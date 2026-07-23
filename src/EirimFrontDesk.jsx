@@ -277,7 +277,7 @@ function Hero() {
             {soundBtn}
             <video
               ref={vid1}
-              src="/voice-ai.mp4"
+              src="/voiceai.mp4"
               autoPlay
               muted
               playsInline
@@ -404,7 +404,7 @@ function Checkin() {
         <div className="ck-grid">
           <Reveal delay={80}>
             <div className="ck-photos">
-              <img className="ck-main" src="/kiosk-image.webp" alt="Patient using an MedXFlow Health self check-in kiosk in a clinic lobby" loading="lazy" decoding="async" width="1122" height="1402" />
+              <video className="ck-main" src="/kisok.mp4" autoPlay muted loop playsInline preload="metadata" aria-label="Patient using an MedXFlow Health self check-in kiosk in a clinic lobby" />
             </div>
           </Reveal>
           <div className="ck-feats">
