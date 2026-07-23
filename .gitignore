@@ -1,0 +1,16 @@
+# Dependencies & build output
+node_modules/
+dist/
+
+# Local tool state
+.netlify/
+.vite/
+
+# Secrets — real values live in Netlify env vars
+creds.json
+.env
+.env.*
+!.env.example
+
+# OS junk
+.DS_Store
