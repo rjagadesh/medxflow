@@ -10,6 +10,65 @@ const makeId = () =>
   (globalThis.crypto?.randomUUID?.() ||
     `s-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
 
+// Illustrated female receptionist avatar ("Aoife") in the MedXFlow palette.
+// Inline SVG so it needs no asset and stays crisp at any size; swap for a photo
+// by dropping an <img> in its place.
+function AoifeAvatar({ className = "" }) {
+  return (
+    <svg className={className} viewBox="0 0 120 120" role="img" aria-label="Aoife, MedXFlow Front Desk assistant">
+      <defs>
+        <linearGradient id="aoBg" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#2E7BD6" />
+          <stop offset="1" stopColor="#123F7E" />
+        </linearGradient>
+        <linearGradient id="aoTop" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#17C3B2" />
+          <stop offset="1" stopColor="#0FA093" />
+        </linearGradient>
+        <clipPath id="aoClip"><circle cx="60" cy="60" r="60" /></clipPath>
+      </defs>
+      <g clipPath="url(#aoClip)">
+        <rect width="120" height="120" fill="url(#aoBg)" />
+        {/* shoulders / uniform */}
+        <path d="M16 120 Q18 90 42 83 L78 83 Q102 90 104 120 Z" fill="url(#aoTop)" />
+        <path d="M60 83 L53 95 L60 102 L67 95 Z" fill="#0FA093" />
+        {/* neck */}
+        <path d="M51 76 h18 v11 q-9 7 -18 0 Z" fill="#E7B48C" />
+        {/* hair (back) */}
+        <path d="M29 60 Q29 25 60 25 Q91 25 91 60 Q91 90 78 96 L78 70 Q70 64 60 64 Q50 64 42 70 L42 96 Q29 90 29 60 Z" fill="#4A3728" />
+        {/* face */}
+        <ellipse cx="60" cy="60" rx="24.5" ry="29" fill="#F4C9A6" />
+        {/* ears */}
+        <circle cx="36" cy="62" r="5" fill="#F4C9A6" />
+        <circle cx="84" cy="62" r="5" fill="#F4C9A6" />
+        {/* fringe / front hair */}
+        <path d="M35 58 Q33 30 60 30 Q87 30 85 58 Q83 46 74 44 Q66 42 60 44 Q54 55 47 51 Q41 50 38 56 Z" fill="#5A4433" />
+        {/* brows */}
+        <path d="M46 54 q5 -2.5 10 0" stroke="#4A3728" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <path d="M64 54 q5 -2.5 10 0" stroke="#4A3728" strokeWidth="2" fill="none" strokeLinecap="round" />
+        {/* eyes */}
+        <ellipse cx="51" cy="61" rx="3" ry="4" fill="#2B2B2B" />
+        <ellipse cx="69" cy="61" rx="3" ry="4" fill="#2B2B2B" />
+        <circle cx="52.2" cy="59.8" r="1" fill="#fff" />
+        <circle cx="70.2" cy="59.8" r="1" fill="#fff" />
+        {/* nose */}
+        <path d="M60 62 q2.5 4 -1 6.5" stroke="#D9A97F" strokeWidth="1.5" fill="none" strokeLinecap="round" />
+        {/* blush */}
+        <ellipse cx="47" cy="69" rx="4" ry="2.4" fill="#F08A7A" opacity=".35" />
+        <ellipse cx="73" cy="69" rx="4" ry="2.4" fill="#F08A7A" opacity=".35" />
+        {/* smile */}
+        <path d="M53 73 q7 6.5 14 0" stroke="#C65A48" strokeWidth="2.2" fill="none" strokeLinecap="round" />
+        {/* headset band */}
+        <path d="M34 62 Q34 31 60 31 Q86 31 86 62" stroke="#0D2B52" strokeWidth="4" fill="none" strokeLinecap="round" />
+        {/* earpiece + mic */}
+        <circle cx="34" cy="63" r="6" fill="#17C3B2" stroke="#0D2B52" strokeWidth="1.5" />
+        <path d="M34 69 Q31 86 49 84" stroke="#0D2B52" strokeWidth="3" fill="none" strokeLinecap="round" />
+        <circle cx="50" cy="84" r="3" fill="#17C3B2" />
+      </g>
+    </svg>
+  );
+}
+
 export default function Chatbot() {
   const [open, setOpen] = useState(false);
   const [started, setStarted] = useState(false);
@@ -98,7 +157,8 @@ export default function Chatbot() {
 
       {!open && (
         <button className="cbt-launch" onClick={() => setOpen(true)} aria-label="Open chat">
-          <img src="/chat-bot.webp" alt="Open the MedXFlow chat assistant" className="cbt-launch-img" />
+          <img src="/agent-face.webp" alt="Aoife, the MedXFlow Front Desk assistant" className="cbt-launch-photo" />
+          <span className="cbt-launch-dot" />
         </button>
       )}
 
@@ -106,7 +166,7 @@ export default function Chatbot() {
         <div className="cbt-panel" role="dialog" aria-label="MedXFlow chat">
           <div className="cbt-head">
             <div className="cbt-head-id">
-              <span className="cbt-avatar">A</span>
+              <img src="/agent-face.webp" alt="Aoife" className="cbt-avatar cbt-avatar-photo" />
               <div>
                 <strong>Aoife</strong>
                 <small>MedXFlow Front Desk assistant</small>
@@ -183,7 +243,9 @@ const CSS = `
 .cbt-launch{position:fixed; right:22px; bottom:22px; z-index:9999; width:80px; height:80px; padding:0;
   background:transparent; border:none; cursor:pointer; transition:transform .18s ease; display:block; animation:cbtbob 3s ease-in-out infinite}
 .cbt-launch:hover{transform:translateY(-5px) scale(1.06); animation-play-state:paused}
-.cbt-launch-img{width:100%; height:100%; object-fit:contain; display:block; filter:drop-shadow(0 8px 14px rgba(13,43,82,.4))}
+.cbt-launch-photo{width:100%; height:100%; display:block; border-radius:50%; object-fit:cover; box-shadow:0 10px 22px rgba(13,43,82,.34); border:3px solid #fff}
+.cbt-launch-dot{position:absolute; right:5px; top:6px; width:15px; height:15px; border-radius:50%; background:#22c55e; border:2.5px solid #fff; box-shadow:0 0 0 0 rgba(34,197,94,.5); animation:cbtpulse 2.4s ease-out infinite}
+@keyframes cbtpulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}70%,100%{box-shadow:0 0 0 8px rgba(34,197,94,0)}}
 @keyframes cbtbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 @media(prefers-reduced-motion:reduce){.cbt-launch{animation:none}}
 
@@ -196,6 +258,7 @@ const CSS = `
   background:linear-gradient(135deg,#123F7E,#1A5DAD); color:#fff}
 .cbt-head-id{display:flex; align-items:center; gap:11px}
 .cbt-avatar{width:38px; height:38px; border-radius:50%; background:#17C3B2; color:#0D2B52; display:grid; place-items:center; font-weight:800; font-size:17px}
+.cbt-avatar-photo{background:none; padding:0; object-fit:cover; border:2px solid rgba(255,255,255,.6)}
 .cbt-head-id strong{display:block; font-size:15px; line-height:1.2}
 .cbt-head-id small{font-size:12px; opacity:.8}
 .cbt-x{background:transparent; border:none; color:#fff; font-size:26px; line-height:1; cursor:pointer; opacity:.85}

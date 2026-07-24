@@ -19,6 +19,7 @@ export const en = {
     book: "Book a demo",
     p_kiosk: "AI Front Desk Kiosk",
     p_voice: "Voice AI",
+    p_handoff: "Human Fail-safe",
     p_telehealth: "Telehealth",
     p_agents: "AI Agents",
     p_integrators: "System Integrators",
@@ -96,6 +97,43 @@ export const en = {
     f6_d: "Floor-standing unit in white or black, shipped pre-configured. Plug in, connect Wi-Fi, done.",
   },
 
+  handoff: {
+    eyebrow: "Human fail-safe",
+    h2a: "AI never guesses.",
+    h2b: "It hands you the call.",
+    lead: "Every AI touchpoint — Voice, the kiosk and web chat — has a human backstop. The moment the AI is unsure, hits an error, or a patient asks for a person, it stops and passes a complete record to your team. Nothing is dropped, nothing is faked.",
+    step1_h: "AI reaches its limit",
+    step1_d: "Low confidence, a system error, a clinical question it shouldn't answer, or a patient who simply asks for a human.",
+    step2_h: "It escalates instantly",
+    step2_d: "A handoff record is raised with the full transcript, the patient's details and the reason — the AI tells the patient a person is taking over.",
+    step3_h: "Your team takes it from here",
+    step3_d: "Staff pick it up from the MedXFlow dashboard, resolve it, and close it out. Every escalation is tracked, assigned and auditable.",
+    t1: "Triggers on error, low confidence or a request for a human",
+    t2: "Full AI transcript and patient record attached — no re-asking",
+    t3: "Claim, assign and resolve from one shared inbox",
+    t4: "Every handoff logged and auditable for clinical safety",
+    stat_h: "of interactions handled without a human — the rest reach one in seconds",
+    cta: "See the handoff in a demo",
+  },
+
+  compliance: {
+    eyebrow: "Security & Compliance",
+    h2a: "Built for healthcare's",
+    h2b: "highest bar.",
+    lead: "Patient data is protected end to end — encrypted, access-controlled and fully audited — and handled under the frameworks your compliance team expects.",
+    b1_h: "HIPAA",
+    b1_d: "PHI handled to HIPAA standards, with Business Associate Agreements (BAAs) available.",
+    b2_h: "GDPR",
+    b2_d: "EU patient data processed under a GDPR data-processing agreement, hosted in the EU.",
+    b3_h: "Encryption",
+    b3_d: "Encrypted in transit (TLS 1.2+) and at rest (AES-256). We never sell data.",
+    b4_h: "Access & Audit",
+    b4_d: "Least-privilege, role-based access with a full audit trail on every record.",
+    b5_h: "Data residency",
+    b5_d: "Choose EU or US data residency to match your regulatory needs.",
+    foot: "HIPAA & GDPR compliant · Business Associate Agreements available · encrypted in transit and at rest",
+  },
+
   integrations: {
     eyebrow: "Integrations",
     h2a: "Built for the software",
@@ -160,8 +198,8 @@ export const en = {
   faq: {
     eyebrow: "FAQ",
     h2: "Questions, answered.",
-    q1: "Is patient data secure and GDPR-compliant?",
-    a1: "Yes. MedXFlow is built for Irish healthcare: data is hosted in the EU, encrypted in transit and at rest, and processed under a GDPR data-processing agreement. We use least-privilege access and full audit logging, and never sell data or use patient information to train public models.",
+    q1: "Is patient data secure, HIPAA and GDPR compliant?",
+    a1: "Yes. MedXFlow handles PHI to HIPAA standards and offers a Business Associate Agreement (BAA), and for EU practices data is hosted in the EU under a GDPR data-processing agreement. Everything is encrypted in transit and at rest, with least-privilege access and full audit logging. We never sell data or use patient information to train public models.",
     q2: "How long does setup take?",
     a2: "Most practices are live within a fortnight. We connect to your PMS (Socrates or HealthOne), configure your call flows and appointment types, and run a supervised pilot before MedXFlow answers live calls.",
     q3: "What are the contract terms?",
@@ -205,7 +243,7 @@ export const en = {
 
   footer: {
     location: "Dublin, Ireland",
-    legal: "GDPR compliant · Data hosted in the EU · © 2026 MedXFlow Health",
+    legal: "HIPAA & GDPR compliant · BAAs available · EU / US data residency · © 2026 MedXFlow Health",
   },
 
   // Telehealth product page (/telehealth)

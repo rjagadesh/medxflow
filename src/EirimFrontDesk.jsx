@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { LanguageProvider, useI18n, LangSwitcher } from "./i18n.jsx";
 import Tour from "./Tour.jsx";
+import { rcmProducts, serviceProducts } from "./products.data.js";
 
 /* ============ EIRIM FRONT DESK — GP site (React) ============ */
 
@@ -83,15 +84,50 @@ export function Nav() {
         <div className="nav-links">
           <div className="nav-dd">
             <button className="nav-dd-btn" aria-haspopup="true">
-              {t("nav.products")} <span className="nav-dd-caret">▾</span>
+              {t("nav.products")} <span className="nav-dd-caret">▼</span>
             </button>
-            <div className="nav-dd-menu" role="menu">
-              <a href="/#checkin" role="menuitem">{t("nav.p_kiosk")}</a>
-              <a href="/#voice" role="menuitem">{t("nav.p_voice")}</a>
-              <a href="/telehealth" role="menuitem">{t("nav.p_telehealth")}</a>
-              <a href="#cta" role="menuitem" onClick={(e) => { e.preventDefault(); openDemo(); }}>{t("nav.p_agents")}</a>
-              <a href="#cta" role="menuitem" onClick={(e) => { e.preventDefault(); openDemo(); }}>{t("nav.p_integrators")}</a>
-              <a href="#cta" role="menuitem" onClick={(e) => { e.preventDefault(); openDemo(); }}>{t("nav.p_custom")}</a>
+            <div className="nav-dd-menu nav-dd-mega" role="menu">
+              <div className="nav-dd-mega-inner wrap">
+                <div className="nav-dd-col">
+                  <div className="nav-dd-head">Platforms</div>
+                  <a href="/#checkin" role="menuitem"><span className="nav-dd-em">🏥</span>{t("nav.p_kiosk")}</a>
+                  <a href="/#voice" role="menuitem"><span className="nav-dd-em">📞</span>{t("nav.p_voice")}</a>
+                  <a href="/telehealth" role="menuitem"><span className="nav-dd-em">💻</span>{t("nav.p_telehealth")}</a>
+                  <a href="/products/eligibility-verification" role="menuitem"><span className="nav-dd-em">🛡️</span>Eligibility Verification</a>
+                  <a href="#cta" role="menuitem" onClick={(e) => { e.preventDefault(); openDemo(); }}><span className="nav-dd-em">🔁</span>EOB to ERA</a>
+                  <a href="#cta" role="menuitem" onClick={(e) => { e.preventDefault(); openDemo(); }}><span className="nav-dd-em">↪️</span>Referral Workflow</a>
+                  <a href="/products" role="menuitem" className="nav-dd-all">◆ All products</a>
+                </div>
+
+                <div className="nav-dd-col nav-dd-col-span2">
+                  <div className="nav-dd-head">RCM AI Agents</div>
+                  <div className="nav-dd-subgrid">
+                    {rcmProducts.map((p) => (
+                      <a key={p.slug} href={`/products/${p.slug}`} role="menuitem">
+                        <span className="nav-dd-step" style={{ animationDelay: `${(p.step - 1) * 0.4}s` }}>{p.step}</span>{p.name}
+                      </a>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="nav-dd-col">
+                  <div className="nav-dd-head">Managed Billing Services</div>
+                  {serviceProducts.map((p) => (
+                    <a key={p.slug} href={`/products/${p.slug}`} role="menuitem">
+                      <span className="nav-dd-em">👥</span>{p.name}
+                    </a>
+                  ))}
+                  <p className="nav-dd-note">Prefer people over software? A dedicated, human-led billing team runs your revenue cycle end to end.</p>
+                </div>
+
+                <div className="nav-dd-col">
+                  <div className="nav-dd-head">Hardware</div>
+                  <a href="/#checkin" role="menuitem"><span className="nav-dd-em">🖥️</span>Self-service Kiosk</a>
+                  <a href="/#checkin" role="menuitem"><span className="nav-dd-em">📋</span>Reception Tablet</a>
+                  <a href="/#checkin" role="menuitem"><span className="nav-dd-em">💳</span>Card Payment Terminal</a>
+                  <a href="/#voice" role="menuitem"><span className="nav-dd-em">☎️</span>Voice Gateway</a>
+                </div>
+              </div>
             </div>
           </div>
           <a href="#cta">{t("nav.contact")}</a>
@@ -418,6 +454,95 @@ function Checkin() {
             ))}
           </div>
         </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Human fail-safe / handoff ---------- */
+function Handoff() {
+  const { t } = useI18n();
+  const steps = [
+    ["⚠", t("handoff.step1_h"), t("handoff.step1_d")],
+    ["↪", t("handoff.step2_h"), t("handoff.step2_d")],
+    ["🙋", t("handoff.step3_h"), t("handoff.step3_d")],
+  ];
+  return (
+    <section className="sec sec-dark" id="handoff">
+      <div className="wrap">
+        <Reveal>
+          <Eyebrow light>{t("handoff.eyebrow")}</Eyebrow>
+          <h2 className="h-light">{t("handoff.h2a")}<br />{t("handoff.h2b")}</h2>
+          <p className="lead-light">{t("handoff.lead")}</p>
+        </Reveal>
+        <div className="ho-flow">
+          {steps.map(([ic, h, d], i) => (
+            <Reveal key={i} delay={i * 120}>
+              <div className="ho-step">
+                <div className="ho-step-top">
+                  <span className="ho-ic">{ic}</span>
+                  <span className="ho-num">{i + 1}</span>
+                </div>
+                <h3>{h}</h3>
+                <p>{d}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+        <div className="ho-grid">
+          <Reveal delay={120}>
+            <ul className="ticks">
+              <li>{t("handoff.t1")}</li>
+              <li>{t("handoff.t2")}</li>
+              <li>{t("handoff.t3")}</li>
+              <li>{t("handoff.t4")}</li>
+            </ul>
+          </Reveal>
+          <Reveal delay={200}>
+            <div className="ho-stat">
+              <div className="ho-stat-n"><CountUp to={92} suffix="%" /></div>
+              <div className="ho-stat-l">{t("handoff.stat_h")}</div>
+              <a href="#cta" className="btn btn-gorse ho-cta" onClick={(e) => { e.preventDefault(); openDemo(); }}>{t("handoff.cta")}</a>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ---------- Security & Compliance ---------- */
+function Compliance() {
+  const { t } = useI18n();
+  const badges = [
+    ["🛡️", t("compliance.b1_h"), t("compliance.b1_d")],
+    ["🇪🇺", t("compliance.b2_h"), t("compliance.b2_d")],
+    ["🔒", t("compliance.b3_h"), t("compliance.b3_d")],
+    ["📜", t("compliance.b4_h"), t("compliance.b4_d")],
+    ["🌍", t("compliance.b5_h"), t("compliance.b5_d")],
+  ];
+  return (
+    <section className="sec sec-tint" id="compliance">
+      <div className="wrap">
+        <Reveal>
+          <Eyebrow>{t("compliance.eyebrow")}</Eyebrow>
+          <h2>{t("compliance.h2a")}<br />{t("compliance.h2b")}</h2>
+          <p className="body">{t("compliance.lead")}</p>
+        </Reveal>
+        <div className="cpl-grid">
+          {badges.map(([ic, h, d], i) => (
+            <Reveal key={i} delay={i * 80}>
+              <div className="cpl-badge">
+                <div className="cpl-ic">{ic}</div>
+                <h3>{h}</h3>
+                <p>{d}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+        <Reveal delay={120}>
+          <div className="cpl-foot"><span className="cpl-lock">🔐</span>{t("compliance.foot")}</div>
+        </Reveal>
       </div>
     </section>
   );
@@ -806,7 +931,9 @@ export default function EirimFrontDesk() {
       <Problem />
       <Voice />
       <Checkin />
+      <Handoff />
       <Integrations />
+      <Compliance />
       <ROI />
       <About />
         <Pricing />
@@ -864,13 +991,42 @@ export const CSS = `
 .nav-dd{position:relative}
 .nav-dd-btn{display:inline-flex; align-items:center; gap:5px; background:none; border:none; padding:0; font:inherit; font-weight:600; font-size:15px; color:inherit; cursor:pointer}
 .nav-dd-btn:hover{color:var(--spruce)}
-.nav-dd-caret{font-size:10px; transition:transform .18s}
+.nav-dd-caret{font-size:15px; transition:transform .18s}
 .nav-dd:hover .nav-dd-caret, .nav-dd:focus-within .nav-dd-caret{transform:rotate(180deg)}
 .nav-dd-menu{position:absolute; top:100%; left:0; margin-top:14px; min-width:238px; background:#fff; border:1px solid var(--line); border-radius:14px; box-shadow:0 22px 55px rgba(13,43,82,.18); padding:8px; display:flex; flex-direction:column; gap:2px; opacity:0; visibility:hidden; transform:translateY(8px); transition:opacity .18s ease, transform .18s ease, visibility .18s; z-index:60}
 .nav-dd-menu::before{content:""; position:absolute; top:-14px; left:0; right:0; height:14px}
 .nav-dd:hover .nav-dd-menu, .nav-dd:focus-within .nav-dd-menu{opacity:1; visibility:visible; transform:none}
 .nav-dd-menu a{padding:10px 13px; border-radius:9px; font-size:14.5px; font-weight:600; color:var(--ink); white-space:nowrap}
 .nav-dd-menu a:hover{background:var(--mist); color:var(--spruce)}
+/* Full-width mega menu: spans the viewport, pinned just under the nav bar */
+.nav-dd-mega{position:fixed; top:57px; left:0; right:0; width:100vw; min-width:0; max-width:none; margin-top:0; padding:0; border-radius:0; border-left:none; border-right:none; border-top:1px solid var(--line); box-shadow:0 26px 55px rgba(13,46,42,.14); transform:translateY(10px)}
+.nav-scrolled ~ * .nav-dd-mega, .nav-dd-mega{top:57px}
+.nav-dd:hover .nav-dd-mega, .nav-dd:focus-within .nav-dd-mega{transform:none}
+.nav-dd-mega::before{content:""; position:absolute; top:-20px; left:0; right:0; height:20px}
+.nav-dd-mega-inner{display:grid; grid-template-columns:repeat(5,1fr); gap:10px 30px; padding:30px clamp(20px,3.5vw,56px) 34px}
+.nav-dd-col{display:flex; flex-direction:column; gap:1px; min-width:0}
+.nav-dd-col-span2{grid-column:span 2}
+.nav-dd-subgrid{display:grid; grid-template-columns:1fr 1fr; gap:1px 20px}
+/* A soft light travels through the step badges 1→9, suggesting the pipeline flowing */
+.nav-dd-subgrid .nav-dd-step{animation:rcmflow 5s ease-in-out infinite}
+@keyframes rcmflow{
+  0%,100%{background:var(--seaglass); color:var(--spruce-deep); box-shadow:0 0 0 0 rgba(23,195,178,0)}
+  5%{background:#9fe8df; color:var(--spruce-deep); box-shadow:0 0 0 3px rgba(23,195,178,.16)}
+  13%{background:var(--seaglass); color:var(--spruce-deep); box-shadow:0 0 0 0 rgba(23,195,178,0)}
+}
+@media(prefers-reduced-motion:reduce){.nav-dd-subgrid .nav-dd-step{animation:none}}
+.nav-dd-mega .nav-dd-head{font-family:'Spline Sans Mono',monospace; font-size:10.5px; letter-spacing:.14em; text-transform:uppercase; color:var(--spruce); font-weight:600; padding:2px 12px 8px; margin-bottom:4px; border-bottom:1px solid var(--line)}
+.nav-dd-mega a{display:flex; align-items:center; gap:9px; padding:9px 12px; border-radius:9px; font-size:14px; font-weight:600; color:var(--ink)}
+.nav-dd-em{font-size:15px; width:20px; text-align:center; flex:none}
+.nav-dd-all{font-weight:700; color:var(--spruce)!important; margin-top:8px; border-top:1px solid var(--line); padding-top:12px!important}
+.nav-dd-step{display:inline-grid; place-items:center; width:20px; height:20px; border-radius:6px; background:var(--seaglass); color:var(--spruce-deep); font-size:11px; font-weight:800; flex:none}
+.nav-dd-note{font-size:12.5px; line-height:1.5; color:rgba(13,43,82,.55); padding:6px 12px 0; font-weight:500}
+@media(max-width:900px){
+  .nav-dd-mega{position:absolute; top:100%; width:auto; left:0; right:auto; max-width:92vw; border:1px solid var(--line); border-radius:14px; max-height:74vh; overflow-y:auto}
+  .nav-dd-mega-inner{grid-template-columns:1fr; padding:14px; gap:6px}
+  .nav-dd-col-span2{grid-column:auto}
+  .nav-dd-subgrid{grid-template-columns:1fr}
+}
 .nav-tour{display:inline-flex; align-items:center; gap:5px; color:var(--spruce)!important; font-weight:700; white-space:nowrap}
 .nav-tour:hover{color:var(--spruce-deep)!important}
 .nav-cta{background:var(--gorse); color:var(--ink)!important; padding:9px 18px; border-radius:999px; font-weight:700}
@@ -979,6 +1135,34 @@ export const CSS = `
 .ticks li{padding-left:34px; position:relative; font-size:16px; color:rgba(255,255,255,.88)}
 .ticks li:before{content:"✓"; position:absolute; left:0; top:-1px; width:23px; height:23px; border-radius:50%; background:var(--gorse); color:var(--ink); font-weight:800; font-size:13px; display:grid; place-items:center}
 @media(max-width:880px){.voice-grid{grid-template-columns:1fr; gap:36px}}
+
+/* human fail-safe / handoff */
+.ho-flow{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:44px; position:relative}
+.ho-step{background:rgba(255,255,255,.05); border:1px solid rgba(207,224,242,.16); border-radius:20px; padding:26px; height:100%; backdrop-filter:blur(4px)}
+.ho-step-top{display:flex; align-items:center; justify-content:space-between; margin-bottom:16px}
+.ho-ic{font-size:24px; width:46px; height:46px; border-radius:12px; background:rgba(23,195,178,.16); display:grid; place-items:center}
+.ho-num{font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:30px; color:rgba(255,255,255,.16); line-height:1}
+.ho-step h3{font-size:18px; color:#fff; margin-bottom:8px}
+.ho-step p{font-size:14.5px; color:rgba(255,255,255,.7); line-height:1.55}
+.ho-grid{display:grid; grid-template-columns:1.1fr .9fr; gap:40px; align-items:center; margin-top:44px}
+.ho-grid .ticks{margin-top:0}
+.ho-stat{background:linear-gradient(150deg,rgba(23,195,178,.14),rgba(26,93,173,.14)); border:1px solid rgba(61,220,201,.3); border-radius:22px; padding:34px; text-align:center}
+.ho-stat-n{font-family:'Bricolage Grotesque',sans-serif; font-weight:800; font-size:clamp(46px,6vw,64px); color:var(--gorse); letter-spacing:-0.03em; line-height:1}
+.ho-stat-l{font-size:15px; color:rgba(255,255,255,.78); max-width:34ch; margin:10px auto 0}
+.ho-cta{margin-top:22px}
+@media(max-width:880px){.ho-flow{grid-template-columns:1fr}.ho-grid{grid-template-columns:1fr; gap:28px}}
+
+/* security & compliance */
+.cpl-grid{display:grid; grid-template-columns:repeat(5,1fr); gap:16px; margin-top:40px}
+.cpl-badge{background:#fff; border:1px solid var(--line); border-radius:18px; padding:24px 20px; height:100%; transition:transform .18s, box-shadow .18s}
+.cpl-badge:hover{transform:translateY(-3px); box-shadow:0 20px 44px rgba(13,43,82,.12)}
+.cpl-ic{width:50px; height:50px; border-radius:14px; background:rgba(23,195,178,.12); display:grid; place-items:center; font-size:24px; margin-bottom:14px}
+.cpl-badge h3{font-size:18px; margin-bottom:7px; color:var(--ink)}
+.cpl-badge p{font-size:13.5px; color:rgba(13,43,82,.7); line-height:1.5}
+.cpl-foot{display:flex; align-items:center; justify-content:center; gap:10px; margin-top:32px; padding:16px 22px; background:var(--ink); color:rgba(255,255,255,.85); border-radius:14px; font-size:14px; font-weight:600; text-align:center; flex-wrap:wrap}
+.cpl-lock{font-size:18px}
+@media(max-width:980px){.cpl-grid{grid-template-columns:1fr 1fr 1fr}}
+@media(max-width:620px){.cpl-grid{grid-template-columns:1fr 1fr}}
 
 /* check-in */
 .ck-grid{display:grid; grid-template-columns:.9fr 1.1fr; gap:56px; margin-top:44px; align-items:start}
