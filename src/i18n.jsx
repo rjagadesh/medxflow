@@ -1,15 +1,13 @@
 import { createContext, useContext, useState, useCallback, useEffect } from "react";
 import { flatEn } from "./i18n.strings.mjs";
 import es from "./i18n.es.json";
-import ga from "./i18n.ga.json";
 
 export const LANGS = [
   { code: "en", label: "EN", name: "English" },
   { code: "es", label: "ES", name: "Español" },
-  { code: "ga", label: "GA", name: "Gaeilge" },
 ];
 
-const DICTS = { en: flatEn, es, ga };
+const DICTS = { en: flatEn, es };
 const STORE_KEY = "eirim_lang";
 
 const I18nContext = createContext({ lang: "en", setLang: () => {}, t: (k) => k });

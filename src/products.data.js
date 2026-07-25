@@ -91,8 +91,8 @@ export const PRODUCTS = [
     features: [
       ["🪪", "Identity & insurance confirm", "Photo ID and insurance card capture, with details reconciled against what was pre-registered."],
       ["✍️", "On-screen consents", "Consent and financial-responsibility forms signed digitally — legible, dated, stored, auditable."],
-      ["💶", "Point-of-service collection", "Co-pays and outstanding balances collected by card at check-in, before the patient sits down."],
-      ["↔️", "Real-time PMS write-back", "Arrival status and updated details flow straight into Socrates, HealthOne and more."],
+      ["💵", "Point-of-service collection", "Co-pays and outstanding balances collected by card at check-in, before the patient sits down."],
+      ["↔️", "Real-time EHR write-back", "Arrival status and updated details flow straight into Epic, athenahealth and more."],
     ],
     steps: [
       ["Patient arrives", "Kiosk or front-desk check-in, with pre-registration already done."],

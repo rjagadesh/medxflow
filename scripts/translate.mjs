@@ -33,12 +33,11 @@ if (!KEY || KEY.startsWith("sk-ant-REPLACE")) {
 }
 
 const TARGETS = [
-  { code: "es", name: "Spanish (Spain, es-ES)" },
-  { code: "ga", name: "Irish / Gaeilge (Ireland, ga-IE)" },
+  { code: "es", name: "Spanish (US, es-US)" },
 ];
 
 const DO_NOT_TRANSLATE =
-  "MedXFlow, MedXFlow Health, MedXFlow Voice, MedXFlow Front Desk, MedXFlow Check-in, Socrates, HealthOne, CompleteGP, Healthmail, Gaeilge, Fáilte, Eircode, SMS, PMS, GP, AI, GDPR, Wi-Fi";
+  "MedXFlow, MedXFlow Health, MedXFlow Voice, MedXFlow Front Desk, MedXFlow Check-in, Epic, athenahealth, eClinicalWorks, Availity, ZIP, EHR, SMS, AI, HIPAA, SOC 2, BAA, PHI, CPT, ICD-10, ERA, EOB, Wi-Fi";
 
 async function translate(target) {
   const sys =
@@ -47,7 +46,7 @@ async function translate(target) {
     `Return ONLY a valid JSON object with the exact same keys and translated values — no commentary, no code fences. ` +
     `Rules: keep it natural and marketing-appropriate; preserve the tone; ` +
     `keep these terms unchanged: ${DO_NOT_TRANSLATE}; ` +
-    `keep numbers, prices (€250 etc.), symbols (· — % /), and placeholders intact; ` +
+    `keep numbers, prices ($250 etc.), symbols (· — % /), and placeholders intact; ` +
     `do not add or remove keys.`;
 
   const res = await fetch("https://api.anthropic.com/v1/messages", {

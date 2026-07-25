@@ -134,7 +134,7 @@ export function Nav() {
           <a href="/#pricing">{t("nav.pricing")}</a>
           <a href="/#faq">{t("nav.faq")}</a>
           <a href="#top" className="nav-tour" onClick={(e) => { e.preventDefault(); startTour(); }}>▶ {t("nav.tour")}</a>
-          <a href="tel:+35315551234" className="nav-phone">📞 +353 1 555 1234</a>
+          <a href="tel:+12103969718" className="nav-phone">📞 (210) 396-9718</a>
           <a href="#cta" className="nav-cta" onClick={(e) => { e.preventDefault(); openDemo(); }}>{t("nav.book")}</a>
           <LangSwitcher />
         </div>
@@ -162,7 +162,7 @@ const CALL_SCRIPT = [
   { c: "user", t: "Can I get an appointment this morning? It’s urgent enough." },
   { c: "ai", t: "Dr. Murphy has 10:40 free — will I book you in?" },
   { c: "user", t: "Perfect, yes." },
-  { c: "sys", t: "✓ BOOKED TO SOCRATES · SMS SENT · 22 OTHER CALLS IN PROGRESS" },
+  { c: "sys", t: "✓ BOOKED TO EPIC · SMS SENT · 22 OTHER CALLS IN PROGRESS" },
 ];
 
 function CallDemo({ script = CALL_SCRIPT, header, sub }) {
@@ -313,7 +313,7 @@ function Hero() {
             {soundBtn}
             <video
               ref={vid1}
-              src="/voiceai.mp4"
+              src="/kisok.mp4"
               autoPlay
               muted
               playsInline
@@ -343,7 +343,7 @@ function Stats() {
       <div className="wrap stats-grid">
         <Reveal delay={0}><div className="stat"><div className="stat-n"><CountUp to={30} suffix="%" /></div><div className="stat-l">{t("stats.s1")}</div></div></Reveal>
         <Reveal delay={100}><div className="stat"><div className="stat-n"><CountUp to={9} suffix=" hrs" /></div><div className="stat-l">{t("stats.s2")}</div></div></Reveal>
-        <Reveal delay={200}><div className="stat"><div className="stat-n"><CountUp to={65} prefix="€" /></div><div className="stat-l">{t("stats.s3")}</div></div></Reveal>
+        <Reveal delay={200}><div className="stat"><div className="stat-n"><CountUp to={65} prefix="$" /></div><div className="stat-l">{t("stats.s3")}</div></div></Reveal>
         <Reveal delay={300}><div className="stat"><div className="stat-n">24/7</div><div className="stat-l">{t("stats.s4")}</div></div></Reveal>
       </div>
     </section>
@@ -412,7 +412,7 @@ function Voice() {
         </div>
         <Reveal delay={150}>
           <img className="voice-photo" src="/voice-ai-image.webp" alt="MedXFlow Voice AI receptionist answering patient calls for a clinic" loading="lazy" decoding="async" width="1512" height="1008" />
-          <CallDemo header="EIRIM VOICE · LIVE" sub="MON 08:02 · 23 CALLS IN PROGRESS" />
+          <CallDemo header="MEDXFLOW VOICE · LIVE" sub="MON 08:02 · 23 CALLS IN PROGRESS" />
         </Reveal>
       </div>
     </section>
@@ -516,10 +516,10 @@ function Compliance() {
   const { t } = useI18n();
   const badges = [
     ["🛡️", t("compliance.b1_h"), t("compliance.b1_d")],
-    ["🇪🇺", t("compliance.b2_h"), t("compliance.b2_d")],
+    ["🏅", t("compliance.b2_h"), t("compliance.b2_d")],
     ["🔒", t("compliance.b3_h"), t("compliance.b3_d")],
     ["📜", t("compliance.b4_h"), t("compliance.b4_d")],
-    ["🌍", t("compliance.b5_h"), t("compliance.b5_d")],
+    ["🇺🇸", t("compliance.b5_h"), t("compliance.b5_d")],
   ];
   return (
     <section className="sec sec-tint" id="compliance">
@@ -562,11 +562,11 @@ function Integrations() {
           </Reveal>
           <Reveal delay={120}>
             <div className="int-chips">
-              <span className="ichip">Socrates</span>
-              <span className="ichip">HealthOne</span>
-              <span className="ichip">CompleteGP</span>
-              <span className="ichip ichip-soft">Healthmail</span>
-              <span className="ichip ichip-soft">SMS / Eircode lookup</span>
+              <span className="ichip">Epic</span>
+              <span className="ichip">athenahealth</span>
+              <span className="ichip">eClinicalWorks</span>
+              <span className="ichip ichip-soft">Availity</span>
+              <span className="ichip ichip-soft">SMS / ZIP lookup</span>
             </div>
           </Reveal>
         </div>
@@ -609,14 +609,14 @@ function ROI() {
                 <input type="range" min="10" max="60" step="5" value={lostPct} onChange={(e) => setLostPct(+e.target.value)} />
               </label>
               <label>
-                <span>{t("roi.fee")} <b>€{fee}</b></span>
+                <span>{t("roi.fee")} <b>${fee}</b></span>
                 <input type="range" min="45" max="90" step="5" value={fee} onChange={(e) => setFee(+e.target.value)} />
               </label>
             </div>
             <div className="roi-out">
-              <div className="roi-row"><span>{t("roi.revenueOut")}</span><b className="loss">€{lostPerMonth.toLocaleString()}/mo</b></div>
-              <div className="roi-row"><span>{t("roi.product")}</span><b>€{cost}/mo</b></div>
-              <div className="roi-row roi-net"><span>{t("roi.recovered")}</span><b className="gain">€{Math.max(net, 0).toLocaleString()}</b></div>
+              <div className="roi-row"><span>{t("roi.revenueOut")}</span><b className="loss">${lostPerMonth.toLocaleString()}/mo</b></div>
+              <div className="roi-row"><span>{t("roi.product")}</span><b>${cost}/mo</b></div>
+              <div className="roi-row roi-net"><span>{t("roi.recovered")}</span><b className="gain">${Math.max(net, 0).toLocaleString()}</b></div>
               <p className="roi-fn">{t("roi.footnote")}</p>
             </div>
           </div>
@@ -631,17 +631,17 @@ function Pricing() {
   const { t } = useI18n();
   const plans = [
     {
-      name: "MedXFlow Voice", price: "€250", per: t("pricing.voice_per"),
+      name: "MedXFlow Voice", price: "$250", per: t("pricing.voice_per"),
       feats: [t("pricing.voice_f1"), t("pricing.voice_f2"), t("pricing.voice_f3"), t("pricing.voice_f4"), t("pricing.voice_f5"), t("pricing.voice_f6")],
       cta: t("pricing.voice_cta"),
     },
     {
-      name: "MedXFlow Front Desk", price: "€449", per: t("pricing.fd_per"), featured: true,
+      name: "MedXFlow Front Desk", price: "$449", per: t("pricing.fd_per"), featured: true,
       feats: [t("pricing.fd_f1"), t("pricing.fd_f2"), t("pricing.fd_f3"), t("pricing.fd_f4"), t("pricing.fd_f5")],
       cta: t("pricing.fd_cta"),
     },
     {
-      name: "MedXFlow Check-in", price: "€250", per: t("pricing.ci_per"),
+      name: "MedXFlow Check-in", price: "$250", per: t("pricing.ci_per"),
       feats: [t("pricing.ci_f1"), t("pricing.ci_f2"), t("pricing.ci_f3"), t("pricing.ci_f4"), t("pricing.ci_f5")],
       cta: t("pricing.ci_cta"),
     },
@@ -683,7 +683,7 @@ function CTA() {
             <h2 className="h-light">{t("cta.h2a")}<br />{t("cta.h2b")}</h2>
             <p className="lead-light">{t("cta.lead")}</p>
             <div className="cta-contact">
-              <a href="tel:+35315551234">📞 +353 1 555 1234</a>
+              <a href="tel:+12103969718">📞 (210) 396-9718</a>
               <a href="mailto:hello@medxflow.com">✉ hello@medxflow.com</a>
             </div>
           </Reveal>
@@ -706,7 +706,7 @@ export function Footer() {
       <div className="wrap foot-in">
         <div className="brand brand-foot"><ShamrockMark size={24} variant="light" /><span>MedXFlow <b>Health</b></span></div>
         <div className="foot-links">
-          <a href="tel:+35315551234">📞 +353 1 555 1234</a>
+          <a href="tel:+12103969718">📞 (210) 396-9718</a>
           <a href="mailto:hello@medxflow.com">hello@medxflow.com</a>
           <span>{t("footer.location")}</span>
         </div>
@@ -797,7 +797,7 @@ function LeadForm({ source = "cta", onDone, dark = false }) {
         </label>
         <label>
           {t("lead.phone")}
-          <input value={f.phone} onChange={set("phone")} placeholder="+353 1 234 5678" />
+          <input value={f.phone} onChange={set("phone")} placeholder="(214) 555-0199" />
         </label>
       </div>
       <label>

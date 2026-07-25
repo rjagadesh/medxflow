@@ -10,12 +10,12 @@ const makeId = () =>
   (globalThis.crypto?.randomUUID?.() ||
     `s-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`);
 
-// Illustrated female receptionist avatar ("Aoife") in the MedXFlow palette.
+// Illustrated female receptionist avatar ("Ava") in the MedXFlow palette.
 // Inline SVG so it needs no asset and stays crisp at any size; swap for a photo
 // by dropping an <img> in its place.
-function AoifeAvatar({ className = "" }) {
+function AvaAvatar({ className = "" }) {
   return (
-    <svg className={className} viewBox="0 0 120 120" role="img" aria-label="Aoife, MedXFlow Front Desk assistant">
+    <svg className={className} viewBox="0 0 120 120" role="img" aria-label="Ava, MedXFlow Front Desk assistant">
       <defs>
         <linearGradient id="aoBg" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#2E7BD6" />
@@ -95,7 +95,7 @@ export default function Chatbot() {
     setMessages([
       {
         role: "assistant",
-        content: `Hi ${name.trim().split(" ")[0]}! I'm Aoife, the MedXFlow Front Desk assistant. Ask me anything about how MedXFlow can answer your clinic's calls, book appointments, and check patients in.`,
+        content: `Hi ${name.trim().split(" ")[0]}! I'm Ava, the MedXFlow Front Desk assistant. Ask me anything about how MedXFlow can answer your clinic's calls, book appointments, and check patients in.`,
       },
     ]);
     // Log the visitor (fire-and-forget; never blocks the chat).
@@ -157,7 +157,7 @@ export default function Chatbot() {
 
       {!open && (
         <button className="cbt-launch" onClick={() => setOpen(true)} aria-label="Open chat">
-          <img src="/agent-face.webp" alt="Aoife, the MedXFlow Front Desk assistant" className="cbt-launch-photo" />
+          <img src="/agent-face.webp" alt="Ava, the MedXFlow Front Desk assistant" className="cbt-launch-photo" />
           <span className="cbt-launch-dot" />
         </button>
       )}
@@ -166,9 +166,9 @@ export default function Chatbot() {
         <div className="cbt-panel" role="dialog" aria-label="MedXFlow chat">
           <div className="cbt-head">
             <div className="cbt-head-id">
-              <img src="/agent-face.webp" alt="Aoife" className="cbt-avatar cbt-avatar-photo" />
+              <img src="/agent-face.webp" alt="Ava" className="cbt-avatar cbt-avatar-photo" />
               <div>
-                <strong>Aoife</strong>
+                <strong>Ava</strong>
                 <small>MedXFlow Front Desk assistant</small>
               </div>
             </div>
