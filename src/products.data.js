@@ -22,7 +22,7 @@ export const PRODUCTS = [
     h1a: "The clean claim starts",
     h1b: "before the visit does.",
     tagline:
-      "Capture demographics, insurance and consent up front, and fill the schedule with the right appointment in the right slot — so nothing downstream has to be fixed later.",
+      "Capture demographics, insurance and consent up front, and book the right visit in the right slot — so nothing downstream has to be fixed later.",
     overview:
       "Most denials are born at the front door. MedXFlow pre-registration collects and validates patient demographics, guarantor and insurance details before the patient ever arrives, then books them into the correct visit type with the right provider, location and duration. Every field that a claim will later depend on is verified at the point it's cheapest to fix.",
     features: [
@@ -54,7 +54,7 @@ export const PRODUCTS = [
     h1a: "Know exactly what's covered",
     h1b: "before you deliver care.",
     tagline:
-      "Real-time eligibility and benefits checks confirm active coverage, co-pays, deductibles and prior-auth requirements — so you bill the right payer, the first time.",
+      "Real-time eligibility checks confirm active coverage, co-pays, deductibles and prior-auth needs — so you bill the right payer, the first time.",
     overview:
       "MedXFlow runs automated 270/271 eligibility checks against payers the moment an appointment is booked, and re-checks on the day of service. Staff see active coverage, plan details, co-pay, deductible-remaining and whether a prior authorisation is required — surfaced directly in the worklist, with exceptions flagged for a human to resolve.",
     features: [
@@ -86,7 +86,7 @@ export const PRODUCTS = [
     h1a: "Check in the patient,",
     h1b: "not the paperwork.",
     tagline:
-      "A fast, accurate arrival: confirm identity and coverage, capture signatures and consents, collect what's owed, and mark the patient arrived — straight into your PMS.",
+      "A fast, accurate arrival: confirm identity and coverage, capture consents, collect what's owed, and mark the patient arrived — straight into your EHR.",
     overview:
       "MedXFlow check-in turns arrival into a two-minute, error-free step. Patients confirm their details, sign consents and financial-responsibility forms on screen, and pay their co-pay or balance at the kiosk or front desk. Everything writes back to the practice management system instantly, so the encounter is clean before the clinician even opens the chart.",
     features: [
@@ -150,7 +150,7 @@ export const PRODUCTS = [
     h1a: "Clean claims out the door,",
     h1b: "first pass, every day.",
     tagline:
-      "Generate, scrub and submit compliant 837 claims electronically to every payer and clearinghouse — with acknowledgements tracked and rejections worked automatically.",
+      "Generate, scrub and submit compliant 837 claims to every payer and clearinghouse — with acknowledgements tracked and rejections worked automatically.",
     overview:
       "MedXFlow builds compliant electronic claims, runs them through a multi-layer scrubber, and submits them to payers and clearinghouses. Every 999/277CA acknowledgement is tracked, front-end rejections are auto-triaged and corrected, and clean-claim and first-pass rates are measured so you can see — and improve — how much goes right the first time.",
     features: [
@@ -310,7 +310,7 @@ export const PRODUCTS = [
     h1a: "Your clinic phone system,",
     h1b: "reinvented in the cloud.",
     tagline:
-      "Enterprise-grade cloud VoIP built for healthcare — crystal-clear calls, smart routing, and native integration with MedXFlow Voice AI and your EHR. No on-prem hardware, one predictable bill.",
+      "Enterprise-grade cloud VoIP for healthcare — crystal-clear calls, smart routing, and native integration with MedXFlow Voice AI and your EHR.",
     overview:
       "Legacy phone systems weren't built for a modern practice — or for AI. MedXFlow VoIP replaces your on-prem PBX with a HIPAA-ready cloud phone system: port your existing numbers, route calls intelligently across locations, and let MedXFlow Voice AI answer overflow and after-hours automatically. Softphones for the desk, apps for the road, and call analytics that actually tie back to bookings.",
     features: [
@@ -344,7 +344,7 @@ export const PRODUCTS = [
     h1a: "A dedicated billing team,",
     h1b: "without the overhead.",
     tagline:
-      "Prefer people over software? Our certified billers and coders run your entire revenue cycle for you — the traditional, full-service billing partnership, backed by MedXFlow technology.",
+      "Prefer people over software? Certified billers and coders run your entire revenue cycle for you — a full-service billing partnership, backed by MedXFlow.",
     overview:
       "Not every practice wants to run the software themselves. Managed Billing Services is our human-led, full-service offering: a dedicated team of certified medical billers, coders and A/R specialists who own your revenue cycle end to end — from eligibility to final payment — and report to you against clear performance targets. It's the classic outsourced-billing relationship, with MedXFlow's automation working quietly behind your team.",
     features: [

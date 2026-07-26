@@ -259,7 +259,7 @@ export const en = {
     hero_eyebrow: "Product · MedXFlow Telehealth",
     hero_h1a: "See patients anywhere,",
     hero_h1b: "in one tap.",
-    hero_lead: "MedXFlow Telehealth turns any appointment into a secure video visit — no apps, no downloads. The patient taps a link, joins in their browser, and every note writes straight back into Epic and athenahealth.",
+    hero_lead: "MedXFlow Telehealth turns any appointment into a secure video visit — no apps, no downloads. Patients join in the browser; notes write back to your EHR.",
     hero_cta1: "Book a demo",
     hero_cta2: "See pricing",
     hero_note: "No downloads · US-hosted · Integrated with your EHR",

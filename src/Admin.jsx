@@ -5,6 +5,7 @@ import { Contacts, ContactDetail } from "./Contacts.jsx";
 import Pipeline from "./Pipeline.jsx";
 import Tickets from "./Tickets.jsx";
 import Settings from "./Settings.jsx";
+import Seo from "./Seo.jsx";
 
 const DATA_ENDPOINT = "/.netlify/functions/admin-data";
 const PW_KEY = "eirim_admin_pw";
@@ -29,7 +30,7 @@ const tally = (arr, keyFn) => {
 };
 
 const SKEY = "eirim_admin_session";
-const TAB_ORDER = ["contacts", "pipeline", "campaigns", "financials", "leads", "traffic", "chat", "tickets", "settings"];
+const TAB_ORDER = ["contacts", "pipeline", "campaigns", "financials", "leads", "traffic", "seo", "chat", "tickets", "settings"];
 const readSession = () => { try { return JSON.parse(sessionStorage.getItem(SKEY) || "null"); } catch { return null; } };
 const firstTab = (sess) => TAB_ORDER.find((m) => sess?.role === "owner" || (sess?.modules || []).includes(m)) || "contacts";
 
@@ -161,6 +162,7 @@ export default function Admin() {
           {can("leads") && <button className={tab === "leads" ? "on" : ""} onClick={() => setTab("leads")}>📥 Demo requests</button>}
           {can("tickets") && <button className={tab === "tickets" ? "on" : ""} onClick={() => setTab("tickets")}>🎫 Tickets</button>}
           {can("traffic") && <button className={tab === "traffic" ? "on" : ""} onClick={() => setTab("traffic")}>📊 Traffic</button>}
+          {can("traffic") && <button className={tab === "seo" ? "on" : ""} onClick={() => setTab("seo")}>📈 SEO</button>}
           {can("chat") && <button className={tab === "chat" ? "on" : ""} onClick={() => setTab("chat")}>💬 Chatbot</button>}
           {can("settings") && <button className={tab === "settings" ? "on" : ""} onClick={() => setTab("settings")}>⚙️ Settings</button>}
         </nav>
@@ -172,7 +174,7 @@ export default function Admin() {
       </aside>
 
       <main className="ad-main">
-        {!["campaigns", "financials", "contacts", "pipeline", "tickets", "settings"].includes(tab) && (
+        {!["campaigns", "financials", "contacts", "pipeline", "tickets", "settings", "seo"].includes(tab) && (
           <div className="ad-stats">
             <div className="ad-stat ad-stat-hot"><b>{counts.leads ?? leads.length}</b><span>Demo requests</span></div>
             <div className="ad-stat"><b>{tab === "traffic" ? shownPV.length : (counts.pageviews ?? pageviews.length)}</b><span>Pageviews{tab === "traffic" && seg !== "human" ? ` · ${SEG_LABEL[seg]}` : ""}</span></div>
@@ -191,6 +193,8 @@ export default function Admin() {
       {tab === "tickets" && can("tickets") && <Tickets pw={pw} />}
 
       {tab === "settings" && can("settings") && <Settings pw={pw} session={session} />}
+
+      {tab === "seo" && can("traffic") && <Seo pw={pw} />}
 
       {tab === "campaigns" && <Campaigns pw={pw} leads={leads} visitors={visitors} />}
 
