@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { LanguageProvider } from "./i18n.jsx";
 import { Nav, Footer, Reveal, Eyebrow, BookDemo, CSS } from "./EirimFrontDesk.jsx";
-import { PRODUCTS, rcmProducts, serviceProducts, bySlug } from "./products.data.js";
+import { PRODUCTS, platformProducts, rcmProducts, serviceProducts, bySlug } from "./products.data.js";
 
 const openDemo = () => window.dispatchEvent(new Event("eirim:book-demo"));
 
@@ -263,6 +263,30 @@ export function ProductsIndex() {
         </header>
 
         <section className="sec">
+          <div className="wrap">
+            <Reveal>
+              <Eyebrow>Platforms</Eyebrow>
+              <h2>The systems your front office runs on</h2>
+            </Reveal>
+            <div className="pp-index-grid">
+              {platformProducts.map((r) => (
+                <Reveal key={r.slug}>
+                  <a className="pp-index-card" href={`/products/${r.slug}`}>
+                    <div className="pp-index-top">
+                      <span className="pp-index-ic">{r.icon}</span>
+                      <span className="pp-index-step">Platform</span>
+                    </div>
+                    <h3>{r.name}</h3>
+                    <p>{r.tagline}</p>
+                    <span className="pp-index-link">Learn more →</span>
+                  </a>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="sec sec-tint">
           <div className="wrap">
             <Reveal>
               <Eyebrow>Revenue Cycle Management</Eyebrow>

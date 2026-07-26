@@ -13,6 +13,15 @@ const isTelehealth = path === "/telehealth";
 const isProductsIndex = path === "/products";
 const productMatch = path.match(/^\/products\/([a-z0-9-]+)$/);
 
+// Self-referencing canonical per route. Navigation is via full page loads, so
+// setting this once per load from the current path covers every page.
+(() => {
+  const url = "https://medxflow.ai" + (path || "/");
+  let c = document.querySelector('link[rel="canonical"]');
+  if (!c) { c = document.createElement("link"); c.rel = "canonical"; document.head.appendChild(c); }
+  c.setAttribute("href", url);
+})();
+
 // Log public traffic (never the admin page itself).
 if (!isAdmin) track();
 

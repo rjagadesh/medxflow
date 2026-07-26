@@ -6,6 +6,7 @@
 // ─────────────────────────────────────────────────────────────────────────
 
 export const CATEGORIES = {
+  platform: "Platforms",
   rcm: "Revenue Cycle Management",
   services: "Managed Services",
 };
@@ -300,6 +301,40 @@ export const PRODUCTS = [
     stat: { n: 360, suffix: "°", label: "visibility across every stage — from scheduling to final payment" },
   },
   {
+    slug: "voip",
+    category: "platform",
+    step: 0,
+    icon: "📞",
+    eyebrow: "Platform · Cloud VoIP for healthcare",
+    name: "VoIP Services",
+    h1a: "Your clinic phone system,",
+    h1b: "reinvented in the cloud.",
+    tagline:
+      "Enterprise-grade cloud VoIP built for healthcare — crystal-clear calls, smart routing, and native integration with MedXFlow Voice AI and your EHR. No on-prem hardware, one predictable bill.",
+    overview:
+      "Legacy phone systems weren't built for a modern practice — or for AI. MedXFlow VoIP replaces your on-prem PBX with a HIPAA-ready cloud phone system: port your existing numbers, route calls intelligently across locations, and let MedXFlow Voice AI answer overflow and after-hours automatically. Softphones for the desk, apps for the road, and call analytics that actually tie back to bookings.",
+    features: [
+      ["☎️", "Cloud PBX & SIP", "A full hosted phone system — extensions, hunt groups, voicemail-to-email — with no hardware to rack or maintain."],
+      ["🔀", "Smart call routing", "Time-of-day, skills- and location-based IVR routing, with overflow and after-hours handled by MedXFlow Voice AI."],
+      ["🔁", "Number porting", "Keep every number your patients already know. We port them over with zero downtime."],
+      ["🤖", "Native Voice AI hand-off", "Calls flow seamlessly between your team and the AI receptionist — one system, one call log."],
+      ["📊", "Call analytics", "Volumes, wait times, missed-call recovery and outcomes, tied back to bookings and revenue."],
+      ["📱", "Softphone & mobile", "Take clinic calls from a browser or phone app — secure, recorded where required, always on your caller ID."],
+    ],
+    steps: [
+      ["Port your numbers", "We move your existing lines to the cloud with no interruption to patients."],
+      ["Configure call flows", "Set routing, IVR, hours and overflow — with Voice AI as the always-on backstop."],
+      ["Go live", "Your team answers from softphones or apps; analytics and EHR write-back start day one."],
+    ],
+    benefits: [
+      "No on-prem PBX to buy, rack or maintain",
+      "Lower per-minute and line costs, one predictable bill",
+      "Scales instantly across new providers and locations",
+      "One phone platform that already speaks to your AI and EHR",
+    ],
+    stat: { n: 99.99, suffix: "%", label: "uptime SLA — carrier-grade cloud voice your practice can rely on" },
+  },
+  {
     slug: "managed-billing",
     category: "services",
     step: 0,
@@ -334,5 +369,6 @@ export const PRODUCTS = [
 ];
 
 export const bySlug = (slug) => PRODUCTS.find((p) => p.slug === slug) || null;
+export const platformProducts = PRODUCTS.filter((p) => p.category === "platform");
 export const rcmProducts = PRODUCTS.filter((p) => p.category === "rcm").sort((a, b) => a.step - b.step);
 export const serviceProducts = PRODUCTS.filter((p) => p.category === "services");

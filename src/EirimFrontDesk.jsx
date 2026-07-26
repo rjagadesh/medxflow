@@ -93,6 +93,7 @@ export function Nav() {
                   <a href="/#checkin" role="menuitem"><span className="nav-dd-em">🏥</span>{t("nav.p_kiosk")}</a>
                   <a href="/#voice" role="menuitem"><span className="nav-dd-em">📞</span>{t("nav.p_voice")}</a>
                   <a href="/telehealth" role="menuitem"><span className="nav-dd-em">💻</span>{t("nav.p_telehealth")}</a>
+                  <a href="/products/voip" role="menuitem"><span className="nav-dd-em">📞</span>VoIP Services</a>
                   <a href="/products/eligibility-verification" role="menuitem"><span className="nav-dd-em">🛡️</span>Eligibility Verification</a>
                   <a href="#cta" role="menuitem" onClick={(e) => { e.preventDefault(); openDemo(); }}><span className="nav-dd-em">🔁</span>EOB to ERA</a>
                   <a href="#cta" role="menuitem" onClick={(e) => { e.preventDefault(); openDemo(); }}><span className="nav-dd-em">↪️</span>Referral Workflow</a>
@@ -201,25 +202,24 @@ function Hero() {
   const [muted, setMuted] = useState(true);
   const vid0 = useRef(null);
   const vid1 = useRef(null);
-  const activeVid = () => (idx === 0 ? vid0.current : vid1.current);
+  const vid2 = useRef(null);
+  const vids = [vid0, vid1, vid2];
+  const SLIDES = vids.length;
+  const activeVid = () => vids[idx]?.current;
 
-  // On slide change: restart & play the active slide's video, pause the other.
+  // On slide change: restart & play the active slide's video, pause the others.
   // Advancing is driven by each video's 'ended' event (see onEnded below).
   useEffect(() => {
-    const active = idx === 0 ? vid0.current : vid1.current;
-    const other = idx === 0 ? vid1.current : vid0.current;
-    if (other) {
-      try {
-        other.pause();
-      } catch {}
-    }
-    if (active) {
-      try {
-        active.currentTime = 0;
-        const p = active.play();
-        if (p && p.catch) p.catch(() => {});
-      } catch {}
-    }
+    vids.forEach((r, i) => {
+      const v = r.current;
+      if (!v) return;
+      if (i === idx) {
+        try { v.currentTime = 0; const p = v.play(); if (p && p.catch) p.catch(() => {}); } catch {}
+      } else {
+        try { v.pause(); } catch {}
+      }
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [idx]);
 
   // Safety fallback: if a video never fires 'ended' (stall / missing metadata),
@@ -227,14 +227,14 @@ function Hero() {
   useEffect(() => {
     if (paused) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const t = setTimeout(() => setIdx((i) => (i + 1) % 2), 45000);
+    const t = setTimeout(() => setIdx((i) => (i + 1) % SLIDES), 45000);
     return () => clearTimeout(t);
-  }, [idx, paused]);
+  }, [idx, paused, SLIDES]);
 
-  // Only the active slide's video carries sound; the other stays muted.
+  // Only the active slide's video carries sound; the others stay muted.
   useEffect(() => {
-    if (vid0.current) vid0.current.muted = muted || idx !== 0;
-    if (vid1.current) vid1.current.muted = muted || idx !== 1;
+    vids.forEach((r, i) => { if (r.current) r.current.muted = muted || idx !== i; });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [muted, idx]);
 
   const soundBtn = (
@@ -317,17 +317,44 @@ function Hero() {
               autoPlay
               muted
               playsInline
-              onEnded={() => setIdx((i) => (i === 1 ? 0 : i))}
+              onEnded={() => setIdx((i) => (i === 1 ? 2 : i))}
               aria-label="MedXFlow Voice AI agent answering patient calls alongside the reception team"
             />
           </div>
         </div>
       </div>
+      {/* Slide 3 — Telehealth */}
+      <div className={"slide" + (idx === 2 ? " slide-on" : "")} aria-hidden={idx !== 2}>
+        <div className="wrap hero-grid">
+          <div className="hero-copy">
+            <Eyebrow light>{t("hero.s3_eyebrow")}</Eyebrow>
+            <h2 className="hero-alt-h">{t("hero.s3_h2a")}<br /><em>{t("hero.s3_h2b")}</em></h2>
+            <p className="lead">{t("hero.s3_lead")}</p>
+            <div className="btn-row">
+              <a className="btn btn-gorse" href="/telehealth">{t("hero.s3_cta1")}</a>
+              <a className="btn btn-ghost" href="#pricing">{t("hero.s3_cta2")}</a>
+            </div>
+            <div className="hero-note">{t("hero.s3_note")}</div>
+          </div>
+          <div className="hero-art hero-art-full">
+            {soundBtn}
+            <video
+              ref={vid2}
+              src="/telehealth.mp4"
+              autoPlay
+              muted
+              playsInline
+              onEnded={() => setIdx((i) => (i === 2 ? 0 : i))}
+              aria-label="A patient joining a MedXFlow telehealth video visit from home"
+            />
+          </div>
+        </div>
+      </div>
 
-      <button className="s-arrow s-prev" aria-label="Previous slide" onClick={() => setIdx((i) => (i + 1) % 2)}>‹</button>
-      <button className="s-arrow s-next" aria-label="Next slide" onClick={() => setIdx((i) => (i + 1) % 2)}>›</button>
+      <button className="s-arrow s-prev" aria-label="Previous slide" onClick={() => setIdx((i) => (i + SLIDES - 1) % SLIDES)}>‹</button>
+      <button className="s-arrow s-next" aria-label="Next slide" onClick={() => setIdx((i) => (i + 1) % SLIDES)}>›</button>
       <div className="s-dots">
-        {[0, 1].map((i) => (
+        {[0, 1, 2].map((i) => (
           <button key={i} className={idx === i ? "on" : ""} aria-label={`Slide ${i + 1}`} onClick={() => setIdx(i)} />
         ))}
       </div>
