@@ -48,6 +48,9 @@ export default function Admin() {
   const [contactEmail, setContactEmail] = useState(null);
   const openContact = (email) => email && setContactEmail(email);
   const [openSession, setOpenSession] = useState(null);
+  const [seg, setSeg] = useState("human"); // traffic segment: human | bot | internal
+  const [pvPage, setPvPage] = useState(0);
+  const [leadPage, setLeadPage] = useState(0);
 
   const can = (m) => session?.role === "owner" || (session?.modules || []).includes(m);
 
@@ -127,11 +130,23 @@ export default function Admin() {
   }
 
   const { transcripts = [], visitors = [], pageviews = [], leads = [], counts = {} } = data || {};
-  const uniqueVisitors = new Set(pageviews.map((p) => p.visitorId).filter(Boolean)).size;
-  const topPages = tally(pageviews, (p) => p.path);
-  const topCountries = tally(pageviews, (p) => p.geo?.country);
-  const topReferrers = tally(pageviews, (p) => p.referrerDomain || (p.referrer ? "other" : "direct"));
-  const topCampaigns = tally(pageviews, (p) => p.utm?.campaign || p.utm?.source);
+  const SEG_LABEL = { human: "Real", bot: "Bots", internal: "You" };
+  const segments = counts.segments || { human: pageviews.length, bot: 0, internal: 0, total: pageviews.length };
+  // Everything on the Traffic tab respects the segment toggle (default: Real).
+  const shownPV = tab === "traffic" ? pageviews.filter((p) => (p.segment || "human") === seg) : pageviews;
+  // Drop our own domain from Top Referrers — it's internal-navigation self-referral.
+  const SELF_REF = /(?:^|\.)medxflow\.(?:ai|com|io)$|^localhost$|^127\.0\.0\.1$/i;
+  const uniqueVisitors = new Set(shownPV.map((p) => p.visitorId).filter(Boolean)).size;
+  const topPages = tally(shownPV, (p) => p.path);
+  const topCountries = tally(shownPV, (p) => p.geo?.country);
+  const topReferrers = tally(shownPV, (p) => {
+    const d = p.referrerDomain || (p.referrer ? "other" : "direct");
+    return SELF_REF.test(d) ? null : d; // tally() ignores falsy keys
+  });
+  const topCampaigns = tally(shownPV, (p) => p.utm?.campaign || p.utm?.source);
+  const PER = 25;
+  const pvSlice = shownPV.slice(pvPage * PER, pvPage * PER + PER);
+  const leadSlice = leads.slice(leadPage * PER, leadPage * PER + PER);
 
   return (
     <div className="ad-wrap ad-shell">
@@ -160,7 +175,7 @@ export default function Admin() {
         {!["campaigns", "financials", "contacts", "pipeline", "tickets", "settings"].includes(tab) && (
           <div className="ad-stats">
             <div className="ad-stat ad-stat-hot"><b>{counts.leads ?? leads.length}</b><span>Demo requests</span></div>
-            <div className="ad-stat"><b>{counts.pageviews ?? pageviews.length}</b><span>Pageviews</span></div>
+            <div className="ad-stat"><b>{tab === "traffic" ? shownPV.length : (counts.pageviews ?? pageviews.length)}</b><span>Pageviews{tab === "traffic" && seg !== "human" ? ` · ${SEG_LABEL[seg]}` : ""}</span></div>
             <div className="ad-stat"><b>{uniqueVisitors}</b><span>Unique visitors</span></div>
             <div className="ad-stat"><b>{counts.visitors ?? visitors.length}</b><span>Chat leads</span></div>
             <div className="ad-stat"><b>{counts.transcripts ?? transcripts.length}</b><span>Chat sessions</span></div>
@@ -186,7 +201,7 @@ export default function Admin() {
           {leads.length === 0 ? (
             <div className="ad-empty">No demo requests yet.</div>
           ) : (
-            <div className="ad-scroll">
+            <div className="ad-scroll ad-scroll-tall">
               <table>
                 <thead>
                   <tr>
@@ -202,7 +217,7 @@ export default function Admin() {
                   </tr>
                 </thead>
                 <tbody>
-                  {leads.map((l) => (
+                  {leadSlice.map((l) => (
                     <tr key={l.id} className="ct-row" onClick={() => openContact(l.email)}>
                       <td className="ad-nowrap">{fmt(l.at)}</td>
                       <td>{l.name || "—"}</td>
@@ -223,11 +238,26 @@ export default function Admin() {
               </table>
             </div>
           )}
+          <Pager page={leadPage} setPage={setLeadPage} total={leads.length} per={PER} />
         </div>
       )}
 
       {tab === "traffic" && (
         <>
+          <div className="ad-seg">
+            {["human", "bot", "internal"].map((s) => (
+              <button key={s} className={seg === s ? "on" : ""} onClick={() => { setSeg(s); setPvPage(0); }}>
+                {SEG_LABEL[s]} <span className="ad-seg-n">{segments[s] ?? 0}</span>
+              </button>
+            ))}
+          </div>
+          {segments.total > 0 && (
+            <div className="ad-filtered">
+              <b>{segments.total - segments.human}</b> of {segments.total} pageviews filtered —{" "}
+              <button className="ad-flink" onClick={() => { setSeg("bot"); setPvPage(0); }}>{segments.bot} bot</button>,{" "}
+              <button className="ad-flink" onClick={() => { setSeg("internal"); setPvPage(0); }}>{segments.internal} internal</button>
+            </div>
+          )}
           <div className="ad-insights">
             <InsightCard title="Top pages" rows={topPages} />
             <InsightCard title="Top countries" rows={topCountries} empty="No geo yet (shows on live site)" />
@@ -235,14 +265,15 @@ export default function Admin() {
             <InsightCard title="Top campaigns" rows={topCampaigns} empty="No UTM campaigns yet" />
           </div>
           <div className="ad-card">
-            {pageviews.length === 0 ? (
-              <div className="ad-empty">No traffic logged yet.</div>
+            {shownPV.length === 0 ? (
+              <div className="ad-empty">No {SEG_LABEL[seg].toLowerCase()} traffic in this view.</div>
             ) : (
-              <div className="ad-scroll">
+              <div className="ad-scroll ad-scroll-tall">
                 <table>
                   <thead>
                     <tr>
                       <th>When</th>
+                      <th>Segment · why</th>
                       <th>Location</th>
                       <th>IP</th>
                       <th>Device</th>
@@ -252,9 +283,17 @@ export default function Admin() {
                     </tr>
                   </thead>
                   <tbody>
-                    {pageviews.map((p) => (
+                    {pvSlice.map((p) => (
                       <tr key={p.id}>
                         <td className="ad-nowrap">{fmt(p.at)}</td>
+                        <td>
+                          <span className={"ad-seg-tag st-" + (p.segment || "human")}>{SEG_LABEL[p.segment || "human"]}</span>
+                          <div className="ad-reasons">
+                            {(p.reasons || []).length
+                              ? p.reasons.map((r) => <span key={r} className="ad-reason">{r}</span>)
+                              : <span className="ad-reason ad-reason-none">—</span>}
+                          </div>
+                        </td>
                         <td>{[p.geo?.city, p.geo?.country].filter(Boolean).join(", ") || "—"}</td>
                         <td className="ad-nowrap">{p.ip || "—"}</td>
                         <td className="ad-nowrap">
@@ -275,6 +314,7 @@ export default function Admin() {
                 </table>
               </div>
             )}
+            <Pager page={pvPage} setPage={setPvPage} total={shownPV.length} per={PER} />
           </div>
         </>
       )}
@@ -363,6 +403,25 @@ export default function Admin() {
       {contactEmail && (
         <ContactDetail pw={pw} email={contactEmail} onClose={() => setContactEmail(null)} onChanged={() => load(pw)} />
       )}
+    </div>
+  );
+}
+
+function Pager({ page, setPage, total, per }) {
+  const pages = Math.max(1, Math.ceil(total / per));
+  if (pages <= 1) return null;
+  const from = page * per + 1;
+  const to = Math.min(total, page * per + per);
+  return (
+    <div className="ad-pager">
+      <span className="ad-pager-info">{from}–{to} of {total}</span>
+      <div className="ad-pager-btns">
+        <button disabled={page === 0} onClick={() => setPage(0)}>« First</button>
+        <button disabled={page === 0} onClick={() => setPage(page - 1)}>‹ Prev</button>
+        <span className="ad-pager-cur">{page + 1} / {pages}</span>
+        <button disabled={page >= pages - 1} onClick={() => setPage(page + 1)}>Next ›</button>
+        <button disabled={page >= pages - 1} onClick={() => setPage(pages - 1)}>Last »</button>
+      </div>
     </div>
   );
 }
@@ -476,4 +535,37 @@ th{font-size:11.5px; text-transform:uppercase; letter-spacing:.06em; color:rgba(
 .ad-bar-fill{display:block; height:100%; background:linear-gradient(90deg,#1A5DAD,#3DDCC9); border-radius:999px}
 .ad-bar-n{flex:none; color:rgba(232,238,246,.7); font-variant-numeric:tabular-nums; min-width:26px; text-align:right}
 .ad-badge{display:inline-block; margin-left:8px; font-size:10.5px; padding:1px 7px; border-radius:999px; background:rgba(61,220,201,.15); color:#3DDCC9; vertical-align:middle}
+
+/* traffic segment toggle */
+.ad-seg{display:inline-flex; gap:4px; background:#081226; border:1px solid rgba(207,224,242,.14); border-radius:11px; padding:4px; margin-bottom:14px}
+.ad-seg button{background:transparent; border:none; color:rgba(232,238,246,.65); padding:8px 16px; border-radius:8px; font-size:13.5px; font-weight:700; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:7px}
+.ad-seg button:hover{color:#fff}
+.ad-seg button.on{background:#1A5DAD; color:#fff}
+.ad-seg-n{font-size:11.5px; font-weight:800; background:rgba(255,255,255,.16); padding:1px 7px; border-radius:999px; font-variant-numeric:tabular-nums}
+.ad-filtered{font-size:13px; color:rgba(232,238,246,.6); margin:-4px 0 16px}
+.ad-filtered b{color:#17C3B2}
+.ad-flink{background:none; border:none; color:#7FD8CE; font:inherit; font-size:13px; font-weight:700; cursor:pointer; padding:0; text-decoration:underline}
+.ad-flink:hover{color:#3DDCC9}
+
+/* per-row segment + reason codes */
+.ad-seg-tag{font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; padding:2px 8px; border-radius:999px}
+.st-human{background:rgba(61,220,201,.16); color:#3DDCC9}
+.st-bot{background:rgba(224,90,78,.18); color:#E05A4E}
+.st-internal{background:rgba(123,179,213,.18); color:#7FB3D5}
+.ad-reasons{display:flex; flex-wrap:wrap; gap:4px; margin-top:5px; max-width:260px}
+.ad-reason{font-family:'Spline Sans Mono',monospace; font-size:10px; padding:1px 6px; border-radius:5px; background:rgba(207,224,242,.1); color:rgba(232,238,246,.72)}
+.ad-reason-none{background:none; color:rgba(232,238,246,.35)}
+
+/* tall scroll + sticky header */
+.ad-scroll-tall{max-height:min(60vh,560px); overflow-y:auto}
+.ad-scroll-tall thead th{position:sticky; top:0; background:#0e2647; z-index:1}
+
+/* pagination */
+.ad-pager{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 14px; border-top:1px solid rgba(207,224,242,.09); flex-wrap:wrap}
+.ad-pager-info{font-size:12.5px; color:rgba(232,238,246,.55); font-variant-numeric:tabular-nums}
+.ad-pager-btns{display:flex; align-items:center; gap:6px}
+.ad-pager-btns button{background:transparent; border:1px solid rgba(207,224,242,.2); color:#E8EEF6; border-radius:8px; padding:6px 11px; font-size:12.5px; font-weight:600; cursor:pointer; font-family:inherit}
+.ad-pager-btns button:hover:not(:disabled){background:rgba(207,224,242,.08)}
+.ad-pager-btns button:disabled{opacity:.35; cursor:default}
+.ad-pager-cur{font-size:12.5px; color:rgba(232,238,246,.7); font-variant-numeric:tabular-nums; padding:0 4px}
 `;

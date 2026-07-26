@@ -73,7 +73,16 @@ export default async (req, context) => {
   // omit the Accept-Language *header* even when body.language is spoofed.
   const acceptLanguage = req.headers.get("accept-language") || null;
 
-  const id = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+  // Self-exclusion cookie (set by /debug/exclude-me). Read server-side; the
+  // cookie is HttpOnly so JS can't touch it, but the browser sends it here.
+  const cookieHeader = req.headers.get("cookie") || "";
+  const mxInternal = /(?:^|;\s*)_mx_internal=1(?:;|$)/.test(cookieHeader);
+
+  // Use the client-supplied event id so the confirmation beacon can target this
+  // exact event; fall back to a server id if it's missing or malformed.
+  const id =
+    (typeof body.eventId === "string" && /^[\w-]{6,64}$/.test(body.eventId) && body.eventId) ||
+    `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
   try {
     const store = getStore("pageviews");
@@ -103,7 +112,8 @@ export default async (req, context) => {
       accept_language: acceptLanguage,
       cf_ip_country: geo?.country?.code || null, // Netlify geo country (CF-equivalent)
       asn: null,
-      beacon_confirmed: null, // set later by the ~2s confirm beacon (Phase 3)
+      mx_internal: mxInternal, // true when the _mx_internal self-exclusion cookie is present
+      beacon_confirmed: null,  // set later by the ~2s confirm beacon (Phase 3)
       device: parseUA(ua),
       ua,
       language: body.language || null,

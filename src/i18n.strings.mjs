@@ -27,14 +27,14 @@ export const en = {
   },
 
   hero: {
-    s1_eyebrow: "Product · MedXFlow Check-in kiosk",
-    s1_h1a: "Meet your new",
-    s1_h1b: "AI front desk assistant",
+    s1_eyebrow: "Product · MedXFlow Revenue Cycle AI",
+    s1_h1a: "Your revenue cycle,",
+    s1_h1b: "now on autopilot.",
     s1_lead:
-      "A self check-in kiosk that greets your patients, collects the copay by card, verifies their details — and writes it all straight into your EHR: Epic and athenahealth.",
-    s1_cta1: "See the kiosk",
+      "One AI agent runs the whole cycle — scheduling, eligibility, coding, claims, payments and collections — writing straight into Epic and athenahealth. No busywork, nothing dropped.",
+    s1_cta1: "See how it works",
     s1_cta2: "Pricing",
-    s1_note: "Integrated with your EHR · Hardware included · $250/month",
+    s1_note: "Integrated with your EHR · Live in two weeks · $250/month",
     s2_eyebrow: "Product · MedXFlow Voice",
     s2_h2a: "Every call answered.",
     s2_h2b: "All of them, at once.",

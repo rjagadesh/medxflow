@@ -1,5 +1,6 @@
 import { getStore } from "@netlify/blobs";
 import { authorize, json } from "../lib/auth.mjs";
+import { classifyEvents, loadDatacenterCidrs } from "../lib/traffic-segments.mjs";
 
 async function dumpStore(name, limit) {
   const store = getStore(name);
@@ -33,18 +34,32 @@ export default async (req) => {
     ]);
     transcripts.sort((a, b) => String(b.updatedAt || "").localeCompare(String(a.updatedAt || "")));
     visitors.sort((a, b) => String(b.at || "").localeCompare(String(a.at || "")));
-    pageviews.sort((a, b) => String(b.at || "").localeCompare(String(a.at || "")));
     leads.sort((a, b) => String(b.at || "").localeCompare(String(a.at || "")));
+
+    // Classify traffic at query time (never persisted → rule fixes apply
+    // retroactively). Cross-event detection needs the whole batch, so classify
+    // before the display sort.
+    let classified = pageviews;
+    let segCounts = { human: 0, bot: 0, internal: 0, total: pageviews.length };
+    if (pageviews.length) {
+      const cidrs = await loadDatacenterCidrs().catch(() => undefined);
+      const res = classifyEvents(pageviews, cidrs ? { cidrs } : {});
+      classified = res.events;
+      segCounts = res.counts;
+    }
+    classified.sort((a, b) => String(b.at || "").localeCompare(String(a.at || "")));
+
     return json({
       transcripts,
       visitors,
-      pageviews,
+      pageviews: classified, // each carries { segment, reasons }
       leads,
       counts: {
         transcripts: transcripts.length,
         visitors: visitors.length,
         pageviews: pageviews.length,
         leads: leads.length,
+        segments: segCounts, // { human, bot, internal, total }
       },
     });
   } catch (err) {

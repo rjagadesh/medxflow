@@ -286,7 +286,7 @@ function Hero() {
             {soundBtn}
             <video
               ref={vid0}
-              src={IMG.heroVideo}
+              src="/medxflow-header.mp4"
               autoPlay
               muted
               playsInline
