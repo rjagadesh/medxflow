@@ -34,7 +34,7 @@ export const en = {
       "One AI agent runs the whole cycle — scheduling, eligibility, coding, claims, payments and collections — writing straight into Epic and athenahealth. No busywork, nothing dropped.",
     s1_cta1: "See how it works",
     s1_cta2: "Pricing",
-    s1_note: "Integrated with your EHR · Live in two weeks · $250/month",
+    s1_note: "Integrated with your EHR · Live in a week · $250/month",
     s2_eyebrow: "Product · MedXFlow Voice",
     s2_h2a: "Every call answered.",
     s2_h2b: "All of them, at once.",
@@ -201,7 +201,7 @@ export const en = {
     q1: "Is patient data secure and HIPAA compliant?",
     a1: "Yes. MedXFlow handles PHI to HIPAA standards and offers a Business Associate Agreement (BAA), with security controls aligned to SOC 2 Type II. Everything is stored in US data centers, encrypted in transit and at rest, with least-privilege access and full audit logging. We never sell data or use patient information to train public models.",
     q2: "How long does setup take?",
-    a2: "Most practices are live within two weeks. We connect to your EHR (Epic or athenahealth), configure your call flows and appointment types, and run a supervised pilot before MedXFlow answers live calls.",
+    a2: "Most practices are live within a week. We connect to your EHR (Epic or athenahealth), configure your call flows and appointment types, and run a supervised pilot before MedXFlow answers live calls.",
     q3: "What are the contract terms?",
     a3: "Founding practices get a 60-day trial, free setup, and pricing locked for 24 months. After the trial it's a simple monthly plan — no long lock-in, cancel with 30 days' notice.",
     q4: "What happens when the AI can't handle a call?",
@@ -213,9 +213,9 @@ export const en = {
   },
 
   cta: {
-    h2a: "Be one of the twenty",
-    h2b: "founding practices",
-    lead: "Free setup, a 60-day trial, and pricing locked for 24 months. We'll have MedXFlow Voice answering your calls within two weeks.",
+    h2a: "The revenue-cycle AI",
+    h2b: "practices run on.",
+    lead: "MedXFlow already keeps the phones answered, patients checked in, and claims paid for practices across the country. See what it does on your own numbers — book a 15-minute demo and we'll go live within a week.",
     formTitle: "Request your demo",
   },
 
@@ -305,7 +305,7 @@ export const en = {
     pricing: "Pricing is simple and monthly, with no lock-in — start with Voice, Check-in, or the full Front Desk.",
     about: "MedXFlow is built by a US team who have run the front desk themselves.",
     faq: "Common questions — data security, setup time, and how the AI hands over to your staff — are all answered here.",
-    cta: "Ready to see it on your own calls? Book a free fifteen-minute demo, and we'll have MedXFlow answering within two weeks.",
+    cta: "Ready to see it on your own calls? Book a free fifteen-minute demo, and we'll have MedXFlow answering within a week.",
   },
 };
 

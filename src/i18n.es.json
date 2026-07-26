@@ -18,7 +18,7 @@
   "hero.s1_lead": "Un agente de IA gestiona todo el ciclo — programación, elegibilidad, codificación, reclamaciones, pagos y cobros — escribiendo directamente en Epic y athenahealth. Sin tareas manuales, sin nada que se pierda.",
   "hero.s1_cta1": "Ver cómo funciona",
   "hero.s1_cta2": "Precios",
-  "hero.s1_note": "Integrado con tu EHR · Operativo en dos semanas · $250/mes",
+  "hero.s1_note": "Integrado con tu EHR · Operativo en una semana · $250/mes",
   "hero.s2_eyebrow": "Producto · MedXFlow Voice",
   "hero.s2_h2a": "Cada llamada respondida.",
   "hero.s2_h2b": "Todas ellas, al mismo tiempo.",
@@ -151,7 +151,7 @@
   "faq.q1": "¿Son seguros los datos del paciente y compatibles con HIPAA?",
   "faq.a1": "Sí. MedXFlow maneja PHI según los estándares HIPAA y ofrece un Acuerdo de Asociado de Negocio (BAA), con controles de seguridad alineados con SOC 2 Type II. Todo se almacena en centros de datos de EE.UU., cifrado en tránsito y en reposo, con acceso de privilegios mínimos y registro de auditoría completo. Nunca vendemos datos ni usamos información del paciente para entrenar modelos públicos.",
   "faq.q2": "¿Cuánto tiempo tarda la configuración?",
-  "faq.a2": "La mayoría de las prácticas están activas en dos semanas. Conectamos con tu EHR (Epic o athenahealth), configuramos tus flujos de llamadas y tipos de citas, y ejecutamos un piloto supervisado antes de que MedXFlow responda llamadas en vivo.",
+  "faq.a2": "La mayoría de las prácticas están activas en una semana. Conectamos con tu EHR (Epic o athenahealth), configuramos tus flujos de llamadas y tipos de citas, y ejecutamos un piloto supervisado antes de que MedXFlow responda llamadas en vivo.",
   "faq.q3": "¿Cuáles son los términos del contrato?",
   "faq.a3": "Las prácticas fundadoras obtienen una prueba de 60 días, configuración gratuita y precios fijos por 24 meses. Después de la prueba, es un plan mensual simple — sin bloqueo prolongado, cancela con 30 días de aviso.",
   "faq.q4": "¿Qué sucede cuando la IA no puede manejar una llamada?",
@@ -160,9 +160,9 @@
   "faq.a5": "Sí. MedXFlow se sitúa junto a tu número de teléfono existente y escribe reservas, llegadas y pagos directamente en Epic y athenahealth. Sin rip-and-replace.",
   "faq.q6": "¿Qué idiomas admite?",
   "faq.a6": "Inglés y español actualmente, con una voz cálida y natural y opciones de accesibilidad (tipo más grande, ritmo más lento) para pacientes mayores.",
-  "cta.h2a": "Sé una de las veinte",
-  "cta.h2b": "prácticas fundadoras",
-  "cta.lead": "Configuración gratuita, una prueba de 60 días y precios fijos por 24 meses. Tendremos MedXFlow Voice respondiendo tus llamadas en dos semanas.",
+  "cta.h2a": "La IA de ciclo de ingresos",
+  "cta.h2b": "en la que confían las prácticas.",
+  "cta.lead": "MedXFlow ya mantiene los teléfonos atendidos, los pacientes registrados y las reclamaciones pagadas para prácticas de todo el país. Descubre lo que hace con tus propios números — reserva una demo de 15 minutos y estaremos operativos en una semana.",
   "cta.formTitle": "Solicita tu demostración",
   "lead.name": "Nombre",
   "lead.email": "Correo electrónico de trabajo",
@@ -231,5 +231,5 @@
   "tour.pricing": "Los precios son simples y mensuales, sin bloqueo — comienza con Voice, Check-in o el Front Desk completo.",
   "tour.about": "MedXFlow es construido por un equipo de EE.UU. que ha trabajado en el front desk ellos mismos.",
   "tour.faq": "Las preguntas comunes — seguridad de datos, tiempo de configuración y cómo la IA se entrega a tu personal — todas se responden aquí.",
-  "tour.cta": "¿Listo para verlo en tus propias llamadas? Reserva una demostración gratuita de quince minutos, y tendremos MedXFlow respondiendo en dos semanas."
+  "tour.cta": "¿Listo para verlo en tus propias llamadas? Reserva una demostración gratuita de quince minutos, y tendremos MedXFlow respondiendo en una semana."
 }

@@ -684,7 +684,7 @@ function CTA() {
             <p className="lead-light">{t("cta.lead")}</p>
             <div className="cta-contact">
               <a href="tel:+12103969718">📞 (210) 396-9718</a>
-              <a href="mailto:hello@medxflow.com">✉ hello@medxflow.com</a>
+              <a href="mailto:sales@medxflow.ai">✉ sales@medxflow.ai</a>
             </div>
           </Reveal>
         </div>
@@ -707,7 +707,7 @@ export function Footer() {
         <div className="brand brand-foot"><ShamrockMark size={24} variant="light" /><span>MedXFlow <b>Health</b></span></div>
         <div className="foot-links">
           <a href="tel:+12103969718">📞 (210) 396-9718</a>
-          <a href="mailto:hello@medxflow.com">hello@medxflow.com</a>
+          <a href="mailto:sales@medxflow.ai">sales@medxflow.ai</a>
           <span>{t("footer.location")}</span>
         </div>
         <div className="foot-legal">{t("footer.legal")}</div>
