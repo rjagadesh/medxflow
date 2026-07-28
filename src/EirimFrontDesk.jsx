@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { LanguageProvider, useI18n, LangSwitcher } from "./i18n.jsx";
 import Tour from "./Tour.jsx";
-import { rcmProducts, serviceProducts } from "./products.data.js";
+import { rcmProducts, engagementProducts, serviceProducts } from "./products.data.js";
 
 /* ============ EIRIM FRONT DESK — GP site (React) ============ */
 
@@ -112,6 +112,15 @@ export function Nav() {
                 </div>
 
                 <div className="nav-dd-col">
+                  <div className="nav-dd-head">Patient Engagement</div>
+                  {engagementProducts.map((p) => (
+                    <a key={p.slug} href={`/products/${p.slug}`} role="menuitem">
+                      <span className="nav-dd-em">{p.icon}</span>{p.name}
+                    </a>
+                  ))}
+                </div>
+
+                <div className="nav-dd-col">
                   <div className="nav-dd-head">Managed Billing Services</div>
                   {serviceProducts.map((p) => (
                     <a key={p.slug} href={`/products/${p.slug}`} role="menuitem">
@@ -132,7 +141,6 @@ export function Nav() {
             </div>
           </div>
           <a href="#cta">{t("nav.contact")}</a>
-          <a href="/#pricing">{t("nav.pricing")}</a>
           <a href="/#faq">{t("nav.faq")}</a>
           <a href="#top" className="nav-tour" onClick={(e) => { e.preventDefault(); startTour(); }}>▶ {t("nav.tour")}</a>
           <a href="tel:+12103969718" className="nav-phone">📞 (210) 396-9718</a>
@@ -278,7 +286,7 @@ function Hero() {
             <p className="lead">{t("hero.s1_lead")}</p>
             <div className="btn-row">
               <a className="btn btn-gorse" href="#checkin">{t("hero.s1_cta1")}</a>
-              <a className="btn btn-ghost" href="#pricing">{t("hero.s1_cta2")}</a>
+              <a className="btn btn-ghost" href="#cta">{t("hero.s1_cta2")}</a>
             </div>
             <div className="hero-note">{t("hero.s1_note")}</div>
           </div>
@@ -305,7 +313,7 @@ function Hero() {
             <p className="lead">{t("hero.s2_lead")}</p>
             <div className="btn-row">
               <a className="btn btn-gorse" href="#voice">{t("hero.s2_cta1")}</a>
-              <a className="btn btn-ghost" href="#pricing">{t("hero.s2_cta2")}</a>
+              <a className="btn btn-ghost" href="#cta">{t("hero.s2_cta2")}</a>
             </div>
             <div className="hero-note">{t("hero.s2_note")}</div>
           </div>
@@ -332,7 +340,7 @@ function Hero() {
             <p className="lead">{t("hero.s3_lead")}</p>
             <div className="btn-row">
               <a className="btn btn-gorse" href="/telehealth">{t("hero.s3_cta1")}</a>
-              <a className="btn btn-ghost" href="#pricing">{t("hero.s3_cta2")}</a>
+              <a className="btn btn-ghost" href="#cta">{t("hero.s3_cta2")}</a>
             </div>
             <div className="hero-note">{t("hero.s3_note")}</div>
           </div>
@@ -438,7 +446,7 @@ function Voice() {
           </Reveal>
         </div>
         <Reveal delay={150}>
-          <img className="voice-photo" src="/voice-ai-image.webp" alt="MedXFlow Voice AI receptionist answering patient calls for a clinic" loading="lazy" decoding="async" width="1512" height="1008" />
+          <img className="voice-photo" src="/voice-ai-image.webp" alt="MedXFlow Voice AI receptionist answering patient calls for a clinic" loading="lazy" decoding="async" width="1536" height="1024" />
           <CallDemo header="MEDXFLOW VOICE · LIVE" sub="MON 08:02 · 23 CALLS IN PROGRESS" />
         </Reveal>
       </div>
@@ -735,7 +743,6 @@ export function Footer() {
         <div className="foot-links">
           <a href="tel:+12103969718">📞 (210) 396-9718</a>
           <a href="mailto:sales@medxflow.ai">sales@medxflow.ai</a>
-          <span>{t("footer.location")}</span>
         </div>
         <div className="foot-legal">{t("footer.legal")}</div>
       </div>
@@ -954,16 +961,13 @@ export default function EirimFrontDesk() {
         <style>{CSS}</style>
         <Nav />
       <Hero />
-      <Stats />
       <Problem />
       <Voice />
       <Checkin />
       <Handoff />
       <Integrations />
       <Compliance />
-      <ROI />
       <About />
-        <Pricing />
         <FAQ />
         <CTA />
         <Footer />
@@ -1030,7 +1034,7 @@ export const CSS = `
 .nav-scrolled ~ * .nav-dd-mega, .nav-dd-mega{top:57px}
 .nav-dd:hover .nav-dd-mega, .nav-dd:focus-within .nav-dd-mega{transform:none}
 .nav-dd-mega::before{content:""; position:absolute; top:-20px; left:0; right:0; height:20px}
-.nav-dd-mega-inner{display:grid; grid-template-columns:repeat(5,1fr); gap:10px 30px; padding:30px clamp(20px,3.5vw,56px) 34px}
+.nav-dd-mega-inner{display:grid; grid-template-columns:repeat(6,1fr); gap:10px 26px; padding:30px clamp(20px,3vw,48px) 34px}
 .nav-dd-col{display:flex; flex-direction:column; gap:1px; min-width:0}
 .nav-dd-col-span2{grid-column:span 2}
 .nav-dd-subgrid{display:grid; grid-template-columns:1fr 1fr; gap:1px 20px}

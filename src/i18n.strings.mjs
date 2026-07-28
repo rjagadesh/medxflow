@@ -19,7 +19,7 @@ export const en = {
     book: "Book a demo",
     p_kiosk: "AI Front Desk Kiosk",
     p_voice: "Voice AI",
-    p_handoff: "Human Fail-safe",
+    p_handoff: "AI backed by Human",
     p_telehealth: "Telehealth",
     p_agents: "AI Agents",
     p_integrators: "System Integrators",
@@ -33,23 +33,23 @@ export const en = {
     s1_lead:
       "One AI agent runs the whole cycle — scheduling, eligibility, coding, claims, payments and collections — writing straight into Epic and athenahealth. No busywork, nothing dropped.",
     s1_cta1: "See how it works",
-    s1_cta2: "Pricing",
-    s1_note: "Integrated with your EHR · Live in a week · $250/month",
+    s1_cta2: "Book a demo",
+    s1_note: "Integrated with your EHR · Live in a week",
     s2_eyebrow: "Product · MedXFlow Voice",
     s2_h2a: "Every call answered.",
     s2_h2b: "All of them, at once.",
     s2_lead:
       "When the 8am rush hits, MedXFlow Voice picks up every line simultaneously — booking, rescheduling and confirming by text, straight into your appointment book. No busy signal. No voicemail. Ever.",
     s2_cta1: "Hear it work",
-    s2_cta2: "Pricing",
-    s2_note: "Unlimited simultaneous calls · 24/7 · $250/month + $0.10/min",
+    s2_cta2: "Book a demo",
+    s2_note: "Unlimited simultaneous calls · 24/7",
     s3_eyebrow: "Product · MedXFlow Telehealth",
     s3_h2a: "See patients anywhere,",
     s3_h2b: "in one tap.",
     s3_lead:
       "MedXFlow Telehealth turns any appointment into a secure video visit — no apps, no downloads. The patient taps a link, joins in their browser, and every note writes back into Epic and athenahealth.",
     s3_cta1: "See telehealth",
-    s3_cta2: "Pricing",
+    s3_cta2: "Book a demo",
     s3_note: "No downloads · US-hosted · Integrated with your EHR",
     playSound: "Play sound",
     mute: "Mute",
@@ -106,7 +106,7 @@ export const en = {
   },
 
   handoff: {
-    eyebrow: "Human fail-safe",
+    eyebrow: "AI backed by Human",
     h2a: "AI never guesses.",
     h2b: "It hands you the call.",
     lead: "Every AI touchpoint — Voice, the kiosk and web chat — has a human backstop. The moment the AI is unsure, hits an error, or a patient asks for a person, it stops and passes a complete record to your team. Nothing is dropped, nothing is faked.",
@@ -211,7 +211,7 @@ export const en = {
     q2: "How long does setup take?",
     a2: "Most practices are live within a week. We connect to your EHR (Epic or athenahealth), configure your call flows and appointment types, and run a supervised pilot before MedXFlow answers live calls.",
     q3: "What are the contract terms?",
-    a3: "Founding practices get a 60-day trial, free setup, and pricing locked for 24 months. After the trial it's a simple monthly plan — no long lock-in, cancel with 30 days' notice.",
+    a3: "Practices get a 60-day trial and free setup, with no long lock-in — cancel with 30 days' notice.",
     q4: "What happens when the AI can't handle a call?",
     a4: "MedXFlow knows its limits. Anything clinical, urgent, or out of scope is warm-transferred to your team or flagged for callback, with a full transcript. It augments your front desk — it never overrides clinical judgment.",
     q5: "Does it work with our phone system and EHR?",
@@ -250,7 +250,6 @@ export const en = {
   },
 
   footer: {
-    location: "Dallas, TX",
     legal: "HIPAA compliant · SOC 2 aligned · BAAs available · US data centers · © 2026 MedXFlow Health",
   },
 

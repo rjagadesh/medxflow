@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { LanguageProvider } from "./i18n.jsx";
 import { Nav, Footer, Reveal, Eyebrow, BookDemo, CSS } from "./EirimFrontDesk.jsx";
-import { PRODUCTS, platformProducts, rcmProducts, serviceProducts, bySlug } from "./products.data.js";
+import { PRODUCTS, platformProducts, rcmProducts, engagementProducts, serviceProducts, bySlug } from "./products.data.js";
 
 const openDemo = () => window.dispatchEvent(new Event("eirim:book-demo"));
 
@@ -299,6 +299,30 @@ export function ProductsIndex() {
                     <div className="pp-index-top">
                       <span className="pp-index-ic">{r.icon}</span>
                       <span className="pp-index-step">Step {r.step}</span>
+                    </div>
+                    <h3>{r.name}</h3>
+                    <p>{r.tagline}</p>
+                    <span className="pp-index-link">Learn more →</span>
+                  </a>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="sec">
+          <div className="wrap">
+            <Reveal>
+              <Eyebrow>Patient Access &amp; Engagement</Eyebrow>
+              <h2>Keep patients on the books</h2>
+            </Reveal>
+            <div className="pp-index-grid">
+              {engagementProducts.map((r) => (
+                <Reveal key={r.slug}>
+                  <a className="pp-index-card" href={`/products/${r.slug}`}>
+                    <div className="pp-index-top">
+                      <span className="pp-index-ic">{r.icon}</span>
+                      <span className="pp-index-step">Engagement</span>
                     </div>
                     <h3>{r.name}</h3>
                     <p>{r.tagline}</p>

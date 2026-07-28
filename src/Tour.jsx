@@ -18,8 +18,6 @@ const STEPS = [
   { id: "voice", key: "tour.voice" },
   { id: "checkin", key: "tour.checkin" },
   { id: "integrations", key: "tour.integrations" },
-  { id: "roi", key: "tour.roi" },
-  { id: "pricing", key: "tour.pricing" },
   { id: "about", key: "tour.about" },
   { id: "faq", key: "tour.faq" },
   { id: "cta", key: "tour.cta" },

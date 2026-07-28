@@ -8,6 +8,7 @@
 export const CATEGORIES = {
   platform: "Platforms",
   rcm: "Revenue Cycle Management",
+  engagement: "Patient Access & Engagement",
   services: "Managed Services",
 };
 
@@ -335,6 +336,102 @@ export const PRODUCTS = [
     stat: { n: 99.99, suffix: "%", label: "uptime SLA — carrier-grade cloud voice your practice can rely on" },
   },
   {
+    slug: "appointment-reminders",
+    category: "engagement",
+    step: 0,
+    icon: "🔔",
+    eyebrow: "Patient Engagement · Reminders",
+    name: "Appointment Reminders",
+    h1a: "Fewer no-shows,",
+    h1b: "on autopilot.",
+    tagline:
+      "Automated text, email and voice reminders with one-tap confirm and reschedule — cutting no-shows and filling gaps, synced to your EHR schedule.",
+    overview:
+      "No-shows quietly drain a practice's schedule and revenue. MedXFlow reminders reach every patient on the channel they actually use — text, email or voice — with a cadence you control. Patients confirm, cancel or reschedule in one tap, and every response writes back to your EHR in real time so the front desk always sees an accurate day.",
+    features: [
+      ["💬", "Multi-channel reminders", "Text, email and automated voice — sent on the channel each patient prefers, in English or Spanish."],
+      ["👍", "One-tap confirm & reschedule", "Patients confirm or move their appointment from the message; changes sync straight to the EHR."],
+      ["⏱", "Configurable cadence", "Reminder timing and follow-ups you set per visit type — a week out, the day before, the morning of."],
+      ["📥", "Waitlist backfill", "When a slot frees up, the next waitlisted patient is offered it automatically — no empty chairs."],
+    ],
+    steps: [
+      ["Schedule syncs", "Appointments flow in from Epic and athenahealth automatically."],
+      ["Reminders go out", "Patients get timed reminders and confirm or reschedule in one tap."],
+      ["The book stays full", "Responses write back live, and freed slots are offered to the waitlist."],
+    ],
+    benefits: [
+      "Materially fewer no-shows and late cancellations",
+      "A fuller schedule with automatic waitlist backfill",
+      "Less phone time for the front desk",
+      "Accurate, real-time schedule in your EHR",
+    ],
+    stat: { n: 30, suffix: "%", label: "typical drop in no-shows once automated reminders are running" },
+  },
+  {
+    slug: "recall-campaigns",
+    category: "engagement",
+    step: 0,
+    icon: "🔁",
+    eyebrow: "Patient Engagement · Recall",
+    name: "Recall Campaigns",
+    h1a: "Bring patients back",
+    h1b: "for the care they're due.",
+    tagline:
+      "Reach patients overdue for visits, screenings and follow-ups — recall lists built from your EHR, delivered by text and email, and booked in a tap.",
+    overview:
+      "Every practice has patients who've fallen through the cracks — a screening not booked, a follow-up never scheduled, an annual visit long overdue. MedXFlow builds recall lists straight from your EHR, reaches those patients automatically with a friendly nudge, and lets them self-book in one tap. It's found revenue and better continuity of care, without the front desk making a single call.",
+    features: [
+      ["🗂", "EHR-built recall lists", "Automatically surface patients overdue for visits, screenings, labs or chronic-care follow-up."],
+      ["📣", "Automated outreach", "Personalized text and email campaigns on a schedule, in English or Spanish — no manual list work."],
+      ["📆", "One-tap self-booking", "Patients book straight from the message into an open slot, written back to your EHR."],
+      ["🎯", "Segmentation & tracking", "Target by condition, provider or last-visit date, and track who booked, came in and paid."],
+    ],
+    steps: [
+      ["Find the gaps", "Recall lists are generated from your EHR by overdue rule."],
+      ["Reach out automatically", "Patients get a personalized nudge with a booking link."],
+      ["They book, you measure", "Self-booked visits write back, and campaign results are tracked end to end."],
+    ],
+    benefits: [
+      "Reactivate lapsed and overdue patients at scale",
+      "Recovered revenue with no extra front-desk effort",
+      "Better continuity of care and preventive follow-up",
+      "Clear ROI — bookings and revenue per campaign",
+    ],
+    stat: { n: 20, suffix: "%", label: "of overdue patients typically re-book from an automated recall campaign" },
+  },
+  {
+    slug: "pre-authorization",
+    category: "engagement",
+    step: 0,
+    icon: "🔐",
+    eyebrow: "Patient Access · Prior authorization",
+    name: "Pre-Authorization",
+    h1a: "Prior auths, cleared",
+    h1b: "before they hold you up.",
+    tagline:
+      "Detect what needs prior authorization, submit and track it automatically, and clear approvals before the visit — so care isn't delayed or denied.",
+    overview:
+      "Prior authorization is one of the biggest sources of delayed care and denied claims. MedXFlow flags services that need authorization the moment they're ordered or scheduled, submits the request to the payer with the right documentation, and tracks it to approval — surfacing anything at risk so staff act before the visit, not after the denial.",
+    features: [
+      ["🔎", "Auto-detect requirements", "Payer- and plan-specific rules flag which orders and visits need authorization, up front."],
+      ["📤", "Submit with documentation", "Requests go to the payer with the clinical documentation attached — no chasing forms."],
+      ["📡", "Live status tracking", "Every auth is tracked to approval, with at-risk and expiring authorizations surfaced early."],
+      ["🛑", "Denial prevention", "Nothing is delivered un-authorized, so auth-related denials and write-offs drop sharply."],
+    ],
+    steps: [
+      ["Requirement detected", "The moment a service is ordered or booked, auth rules flag whether it's needed."],
+      ["Request submitted & tracked", "MedXFlow files it with documentation and tracks it to a decision."],
+      ["Cleared before the visit", "Approved authorizations post to the record; at-risk cases are escalated to staff."],
+    ],
+    benefits: [
+      "Care delivered on time, not delayed by paperwork",
+      "Far fewer authorization-related denials and write-offs",
+      "Staff hours saved on portals and payer phone calls",
+      "Every authorization tracked, documented and auditable",
+    ],
+    stat: { n: 25, suffix: "%", label: "of denials are auth-related industry-wide — prevented before the visit" },
+  },
+  {
     slug: "managed-billing",
     category: "services",
     step: 0,
@@ -371,4 +468,5 @@ export const PRODUCTS = [
 export const bySlug = (slug) => PRODUCTS.find((p) => p.slug === slug) || null;
 export const platformProducts = PRODUCTS.filter((p) => p.category === "platform");
 export const rcmProducts = PRODUCTS.filter((p) => p.category === "rcm").sort((a, b) => a.step - b.step);
+export const engagementProducts = PRODUCTS.filter((p) => p.category === "engagement");
 export const serviceProducts = PRODUCTS.filter((p) => p.category === "services");

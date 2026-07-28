@@ -72,18 +72,28 @@ export default function Seo({ pw }) {
           ["<html lang> + viewport", mark(home.lang && home.viewport, false), home.lang ? `lang=${home.lang}` : "missing"],
         ];
 
-        // Per-page checks
-        const pages = routes.map((r) => {
+        // Per-page checks — fetch each route's served HTML and confirm it ships
+        // its OWN head (prerendered), rather than the homepage card.
+        const routeHtmls = await Promise.all(
+          routes.map((r) => fetch(r.path, { headers: { accept: "text/html" } }).then((res) => res.text()).catch(() => ""))
+        );
+        const pages = routes.map((r, idx) => {
           const tLen = (r.title || "").length, dLen = (r.desc || "").length;
+          const rdoc = new DOMParser().parseFromString(routeHtmls[idx] || "", "text/html");
+          const ogu = rdoc.querySelector('meta[property="og:url"]')?.getAttribute("content") || "";
+          let ownHead = false;
+          try { ownHead = (new URL(ogu).pathname.replace(/\/$/, "") || "/") === r.path; } catch {}
+          const hasWebPage = [...rdoc.querySelectorAll('script[type="application/ld+json"]')]
+            .some((s) => /"WebPage"/.test(s.textContent || ""));
+          const isHome = r.path === "/";
           return {
             path: r.path,
             title: r.title, desc: r.desc,
             titleOk: mark(tLen > 0 && tLen <= TITLE_MAX, tLen === 0 || tLen > TITLE_MAX || tLen < TITLE_MIN),
             descOk: mark(dLen >= DESC_MIN && dLen <= DESC_MAX, dLen > 0),
             inSitemap: sitemapPaths.has(r.path),
-            // Non-home pages share the homepage OG card (SPA, no prerender yet).
-            ogOk: r.home ? "pass" : "warn",
-            jsonld: r.home ? "pass" : "warn",
+            ogOk: ownHead ? "pass" : "warn",
+            jsonld: isHome || hasWebPage ? "pass" : "warn",
           };
         });
 
@@ -153,7 +163,7 @@ export default function Seo({ pw }) {
                 </tbody>
               </table>
             </div>
-            <div className="seo-note">⚠️ on OG/JSON-LD for deep pages = they inherit the homepage social card (SPA, no prerender). Add a build-time prerender step to give each page its own card.</div>
+            <div className="seo-note">Each row's OG/JSON-LD is checked against the route's actual served HTML. ⚠️ means it's still serving the homepage card — expected in local dev (Vite serves the SPA shell); the production build prerenders every route (<code>scripts/prerender.mjs</code>), so these turn ✅ on the live site.</div>
           </div>
 
           <div className="ad-card seo-card">
