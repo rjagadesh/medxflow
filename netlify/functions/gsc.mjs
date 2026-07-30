@@ -73,17 +73,27 @@ export default async (req) => {
     const start = new Date(Date.now() - 30 * 864e5);
     const range = { startDate: ymd(start), endDate: ymd(end) };
 
-    const [totalsRes, rowsRes] = await Promise.all([
+    const [totalsRes, rowsRes, pagesRes] = await Promise.all([
       query(token, siteUrl, { ...range }),
-      query(token, siteUrl, { ...range, dimensions: ["query"], rowLimit: 20 }),
+      query(token, siteUrl, { ...range, dimensions: ["query"], rowLimit: 25 }),
+      query(token, siteUrl, { ...range, dimensions: ["page"], rowLimit: 25 }),
     ]);
+    const totals = totalsRes.rows?.[0] || { clicks: 0, impressions: 0, ctr: 0, position: 0 };
+    const rows = (rowsRes.rows || []).map((r) => ({
+      query: r.keys?.[0] || "—",
+      clicks: r.clicks, impressions: r.impressions, ctr: r.ctr, position: r.position,
+    }));
 
     return json({
       configured: true,
       range,
-      totals: totalsRes.rows?.[0] || { clicks: 0, impressions: 0, ctr: 0, position: 0 },
-      rows: (rowsRes.rows || []).map((r) => ({
-        query: r.keys?.[0] || "—",
+      totals,
+      rows,
+      // Google anonymizes low-volume queries; flag when impressions exist but no
+      // query rows came back, so the UI can explain the empty table.
+      queriesHidden: totals.impressions > 0 && rows.length === 0,
+      pages: (pagesRes.rows || []).map((r) => ({
+        page: (() => { try { return new URL(r.keys?.[0]).pathname || "/"; } catch { return r.keys?.[0] || "—"; } })(),
         clicks: r.clicks, impressions: r.impressions, ctr: r.ctr, position: r.position,
       })),
     });

@@ -190,22 +190,53 @@ export default function Seo({ pw }) {
                   <div className="ad-stat"><b>{gsc.totals?.ctr != null ? (gsc.totals.ctr * 100).toFixed(1) + "%" : "—"}</b><span>CTR</span></div>
                   <div className="ad-stat"><b>{gsc.totals?.position != null ? gsc.totals.position.toFixed(1) : "—"}</b><span>Avg. position</span></div>
                 </div>
-                <div className="ad-scroll ad-scroll-tall">
-                  <table>
-                    <thead><tr><th>Query</th><th>Clicks</th><th>Impressions</th><th>CTR</th><th>Position</th></tr></thead>
-                    <tbody>
-                      {(gsc.rows || []).map((r) => (
-                        <tr key={r.query}>
-                          <td>{r.query}</td>
-                          <td>{r.clicks}</td>
-                          <td>{r.impressions}</td>
-                          <td>{(r.ctr * 100).toFixed(1)}%</td>
-                          <td>{r.position.toFixed(1)}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
+                <div className="seo-gsc-sub">Top queries</div>
+                {(gsc.rows || []).length ? (
+                  <div className="ad-scroll ad-scroll-tall">
+                    <table>
+                      <thead><tr><th>Query</th><th>Clicks</th><th>Impressions</th><th>CTR</th><th>Position</th></tr></thead>
+                      <tbody>
+                        {gsc.rows.map((r) => (
+                          <tr key={r.query}>
+                            <td>{r.query}</td>
+                            <td>{r.clicks}</td>
+                            <td>{r.impressions}</td>
+                            <td>{(r.ctr * 100).toFixed(1)}%</td>
+                            <td>{r.position.toFixed(1)}</td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                ) : (
+                  <div className="seo-gsc-note">
+                    {gsc.queriesHidden
+                      ? `Google is hiding the search terms. It anonymizes low-volume queries for privacy, so with only ${gsc.totals?.impressions} impression(s) no individual keywords are shown yet. They'll appear as search volume grows. (Which page they landed on is below.)`
+                      : "No query data in this window yet — impressions and keywords appear as Google indexes and ranks your pages."}
+                  </div>
+                )}
+
+                {(gsc.pages || []).length > 0 && (
+                  <>
+                    <div className="seo-gsc-sub">Top pages (which URLs are showing in Google)</div>
+                    <div className="ad-scroll ad-scroll-tall">
+                      <table>
+                        <thead><tr><th>Page</th><th>Clicks</th><th>Impressions</th><th>CTR</th><th>Position</th></tr></thead>
+                        <tbody>
+                          {gsc.pages.map((r) => (
+                            <tr key={r.page}>
+                              <td>{r.page}</td>
+                              <td>{r.clicks}</td>
+                              <td>{r.impressions}</td>
+                              <td>{(r.ctr * 100).toFixed(1)}%</td>
+                              <td>{r.position.toFixed(1)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </>
+                )}
               </>
             )}
           </div>
@@ -235,4 +266,6 @@ const CSS = `
 .seo-gsc-setup ol{margin:0 0 10px; padding-left:20px; color:rgba(232,238,246,.75); font-size:13.5px; line-height:1.7}
 .seo-gsc-setup code{background:rgba(207,224,242,.12); padding:1px 6px; border-radius:5px; font-size:12.5px; color:#7FD8CE}
 .seo-gsc-stats{margin:16px}
+.seo-gsc-sub{padding:14px 16px 6px; font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:rgba(232,238,246,.6)}
+.seo-gsc-note{margin:0 16px 14px; padding:12px 14px; background:rgba(242,193,78,.1); border:1px solid rgba(242,193,78,.28); border-radius:10px; font-size:13px; color:#f2d18a; line-height:1.5}
 `;
