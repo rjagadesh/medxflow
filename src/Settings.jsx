@@ -68,7 +68,7 @@ export default function Settings({ pw, session }) {
   return (
     <div>
       <style>{CSS}</style>
-      <div className="cmp-head"><h3>Settings — Users &amp; roles</h3></div>
+      <div className="cmp-head"><h3>Settings - Users &amp; roles</h3></div>
       {err && <div className="ad-err" style={{ marginBottom: 12 }}>{err}</div>}
       {msg && <div className="cmp-ok">{msg}</div>}
 
@@ -99,14 +99,14 @@ export default function Settings({ pw, session }) {
 
       {/* Users list */}
       <div className="ad-card">
-        {!users.length ? <div className="ad-empty">No users yet — add one above.</div> : (
+        {!users.length ? <div className="ad-empty">No users yet - add one above.</div> : (
           <div className="ad-scroll">
             <table>
               <thead><tr><th>Name</th><th>Email</th><th>Role</th><th>Modules</th><th>Active</th><th></th></tr></thead>
               <tbody>
                 {users.map((u) => (
                   <tr key={u.email}>
-                    <td><b>{u.name || "—"}</b></td>
+                    <td><b>{u.name || "-"}</b></td>
                     <td>{u.email}</td>
                     <td>
                       <select className="se-role" value={u.role} onChange={(e) => patch(u.email, { role: e.target.value, modules: meta.presets?.[e.target.value] })}>

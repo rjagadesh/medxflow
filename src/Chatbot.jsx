@@ -136,7 +136,7 @@ export default function Chatbot() {
       if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
       setMessages((m) => [
         ...m,
-        { role: "assistant", content: data.reply || "Sorry, I didn't catch that — could you rephrase?" },
+        { role: "assistant", content: data.reply || "Sorry, I didn't catch that - could you rephrase?" },
       ]);
     } catch (err) {
       setMessages((m) => [

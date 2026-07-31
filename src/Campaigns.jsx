@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 const API = "/.netlify/functions/campaigns";
-const fmt = (iso) => (iso ? new Date(iso).toLocaleString() : "—");
+const fmt = (iso) => (iso ? new Date(iso).toLocaleString() : "-");
 
 const BADGE = {
   pending: ["Pending", "#8aa"],
@@ -75,7 +75,7 @@ export default function Campaigns({ pw, leads = [], visitors = [] }) {
     act({ action: "sync" }, (r) =>
       r.error
         ? `Inbox sync error: ${r.error}`
-        : `Inbox synced — ${r.replies || 0} repl(y/ies), ${r.bounces || 0} bounce(s).`
+        : `Inbox synced - ${r.replies || 0} repl(y/ies), ${r.bounces || 0} bounce(s).`
     );
 
   const current = campaigns.find((c) => c.id === view);
@@ -85,7 +85,7 @@ export default function Campaigns({ pw, leads = [], visitors = [] }) {
       <style>{CSS}</style>
       {!smtpReady && (
         <div className="cmp-warn">
-          ⚠️ SMTP is not configured — emails run in <b>simulation mode</b> (logged, not sent). Add
+          ⚠️ SMTP is not configured - emails run in <b>simulation mode</b> (logged, not sent). Add
           SMTP_HOST/USER/PASS to send for real.
         </div>
       )}
@@ -217,19 +217,19 @@ function NewCampaign({ leads, visitors, onCancel, onCreated, call }) {
         <h3>New campaign</h3>
         <button className="cmp-btn" onClick={onCancel}>← Back</button>
       </div>
-      <label>Campaign name<input value={f.name} onChange={set("name")} placeholder="e.g. Founding practices — March" /></label>
+      <label>Campaign name<input value={f.name} onChange={set("name")} placeholder="e.g. Founding practices - March" /></label>
       <div className="cmp-row">
         <label>From name<input value={f.fromName} onChange={set("fromName")} placeholder="MedXFlow Health" /></label>
         <label>Subject<input value={f.subject} onChange={set("subject")} placeholder="Cut missed calls at your practice" /></label>
       </div>
       <label>
-        Message <span className="cmp-hint">— use {"{{firstName}}"}, {"{{name}}"}, {"{{email}}"}. Links are tracked automatically.</span>
+        Message <span className="cmp-hint">- use {"{{firstName}}"}, {"{{name}}"}, {"{{email}}"}. Links are tracked automatically.</span>
         <textarea rows={7} value={f.body} onChange={set("body")} />
       </label>
 
       <div className="cmp-recip-head">
         <label style={{ flex: 1 }}>
-          Recipients <span className="cmp-hint">— one per line, or "Name &lt;email&gt;"</span>
+          Recipients <span className="cmp-hint">- one per line, or "Name &lt;email&gt;"</span>
         </label>
         <div className="cmp-imports">
           <button className="cmp-btn" type="button" onClick={() => importEmails(leads)}>Import leads ({leads.length})</button>
@@ -240,7 +240,7 @@ function NewCampaign({ leads, visitors, onCancel, onCreated, call }) {
 
       <div className="cmp-fups">
         <h4 style={{ margin: "0 0 6px" }}>Schedule</h4>
-        <p className="cmp-hint" style={{ margin: "0 0 10px" }}>Follow-ups send automatically on these days — and stop the moment someone replies.</p>
+        <p className="cmp-hint" style={{ margin: "0 0 10px" }}>Follow-ups send automatically on these days - and stop the moment someone replies.</p>
         <div className="cmp-days">
           {WEEKDAYS.map(([label, d]) => (
             <button type="button" key={d} className={"cmp-day" + (sendDays.includes(d) ? " on" : "")}
@@ -332,7 +332,7 @@ function Detail({ c, busy, onBack, act, onSync }) {
                 return (
                   <tr key={r.email}>
                     <td>{r.email}</td>
-                    <td>{r.name || "—"}</td>
+                    <td>{r.name || "-"}</td>
                     <td><span className="cmp-badge" style={{ color, borderColor: color }}>{label}</span></td>
                     <td className="ad-nowrap">{fmt(r.sentAt)}</td>
                     <td className="ad-nowrap">{fmt(r.openedAt)}</td>

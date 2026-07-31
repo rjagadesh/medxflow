@@ -4,7 +4,7 @@ const API = "/.netlify/functions/tickets";
 const STATUS = ["open", "in_progress", "waiting", "resolved", "closed"];
 const PRIORITY = ["low", "normal", "high", "urgent"];
 const SLABEL = { open: "Open", in_progress: "In progress", waiting: "Waiting", resolved: "Resolved", closed: "Closed" };
-const fmt = (iso) => (iso ? new Date(iso).toLocaleString() : "—");
+const fmt = (iso) => (iso ? new Date(iso).toLocaleString() : "-");
 
 export default function Tickets({ pw }) {
   const [tickets, setTickets] = useState([]);
@@ -79,10 +79,10 @@ export default function Tickets({ pw }) {
                     {shown.map((t) => (
                       <tr key={t.id} className="ct-row" onClick={() => setView(t.id)}>
                         <td><b>{t.subject}</b></td>
-                        <td>{t.requesterName || t.requesterEmail || "—"}{t.clinic ? <div className="cmp-sub">{t.clinic}</div> : null}</td>
+                        <td>{t.requesterName || t.requesterEmail || "-"}{t.clinic ? <div className="cmp-sub">{t.clinic}</div> : null}</td>
                         <td><span className={"tk-pri pr-" + t.priority}>{t.priority}</span></td>
                         <td><span className={"tk-st ts-" + t.status}>{SLABEL[t.status]}</span></td>
-                        <td>{t.assignedTo || "—"}</td>
+                        <td>{t.assignedTo || "-"}</td>
                         <td className="ad-nowrap">{fmt(t.updatedAt)}</td>
                       </tr>
                     ))}

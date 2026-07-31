@@ -56,7 +56,7 @@ export function track() {
 
     // Confirmation beacon: fires ~2s after load and marks the event human-real.
     // If the visitor leaves first, we CANCEL it so beacon_confirmed stays NULL
-    // (unknown) — we never record a false for someone who simply left early.
+    // (unknown) - we never record a false for someone who simply left early.
     let confirmed = false;
     const timer = setTimeout(() => {
       confirmed = true;

@@ -13,7 +13,7 @@ function buildRoutes(homeTitle, homeDesc) {
   const routes = [
     { path: "/", title: homeTitle, desc: homeDesc, home: true },
     { path: "/telehealth", title: "Telehealth · MedXFlow", desc: flatEn["telehealth.hero_lead"] },
-    { path: "/products", title: "Products · MedXFlow", desc: "From the first appointment to the final payment — nine connected stages of Revenue Cycle Management, plus a human-led managed billing team." },
+    { path: "/products", title: "Products · MedXFlow", desc: "From the first appointment to the final payment - nine connected stages of Revenue Cycle Management, plus a human-led managed billing team." },
   ];
   for (const p of PRODUCTS) {
     routes.push({ path: `/products/${p.slug}`, title: `${p.name} · MedXFlow`, desc: p.tagline });
@@ -72,7 +72,7 @@ export default function Seo({ pw }) {
           ["<html lang> + viewport", mark(home.lang && home.viewport, false), home.lang ? `lang=${home.lang}` : "missing"],
         ];
 
-        // Per-page checks — fetch each route's served HTML and confirm it ships
+        // Per-page checks - fetch each route's served HTML and confirm it ships
         // its OWN head (prerendered), rather than the homepage card.
         const routeHtmls = await Promise.all(
           routes.map((r) => fetch(r.path, { headers: { accept: "text/html" } }).then((res) => res.text()).catch(() => ""))
@@ -130,7 +130,7 @@ export default function Seo({ pw }) {
             </div>
             <div className="seo-score-lbl">
               <h3>On-page SEO Health</h3>
-              <p>A self-audit of your own pages, meta, structured data and sitemap. It doesn't measure Google position — see Search Console below for that.</p>
+              <p>A self-audit of your own pages, meta, structured data and sitemap. It doesn't measure Google position - see Search Console below for that.</p>
             </div>
           </div>
 
@@ -163,11 +163,11 @@ export default function Seo({ pw }) {
                 </tbody>
               </table>
             </div>
-            <div className="seo-note">Each row's OG/JSON-LD is checked against the route's actual served HTML. ⚠️ means it's still serving the homepage card — expected in local dev (Vite serves the SPA shell); the production build prerenders every route (<code>scripts/prerender.mjs</code>), so these turn ✅ on the live site.</div>
+            <div className="seo-note">Each row's OG/JSON-LD is checked against the route's actual served HTML. ⚠️ means it's still serving the homepage card - expected in local dev (Vite serves the SPA shell); the production build prerenders every route (<code>scripts/prerender.mjs</code>), so these turn ✅ on the live site.</div>
           </div>
 
           <div className="ad-card seo-card">
-            <div className="seo-card-h">🔍 Google Search Console — real rankings</div>
+            <div className="seo-card-h">🔍 Google Search Console - real rankings</div>
             {gscErr && <div className="ad-err">{gscErr}</div>}
             {!gsc ? (
               <div className="ad-empty">Checking Search Console…</div>
@@ -185,10 +185,10 @@ export default function Seo({ pw }) {
             ) : (
               <>
                 <div className="ad-stats seo-gsc-stats">
-                  <div className="ad-stat"><b>{gsc.totals?.clicks ?? "—"}</b><span>Clicks (28d)</span></div>
-                  <div className="ad-stat"><b>{gsc.totals?.impressions ?? "—"}</b><span>Impressions</span></div>
-                  <div className="ad-stat"><b>{gsc.totals?.ctr != null ? (gsc.totals.ctr * 100).toFixed(1) + "%" : "—"}</b><span>CTR</span></div>
-                  <div className="ad-stat"><b>{gsc.totals?.position != null ? gsc.totals.position.toFixed(1) : "—"}</b><span>Avg. position</span></div>
+                  <div className="ad-stat"><b>{gsc.totals?.clicks ?? "-"}</b><span>Clicks (28d)</span></div>
+                  <div className="ad-stat"><b>{gsc.totals?.impressions ?? "-"}</b><span>Impressions</span></div>
+                  <div className="ad-stat"><b>{gsc.totals?.ctr != null ? (gsc.totals.ctr * 100).toFixed(1) + "%" : "-"}</b><span>CTR</span></div>
+                  <div className="ad-stat"><b>{gsc.totals?.position != null ? gsc.totals.position.toFixed(1) : "-"}</b><span>Avg. position</span></div>
                 </div>
                 <div className="seo-gsc-sub">Top queries</div>
                 {(gsc.rows || []).length ? (
@@ -212,7 +212,7 @@ export default function Seo({ pw }) {
                   <div className="seo-gsc-note">
                     {gsc.queriesHidden
                       ? `Google is hiding the search terms. It anonymizes low-volume queries for privacy, so with only ${gsc.totals?.impressions} impression(s) no individual keywords are shown yet. They'll appear as search volume grows. (Which page they landed on is below.)`
-                      : "No query data in this window yet — impressions and keywords appear as Google indexes and ranks your pages."}
+                      : "No query data in this window yet - impressions and keywords appear as Google indexes and ranks your pages."}
                   </div>
                 )}
 

@@ -1,5 +1,5 @@
 // ─────────────────────────────────────────────────────────────────────────
-//  MedXFlow product catalogue — the Revenue Cycle Management (RCM) suite plus
+//  MedXFlow product catalogue - the Revenue Cycle Management (RCM) suite plus
 //  the human-led Managed Billing service. Each entry drives one page rendered
 //  by ProductPage.jsx at /products/<slug>. Copy is English source-of-truth;
 //  keep brand/product names and prices here (they don't get translated).
@@ -23,11 +23,11 @@ export const PRODUCTS = [
     h1a: "The clean claim starts",
     h1b: "before the visit does.",
     tagline:
-      "Capture demographics, insurance and consent up front, and book the right visit in the right slot — so nothing downstream has to be fixed later.",
+      "Capture demographics, insurance and consent up front, and book the right visit in the right slot - so nothing downstream has to be fixed later.",
     overview:
       "Most denials are born at the front door. MedXFlow pre-registration collects and validates patient demographics, guarantor and insurance details before the patient ever arrives, then books them into the correct visit type with the right provider, location and duration. Every field that a claim will later depend on is verified at the point it's cheapest to fix.",
     features: [
-      ["📇", "Digital pre-registration", "Patients complete demographics, guarantor and insurance on their phone before the visit — no clipboard, no re-keying."],
+      ["📇", "Digital pre-registration", "Patients complete demographics, guarantor and insurance on their phone before the visit - no clipboard, no re-keying."],
       ["🧠", "Smart scheduling", "Rules-based booking picks the correct visit type, provider and slot length, and prevents double-books and impossible combinations."],
       ["🔔", "Reminders & prep", "Automated SMS/email reminders with prep instructions cut no-shows and keep the schedule full."],
       ["✅", "Front-end data validation", "Names, dates of birth, member IDs and addresses are format-checked and normalised so claims don't reject on typos."],
@@ -35,15 +35,15 @@ export const PRODUCTS = [
     steps: [
       ["Patient books or is scheduled", "Online self-scheduling or staff booking, both governed by the same visit-type rules."],
       ["Details captured up front", "A secure pre-registration link collects demographics, insurance and consent ahead of time."],
-      ["Validated and slotted", "Data is normalised and the appointment lands in the right slot — ready for eligibility to run automatically."],
+      ["Validated and slotted", "Data is normalised and the appointment lands in the right slot - ready for eligibility to run automatically."],
     ],
     benefits: [
       "Fewer denials caused by bad demographic or insurance data",
-      "Shorter check-in — most of it is already done",
+      "Shorter check-in - most of it is already done",
       "Lower no-show rate from automated reminders",
       "A schedule that reflects real provider capacity",
     ],
-    stat: { n: 40, suffix: "%", label: "of denials trace back to registration — caught here, before they happen" },
+    stat: { n: 40, suffix: "%", label: "of denials trace back to registration - caught here, before they happen" },
   },
   {
     slug: "eligibility-verification",
@@ -55,9 +55,9 @@ export const PRODUCTS = [
     h1a: "Know exactly what's covered",
     h1b: "before you deliver care.",
     tagline:
-      "Real-time eligibility checks confirm active coverage, co-pays, deductibles and prior-auth needs — so you bill the right payer, the first time.",
+      "Real-time eligibility checks confirm active coverage, co-pays, deductibles and prior-auth needs - so you bill the right payer, the first time.",
     overview:
-      "MedXFlow runs automated 270/271 eligibility checks against payers the moment an appointment is booked, and re-checks on the day of service. Staff see active coverage, plan details, co-pay, deductible-remaining and whether a prior authorisation is required — surfaced directly in the worklist, with exceptions flagged for a human to resolve.",
+      "MedXFlow runs automated 270/271 eligibility checks against payers the moment an appointment is booked, and re-checks on the day of service. Staff see active coverage, plan details, co-pay, deductible-remaining and whether a prior authorisation is required - surfaced directly in the worklist, with exceptions flagged for a human to resolve.",
     features: [
       ["⚡", "Real-time payer checks", "Automated 270/271 transactions confirm active coverage and benefits in seconds, not phone calls."],
       ["💳", "Co-pay & deductible surfaced", "Patient responsibility is known before the visit, so front desk can collect at the point of care."],
@@ -87,27 +87,27 @@ export const PRODUCTS = [
     h1a: "Check in the patient,",
     h1b: "not the paperwork.",
     tagline:
-      "A fast, accurate arrival: confirm identity and coverage, capture consents, collect what's owed, and mark the patient arrived — straight into your EHR.",
+      "A fast, accurate arrival: confirm identity and coverage, capture consents, collect what's owed, and mark the patient arrived - straight into your EHR.",
     overview:
       "MedXFlow check-in turns arrival into a two-minute, error-free step. Patients confirm their details, sign consents and financial-responsibility forms on screen, and pay their co-pay or balance at the kiosk or front desk. Everything writes back to the practice management system instantly, so the encounter is clean before the clinician even opens the chart.",
     features: [
       ["🪪", "Identity & insurance confirm", "Photo ID and insurance card capture, with details reconciled against what was pre-registered."],
-      ["✍️", "On-screen consents", "Consent and financial-responsibility forms signed digitally — legible, dated, stored, auditable."],
+      ["✍️", "On-screen consents", "Consent and financial-responsibility forms signed digitally - legible, dated, stored, auditable."],
       ["💵", "Point-of-service collection", "Co-pays and outstanding balances collected by card at check-in, before the patient sits down."],
       ["↔️", "Real-time EHR write-back", "Arrival status and updated details flow straight into Epic, athenahealth and more."],
     ],
     steps: [
       ["Patient arrives", "Kiosk or front-desk check-in, with pre-registration already done."],
       ["Confirm, sign, pay", "Details verified, consents signed, patient responsibility collected on the spot."],
-      ["Marked arrived in the PMS", "The clinical team sees an arrived, financially-cleared patient — no desk queue."],
+      ["Marked arrived in the PMS", "The clinical team sees an arrived, financially-cleared patient - no desk queue."],
     ],
     benefits: [
       "Point-of-service collections instead of chasing later",
       "Signed, stored consents with a clear audit trail",
-      "No re-keying — details reconcile automatically",
+      "No re-keying - details reconcile automatically",
       "A shorter, calmer waiting room",
     ],
-    stat: { n: 2, suffix: " min", label: "average check-in — most of it completed before the patient walks in" },
+    stat: { n: 2, suffix: " min", label: "average check-in - most of it completed before the patient walks in" },
   },
   {
     slug: "charge-capture-coding",
@@ -119,7 +119,7 @@ export const PRODUCTS = [
     h1a: "Every service rendered",
     h1b: "is a service billed.",
     tagline:
-      "Capture charges at the point of care and code them accurately with CPT/ICD support and automated scrubbing — so nothing leaks and nothing goes out wrong.",
+      "Capture charges at the point of care and code them accurately with CPT/ICD support and automated scrubbing - so nothing leaks and nothing goes out wrong.",
     overview:
       "Revenue leaks when charges are missed or mis-coded. MedXFlow reconciles the day's encounters against the schedule to surface missing charges, assists coders with CPT, ICD-10 and modifier suggestions, and runs a rules engine that checks medical necessity, bundling and payer-specific edits before a claim is ever created.",
     features: [
@@ -139,7 +139,7 @@ export const PRODUCTS = [
       "Compliance with payer and medical-necessity rules",
       "Faster coder throughput with assistive suggestions",
     ],
-    stat: { n: 1, suffix: "%", label: "of net revenue is typically lost to charge capture leakage — closed here" },
+    stat: { n: 1, suffix: "%", label: "of net revenue is typically lost to charge capture leakage - closed here" },
   },
   {
     slug: "claims-submission",
@@ -151,9 +151,9 @@ export const PRODUCTS = [
     h1a: "Clean claims out the door,",
     h1b: "first pass, every day.",
     tagline:
-      "Generate, scrub and submit compliant 837 claims to every payer and clearinghouse — with acknowledgements tracked and rejections worked automatically.",
+      "Generate, scrub and submit compliant 837 claims to every payer and clearinghouse - with acknowledgements tracked and rejections worked automatically.",
     overview:
-      "MedXFlow builds compliant electronic claims, runs them through a multi-layer scrubber, and submits them to payers and clearinghouses. Every 999/277CA acknowledgement is tracked, front-end rejections are auto-triaged and corrected, and clean-claim and first-pass rates are measured so you can see — and improve — how much goes right the first time.",
+      "MedXFlow builds compliant electronic claims, runs them through a multi-layer scrubber, and submits them to payers and clearinghouses. Every 999/277CA acknowledgement is tracked, front-end rejections are auto-triaged and corrected, and clean-claim and first-pass rates are measured so you can see - and improve - how much goes right the first time.",
     features: [
       ["🧼", "Multi-layer claim scrubbing", "Format, payer-edit and clinical checks run before submission to maximise first-pass acceptance."],
       ["🔌", "Any payer, any clearinghouse", "Electronic 837 submission across your full payer mix, with paper fallback where required."],
@@ -183,7 +183,7 @@ export const PRODUCTS = [
     h1a: "Every dollar posted,",
     h1b: "reconciled and explained.",
     tagline:
-      "Automated 835/ERA and manual EOB posting with line-level reconciliation — so cash is accurate, variances are visible, and underpayments never slip through.",
+      "Automated 835/ERA and manual EOB posting with line-level reconciliation - so cash is accurate, variances are visible, and underpayments never slip through.",
     overview:
       "MedXFlow ingests electronic remittance (835/ERA) and posts payments, adjustments and patient responsibility at the line level, reconciled against what was billed. Contractual variances and underpayments are flagged, denials are automatically routed to the denial-management workflow, and daily cash is balanced against deposits so the books always tie out.",
     features: [
@@ -203,7 +203,7 @@ export const PRODUCTS = [
       "Denials actioned the moment they post",
       "Clear patient balances ready for statements",
     ],
-    stat: { n: 7, suffix: "%", label: "of payer payments are underpaid on average — surfaced here for recovery" },
+    stat: { n: 7, suffix: "%", label: "of payer payments are underpaid on average - surfaced here for recovery" },
   },
   {
     slug: "denial-management",
@@ -215,7 +215,7 @@ export const PRODUCTS = [
     h1a: "Turn denials into",
     h1b: "recovered revenue.",
     tagline:
-      "Categorise, prioritise and work denials by root cause — with appeals, resubmissions and prevention analytics that stop the same denial happening twice.",
+      "Categorise, prioritise and work denials by root cause - with appeals, resubmissions and prevention analytics that stop the same denial happening twice.",
     overview:
         "MedXFlow captures every denial with its CARC/RARC reason code, categorises it by root cause and dollar value, and drives a prioritised work queue so the highest-yield denials are worked first. Appeals and corrected claims are generated with the right documentation, timely-filing clocks are tracked, and root-cause analytics feed prevention back upstream.",
     features: [
@@ -227,7 +227,7 @@ export const PRODUCTS = [
     steps: [
       ["Denial captured", "The denied line arrives from payment posting with its reason code."],
       ["Categorised and queued", "Root cause and recoverable value determine priority."],
-      ["Worked and prevented", "Appeal or resubmit — and push the fix upstream so it doesn't recur."],
+      ["Worked and prevented", "Appeal or resubmit - and push the fix upstream so it doesn't recur."],
     ],
     benefits: [
       "Recover revenue that would otherwise be written off",
@@ -235,7 +235,7 @@ export const PRODUCTS = [
       "Stop repeat denials at their source",
       "A clear, auditable trail on every appeal",
     ],
-    stat: { n: 65, suffix: "%", label: "of denials are never reworked industry-wide — this workflow reclaims them" },
+    stat: { n: 65, suffix: "%", label: "of denials are never reworked industry-wide - this workflow reclaims them" },
   },
   {
     slug: "patient-collections",
@@ -247,14 +247,14 @@ export const PRODUCTS = [
     h1a: "Clear balances,",
     h1b: "kindly and quickly.",
     tagline:
-      "Accurate statements, digital payment options and gentle automated follow-up — so patients understand what they owe and paying is effortless.",
+      "Accurate statements, digital payment options and gentle automated follow-up - so patients understand what they owe and paying is effortless.",
     overview:
-      "Patient responsibility is a growing share of revenue and the hardest to collect. MedXFlow issues clear, itemised statements across print, email and SMS, offers online and text-to-pay with payment plans, and runs a compassionate reminder cadence. Balances that remain are aged, segmented and routed appropriately — with a full record kept for every touch.",
+      "Patient responsibility is a growing share of revenue and the hardest to collect. MedXFlow issues clear, itemised statements across print, email and SMS, offers online and text-to-pay with payment plans, and runs a compassionate reminder cadence. Balances that remain are aged, segmented and routed appropriately - with a full record kept for every touch.",
     features: [
       ["🧾", "Clear itemised statements", "Plain-language statements delivered by the channel each patient prefers."],
       ["📱", "Digital & text-to-pay", "Online payment, text-to-pay and card-on-file remove friction from paying."],
       ["📆", "Payment plans", "Automated instalment plans for larger balances, tracked to completion."],
-      ["💬", "Compassionate follow-up", "A configurable, respectful reminder cadence — not a barrage."],
+      ["💬", "Compassionate follow-up", "A configurable, respectful reminder cadence - not a barrage."],
     ],
     steps: [
       ["Balance finalised", "After insurance posts, the patient's true responsibility is set."],
@@ -279,7 +279,7 @@ export const PRODUCTS = [
     h1a: "See the whole revenue cycle",
     h1b: "on one screen.",
     tagline:
-      "KPIs, denial trends, payer performance and cash forecasting in real time — so you can find the leaks and act before they cost you a month.",
+      "KPIs, denial trends, payer performance and cash forecasting in real time - so you can find the leaks and act before they cost you a month.",
     overview:
       "MedXFlow turns the entire revenue cycle into a live dashboard: days in A/R, clean-claim and first-pass rates, net collection rate, denial rate by cause and payer, and cash forecasting. Drill from a headline KPI to the individual claim, benchmark providers and locations, and get scheduled reports in the inbox of whoever needs them.",
     features: [
@@ -299,7 +299,7 @@ export const PRODUCTS = [
       "Benchmark and hold performance accountable",
       "Board-ready reporting without the spreadsheet night",
     ],
-    stat: { n: 360, suffix: "°", label: "visibility across every stage — from scheduling to final payment" },
+    stat: { n: 360, suffix: "°", label: "visibility across every stage - from scheduling to final payment" },
   },
   {
     slug: "voip",
@@ -311,20 +311,20 @@ export const PRODUCTS = [
     h1a: "Your clinic phone system,",
     h1b: "reinvented in the cloud.",
     tagline:
-      "Enterprise-grade cloud VoIP for healthcare — crystal-clear calls, smart routing, and native integration with MedXFlow Voice AI and your EHR.",
+      "Enterprise-grade cloud VoIP for healthcare - crystal-clear calls, smart routing, and native integration with MedXFlow Voice AI and your EHR.",
     overview:
-      "Legacy phone systems weren't built for a modern practice — or for AI. MedXFlow VoIP replaces your on-prem PBX with a HIPAA-ready cloud phone system: port your existing numbers, route calls intelligently across locations, and let MedXFlow Voice AI answer overflow and after-hours automatically. Softphones for the desk, apps for the road, and call analytics that actually tie back to bookings.",
+      "Legacy phone systems weren't built for a modern practice - or for AI. MedXFlow VoIP replaces your on-prem PBX with a HIPAA-ready cloud phone system: port your existing numbers, route calls intelligently across locations, and let MedXFlow Voice AI answer overflow and after-hours automatically. Softphones for the desk, apps for the road, and call analytics that actually tie back to bookings.",
     features: [
-      ["☎️", "Cloud PBX & SIP", "A full hosted phone system — extensions, hunt groups, voicemail-to-email — with no hardware to rack or maintain."],
+      ["☎️", "Cloud PBX & SIP", "A full hosted phone system - extensions, hunt groups, voicemail-to-email - with no hardware to rack or maintain."],
       ["🔀", "Smart call routing", "Time-of-day, skills- and location-based IVR routing, with overflow and after-hours handled by MedXFlow Voice AI."],
       ["🔁", "Number porting", "Keep every number your patients already know. We port them over with zero downtime."],
-      ["🤖", "Native Voice AI hand-off", "Calls flow seamlessly between your team and the AI receptionist — one system, one call log."],
+      ["🤖", "Native Voice AI hand-off", "Calls flow seamlessly between your team and the AI receptionist - one system, one call log."],
       ["📊", "Call analytics", "Volumes, wait times, missed-call recovery and outcomes, tied back to bookings and revenue."],
-      ["📱", "Softphone & mobile", "Take clinic calls from a browser or phone app — secure, recorded where required, always on your caller ID."],
+      ["📱", "Softphone & mobile", "Take clinic calls from a browser or phone app - secure, recorded where required, always on your caller ID."],
     ],
     steps: [
       ["Port your numbers", "We move your existing lines to the cloud with no interruption to patients."],
-      ["Configure call flows", "Set routing, IVR, hours and overflow — with Voice AI as the always-on backstop."],
+      ["Configure call flows", "Set routing, IVR, hours and overflow - with Voice AI as the always-on backstop."],
       ["Go live", "Your team answers from softphones or apps; analytics and EHR write-back start day one."],
     ],
     benefits: [
@@ -333,7 +333,7 @@ export const PRODUCTS = [
       "Scales instantly across new providers and locations",
       "One phone platform that already speaks to your AI and EHR",
     ],
-    stat: { n: 99.99, suffix: "%", label: "uptime SLA — carrier-grade cloud voice your practice can rely on" },
+    stat: { n: 99.99, suffix: "%", label: "uptime SLA - carrier-grade cloud voice your practice can rely on" },
   },
   {
     slug: "appointment-reminders",
@@ -345,14 +345,14 @@ export const PRODUCTS = [
     h1a: "Fewer no-shows,",
     h1b: "on autopilot.",
     tagline:
-      "Automated text, email and voice reminders with one-tap confirm and reschedule — cutting no-shows and filling gaps, synced to your EHR schedule.",
+      "Automated text, email and voice reminders with one-tap confirm and reschedule - cutting no-shows and filling gaps, synced to your EHR schedule.",
     overview:
-      "No-shows quietly drain a practice's schedule and revenue. MedXFlow reminders reach every patient on the channel they actually use — text, email or voice — with a cadence you control. Patients confirm, cancel or reschedule in one tap, and every response writes back to your EHR in real time so the front desk always sees an accurate day.",
+      "No-shows quietly drain a practice's schedule and revenue. MedXFlow reminders reach every patient on the channel they actually use - text, email or voice - with a cadence you control. Patients confirm, cancel or reschedule in one tap, and every response writes back to your EHR in real time so the front desk always sees an accurate day.",
     features: [
-      ["💬", "Multi-channel reminders", "Text, email and automated voice — sent on the channel each patient prefers, in English or Spanish."],
+      ["💬", "Multi-channel reminders", "Text, email and automated voice - sent on the channel each patient prefers, in English or Spanish."],
       ["👍", "One-tap confirm & reschedule", "Patients confirm or move their appointment from the message; changes sync straight to the EHR."],
-      ["⏱", "Configurable cadence", "Reminder timing and follow-ups you set per visit type — a week out, the day before, the morning of."],
-      ["📥", "Waitlist backfill", "When a slot frees up, the next waitlisted patient is offered it automatically — no empty chairs."],
+      ["⏱", "Configurable cadence", "Reminder timing and follow-ups you set per visit type - a week out, the day before, the morning of."],
+      ["📥", "Waitlist backfill", "When a slot frees up, the next waitlisted patient is offered it automatically - no empty chairs."],
     ],
     steps: [
       ["Schedule syncs", "Appointments flow in from Epic and athenahealth automatically."],
@@ -377,12 +377,12 @@ export const PRODUCTS = [
     h1a: "Bring patients back",
     h1b: "for the care they're due.",
     tagline:
-      "Reach patients overdue for visits, screenings and follow-ups — recall lists built from your EHR, delivered by text and email, and booked in a tap.",
+      "Reach patients overdue for visits, screenings and follow-ups - recall lists built from your EHR, delivered by text and email, and booked in a tap.",
     overview:
-      "Every practice has patients who've fallen through the cracks — a screening not booked, a follow-up never scheduled, an annual visit long overdue. MedXFlow builds recall lists straight from your EHR, reaches those patients automatically with a friendly nudge, and lets them self-book in one tap. It's found revenue and better continuity of care, without the front desk making a single call.",
+      "Every practice has patients who've fallen through the cracks - a screening not booked, a follow-up never scheduled, an annual visit long overdue. MedXFlow builds recall lists straight from your EHR, reaches those patients automatically with a friendly nudge, and lets them self-book in one tap. It's found revenue and better continuity of care, without the front desk making a single call.",
     features: [
       ["🗂", "EHR-built recall lists", "Automatically surface patients overdue for visits, screenings, labs or chronic-care follow-up."],
-      ["📣", "Automated outreach", "Personalized text and email campaigns on a schedule, in English or Spanish — no manual list work."],
+      ["📣", "Automated outreach", "Personalized text and email campaigns on a schedule, in English or Spanish - no manual list work."],
       ["📆", "One-tap self-booking", "Patients book straight from the message into an open slot, written back to your EHR."],
       ["🎯", "Segmentation & tracking", "Target by condition, provider or last-visit date, and track who booked, came in and paid."],
     ],
@@ -395,7 +395,7 @@ export const PRODUCTS = [
       "Reactivate lapsed and overdue patients at scale",
       "Recovered revenue with no extra front-desk effort",
       "Better continuity of care and preventive follow-up",
-      "Clear ROI — bookings and revenue per campaign",
+      "Clear ROI - bookings and revenue per campaign",
     ],
     stat: { n: 20, suffix: "%", label: "of overdue patients typically re-book from an automated recall campaign" },
   },
@@ -409,12 +409,12 @@ export const PRODUCTS = [
     h1a: "Prior auths, cleared",
     h1b: "before they hold you up.",
     tagline:
-      "Detect what needs prior authorization, submit and track it automatically, and clear approvals before the visit — so care isn't delayed or denied.",
+      "Detect what needs prior authorization, submit and track it automatically, and clear approvals before the visit - so care isn't delayed or denied.",
     overview:
-      "Prior authorization is one of the biggest sources of delayed care and denied claims. MedXFlow flags services that need authorization the moment they're ordered or scheduled, submits the request to the payer with the right documentation, and tracks it to approval — surfacing anything at risk so staff act before the visit, not after the denial.",
+      "Prior authorization is one of the biggest sources of delayed care and denied claims. MedXFlow flags services that need authorization the moment they're ordered or scheduled, submits the request to the payer with the right documentation, and tracks it to approval - surfacing anything at risk so staff act before the visit, not after the denial.",
     features: [
       ["🔎", "Auto-detect requirements", "Payer- and plan-specific rules flag which orders and visits need authorization, up front."],
-      ["📤", "Submit with documentation", "Requests go to the payer with the clinical documentation attached — no chasing forms."],
+      ["📤", "Submit with documentation", "Requests go to the payer with the clinical documentation attached - no chasing forms."],
       ["📡", "Live status tracking", "Every auth is tracked to approval, with at-risk and expiring authorizations surfaced early."],
       ["🛑", "Denial prevention", "Nothing is delivered un-authorized, so auth-related denials and write-offs drop sharply."],
     ],
@@ -429,7 +429,7 @@ export const PRODUCTS = [
       "Staff hours saved on portals and payer phone calls",
       "Every authorization tracked, documented and auditable",
     ],
-    stat: { n: 25, suffix: "%", label: "of denials are auth-related industry-wide — prevented before the visit" },
+    stat: { n: 25, suffix: "%", label: "of denials are auth-related industry-wide - prevented before the visit" },
   },
   {
     slug: "managed-billing",
@@ -441,12 +441,12 @@ export const PRODUCTS = [
     h1a: "A dedicated billing team,",
     h1b: "without the overhead.",
     tagline:
-      "Prefer people over software? Certified billers and coders run your entire revenue cycle for you — a full-service billing partnership, backed by MedXFlow.",
+      "Prefer people over software? Certified billers and coders run your entire revenue cycle for you - a full-service billing partnership, backed by MedXFlow.",
     overview:
-      "Not every practice wants to run the software themselves. Managed Billing Services is our human-led, full-service offering: a dedicated team of certified medical billers, coders and A/R specialists who own your revenue cycle end to end — from eligibility to final payment — and report to you against clear performance targets. It's the classic outsourced-billing relationship, with MedXFlow's automation working quietly behind your team.",
+      "Not every practice wants to run the software themselves. Managed Billing Services is our human-led, full-service offering: a dedicated team of certified medical billers, coders and A/R specialists who own your revenue cycle end to end - from eligibility to final payment - and report to you against clear performance targets. It's the classic outsourced-billing relationship, with MedXFlow's automation working quietly behind your team.",
     features: [
       ["🧑‍💼", "Dedicated account team", "Named certified billers and coders who know your practice, your payers and your specialty."],
-      ["🔄", "Full-cycle ownership", "We handle eligibility, coding, claims, posting, denials and patient collections — end to end."],
+      ["🔄", "Full-cycle ownership", "We handle eligibility, coding, claims, posting, denials and patient collections - end to end."],
       ["📞", "You keep a human on the phone", "A real account manager you can call, with regular reviews and transparent reporting."],
       ["📑", "Compliance & credentialing", "Certified coding, payer enrolment and credentialing support, with audit-ready documentation."],
     ],
@@ -459,7 +459,7 @@ export const PRODUCTS = [
       "No billing staff to hire, train or cover",
       "Certified coders across your specialty",
       "Transparent, KPI-based monthly reporting",
-      "Percentage-of-collections pricing — we win when you do",
+      "Percentage-of-collections pricing - we win when you do",
     ],
     stat: { n: 100, suffix: "%", label: "of your revenue cycle handled by a dedicated human team" },
   },

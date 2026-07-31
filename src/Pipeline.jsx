@@ -52,7 +52,7 @@ export default function Pipeline({ pw, onOpen }) {
   const total = contacts.length;
   const demos = contacts.filter((c) => c.demoRequest || DEMO_STAGES.includes(c.stage)).length;
   const wonList = contacts.filter((c) => c.stage === "won");
-  const pct = (a, b) => (b ? Math.round((a / b) * 100) + "%" : "—");
+  const pct = (a, b) => (b ? Math.round((a / b) * 100) + "%" : "-");
   const totalValue = contacts.reduce((s, c) => s + (c.dealValue || 0), 0);
   const wonValue = wonList.reduce((s, c) => s + (c.dealValue || 0), 0);
 
@@ -102,7 +102,7 @@ export default function Pipeline({ pw, onOpen }) {
                     <div className="pl-card-name">{c.name || c.email}</div>
                     <div className="pl-card-clinic">{c.clinic || c.email}</div>
                     <div className="pl-card-foot">
-                      <span className={"ct-src ct-" + (c.sources[0] || "chat")}>{c.sources[0] || "—"}</span>
+                      <span className={"ct-src ct-" + (c.sources[0] || "chat")}>{c.sources[0] || "-"}</span>
                       {c.dealValue ? <span className="pl-val">{usd(c.dealValue)}</span> : null}
                     </div>
                     {c.lastActivityAt && <div className="pl-card-date">{new Date(c.lastActivityAt).toLocaleDateString()}</div>}

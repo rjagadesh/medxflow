@@ -7,8 +7,8 @@ export const STAGE_LABEL = {
   new: "New Lead", contacted: "Contacted", demo_scheduled: "Demo Scheduled",
   demo_completed: "Demo Completed", proposal: "Proposal Sent", won: "Won", lost: "Lost",
 };
-const fmt = (iso) => (iso ? new Date(iso).toLocaleString() : "—");
-const fmtDate = (iso) => (iso ? new Date(iso).toLocaleDateString() : "—");
+const fmt = (iso) => (iso ? new Date(iso).toLocaleString() : "-");
+const fmtDate = (iso) => (iso ? new Date(iso).toLocaleDateString() : "-");
 
 export async function contactsApi(pw, payload) {
   const res = await fetch(API, {
@@ -68,12 +68,12 @@ export function Contacts({ pw, onOpen }) {
               <tbody>
                 {shown.map((c) => (
                   <tr key={c.email} className="ct-row" onClick={() => onOpen(c.email)}>
-                    <td><b>{c.name || "—"}</b></td>
+                    <td><b>{c.name || "-"}</b></td>
                     <td>{c.email}</td>
-                    <td>{c.clinic || "—"}</td>
+                    <td>{c.clinic || "-"}</td>
                     <td>{c.sources.map((s) => <span key={s} className={"ct-src ct-" + s}>{s}</span>)}</td>
                     <td><span className={"ct-stage st-" + c.stage}>{STAGE_LABEL[c.stage]}</span></td>
-                    <td className="ad-nowrap">{c.campaign.sent ? `${c.campaign.sent}✉ ${c.campaign.opened}👁 ${c.campaign.replied}↩` : "—"}</td>
+                    <td className="ad-nowrap">{c.campaign.sent ? `${c.campaign.sent}✉ ${c.campaign.opened}👁 ${c.campaign.replied}↩` : "-"}</td>
                     <td className="ad-nowrap">{fmtDate(c.lastActivityAt)}</td>
                   </tr>
                 ))}
@@ -187,8 +187,8 @@ export function ContactDetail({ pw, email, onClose, onChanged }) {
             <h4 className="ct-h4">Campaign emails</h4>
             {c.campaignEvents?.length ? c.campaignEvents.map((e, i) => (
               <div className="ct-hist" key={i}>
-                <div className="ct-line"><b>{e.campaignName}</b> — <span className={"cmp-badge2 st-" + e.status}>{e.status}</span></div>
-                <div className="ct-meta">{[e.sentAt && `sent ${fmt(e.sentAt)}`, e.openedAt && `opened ${fmt(e.openedAt)}`, e.repliedAt && `replied ${fmt(e.repliedAt)}`].filter(Boolean).join(" · ") || "—"}</div>
+                <div className="ct-line"><b>{e.campaignName}</b> - <span className={"cmp-badge2 st-" + e.status}>{e.status}</span></div>
+                <div className="ct-meta">{[e.sentAt && `sent ${fmt(e.sentAt)}`, e.openedAt && `opened ${fmt(e.openedAt)}`, e.repliedAt && `replied ${fmt(e.repliedAt)}`].filter(Boolean).join(" · ") || "-"}</div>
               </div>
             )) : <div className="ct-none">No campaign emails.</div>}
 
@@ -210,7 +210,7 @@ export function ContactDetail({ pw, email, onClose, onChanged }) {
             {c.pageviews?.length ? (
               <div className="ct-hist">
                 {c.pageviews.slice(0, 12).map((p, i) => (
-                  <div className="ct-line" key={i}><span className="ct-meta">{fmt(p.at)}</span> — {p.path}{p.geo?.country ? ` · ${p.geo.country}` : ""}</div>
+                  <div className="ct-line" key={i}><span className="ct-meta">{fmt(p.at)}</span> - {p.path}{p.geo?.country ? ` · ${p.geo.country}` : ""}</div>
                 ))}
               </div>
             ) : <div className="ct-none">No linked pageviews.</div>}

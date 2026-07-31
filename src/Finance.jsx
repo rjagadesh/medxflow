@@ -137,10 +137,10 @@ export default function Finance({ pw }) {
       {/* Month-on-month chart */}
       <div className="ad-card fin-block">
         <div className="fin-block-head">
-          <h4>Income vs expenses — month on month</h4>
+          <h4>Income vs expenses - month on month</h4>
           <div className="fin-legend"><span className="fin-dot in" /> Income <span className="fin-dot ex" /> Expenses</div>
         </div>
-        {M.months.length ? <MonthChart data={M.months} /> : <div className="ad-empty">No data yet — add entries below.</div>}
+        {M.months.length ? <MonthChart data={M.months} /> : <div className="ad-empty">No data yet - add entries below.</div>}
       </div>
 
       {/* Category breakdown */}
@@ -191,8 +191,8 @@ export default function Finance({ pw }) {
                     <td className="ad-nowrap">{e.date}</td>
                     <td><span className={"fin-tag " + e.type}>{e.type}</span></td>
                     <td>{e.category}</td>
-                    <td>{e.party || "—"}</td>
-                    <td className="ad-trunc">{e.description || "—"}</td>
+                    <td>{e.party || "-"}</td>
+                    <td className="ad-trunc">{e.description || "-"}</td>
                     <td style={{ textAlign: "right" }} className={e.type === "income" ? "fin-in" : "fin-ex"}>
                       {e.type === "income" ? "+" : "−"}{eur2(e.amount)}
                     </td>

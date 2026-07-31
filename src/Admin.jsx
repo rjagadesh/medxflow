@@ -11,7 +11,7 @@ const DATA_ENDPOINT = "/.netlify/functions/admin-data";
 const PW_KEY = "eirim_admin_pw";
 
 const fmt = (iso) => {
-  if (!iso) return "—";
+  if (!iso) return "-";
   try {
     return new Date(iso).toLocaleString();
   } catch {
@@ -61,7 +61,7 @@ export default function Admin() {
     try {
       const res = await fetch(DATA_ENDPOINT, { headers: { "x-admin-password": token } });
       const body = await res.json().catch(() => ({}));
-      if (res.status === 401) { logout(); throw new Error("Session expired — please sign in again."); }
+      if (res.status === 401) { logout(); throw new Error("Session expired - please sign in again."); }
       if (!res.ok) throw new Error(body?.error || `HTTP ${res.status}`);
       setData(body);
       setAuthed(true);
@@ -135,7 +135,7 @@ export default function Admin() {
   const segments = counts.segments || { human: pageviews.length, bot: 0, internal: 0, total: pageviews.length };
   // Everything on the Traffic tab respects the segment toggle (default: Real).
   const shownPV = tab === "traffic" ? pageviews.filter((p) => (p.segment || "human") === seg) : pageviews;
-  // Drop our own domain from Top Referrers — it's internal-navigation self-referral.
+  // Drop our own domain from Top Referrers - it's internal-navigation self-referral.
   const SELF_REF = /(?:^|\.)medxflow\.(?:ai|com|io)$|^localhost$|^127\.0\.0\.1$/i;
   const uniqueVisitors = new Set(shownPV.map((p) => p.visitorId).filter(Boolean)).size;
   const topPages = tally(shownPV, (p) => p.path);
@@ -224,18 +224,18 @@ export default function Admin() {
                   {leadSlice.map((l) => (
                     <tr key={l.id} className="ct-row" onClick={() => openContact(l.email)}>
                       <td className="ad-nowrap">{fmt(l.at)}</td>
-                      <td>{l.name || "—"}</td>
+                      <td>{l.name || "-"}</td>
                       <td>
-                        <a className="ad-mail" href={`mailto:${l.email}`}>{l.email || "—"}</a>
+                        <a className="ad-mail" href={`mailto:${l.email}`}>{l.email || "-"}</a>
                       </td>
-                      <td>{l.clinic || "—"}</td>
+                      <td>{l.clinic || "-"}</td>
                       <td className="ad-nowrap">
-                        {l.phone ? <a className="ad-mail" href={`tel:${l.phone}`}>{l.phone}</a> : "—"}
+                        {l.phone ? <a className="ad-mail" href={`tel:${l.phone}`}>{l.phone}</a> : "-"}
                       </td>
-                      <td>{l.preferredTime || "—"}</td>
-                      <td className="ad-trunc" title={l.message || ""}>{l.message || "—"}</td>
-                      <td className="ad-trunc">{l.source || "—"}</td>
-                      <td>{[l.geo?.city, l.geo?.country].filter(Boolean).join(", ") || "—"}</td>
+                      <td>{l.preferredTime || "-"}</td>
+                      <td className="ad-trunc" title={l.message || ""}>{l.message || "-"}</td>
+                      <td className="ad-trunc">{l.source || "-"}</td>
+                      <td>{[l.geo?.city, l.geo?.country].filter(Boolean).join(", ") || "-"}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -257,7 +257,7 @@ export default function Admin() {
           </div>
           {segments.total > 0 && (
             <div className="ad-filtered">
-              <b>{segments.total - segments.human}</b> of {segments.total} pageviews filtered —{" "}
+              <b>{segments.total - segments.human}</b> of {segments.total} pageviews filtered -{" "}
               <button className="ad-flink" onClick={() => { setSeg("bot"); setPvPage(0); }}>{segments.bot} bot</button>,{" "}
               <button className="ad-flink" onClick={() => { setSeg("internal"); setPvPage(0); }}>{segments.internal} internal</button>
             </div>
@@ -295,13 +295,13 @@ export default function Admin() {
                           <div className="ad-reasons">
                             {(p.reasons || []).length
                               ? p.reasons.map((r) => <span key={r} className="ad-reason">{r}</span>)
-                              : <span className="ad-reason ad-reason-none">—</span>}
+                              : <span className="ad-reason ad-reason-none">-</span>}
                           </div>
                         </td>
-                        <td>{[p.geo?.city, p.geo?.country].filter(Boolean).join(", ") || "—"}</td>
-                        <td className="ad-nowrap">{p.ip || "—"}</td>
+                        <td>{[p.geo?.city, p.geo?.country].filter(Boolean).join(", ") || "-"}</td>
+                        <td className="ad-nowrap">{p.ip || "-"}</td>
                         <td className="ad-nowrap">
-                          {[p.device?.browser, p.device?.os].filter(Boolean).join(" / ") || "—"}
+                          {[p.device?.browser, p.device?.os].filter(Boolean).join(" / ") || "-"}
                           {p.device?.type && <span className="ad-badge">{p.device.type}</span>}
                         </td>
                         <td>{p.path}</td>
@@ -351,12 +351,12 @@ export default function Admin() {
                   {visitors.map((v) => (
                     <tr key={v.sessionId} className={v.email ? "ct-row" : ""} onClick={() => v.email && openContact(v.email)}>
                       <td className="ad-nowrap">{fmt(v.at)}</td>
-                      <td>{v.name || "—"}</td>
-                      <td>{v.email || "—"}</td>
-                      <td>{v.page || "—"}</td>
+                      <td>{v.name || "-"}</td>
+                      <td>{v.email || "-"}</td>
+                      <td>{v.page || "-"}</td>
                       <td className="ad-trunc">{v.referrer || "direct"}</td>
                       <td className="ad-trunc" title={v.userAgent || ""}>
-                        {v.userAgent || "—"}
+                        {v.userAgent || "-"}
                       </td>
                     </tr>
                   ))}
@@ -382,7 +382,7 @@ export default function Admin() {
                   >
                     <span className="ad-caret">{open ? "▾" : "▸"}</span>
                     <b>{t.name || "Anonymous"}</b>
-                    <span className="ad-email">{t.email || "—"}</span>
+                    <span className="ad-email">{t.email || "-"}</span>
                     <span className="ad-meta">
                       {(t.messages?.length || 0)} msgs · {fmt(t.updatedAt)}
                     </span>

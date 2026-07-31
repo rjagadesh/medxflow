@@ -168,7 +168,7 @@ export default function ProductPage({ slug }) {
           <div className="wrap pp-cta">
             <Reveal>
               <h2 className="h-light">Ready to plug the leaks in your revenue cycle?</h2>
-              <p className="lead-light">See {p.name} — and the full MedXFlow suite — in a 20-minute demo built around your practice.</p>
+              <p className="lead-light">See {p.name} - and the full MedXFlow suite - in a 20-minute demo built around your practice.</p>
               <a href="#cta" className="btn btn-gorse" onClick={(e) => { e.preventDefault(); openDemo(); }}>Book a demo</a>
             </Reveal>
           </div>
@@ -254,7 +254,7 @@ export function ProductsIndex() {
             <Reveal>
               <Eyebrow light>Products</Eyebrow>
               <h1 className="h-light pp-h1">The whole revenue cycle,<br />one connected platform.</h1>
-              <p className="lead-light pp-tagline">From the first appointment to the final payment — nine connected stages of Revenue Cycle Management, plus a human-led managed billing team when you'd rather hand it over.</p>
+              <p className="lead-light pp-tagline">From the first appointment to the final payment - nine connected stages of Revenue Cycle Management, plus a human-led managed billing team when you'd rather hand it over.</p>
             </Reveal>
           </div>
           <div className="wrap pp-life-wrap">
