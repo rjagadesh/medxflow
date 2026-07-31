@@ -184,8 +184,8 @@ export default function ProductPage({ slug }) {
 // Animated RCM lifecycle: an AI agent flies the pipeline, completing each stage
 // (scheduling → eligibility → … → collections → analytics), then loops.
 const RLC_SHORT = {
-  1: "Scheduling", 2: "Eligibility", 3: "Check-in", 4: "Charge & Coding",
-  5: "Claims", 6: "Payment Posting", 7: "Denials", 8: "Collections", 9: "Analytics",
+  1: "Scheduling", 2: "Eligibility", 3: "Prior Auth", 4: "Check-in", 5: "Charge & Coding",
+  6: "Claims", 7: "Payment Posting", 8: "Denials", 9: "Collections", 10: "Analytics",
 };
 function RcmLifecycle() {
   const nodes = rcmProducts;
@@ -254,7 +254,7 @@ export function ProductsIndex() {
             <Reveal>
               <Eyebrow light>Products</Eyebrow>
               <h1 className="h-light pp-h1">The whole revenue cycle,<br />one connected platform.</h1>
-              <p className="lead-light pp-tagline">From the first appointment to the final payment - nine connected stages of Revenue Cycle Management, plus a human-led managed billing team when you'd rather hand it over.</p>
+              <p className="lead-light pp-tagline">From the first appointment to the final payment - the connected stages of Revenue Cycle Management, plus a human-led managed billing team when you'd rather hand it over.</p>
             </Reveal>
           </div>
           <div className="wrap pp-life-wrap">
@@ -290,7 +290,7 @@ export function ProductsIndex() {
           <div className="wrap">
             <Reveal>
               <Eyebrow>Revenue Cycle Management</Eyebrow>
-              <h2>Nine stages, end to end</h2>
+              <h2>{rcmProducts.length} stages, end to end</h2>
             </Reveal>
             <div className="pp-index-grid">
               {rcmProducts.map((r, i) => (

@@ -105,6 +105,7 @@ export function Nav() {
                   <a href="/telehealth" role="menuitem"><span className="nav-dd-em">💻</span>{t("nav.p_telehealth")}</a>
                   <a href="/products/voip" role="menuitem"><span className="nav-dd-em">📞</span>VoIP Services</a>
                   <a href="/products/eligibility-verification" role="menuitem"><span className="nav-dd-em">🛡️</span>Eligibility Verification</a>
+                  <a href="/products/charge-capture-coding" role="menuitem"><span className="nav-dd-em">🏷️</span>Medical Coding</a>
                   <a href="#cta" role="menuitem" onClick={(e) => { e.preventDefault(); openDemo(); }}><span className="nav-dd-em">↪️</span>Referral Workflow</a>
                   <a href="/products" role="menuitem" className="nav-dd-all">◆ All products</a>
                 </div>
@@ -931,11 +932,10 @@ export function BookDemo() {
 /* ---------- About / Team ---------- */
 function About() {
   const { t } = useI18n();
-  // TODO: replace placeholder names with your real team (names are not translated).
-  const team = [
-    { name: "Founder Name", role: t("about.role1"), bio: t("about.bio1") },
-    { name: "Founder Name", role: t("about.role2"), bio: t("about.bio2") },
-    { name: "Advisor Name", role: t("about.role3"), bio: t("about.bio3") },
+  const highlights = [
+    { icon: "📈", h: t("about.exp1_h"), d: t("about.exp1_d") },
+    { icon: "🔁", h: t("about.exp2_h"), d: t("about.exp2_d") },
+    { icon: "🛠", h: t("about.exp3_h"), d: t("about.exp3_d") },
   ];
   return (
     <section className="sec sec-tint" id="about">
@@ -946,15 +946,12 @@ function About() {
           <p className="body">{t("about.body")}</p>
         </Reveal>
         <div className="team-grid">
-          {team.map((t, i) => (
+          {highlights.map((x, i) => (
             <Reveal key={i} delay={i * 90}>
               <div className="team-card">
-                <div className="team-avatar" aria-hidden="true">
-                  {t.name.split(" ").map((w) => w[0]).join("").slice(0, 2)}
-                </div>
-                <h3>{t.name}</h3>
-                <div className="team-role">{t.role}</div>
-                <p>{t.bio}</p>
+                <div className="team-avatar" aria-hidden="true">{x.icon}</div>
+                <h3>{x.h}</h3>
+                <p>{x.d}</p>
               </div>
             </Reveal>
           ))}

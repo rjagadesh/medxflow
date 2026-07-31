@@ -23,7 +23,7 @@ const esc = (s) => String(s)
 // Every route to prerender (homepage keeps its own index.html untouched).
 const routes = [
   { path: "/telehealth", title: "Telehealth · MedXFlow", desc: en.telehealth.hero_lead },
-  { path: "/products", title: "Products · MedXFlow", desc: "Nine connected stages of Revenue Cycle Management, plus VoIP, telehealth and a human-led managed billing team — one platform for the whole practice." },
+  { path: "/products", title: "Products · MedXFlow", desc: "The connected stages of Revenue Cycle Management, plus VoIP, telehealth and a human-led managed billing team - one platform for the whole practice." },
   ...PRODUCTS.map((p) => ({ path: `/products/${p.slug}`, title: `${p.name} · MedXFlow`, desc: p.tagline })),
 ];
 
