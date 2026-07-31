@@ -70,17 +70,27 @@ export function Reveal({ children, delay = 0, className = "" }) {
 export function Nav() {
   const { t } = useI18n();
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   useEffect(() => {
     const f = () => setScrolled(window.scrollY > 24);
     window.addEventListener("scroll", f, { passive: true });
     return () => window.removeEventListener("scroll", f);
   }, []);
+  const closeMenu = () => setMenuOpen(false);
   return (
-    <nav className={"nav" + (scrolled ? " nav-scrolled" : "")}>
+    <nav className={"nav" + (scrolled ? " nav-scrolled" : "") + (menuOpen ? " nav-open" : "")}>
       <div className="wrap nav-in">
-        <a href="/" className="brand">
+        <a href="/" className="brand" onClick={closeMenu}>
           <img src="/logo.webp" alt="MedXFlow — AI front desk for clinics" className="brand-logo" width="1045" height="140" />
         </a>
+        <button
+          className="nav-burger"
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-expanded={menuOpen}
+          onClick={() => setMenuOpen((o) => !o)}
+        >
+          <span /><span /><span />
+        </button>
         <div className="nav-links">
           <div className="nav-dd">
             <button className="nav-dd-btn" aria-haspopup="true">
@@ -146,6 +156,17 @@ export function Nav() {
           <a href="#cta" className="nav-cta" onClick={(e) => { e.preventDefault(); openDemo(); }}>{t("nav.book")}</a>
           <LangSwitcher />
         </div>
+      </div>
+
+      {/* Mobile menu */}
+      <div className="nav-mobile">
+        <a href="/products" onClick={closeMenu}>{t("nav.products")}</a>
+        <a href="#cta" onClick={closeMenu}>{t("nav.contact")}</a>
+        <a href="/#faq" onClick={closeMenu}>{t("nav.faq")}</a>
+        <a href="#top" onClick={(e) => { e.preventDefault(); closeMenu(); startTour(); }}>▶ {t("nav.tour")}</a>
+        <a href="tel:+12103969718" onClick={closeMenu}>📞 (210) 396-9718</a>
+        <a href="#cta" className="nav-mobile-cta" onClick={(e) => { e.preventDefault(); closeMenu(); openDemo(); }}>{t("nav.book")}</a>
+        <div className="nav-mobile-lang"><LangSwitcher /></div>
       </div>
     </nav>
   );
@@ -1059,9 +1080,25 @@ export const CSS = `
 }
 .nav-tour{display:inline-flex; align-items:center; gap:5px; color:var(--spruce)!important; font-weight:700; white-space:nowrap}
 .nav-tour:hover{color:var(--spruce-deep)!important}
-.nav-cta{background:var(--gorse); color:var(--ink)!important; padding:9px 18px; border-radius:999px; font-weight:700}
+.nav-cta{background:var(--gorse); color:var(--ink)!important; padding:9px 18px; border-radius:999px; font-weight:700; white-space:nowrap}
 .nav-cta:hover{transform:translateY(-1px)}
-@media(max-width:820px){.nav-links a:not(.nav-cta){display:none}}
+
+/* mobile hamburger + slide-down menu */
+.nav-burger{display:none; flex-direction:column; justify-content:center; gap:5px; width:44px; height:44px; padding:11px; background:none; border:none; cursor:pointer}
+.nav-burger span{display:block; height:2.5px; width:100%; background:var(--ink); border-radius:2px; transition:transform .25s ease, opacity .2s ease}
+.nav-open .nav-burger span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+.nav-open .nav-burger span:nth-child(2){opacity:0}
+.nav-open .nav-burger span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+.nav-mobile{display:none; flex-direction:column; background:#fff; border-top:1px solid var(--line); box-shadow:0 24px 44px rgba(13,43,82,.14); max-height:calc(100vh - 60px); overflow-y:auto}
+.nav-mobile a{padding:15px clamp(20px,5vw,32px); font-size:16px; font-weight:600; color:var(--ink); border-bottom:1px solid var(--line)}
+.nav-mobile a:active{background:var(--mist)}
+.nav-mobile-cta{color:var(--spruce)!important; font-weight:800}
+.nav-mobile-lang{padding:14px clamp(20px,5vw,32px)}
+@media(max-width:880px){
+  .nav-links{display:none}
+  .nav-burger{display:flex}
+  .nav-open .nav-mobile{display:flex}
+}
 
 /* hero */
 .hero{position:relative; min-height:92vh; display:grid; background:
