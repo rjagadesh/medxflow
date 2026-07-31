@@ -1097,7 +1097,10 @@ export const CSS = `
 .nav-dd-all{font-weight:700; color:var(--spruce)!important; margin-top:8px; border-top:1px solid var(--line); padding-top:12px!important}
 .nav-dd-step{display:inline-grid; place-items:center; width:20px; height:20px; border-radius:6px; background:var(--seaglass); color:var(--spruce-deep); font-size:11px; font-weight:800; flex:none}
 .nav-dd-note{font-size:12.5px; line-height:1.5; color:rgba(13,43,82,.55); padding:6px 12px 0; font-weight:500}
-@media(max-width:900px){
+/* Below the hamburger breakpoint (nav-links hidden), so this only matters if the
+   mega menu is ever shown at very narrow desktop widths. Kept in sync with the
+   880px hamburger breakpoint to avoid a broken in-between zone. */
+@media(max-width:880px){
   .nav-dd-mega{position:absolute; top:100%; width:auto; left:0; right:auto; max-width:92vw; border:1px solid var(--line); border-radius:14px; max-height:74vh; overflow-y:auto}
   .nav-dd-mega-inner{grid-template-columns:1fr; padding:14px; gap:6px}
   .nav-dd-col-span2{grid-column:auto}
