@@ -95,7 +95,6 @@ export function Nav() {
                   <a href="/telehealth" role="menuitem"><span className="nav-dd-em">💻</span>{t("nav.p_telehealth")}</a>
                   <a href="/products/voip" role="menuitem"><span className="nav-dd-em">📞</span>VoIP Services</a>
                   <a href="/products/eligibility-verification" role="menuitem"><span className="nav-dd-em">🛡️</span>Eligibility Verification</a>
-                  <a href="#cta" role="menuitem" onClick={(e) => { e.preventDefault(); openDemo(); }}><span className="nav-dd-em">🔁</span>EOB to ERA</a>
                   <a href="#cta" role="menuitem" onClick={(e) => { e.preventDefault(); openDemo(); }}><span className="nav-dd-em">↪️</span>Referral Workflow</a>
                   <a href="/products" role="menuitem" className="nav-dd-all">◆ All products</a>
                 </div>
