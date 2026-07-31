@@ -81,7 +81,7 @@ export function Nav() {
     <nav className={"nav" + (scrolled ? " nav-scrolled" : "") + (menuOpen ? " nav-open" : "")}>
       <div className="wrap nav-in">
         <a href="/" className="brand" onClick={closeMenu}>
-          <img src="/logo.webp" alt="MedXFlow - AI front desk for clinics" className="brand-logo" width="1045" height="140" />
+          <img src="/logo.jpg" alt="MedXFlow - AI revenue cycle management for practices" className="brand-logo" width="1045" height="140" />
         </a>
         <button
           className="nav-burger"
@@ -231,7 +231,8 @@ function Hero() {
   const vid0 = useRef(null);
   const vid1 = useRef(null);
   const vid2 = useRef(null);
-  const vids = [vid0, vid1, vid2];
+  const vid3 = useRef(null);
+  const vids = [vid0, vid1, vid2, vid3];
   const SLIDES = vids.length;
   const activeVid = () => vids[idx]?.current;
 
@@ -372,8 +373,35 @@ function Hero() {
               autoPlay
               muted
               playsInline
-              onEnded={() => setIdx((i) => (i === 2 ? 0 : i))}
+              onEnded={() => setIdx((i) => (i === 2 ? 3 : i))}
               aria-label="A patient joining a MedXFlow telehealth video visit from home"
+            />
+          </div>
+        </div>
+      </div>
+      {/* Slide 4 - RCM Billing */}
+      <div className={"slide" + (idx === 3 ? " slide-on" : "")} aria-hidden={idx !== 3}>
+        <div className="wrap hero-grid">
+          <div className="hero-copy">
+            <Eyebrow light>{t("hero.s4_eyebrow")}</Eyebrow>
+            <h2 className="hero-alt-h">{t("hero.s4_h2a")}<br /><em>{t("hero.s4_h2b")}</em></h2>
+            <p className="lead">{t("hero.s4_lead")}</p>
+            <div className="btn-row">
+              <a className="btn btn-gorse" href="/products">{t("hero.s4_cta1")}</a>
+              <a className="btn btn-ghost" href="#cta">{t("hero.s4_cta2")}</a>
+            </div>
+            <div className="hero-note">{t("hero.s4_note")}</div>
+          </div>
+          <div className="hero-art hero-art-full">
+            {soundBtn}
+            <video
+              ref={vid3}
+              src="/rcm-process.mp4"
+              autoPlay
+              muted
+              playsInline
+              onEnded={() => setIdx((i) => (i === 3 ? 0 : i))}
+              aria-label="MedXFlow AI agent working the revenue cycle billing process"
             />
           </div>
         </div>
@@ -382,7 +410,7 @@ function Hero() {
       <button className="s-arrow s-prev" aria-label="Previous slide" onClick={() => setIdx((i) => (i + SLIDES - 1) % SLIDES)}>‹</button>
       <button className="s-arrow s-next" aria-label="Next slide" onClick={() => setIdx((i) => (i + 1) % SLIDES)}>›</button>
       <div className="s-dots">
-        {[0, 1, 2].map((i) => (
+        {[0, 1, 2, 3].map((i) => (
           <button key={i} className={idx === i ? "on" : ""} aria-label={`Slide ${i + 1}`} onClick={() => setIdx(i)} />
         ))}
       </div>
