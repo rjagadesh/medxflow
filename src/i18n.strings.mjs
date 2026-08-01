@@ -109,7 +109,7 @@ export const en = {
     f4_d: "Registration and consent captured on screen - typed, legible, structured. No clipboards.",
     f5_h: "Welcome · English & Spanish",
     f5_d: "A warm bilingual welcome, larger type for older patients, full accessibility mode.",
-    f6_h: "Hardware included",
+    f6_h: "Devices included",
     f6_d: "Floor-standing unit in white or black, shipped pre-configured. Plug in, connect Wi-Fi, done.",
   },
 
@@ -189,7 +189,7 @@ export const en = {
     fd_f3: "Priority support",
     fd_f4: "Founding practices: pricing locked 24 months",
     fd_f5: "Free setup + 30-day trial",
-    ci_per: "/month, hardware included",
+    ci_per: "/month, devices included",
     ci_cta: "Start with Check-in",
     ci_f1: "Floor-standing kiosk (white/black)",
     ci_f2: "Arrival status to your EHR",

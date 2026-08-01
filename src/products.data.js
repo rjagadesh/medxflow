@@ -315,7 +315,7 @@ export const PRODUCTS = [
     overview:
       "Legacy phone systems weren't built for a modern practice - or for AI. MedXFlow VoIP replaces your on-prem PBX with a HIPAA-ready cloud phone system: port your existing numbers, route calls intelligently across locations, and let MedXFlow Voice AI answer overflow and after-hours automatically. Softphones for the desk, apps for the road, and call analytics that actually tie back to bookings.",
     features: [
-      ["☎️", "Cloud PBX & SIP", "A full hosted phone system - extensions, hunt groups, voicemail-to-email - with no hardware to rack or maintain."],
+      ["☎️", "Cloud PBX & SIP", "A full hosted phone system - extensions, hunt groups, voicemail-to-email - with no devices to rack or maintain."],
       ["🔀", "Smart call routing", "Time-of-day, skills- and location-based IVR routing, with overflow and after-hours handled by MedXFlow Voice AI."],
       ["🔁", "Number porting", "Keep every number your patients already know. We port them over with zero downtime."],
       ["🤖", "Native Voice AI hand-off", "Calls flow seamlessly between your team and the AI receptionist - one system, one call log."],

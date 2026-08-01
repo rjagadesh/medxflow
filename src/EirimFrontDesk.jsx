@@ -141,7 +141,7 @@ export function Nav() {
                 </div>
 
                 <div className="nav-dd-col">
-                  <div className="nav-dd-head">Hardware</div>
+                  <div className="nav-dd-head">Devices</div>
                   <a href="/#checkin" role="menuitem"><span className="nav-dd-em">🖥️</span>Self-service Kiosk</a>
                   <a href="/#checkin" role="menuitem"><span className="nav-dd-em">📋</span>Reception Tablet</a>
                   <a href="/#checkin" role="menuitem"><span className="nav-dd-em">💳</span>Card Payment Terminal</a>
