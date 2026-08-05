@@ -19,18 +19,18 @@ export function config() {
 }
 
 // ---- modules & role presets (IAM) ----
-export const MODULES = ["contacts", "pipeline", "campaigns", "financials", "leads", "traffic", "chat", "tickets", "settings"];
+export const MODULES = ["contacts", "pipeline", "campaigns", "financials", "leads", "traffic", "meta", "chat", "tickets", "settings"];
 export const MODULE_LABEL = {
   contacts: "Contacts", pipeline: "Pipeline", campaigns: "Campaigns", financials: "Financials",
-  leads: "Demo requests", traffic: "Traffic", chat: "Chatbot", tickets: "Tickets", settings: "Settings",
+  leads: "Demo requests", traffic: "Traffic", meta: "Meta Suite", chat: "Chatbot", tickets: "Tickets", settings: "Settings",
 };
 export const ROLE_PRESETS = {
   owner: [...MODULES],
   admin: MODULES.filter((m) => m !== "settings"),
-  sales: ["contacts", "pipeline", "campaigns", "leads", "chat", "tickets"],
+  sales: ["contacts", "pipeline", "campaigns", "leads", "meta", "chat", "tickets"],
   finance: ["financials", "contacts"],
   support: ["tickets", "contacts", "chat"],
-  analyst: ["traffic", "contacts", "pipeline"],
+  analyst: ["traffic", "meta", "contacts", "pipeline"],
 };
 
 // ---- password hashing (scrypt) ----
@@ -44,6 +44,46 @@ export function verifyPassword(pw, stored) {
   const [salt, h] = stored.split(":");
   const h2 = crypto.scryptSync(String(pw), salt, 32).toString("hex");
   return h.length === h2.length && crypto.timingSafeEqual(Buffer.from(h, "hex"), Buffer.from(h2, "hex"));
+}
+
+// Constant-time string compare (avoids timing attacks on the master password).
+export function safeEqual(a, b) {
+  const ba = Buffer.from(String(a || ""));
+  const bb = Buffer.from(String(b || ""));
+  if (ba.length !== bb.length || ba.length === 0) return false;
+  return crypto.timingSafeEqual(ba, bb);
+}
+
+// ---- brute-force protection (per-IP failed-login lockout) ----
+const ATTEMPT_WINDOW_MS = 15 * 60 * 1000;
+const MAX_ATTEMPTS = 6;
+const LOCK_MS = 15 * 60 * 1000;
+const attemptsStore = () => getStore("login-attempts");
+const attemptKey = (ip) => `ip-${String(ip || "unknown").replace(/[^\w.:-]/g, "_")}`;
+
+export async function checkLock(ip) {
+  try {
+    const rec = await attemptsStore().get(attemptKey(ip), { type: "json" });
+    if (rec?.lockUntil && Date.now() < rec.lockUntil) {
+      return { locked: true, retryAfter: Math.ceil((rec.lockUntil - Date.now()) / 1000) };
+    }
+  } catch {}
+  return { locked: false };
+}
+export async function recordFail(ip) {
+  try {
+    const s = attemptsStore();
+    const key = attemptKey(ip);
+    const now = Date.now();
+    let rec = (await s.get(key, { type: "json" })) || { count: 0, windowStart: now };
+    if (now - rec.windowStart > ATTEMPT_WINDOW_MS) rec = { count: 0, windowStart: now };
+    rec.count += 1;
+    if (rec.count >= MAX_ATTEMPTS) rec.lockUntil = now + LOCK_MS;
+    await s.setJSON(key, rec);
+  } catch {}
+}
+export async function clearFails(ip) {
+  try { await attemptsStore().delete(attemptKey(ip)); } catch {}
 }
 
 // ---- signed tokens (stateless sessions) ----
@@ -98,7 +138,7 @@ export const deleteUser = (email) => usersStore().delete(userKey(email));
 export function principal(req) {
   const h = req.headers.get("x-admin-password") || "";
   const { adminPassword } = config();
-  if (h && adminPassword && h === adminPassword) {
+  if (h && adminPassword && safeEqual(h, adminPassword)) {
     return { owner: true, email: "owner", name: "Owner", role: "owner", modules: [...MODULES] };
   }
   const p = verifyToken(h);

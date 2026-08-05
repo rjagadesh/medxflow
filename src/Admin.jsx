@@ -6,6 +6,7 @@ import Pipeline from "./Pipeline.jsx";
 import Tickets from "./Tickets.jsx";
 import Settings from "./Settings.jsx";
 import Seo from "./Seo.jsx";
+import Meta from "./Meta.jsx";
 
 const DATA_ENDPOINT = "/.netlify/functions/admin-data";
 const PW_KEY = "eirim_admin_pw";
@@ -30,7 +31,7 @@ const tally = (arr, keyFn) => {
 };
 
 const SKEY = "eirim_admin_session";
-const TAB_ORDER = ["contacts", "pipeline", "campaigns", "financials", "leads", "traffic", "seo", "chat", "tickets", "settings"];
+const TAB_ORDER = ["contacts", "pipeline", "campaigns", "meta", "financials", "leads", "traffic", "seo", "chat", "tickets", "settings"];
 const readSession = () => { try { return JSON.parse(sessionStorage.getItem(SKEY) || "null"); } catch { return null; } };
 const firstTab = (sess) => TAB_ORDER.find((m) => sess?.role === "owner" || (sess?.modules || []).includes(m)) || "contacts";
 
@@ -118,13 +119,25 @@ export default function Admin() {
     return (
       <div className="ad-wrap ad-center">
         <style>{CSS}</style>
-        <form className="ad-login" onSubmit={signIn}>
-          <h1>MedXFlow Admin</h1>
-          <p>Sign in with your account, or leave email blank and use the owner password.</p>
-          <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Email (blank = owner)" autoComplete="username" />
-          <input type="password" value={pwInput} onChange={(e) => setPwInput(e.target.value)} placeholder="Password" autoComplete="current-password" autoFocus />
-          <button type="submit" disabled={loading || !pwInput}>{loading ? "Checking…" : "Sign in"}</button>
-          {error && <div className="ad-err">{error}</div>}
+        <form className="ad-login" onSubmit={signIn} autoComplete="on">
+          <div className="ad-login-brand">
+            <img src="/logo.jpg" alt="MedXFlow" />
+          </div>
+          <div className="ad-login-head">
+            <h1>Admin Console</h1>
+            <p>Sign in to continue. Authorized personnel only.</p>
+          </div>
+          <label className="ad-login-field">
+            <span>Email</span>
+            <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@medxflow.ai" autoComplete="username" autoFocus />
+          </label>
+          <label className="ad-login-field">
+            <span>Password</span>
+            <input type="password" value={pwInput} onChange={(e) => setPwInput(e.target.value)} placeholder="••••••••" autoComplete="current-password" />
+          </label>
+          <button type="submit" disabled={loading || !pwInput}>{loading ? "Signing in…" : "Sign in"}</button>
+          {error && <div className="ad-err" role="alert">{error}</div>}
+          <div className="ad-login-foot">🔒 Secure area · access is monitored and rate-limited</div>
         </form>
       </div>
     );
@@ -158,6 +171,7 @@ export default function Admin() {
           {can("contacts") && <button className={tab === "contacts" ? "on" : ""} onClick={() => setTab("contacts")}>👤 Contacts</button>}
           {can("pipeline") && <button className={tab === "pipeline" ? "on" : ""} onClick={() => setTab("pipeline")}>🗂 Pipeline</button>}
           {can("campaigns") && <button className={tab === "campaigns" ? "on" : ""} onClick={() => setTab("campaigns")}>📣 Campaigns</button>}
+          {can("meta") && <button className={tab === "meta" ? "on" : ""} onClick={() => setTab("meta")}>📱 Meta Suite</button>}
           {can("financials") && <button className={tab === "financials" ? "on" : ""} onClick={() => setTab("financials")}>💶 Financials</button>}
           {can("leads") && <button className={tab === "leads" ? "on" : ""} onClick={() => setTab("leads")}>📥 Demo requests</button>}
           {can("tickets") && <button className={tab === "tickets" ? "on" : ""} onClick={() => setTab("tickets")}>🎫 Tickets</button>}
@@ -174,7 +188,7 @@ export default function Admin() {
       </aside>
 
       <main className="ad-main">
-        {!["campaigns", "financials", "contacts", "pipeline", "tickets", "settings", "seo"].includes(tab) && (
+        {!["campaigns", "meta", "financials", "contacts", "pipeline", "tickets", "settings", "seo"].includes(tab) && (
           <div className="ad-stats">
             <div className="ad-stat ad-stat-hot"><b>{counts.leads ?? leads.length}</b><span>Demo requests</span></div>
             <div className="ad-stat"><b>{tab === "traffic" ? shownPV.length : (counts.pageviews ?? pageviews.length)}</b><span>Pageviews{tab === "traffic" && seg !== "human" ? ` · ${SEG_LABEL[seg]}` : ""}</span></div>
@@ -197,6 +211,8 @@ export default function Admin() {
       {tab === "seo" && can("traffic") && <Seo pw={pw} />}
 
       {tab === "campaigns" && <Campaigns pw={pw} leads={leads} visitors={visitors} />}
+
+      {tab === "meta" && can("meta") && <Meta pw={pw} />}
 
       {tab === "financials" && <Finance pw={pw} />}
 
@@ -476,15 +492,27 @@ const CSS = `
   .ad-nav{flex-direction:row; flex-wrap:wrap}
   .ad-side-foot{flex-direction:row; border-top:none; padding-top:0; margin-top:8px}
 }
-.ad-center{display:grid; place-items:center}
-.ad-login{background:#112B52; border:1px solid rgba(207,224,242,.16); border-radius:16px; padding:34px 30px; width:min(360px,92vw); display:flex; flex-direction:column; gap:14px; box-shadow:0 30px 80px rgba(0,0,0,.5)}
-.ad-login h1{font-size:22px; margin:0}
-.ad-login p{margin:0; font-size:13.5px; color:rgba(232,238,246,.6)}
-.ad-login input{padding:12px 14px; border-radius:10px; border:1px solid rgba(207,224,242,.2); background:#0A1830; color:#fff; font-size:15px; outline:none}
-.ad-login input:focus{border-color:#3DDCC9}
+.ad-center{display:grid; place-items:center; min-height:100vh; padding:24px;
+  background:radial-gradient(1100px 620px at 50% -10%, rgba(26,93,173,.22), transparent 60%), #081226}
+.ad-login{background:linear-gradient(180deg,#122e57,#0f2748); border:1px solid rgba(207,224,242,.14);
+  border-radius:20px; padding:34px 32px 26px; width:min(400px,94vw); display:flex; flex-direction:column; gap:16px;
+  box-shadow:0 40px 100px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.05)}
+.ad-login-brand{display:flex; justify-content:center; margin-bottom:6px}
+.ad-login-brand img{height:30px; width:auto; display:block; border-radius:9px; padding:7px 12px; background:#fff; box-shadow:0 6px 18px rgba(0,0,0,.3)}
+.ad-login-head{text-align:center; margin-bottom:4px}
+.ad-login-head h1{font-size:21px; margin:0 0 5px; color:#fff; letter-spacing:-.01em}
+.ad-login-head p{margin:0; font-size:13px; color:rgba(232,238,246,.55); line-height:1.5}
+.ad-login-field{display:flex; flex-direction:column; gap:6px}
+.ad-login-field span{font-size:12px; font-weight:600; color:rgba(232,238,246,.72); letter-spacing:.02em}
+.ad-login input{padding:12px 14px; border-radius:11px; border:1px solid rgba(207,224,242,.18); background:#0A1830; color:#fff; font-size:15px; outline:none; transition:border-color .15s, box-shadow .15s; width:100%}
+.ad-login input::placeholder{color:rgba(232,238,246,.32)}
+.ad-login input:focus{border-color:#3DDCC9; box-shadow:0 0 0 3px rgba(61,220,201,.14)}
 .ad-login button, .ad-ghost{cursor:pointer; font-family:inherit}
-.ad-login button{background:#1A5DAD; color:#fff; border:none; border-radius:10px; padding:12px; font-size:15px; font-weight:700}
-.ad-login button:disabled{opacity:.5}
+.ad-login button{background:#1A5DAD; color:#fff; border:none; border-radius:11px; padding:13px; font-size:15px; font-weight:700; margin-top:4px; transition:background .15s, transform .1s}
+.ad-login button:hover:not(:disabled){background:#1e6bc4}
+.ad-login button:active:not(:disabled){transform:translateY(1px)}
+.ad-login button:disabled{opacity:.5; cursor:default}
+.ad-login-foot{text-align:center; font-size:11.5px; color:rgba(232,238,246,.4); margin-top:2px}
 .ad-err{background:rgba(217,83,79,.15); border:1px solid rgba(217,83,79,.4); color:#ffb4ae; padding:9px 12px; border-radius:9px; font-size:13px}
 
 .ad-top{display:flex; justify-content:space-between; align-items:flex-end; gap:16px; flex-wrap:wrap; margin-bottom:20px}

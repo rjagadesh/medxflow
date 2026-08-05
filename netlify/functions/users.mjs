@@ -1,11 +1,12 @@
 import {
   config, MODULES, MODULE_LABEL, ROLE_PRESETS,
-  hashPassword, verifyPassword, signToken,
+  hashPassword, verifyPassword, signToken, safeEqual,
+  checkLock, recordFail, clearFails,
   listUsers, getUser, saveUser, deleteUser, userKey,
   authorize, json,
 } from "../lib/auth.mjs";
 
-export default async (req) => {
+export default async (req, context) => {
   let body = {};
   try {
     body = await req.json();
@@ -14,20 +15,37 @@ export default async (req) => {
 
   // ---- login (no auth required — this IS the auth) ----
   if (action === "login") {
+    const ip =
+      context?.ip ||
+      req.headers.get("x-nf-client-connection-ip") ||
+      (req.headers.get("x-forwarded-for") || "").split(",")[0].trim() ||
+      "unknown";
+
+    // Brute-force lockout: too many recent failures from this IP -> 429.
+    const lock = await checkLock(ip);
+    if (lock.locked) {
+      return json({ error: "Too many failed attempts. Please try again later." }, 429);
+    }
+
     const { adminPassword } = config();
     const email = userKey(body.email);
     const pw = String(body.password || "");
+    // Single generic message so we never leak whether an account exists.
+    const deny = async () => { await recordFail(ip); return json({ error: "Invalid email or password." }, 401); };
+
     if (!email || email === "owner") {
-      if (adminPassword && pw === adminPassword) {
+      if (adminPassword && safeEqual(pw, adminPassword)) {
+        await clearFails(ip);
         const token = signToken({ email: "owner", name: "Owner", role: "owner", modules: MODULES });
         return json({ ok: true, token, name: "Owner", role: "owner", modules: MODULES });
       }
-      return json({ error: "Wrong password." }, 401);
+      return deny();
     }
     const u = await getUser(email);
     if (!u || u.active === false || !verifyPassword(pw, u.password)) {
-      return json({ error: "Wrong email or password." }, 401);
+      return deny();
     }
+    await clearFails(ip);
     const token = signToken({ email: u.email, name: u.name, role: u.role, modules: u.modules });
     return json({ ok: true, token, name: u.name, role: u.role, modules: u.modules });
   }
@@ -50,7 +68,7 @@ export default async (req) => {
   if (action === "create") {
     const email = userKey(body.email);
     if (!email || !email.includes("@")) return json({ error: "A valid email is required." }, 400);
-    if (!body.password || String(body.password).length < 6) return json({ error: "Password must be at least 6 characters." }, 400);
+    if (!body.password || String(body.password).length < 8) return json({ error: "Password must be at least 8 characters." }, 400);
     if (await getUser(email)) return json({ error: "A user with that email already exists." }, 400);
     const role = body.role || "sales";
     const modules = Array.isArray(body.modules) && body.modules.length ? body.modules.filter((m) => MODULES.includes(m)) : ROLE_PRESETS[role] || [];
@@ -69,7 +87,7 @@ export default async (req) => {
     if (Array.isArray(p.modules)) u.modules = p.modules.filter((m) => MODULES.includes(m));
     if (p.active !== undefined) u.active = !!p.active;
     if (p.password) {
-      if (String(p.password).length < 6) return json({ error: "Password too short." }, 400);
+      if (String(p.password).length < 8) return json({ error: "Password too short." }, 400);
       u.password = hashPassword(p.password);
     }
     await saveUser(u);
