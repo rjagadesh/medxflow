@@ -326,62 +326,8 @@ function Hero() {
           </div>
         </div>
       </div>
-      {/* Slide 2 - Voice */}
+      {/* Slide 2 - RCM Billing */}
       <div className={"slide" + (idx === 1 ? " slide-on" : "")} aria-hidden={idx !== 1}>
-        <div className="wrap hero-grid">
-          <div className="hero-copy">
-            <Eyebrow light>{t("hero.s2_eyebrow")}</Eyebrow>
-            <h2 className="hero-alt-h">{t("hero.s2_h2a")}<br /><em>{t("hero.s2_h2b")}</em></h2>
-            <p className="lead">{t("hero.s2_lead")}</p>
-            <div className="btn-row">
-              <a className="btn btn-gorse" href="#voice">{t("hero.s2_cta1")}</a>
-              <a className="btn btn-ghost" href="#cta">{t("hero.s2_cta2")}</a>
-            </div>
-            <div className="hero-note">{t("hero.s2_note")}</div>
-          </div>
-          <div className="hero-art hero-art-full">
-            {soundBtn}
-            <video
-              ref={vid1}
-              src="/voiceai.mp4"
-              autoPlay
-              muted
-              playsInline
-              onEnded={() => setIdx((i) => (i === 1 ? 2 : i))}
-              aria-label="MedXFlow Voice AI agent answering patient calls alongside the reception team"
-            />
-          </div>
-        </div>
-      </div>
-      {/* Slide 3 - Telehealth */}
-      <div className={"slide" + (idx === 2 ? " slide-on" : "")} aria-hidden={idx !== 2}>
-        <div className="wrap hero-grid">
-          <div className="hero-copy">
-            <Eyebrow light>{t("hero.s3_eyebrow")}</Eyebrow>
-            <h2 className="hero-alt-h">{t("hero.s3_h2a")}<br /><em>{t("hero.s3_h2b")}</em></h2>
-            <p className="lead">{t("hero.s3_lead")}</p>
-            <div className="btn-row">
-              <a className="btn btn-gorse" href="/telehealth">{t("hero.s3_cta1")}</a>
-              <a className="btn btn-ghost" href="#cta">{t("hero.s3_cta2")}</a>
-            </div>
-            <div className="hero-note">{t("hero.s3_note")}</div>
-          </div>
-          <div className="hero-art hero-art-full">
-            {soundBtn}
-            <video
-              ref={vid2}
-              src="/telehealth.mp4"
-              autoPlay
-              muted
-              playsInline
-              onEnded={() => setIdx((i) => (i === 2 ? 3 : i))}
-              aria-label="A patient joining a MedXFlow telehealth video visit from home"
-            />
-          </div>
-        </div>
-      </div>
-      {/* Slide 4 - RCM Billing */}
-      <div className={"slide" + (idx === 3 ? " slide-on" : "")} aria-hidden={idx !== 3}>
         <div className="wrap hero-grid">
           <div className="hero-copy">
             <Eyebrow light>{t("hero.s4_eyebrow")}</Eyebrow>
@@ -396,13 +342,67 @@ function Hero() {
           <div className="hero-art hero-art-full">
             {soundBtn}
             <video
-              ref={vid3}
+              ref={vid1}
               src="/rcm-process.mp4"
               autoPlay
               muted
               playsInline
-              onEnded={() => setIdx((i) => (i === 3 ? 0 : i))}
+              onEnded={() => setIdx((i) => (i === 1 ? 2 : i))}
               aria-label="MedXFlow AI agent working the revenue cycle billing process"
+            />
+          </div>
+        </div>
+      </div>
+      {/* Slide 3 - Voice */}
+      <div className={"slide" + (idx === 2 ? " slide-on" : "")} aria-hidden={idx !== 2}>
+        <div className="wrap hero-grid">
+          <div className="hero-copy">
+            <Eyebrow light>{t("hero.s2_eyebrow")}</Eyebrow>
+            <h2 className="hero-alt-h">{t("hero.s2_h2a")}<br /><em>{t("hero.s2_h2b")}</em></h2>
+            <p className="lead">{t("hero.s2_lead")}</p>
+            <div className="btn-row">
+              <a className="btn btn-gorse" href="#voice">{t("hero.s2_cta1")}</a>
+              <a className="btn btn-ghost" href="#cta">{t("hero.s2_cta2")}</a>
+            </div>
+            <div className="hero-note">{t("hero.s2_note")}</div>
+          </div>
+          <div className="hero-art hero-art-full">
+            {soundBtn}
+            <video
+              ref={vid2}
+              src="/voiceai.mp4"
+              autoPlay
+              muted
+              playsInline
+              onEnded={() => setIdx((i) => (i === 2 ? 3 : i))}
+              aria-label="MedXFlow Voice AI agent answering patient calls alongside the reception team"
+            />
+          </div>
+        </div>
+      </div>
+      {/* Slide 4 - Telehealth */}
+      <div className={"slide" + (idx === 3 ? " slide-on" : "")} aria-hidden={idx !== 3}>
+        <div className="wrap hero-grid">
+          <div className="hero-copy">
+            <Eyebrow light>{t("hero.s3_eyebrow")}</Eyebrow>
+            <h2 className="hero-alt-h">{t("hero.s3_h2a")}<br /><em>{t("hero.s3_h2b")}</em></h2>
+            <p className="lead">{t("hero.s3_lead")}</p>
+            <div className="btn-row">
+              <a className="btn btn-gorse" href="/telehealth">{t("hero.s3_cta1")}</a>
+              <a className="btn btn-ghost" href="#cta">{t("hero.s3_cta2")}</a>
+            </div>
+            <div className="hero-note">{t("hero.s3_note")}</div>
+          </div>
+          <div className="hero-art hero-art-full">
+            {soundBtn}
+            <video
+              ref={vid3}
+              src="/telehealth.mp4"
+              autoPlay
+              muted
+              playsInline
+              onEnded={() => setIdx((i) => (i === 3 ? 0 : i))}
+              aria-label="A patient joining a MedXFlow telehealth video visit from home"
             />
           </div>
         </div>
