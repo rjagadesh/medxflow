@@ -271,7 +271,8 @@ export async function sendInitial(campaign, cfg, maxBatch = 30) {
   let cursor = campaign.rotateCursor || 0;
   let sent = 0,
     simulated = false;
-  const pending = (campaign.recipients || []).filter((r) => r.status === "pending");
+  // Send to not-yet-sent recipients, including retrying previously failed ones.
+  const pending = (campaign.recipients || []).filter((r) => r.status === "pending" || r.status === "failed");
   for (const r of pending.slice(0, maxBatch)) {
     const sender = pool[cursor % pool.length];
     cursor++;
@@ -282,6 +283,7 @@ export async function sendInitial(campaign, cfg, maxBatch = 30) {
       r.sentAt = new Date().toISOString();
       r.lastSentAt = r.sentAt;
       if (res.from) r.sentFrom = res.from;
+      delete r.error;
       sent++;
     } catch (err) {
       r.status = "failed";
@@ -293,7 +295,7 @@ export async function sendInitial(campaign, cfg, maxBatch = 30) {
   if (campaign.status === "draft") campaign.status = "active";
   campaign.updatedAt = new Date().toISOString();
   await saveCampaign(campaign);
-  const remaining = (campaign.recipients || []).filter((r) => r.status === "pending").length;
+  const remaining = (campaign.recipients || []).filter((r) => r.status === "pending" || r.status === "failed").length;
   return { sent, remaining, simulated };
 }
 

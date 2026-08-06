@@ -545,8 +545,8 @@ function Detail({ c, busy, onBack, act, onSync }) {
       </div>
 
       <div className="cmp-actions">
-        <button className="cmp-btn cmp-primary" disabled={!!busy || !s.pending} onClick={() => act({ action: "send", id: c.id }, (r) => `Sent ${r.sent}${r.simulated ? " (simulated)" : ""}. ${r.remaining} remaining.`)}>
-          {busy === "send" + c.id ? "Sending…" : `Send first email${s.pending ? ` (${s.pending})` : ""}`}
+        <button className="cmp-btn cmp-primary" disabled={!!busy || !(s.pending + s.failed)} onClick={() => act({ action: "send", id: c.id }, (r) => `Sent ${r.sent}${r.simulated ? " (simulated)" : ""}. ${r.remaining} remaining.`)}>
+          {busy === "send" + c.id ? "Sending…" : s.failed && !s.pending ? `Retry failed (${s.failed})` : `Send first email${s.pending ? ` (${s.pending})` : ""}`}
         </button>
         <button className="cmp-btn" disabled={!!busy || !(c.followups || []).length} onClick={() => act({ action: "followup", id: c.id }, (r) => `Follow-ups sent: ${r.sent}${r.simulated ? " (simulated)" : ""}.`)}>
           {busy === "followup" + c.id ? "Sending…" : "Send due follow-ups now"}
