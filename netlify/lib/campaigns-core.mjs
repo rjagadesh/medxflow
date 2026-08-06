@@ -219,7 +219,10 @@ async function sendViaGraph(cfg, { to, subject, html, unsubUrl, sender }) {
           subject,
           body: { contentType: "HTML", content: html },
           toRecipients: [{ emailAddress: { address: to } }],
-          internetMessageHeaders: unsubUrl ? [{ name: "List-Unsubscribe", value: `<${unsubUrl}>` }] : undefined,
+          // Graph only allows custom headers prefixed with 'x-'; the standard
+          // List-Unsubscribe is rejected, so we surface unsubscribe via the
+          // in-body link instead. Keep a machine-readable x- hint for our own use.
+          internetMessageHeaders: unsubUrl ? [{ name: "X-MedXFlow-Unsubscribe", value: unsubUrl }] : undefined,
         },
         saveToSentItems: true,
       }),
