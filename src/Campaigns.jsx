@@ -569,7 +569,10 @@ function Detail({ c, busy, onBack, act, onSync }) {
                   <tr key={r.email}>
                     <td>{r.email}</td>
                     <td>{r.name || "-"}</td>
-                    <td><span className="cmp-badge" style={{ color, borderColor: color }}>{label}</span></td>
+                    <td>
+                      <span className="cmp-badge" style={{ color, borderColor: color }} title={r.error || ""}>{label}</span>
+                      {r.status === "failed" && r.error && <div className="cmp-err-detail">{r.error}</div>}
+                    </td>
                     <td className="ad-nowrap">{fmt(r.sentAt)}</td>
                     <td className="ad-nowrap">{fmt(r.openedAt)}</td>
                     <td>{r.followupsSent || 0}</td>
@@ -604,6 +607,7 @@ const CSS = `
 .cmp-status{font-size:11.5px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; padding:3px 9px; border-radius:999px; background:rgba(255,255,255,.1)}
 .cmp-active{background:rgba(61,220,201,.18); color:#3DDCC9} .cmp-draft{background:rgba(255,255,255,.12); color:#bcd}
 .cmp-badge{font-size:11.5px; font-weight:700; padding:2px 9px; border:1px solid; border-radius:999px}
+.cmp-err-detail{margin-top:4px; font-size:11px; color:#e88; max-width:340px; line-height:1.4; word-break:break-word}
 .cmp-stats{display:flex; flex-wrap:wrap; gap:12px; margin:16px 0}
 .cmp-stat{background:#112B52; border:1px solid rgba(207,224,242,.14); border-radius:12px; padding:12px 20px; min-width:96px}
 .cmp-stat b{display:block; font-size:24px; color:#fff; font-weight:800; line-height:1}
