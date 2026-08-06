@@ -21,6 +21,7 @@ const WEEKDAYS = [
 export default function Campaigns({ pw, leads = [], visitors = [] }) {
   const [campaigns, setCampaigns] = useState([]);
   const [smtpReady, setSmtpReady] = useState(false);
+  const [senders, setSenders] = useState([]);
   const [view, setView] = useState("list"); // "list" | "new" | campaignId
   const [loading, setLoading] = useState(false);
   const [busy, setBusy] = useState("");
@@ -45,6 +46,7 @@ export default function Campaigns({ pw, leads = [], visitors = [] }) {
       const d = await call({ action: "list" });
       setCampaigns(d.campaigns || []);
       setSmtpReady(!!d.smtpReady);
+      setSenders(d.senders || []);
     } catch (e) {
       setErr(e.message);
     } finally {
@@ -104,6 +106,8 @@ export default function Campaigns({ pw, leads = [], visitors = [] }) {
       )}
       {view === "new" && (
         <NewCampaign
+          pw={pw}
+          senders={senders}
           leads={leads}
           visitors={visitors}
           onCancel={() => setView("list")}
@@ -195,7 +199,18 @@ function Toggle({ on, onClick }) {
   return <button type="button" className={"nc-sw" + (on ? " on" : "")} onClick={onClick} aria-pressed={on}><span /></button>;
 }
 
-function NewCampaign({ leads, visitors, onCancel, onCreated, call }) {
+function BarPopover({ icon, label, badge, open, onToggle, children, wide }) {
+  return (
+    <div className="nc-pop">
+      <button type="button" className={"nc-pop-btn" + (open ? " on" : "")} onClick={onToggle}>
+        <span>{icon}</span> {label}{badge != null && <em className="nc-pop-badge">{badge}</em>} <i className="nc-caret">▾</i>
+      </button>
+      {open && <div className={"nc-pop-panel" + (wide ? " wide" : "")}>{children}</div>}
+    </div>
+  );
+}
+
+function NewCampaign({ pw, senders = [], leads, visitors, onCancel, onCreated, call }) {
   const [name, setName] = useState("");
   const [subject, setSubject] = useState("");
   const [type, setType] = useState("Follow-up series");
@@ -204,17 +219,43 @@ function NewCampaign({ leads, visitors, onCancel, onCreated, call }) {
   const [recipMode, setRecipMode] = useState("list");
   const [listSel, setListSel] = useState("");
   const [showSample, setShowSample] = useState(false);
+  const [sheet, setSheet] = useState(null); // { workbook, tabs } | { configured:false }
+  const [sheetTab, setSheetTab] = useState("");
+  const [sheetBusy, setSheetBusy] = useState(false);
   const [followups, setFollowups] = useState([]);
   const [expanded, setExpanded] = useState(null);
   const [sendDays, setSendDays] = useState([1, 3, 5]);
   const [minGap, setMinGap] = useState(2);
   const [maxFup, setMaxFup] = useState(6);
+  const [rotateSenders, setRotateSenders] = useState(senders.length > 1);
   const [aiOn, setAiOn] = useState(true);
   const [tplOpen, setTplOpen] = useState(false);
   const [aiOpen, setAiOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [err, setErr] = useState("");
   const bodyRef = useRef(null);
+  // Editable + persisted sender pool
+  const [senderList, setSenderList] = useState(senders);
+  const [senderText, setSenderText] = useState(senders.join("\n"));
+  const [savingSenders, setSavingSenders] = useState(false);
+  const [senderMsg, setSenderMsg] = useState("");
+  const [openPop, setOpenPop] = useState(null);
+  const togglePop = (k) => setOpenPop((p) => (p === k ? null : k));
+
+  const addFollowup = () => setFollowups((s) => (s.length >= maxFup ? s : [...s, { subject: "", body: "", enabled: true }]));
+
+  const doSaveSenders = async () => {
+    const list = senderText.split(/[\n,;]+/).map((s) => s.trim().toLowerCase()).filter((s) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s));
+    setSavingSenders(true); setSenderMsg("");
+    try {
+      const d = await call({ action: "saveSenders", senders: list });
+      setSenderList(d.senders || []);
+      setSenderText((d.senders || []).join("\n"));
+      if ((d.senders || []).length < 2) setRotateSenders(false);
+      setSenderMsg(`Saved ${d.senders?.length || 0} sender(s) ✓`);
+    } catch (e) { setSenderMsg(e.message); }
+    finally { setSavingSenders(false); }
+  };
 
   const recipList = recipients.split(/\n+/).map((s) => s.trim()).filter(Boolean);
   const recipCount = recipList.length;
@@ -235,6 +276,34 @@ function NewCampaign({ leads, visitors, onCancel, onCreated, call }) {
     };
     reader.readAsText(file);
   };
+
+  // Google Sheet: each tab is a campaign. Load tab list, then pull a tab's emails.
+  const sheetsCall = async (action, extra = {}) => {
+    const res = await fetch("/.netlify/functions/sheets", {
+      method: "POST",
+      headers: { "content-type": "application/json", "x-admin-password": pw },
+      body: JSON.stringify({ action, ...extra }),
+    });
+    return res.json();
+  };
+  const loadTabs = async () => {
+    setSheetBusy(true);
+    try { setSheet(await sheetsCall("tabs")); } catch (e) { setSheet({ configured: false, reason: e.message }); }
+    finally { setSheetBusy(false); }
+  };
+  const applySheetTab = async (tab) => {
+    setSheetTab(tab);
+    if (!tab) { setRecipients(""); return; }
+    if (!name) setName(tab); // default the campaign name to the tab name
+    setSheetBusy(true);
+    try {
+      const d = await sheetsCall("emails", { tab });
+      const list = (d.recipients || []).map((r) => (r.name ? `${r.name} <${r.email}>` : r.email));
+      setRecipients(list.join("\n"));
+    } catch (e) { setErr(e.message); }
+    finally { setSheetBusy(false); }
+  };
+  const pickMode = (m) => { setRecipMode(m); if (m === "sheet" && !sheet) loadTabs(); };
 
   // Lightweight formatting on the message textarea.
   const wrap = (before, after = before) => {
@@ -274,7 +343,7 @@ function NewCampaign({ leads, visitors, onCancel, onCreated, call }) {
     setErr("");
     try {
       const fups = followups.filter((f) => f.enabled !== false).map(({ subject, body }) => ({ subject, body }));
-      const r = await call({ action: "create", name, fromName: "MedXFlow Health", subject, body, type, status: asDraft ? "draft" : "ready", recipients, followups: fups, sendDays, minGapDays: minGap });
+      const r = await call({ action: "create", name, fromName: "MedXFlow Health", subject, body, type, status: asDraft ? "draft" : "ready", recipients, followups: fups, sendDays, minGapDays: minGap, sheetTab: recipMode === "sheet" ? sheetTab : undefined, rotateSenders: senderList.length > 1 && rotateSenders });
       onCreated(r.id);
     } catch (e) {
       setErr(e.message);
@@ -285,190 +354,164 @@ function NewCampaign({ leads, visitors, onCancel, onCreated, call }) {
 
   const count = (v, max) => <span className="nc-count">{v.length}/{max}</span>;
 
+  const toolbar = (
+    <div className="nc-toolbar">
+      <div className="nc-tools">
+        <button type="button" title="Undo" onClick={() => document.execCommand("undo")}>↶</button>
+        <button type="button" title="Redo" onClick={() => document.execCommand("redo")}>↷</button>
+        <span className="nc-div" />
+        <button type="button" title="Bold" onClick={() => wrap("**")}><b>B</b></button>
+        <button type="button" title="Italic" onClick={() => wrap("_")}><i>I</i></button>
+        <button type="button" title="Underline" onClick={() => wrap("<u>", "</u>")}><u>U</u></button>
+        <button type="button" title="Bulleted list" onClick={() => append("\n- ")}>☰</button>
+        <button type="button" title="Link" onClick={() => wrap("[", "](https://medxflow.ai)")}>🔗</button>
+        <button type="button" title="Emoji" onClick={() => append(" 🙂")}>😊</button>
+      </div>
+      <div className="nc-tool-right">
+        <div className="nc-dd">
+          <button type="button" onClick={() => { setTplOpen((o) => !o); setAiOpen(false); }}>🗂 Insert template ▾</button>
+          {tplOpen && (
+            <div className="nc-menu">
+              {Object.keys(TEMPLATES).map((k) => (
+                <button key={k} type="button" onClick={() => { setBody(TEMPLATES[k]); setTplOpen(false); }}>{k}</button>
+              ))}
+            </div>
+          )}
+        </div>
+        <div className="nc-dd">
+          <button type="button" className="nc-ai-btn" onClick={() => { setAiOpen((o) => !o); setTplOpen(false); }}>✨ AI assist ▾</button>
+          {aiOpen && (
+            <div className="nc-menu">
+              <button type="button" onClick={() => { setBody((b) => (/^\s*hi/i.test(b) ? b : "Hi {{firstName}},\n\n" + b)); setAiOpen(false); }}>Add greeting</button>
+              <button type="button" onClick={() => { append("\n\nOpen to a quick 15-minute demo this week?"); setAiOpen(false); }}>Add call-to-action</button>
+              <button type="button" onClick={() => { append("\n\nBest,\nThe MedXFlow Team"); setAiOpen(false); }}>Add sign-off</button>
+              <button type="button" onClick={() => { generateVariations(); setAiOpen(false); }}>Generate subject variation</button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
   return (
-    <div className="nc">
-      {/* Header */}
-      <div className="nc-top">
-        <div className="nc-title">
-          <div className="nc-ticon">📣</div>
-          <div>
-            <h2>New campaign</h2>
-            <p>Create and manage your marketing campaign</p>
+    <div className="nc nc-compose">
+      {/* Compact settings toolbar */}
+      <div className="nc-bar">
+        <div className="nc-ticon sm">📣</div>
+        <input className="nc-bar-name" maxLength={100} value={name} onChange={(e) => setName(e.target.value)} placeholder="Campaign name *" />
+        <select className="nc-bar-sel" value={type} onChange={(e) => setType(e.target.value)}>{CAMPAIGN_TYPES.map((t) => <option key={t}>{t}</option>)}</select>
+
+        <BarPopover icon="👥" label="Recipients" badge={recipCount} open={openPop === "recip"} onToggle={() => togglePop("recip")} wide>
+          <div className="nc-recip-head">
+            <label className="nc-radio"><input type="radio" checked={recipMode === "list"} onChange={() => pickMode("list")} /> Existing list</label>
+            <label className="nc-radio"><input type="radio" checked={recipMode === "csv"} onChange={() => pickMode("csv")} /> Upload CSV</label>
+            <label className="nc-radio"><input type="radio" checked={recipMode === "sheet"} onChange={() => pickMode("sheet")} /> Google Sheet</label>
           </div>
-        </div>
-        <button className="nc-back" onClick={onCancel}>← Back to campaigns</button>
-      </div>
-
-      {/* Top fields */}
-      <div className="nc-grid3">
-        <div className="nc-field">
-          <label>Campaign name <i>*</i></label>
-          <div className="nc-input"><span className="nc-ic">📣</span><input maxLength={100} value={name} onChange={(e) => setName(e.target.value)} placeholder="e.g. Founding practices - March" />{count(name, 100)}</div>
-        </div>
-        <div className="nc-field">
-          <label>Subject <i>*</i></label>
-          <div className="nc-input"><span className="nc-ic">✉️</span><input maxLength={150} value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Cut missed calls at your practice" />{count(subject, 150)}</div>
-        </div>
-        <div className="nc-field">
-          <label>Campaign type</label>
-          <div className="nc-input"><span className="nc-ic">📣</span><select value={type} onChange={(e) => setType(e.target.value)}>{CAMPAIGN_TYPES.map((t) => <option key={t}>{t}</option>)}</select></div>
-        </div>
-      </div>
-
-      {/* Message + AI insights */}
-      <div className="nc-grid-msg">
-        <div className="nc-card nc-msg">
-          <label className="nc-lbl">Message <i>*</i></label>
-          <div className="nc-toolbar">
-            <div className="nc-tools">
-              <button type="button" title="Undo" onClick={() => document.execCommand("undo")}>↶</button>
-              <button type="button" title="Redo" onClick={() => document.execCommand("redo")}>↷</button>
-              <span className="nc-div" />
-              <button type="button" title="Bold" onClick={() => wrap("**")}><b>B</b></button>
-              <button type="button" title="Italic" onClick={() => wrap("_")}><i>I</i></button>
-              <button type="button" title="Underline" onClick={() => wrap("<u>", "</u>")}><u>U</u></button>
-              <button type="button" title="Bulleted list" onClick={() => append("\n- ")}>☰</button>
-              <button type="button" title="Link" onClick={() => wrap("[", "](https://medxflow.ai)")}>🔗</button>
-              <button type="button" title="Emoji" onClick={() => append(" 🙂")}>😊</button>
-            </div>
-            <div className="nc-tool-right">
-              <div className="nc-dd">
-                <button type="button" onClick={() => { setTplOpen((o) => !o); setAiOpen(false); }}>🗂 Insert template ▾</button>
-                {tplOpen && (
-                  <div className="nc-menu">
-                    {Object.keys(TEMPLATES).map((k) => (
-                      <button key={k} type="button" onClick={() => { setBody(TEMPLATES[k]); setTplOpen(false); }}>{k}</button>
-                    ))}
-                  </div>
-                )}
-              </div>
-              <div className="nc-dd">
-                <button type="button" className="nc-ai-btn" onClick={() => { setAiOpen((o) => !o); setTplOpen(false); }}>✨ AI assist ▾</button>
-                {aiOpen && (
-                  <div className="nc-menu">
-                    <button type="button" onClick={() => { setBody((b) => (/^\s*hi/i.test(b) ? b : "Hi {{firstName}},\n\n" + b)); setAiOpen(false); }}>Add greeting</button>
-                    <button type="button" onClick={() => { append("\n\nOpen to a quick 15-minute demo this week?"); setAiOpen(false); }}>Add call-to-action</button>
-                    <button type="button" onClick={() => { append("\n\nBest,\nThe MedXFlow Team"); setAiOpen(false); }}>Add sign-off</button>
-                    <button type="button" onClick={() => { generateVariations(); setAiOpen(false); }}>Generate subject variation</button>
-                  </div>
-                )}
-              </div>
-            </div>
+          <div className="nc-recip-body">
+            {recipMode === "list" ? (
+              <select className="nc-select" value={listSel} onChange={(e) => applyList(e.target.value)}>
+                <option value="">Select recipient list…</option>
+                <option value="leads">Demo requests / leads ({leads.length})</option>
+                <option value="visitors">Chat visitors ({visitors.length})</option>
+                <option value="both">All contacts ({new Set([...leads, ...visitors].map((x) => x.email).filter(Boolean)).size})</option>
+              </select>
+            ) : recipMode === "csv" ? (
+              <label className="nc-csv">📄 Choose CSV file<input type="file" accept=".csv,text/csv" onChange={onCsv} hidden /></label>
+            ) : sheetBusy && !sheet ? (
+              <div className="nc-select" style={{ display: "flex", alignItems: "center", color: "#64748B" }}>Loading tabs…</div>
+            ) : sheet && sheet.configured === false ? (
+              <div className="nc-sheet-setup">📄 Not connected — {sheet.reason || "share the workbook with the service account."}</div>
+            ) : (
+              <select className="nc-select" value={sheetTab} onChange={(e) => applySheetTab(e.target.value)}>
+                <option value="">Select a campaign tab…{sheet?.workbook ? ` (${sheet.workbook})` : ""}</option>
+                {(sheet?.tabs || []).map((t) => <option key={t.name} value={t.name}>{t.name}</option>)}
+              </select>
+            )}
+            <button type="button" className="nc-obtn" onClick={() => setShowSample((s) => !s)}>👁 Sample</button>
+            {recipMode === "sheet"
+              ? <button type="button" className="nc-obtn" onClick={loadTabs} disabled={sheetBusy}>⟳ Refresh</button>
+              : <button type="button" className="nc-obtn" onClick={() => setRecipients(recipList.filter((e) => e.includes("@")).join("\n"))}>⛃ Filter</button>}
           </div>
-          <textarea ref={bodyRef} className="nc-body" value={body} onChange={(e) => setBody(e.target.value)} placeholder="Write your message… use {{firstName}}, {{name}}, {{email}}. Links are tracked automatically." />
-        </div>
+          <div className="nc-recip-count">{recipCount.toLocaleString()} recipient{recipCount === 1 ? "" : "s"} selected{recipMode === "sheet" && sheetTab ? ` · from “${sheetTab}”` : ""}</div>
+          {showSample && recipCount > 0 && <div className="nc-sample">{recipList.slice(0, 8).join(", ")}{recipCount > 8 ? ` … +${recipCount - 8} more` : ""}</div>}
+        </BarPopover>
 
-        <div className={"nc-card nc-ai" + (aiOn ? "" : " off")}>
-          <div className="nc-ai-head">
-            <span className="nc-ai-title">✨ AI insights <em>Beta</em></span>
-            <Toggle on={aiOn} onClick={() => setAiOn((v) => !v)} />
-          </div>
-          {aiOn && (
-            <>
-              <ul className="nc-ai-list">
-                {insights.map(([ok, text], i) => (
-                  <li key={i}><span className={"nc-chk" + (ok ? "" : " warn")}>{ok ? "✓" : "!"}</span>{text}</li>
-                ))}
-              </ul>
-              <button type="button" className="nc-ai-gen" onClick={generateVariations}>✨ Generate variations</button>
-            </>
-          )}
-        </div>
-      </div>
-
-      {/* Recipients */}
-      <div className="nc-card nc-recip">
-        <div className="nc-recip-head">
-          <span className="nc-ic-chip">👥</span>
-          <b>Recipients <i>*</i></b>
-          <label className="nc-radio"><input type="radio" checked={recipMode === "list"} onChange={() => setRecipMode("list")} /> Use existing list</label>
-          <label className="nc-radio"><input type="radio" checked={recipMode === "csv"} onChange={() => setRecipMode("csv")} /> Upload CSV</label>
-        </div>
-        <div className="nc-recip-body">
-          {recipMode === "list" ? (
-            <select className="nc-select" value={listSel} onChange={(e) => applyList(e.target.value)}>
-              <option value="">Select or search recipient list…</option>
-              <option value="leads">Demo requests / leads ({leads.length})</option>
-              <option value="visitors">Chat visitors ({visitors.length})</option>
-              <option value="both">All contacts ({new Set([...leads, ...visitors].map((x) => x.email).filter(Boolean)).size})</option>
-            </select>
-          ) : (
-            <label className="nc-csv">📄 Choose CSV file<input type="file" accept=".csv,text/csv" onChange={onCsv} hidden /></label>
-          )}
-          <button type="button" className="nc-obtn" onClick={() => setShowSample((s) => !s)}>👁 View sample</button>
-          <button type="button" className="nc-obtn" onClick={() => setRecipients(recipList.filter((e) => e.includes("@")).join("\n"))}>⛃ Filter</button>
-        </div>
-        <div className="nc-recip-count">{recipCount.toLocaleString()} recipient{recipCount === 1 ? "" : "s"} selected</div>
-        {showSample && recipCount > 0 && (
-          <div className="nc-sample">{recipList.slice(0, 8).join(", ")}{recipCount > 8 ? ` … +${recipCount - 8} more` : ""}</div>
-        )}
-      </div>
-
-      {/* Schedule + Follow-ups */}
-      <div className="nc-grid2">
-        <div className="nc-card nc-sched">
-          <div className="nc-card-h"><span className="nc-ic-chip">📅</span><b>Schedule</b></div>
-          <p className="nc-sub">Follow-ups will be sent automatically on these days</p>
+        <BarPopover icon="📅" label="Schedule" open={openPop === "sched"} onToggle={() => togglePop("sched")}>
+          <p className="nc-sub" style={{ margin: "0 0 10px" }}>Follow-ups send on these days</p>
           <div className="nc-days">
-            {DAY_INITIALS.map(([label, d]) => {
-              const on = sendDays.includes(d);
-              return (
-                <div key={d} className="nc-day">
-                  <span>{label.slice(0, label === "Sun" || label === "Sat" ? 1 : 3)}</span>
-                  <Toggle on={on} onClick={() => setSendDays((s) => (s.includes(d) ? s.filter((x) => x !== d) : [...s, d].sort()))} />
-                </div>
-              );
-            })}
+            {DAY_INITIALS.map(([label, d]) => (
+              <div key={d} className="nc-day">
+                <span>{label.slice(0, label === "Sun" || label === "Sat" ? 1 : 3)}</span>
+                <Toggle on={sendDays.includes(d)} onClick={() => setSendDays((s) => (s.includes(d) ? s.filter((x) => x !== d) : [...s, d].sort()))} />
+              </div>
+            ))}
           </div>
-          <div className="nc-min">
-            <span>Minimum</span>
-            <input type="number" min="1" max="30" value={minGap} onChange={(e) => setMinGap(Math.max(1, +e.target.value || 1))} />
-            <span>days between emails</span>
-          </div>
-        </div>
+          <div className="nc-min"><span>Minimum</span><input type="number" min="1" max="30" value={minGap} onChange={(e) => setMinGap(Math.max(1, +e.target.value || 1))} /><span>days between emails</span></div>
+        </BarPopover>
 
-        <div className="nc-card nc-fups">
-          <div className="nc-card-h">
-            <span className="nc-ic-chip">✉️</span><b>Follow-up emails</b>
-            <div className="nc-fup-ctl">
-              <span className="nc-uptok">Up to <input type="number" min="1" max="6" value={maxFup} onChange={(e) => setMaxFup(Math.min(6, Math.max(1, +e.target.value || 1)))} /></span>
-              <button type="button" className="nc-addfup" disabled={followups.length >= maxFup} onClick={() => setFollowups((s) => [...s, { subject: "", body: "", enabled: true }])}>+ Add follow-up</button>
+        <BarPopover icon="✉️" label="Senders" badge={senderList.length} open={openPop === "senders"} onToggle={() => togglePop("senders")} wide>
+          <div className="nc-rotate" style={{ margin: 0, border: "none", padding: 0 }}>
+            <div className="nc-rotate-l">
+              <b>🔁 Rotate senders</b>
+              <span>{senderList.length > 1 ? `Round-robin across ${senderList.length} mailboxes` : "Add 2+ mailboxes to rotate"}</span>
             </div>
+            <Toggle on={senderList.length > 1 && rotateSenders} onClick={() => senderList.length > 1 && setRotateSenders((v) => !v)} />
           </div>
-          {followups.length === 0 ? (
-            <div className="nc-fup-empty">No follow-ups yet. Add up to {maxFup}, sent one at a time on the schedule.</div>
-          ) : (
-            <table className="nc-fup-table">
-              <thead><tr><th>#</th><th>Send after</th><th>Subject preview</th><th>Status</th><th></th></tr></thead>
-              <tbody>
-                {followups.map((fu, i) => (
-                  <Fragment key={i}>
-                    <tr>
-                      <td className="nc-fup-n">{i + 1}</td>
-                      <td className="nc-fup-day">Day {minGap * (i + 1)}</td>
-                      <td><input className="nc-fup-subj" value={fu.subject} placeholder="Subject preview" onChange={(e) => setFup(i, { subject: e.target.value })} onFocus={() => setExpanded(i)} /></td>
-                      <td><Toggle on={fu.enabled !== false} onClick={() => setFup(i, { enabled: fu.enabled === false })} /></td>
-                      <td><button type="button" className="nc-fup-x" onClick={() => { setFollowups((s) => s.filter((_, j) => j !== i)); setExpanded(null); }}>⋯</button></td>
-                    </tr>
-                    {expanded === i && (
-                      <tr className="nc-fup-bodyrow"><td colSpan={5}>
-                        <textarea rows={3} value={fu.body} placeholder="Follow-up message…" onChange={(e) => setFup(i, { body: e.target.value })} />
-                      </td></tr>
-                    )}
-                  </Fragment>
-                ))}
-              </tbody>
-            </table>
-          )}
+          <label className="nc-pop-lbl">Sender mailboxes — one per line</label>
+          <textarea className="nc-sender-edit" rows={4} value={senderText} onChange={(e) => setSenderText(e.target.value)} placeholder={"raj@medxflow.ai\njay@medxflow.ai"} />
+          <div className="nc-sender-actions">
+            <button type="button" className="nc-save-sm" disabled={savingSenders} onClick={doSaveSenders}>{savingSenders ? "Saving…" : "💾 Save senders"}</button>
+            {senderMsg && <span className="nc-sender-msg">{senderMsg}</span>}
+          </div>
+          <div className="nc-pop-hint">Saved to Netlify Blobs — used for all campaigns.</div>
+        </BarPopover>
+
+        <BarPopover icon="✨" label="Insights" open={openPop === "ai"} onToggle={() => togglePop("ai")}>
+          <ul className="nc-ai-list">
+            {insights.map(([ok, text], i) => (
+              <li key={i}><span className={"nc-chk" + (ok ? "" : " warn")}>{ok ? "✓" : "!"}</span>{text}</li>
+            ))}
+          </ul>
+          <button type="button" className="nc-ai-gen" onClick={generateVariations}>✨ Generate subject variation</button>
+        </BarPopover>
+
+        <div className="nc-bar-actions">
+          <button className="nc-back" onClick={onCancel}>← Back</button>
+          <button className="nc-draft" disabled={saving} onClick={() => submit(true)}>💾 Draft</button>
+          <button className="nc-create" disabled={saving} onClick={() => submit(false)}>✈ {saving ? "Creating…" : "Create campaign"}</button>
         </div>
       </div>
 
-      {err && <div className="ad-err" style={{ margin: "6px 0" }}>{err}</div>}
+      {err && <div className="ad-err" style={{ margin: "10px 0" }}>{err}</div>}
 
-      {/* Footer actions */}
-      <div className="nc-footer">
-        <button className="nc-create" disabled={saving} onClick={() => submit(false)}>✈ {saving ? "Creating…" : "Create campaign"}</button>
-        <button className="nc-draft" disabled={saving} onClick={() => submit(true)}>💾 Save draft</button>
+      {/* Compose stack: initial email + stacked follow-up blocks */}
+      <div className="nc-stack">
+        <div className="nc-block">
+          <div className="nc-block-h">
+            <span className="nc-block-tag nc-tag-initial">Initial email</span>
+            <span className="nc-block-day">sent first</span>
+          </div>
+          <div className="nc-input nc-input-lg"><span className="nc-ic">✉️</span><input maxLength={150} value={subject} onChange={(e) => setSubject(e.target.value)} placeholder="Subject *" />{count(subject, 150)}</div>
+          {toolbar}
+          <textarea ref={bodyRef} className="nc-body nc-body-big" value={body} onChange={(e) => setBody(e.target.value)} placeholder="Write your message… use {{firstName}}, {{name}}, {{email}}. Links are tracked automatically." />
+        </div>
+
+        {followups.map((fu, i) => (
+          <div className="nc-block" key={i}>
+            <div className="nc-block-h">
+              <span className="nc-block-tag">Follow-up {i + 1}</span>
+              <span className="nc-block-day">Day {minGap * (i + 1)}</span>
+              <span className="nc-block-sw"><Toggle on={fu.enabled !== false} onClick={() => setFup(i, { enabled: fu.enabled === false })} /></span>
+              <button type="button" className="nc-block-x" onClick={() => setFollowups((s) => s.filter((_, j) => j !== i))}>✕ Remove</button>
+            </div>
+            <div className="nc-input nc-input-lg"><span className="nc-ic">✉️</span><input maxLength={150} value={fu.subject} onChange={(e) => setFup(i, { subject: e.target.value })} placeholder={`Follow-up ${i + 1} subject`} /></div>
+            <textarea className="nc-body nc-body-big" value={fu.body} onChange={(e) => setFup(i, { body: e.target.value })} placeholder="Follow-up message…" />
+          </div>
+        ))}
+
+        <button type="button" className="nc-addblock" disabled={followups.length >= maxFup} onClick={addFollowup}>
+          ＋ Add follow-up{followups.length >= maxFup ? ` (max ${maxFup})` : ""}
+        </button>
       </div>
     </div>
   );
@@ -586,28 +629,41 @@ const CSS = `
 @media(max-width:640px){.cmp-row{grid-template-columns:1fr}}
 
 /* ===== New campaign - light redesign ===== */
-.nc{background:#F4F7FB; margin:-4px; padding:22px; border-radius:16px; color:#1B2A44; font-family:inherit}
+.nc{background:#F4F7FB; margin:-4px; padding:16px; border-radius:16px; color:#1B2A44; font-family:inherit}
 .nc *{box-sizing:border-box}
-.nc-top{display:flex; align-items:center; justify-content:space-between; gap:16px; background:#fff; border:1px solid #E6ECF3; border-radius:14px; padding:16px 20px; margin-bottom:18px; box-shadow:0 1px 2px rgba(16,40,80,.04)}
-.nc-title{display:flex; align-items:center; gap:14px}
-.nc-ticon{width:52px; height:52px; border-radius:13px; background:#EEF1FF; display:grid; place-items:center; font-size:24px}
-.nc-title h2{margin:0; font-size:24px; font-weight:800; color:#101B33; letter-spacing:-.02em}
+.nc-top{display:flex; align-items:center; justify-content:space-between; gap:16px; background:#fff; border:1px solid #E6ECF3; border-radius:14px; padding:11px 18px; margin-bottom:12px; box-shadow:0 1px 2px rgba(16,40,80,.04)}
+.nc-title{display:flex; align-items:center; gap:13px}
+.nc-ticon{width:42px; height:42px; border-radius:11px; background:#EEF1FF; display:grid; place-items:center; font-size:20px}
+.nc-title h2{margin:0; font-size:20px; font-weight:800; color:#101B33; letter-spacing:-.02em}
 .nc-title p{margin:2px 0 0; font-size:13.5px; color:#64748B}
 .nc-back{background:#fff; border:1px solid #E1E8F0; color:#334155; border-radius:10px; padding:10px 16px; font-size:13.5px; font-weight:600; cursor:pointer; font-family:inherit}
 .nc-back:hover{background:#F8FAFC}
-.nc-grid3{display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; margin-bottom:16px}
-.nc-field label{display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:7px}
+.nc-grid2c{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:12px}
+.nc-field label{display:block; font-size:12.5px; font-weight:700; color:#334155; margin-bottom:6px}
 .nc-field label i{color:#EF4444; font-style:normal}
-.nc-input{position:relative; display:flex; align-items:center; background:#fff; border:1px solid #E1E8F0; border-radius:11px; padding:0 12px; height:48px; transition:border-color .15s, box-shadow .15s}
+.nc-input{position:relative; display:flex; align-items:center; background:#fff; border:1px solid #E1E8F0; border-radius:10px; padding:0 12px; height:42px; transition:border-color .15s, box-shadow .15s}
 .nc-input:focus-within{border-color:#2F6BFF; box-shadow:0 0 0 3px rgba(47,107,255,.12)}
 .nc-ic{font-size:15px; opacity:.65; margin-right:9px}
-.nc-input input, .nc-input select{flex:1; border:none; outline:none; background:none; font-size:14.5px; color:#101B33; font-family:inherit; height:100%}
+.nc-input input, .nc-input select{flex:1; border:none; outline:none; background:none; font-size:14px; color:#101B33; font-family:inherit; height:100%}
 .nc-input select{cursor:pointer; appearance:none}
-.nc-count{position:absolute; right:12px; bottom:-19px; font-size:11px; color:#94A3B8; font-variant-numeric:tabular-nums}
+.nc-count{position:absolute; right:12px; bottom:-17px; font-size:11px; color:#94A3B8; font-variant-numeric:tabular-nums}
+/* Subject - prominent, full width */
+.nc-field-subject{margin-bottom:14px}
+.nc-field-subject label{font-size:13.5px}
+.nc-input-lg{height:58px; border-radius:12px; border-color:#D7E0EC}
+.nc-input-lg .nc-ic{font-size:18px; margin-right:11px}
+.nc-input-lg input{font-size:18px!important; font-weight:600}
 .nc-card{background:#fff; border:1px solid #E6ECF3; border-radius:14px; box-shadow:0 1px 2px rgba(16,40,80,.04)}
-.nc-grid-msg{display:grid; grid-template-columns:1fr 320px; gap:16px; margin-bottom:16px}
-.nc-msg{padding:16px 18px}
-.nc-lbl{display:block; font-size:13px; font-weight:700; color:#334155; margin-bottom:10px}
+/* Single-window two-column layout: compose left, feature rail right */
+.nc-main{display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:14px; align-items:stretch}
+.nc-left{display:flex; flex-direction:column; gap:12px; min-width:0}
+.nc-col{display:flex; flex-direction:column; gap:12px; min-width:0}
+.nc-grid2c{margin-bottom:0}
+.nc-field-subject{margin-bottom:0}
+.nc-left .nc-msg{flex:1; display:flex; flex-direction:column; min-height:0}
+.nc-recip{margin-bottom:0}
+.nc-msg{padding:14px 16px}
+.nc-lbl{display:block; font-size:14.5px; font-weight:800; color:#1B2A44; margin-bottom:10px}
 .nc-lbl i{color:#EF4444; font-style:normal}
 .nc-toolbar{display:flex; align-items:center; justify-content:space-between; gap:10px; flex-wrap:wrap; border:1px solid #EDF1F6; border-radius:10px 10px 0 0; background:#FAFBFD; padding:7px 9px}
 .nc-tools{display:flex; align-items:center; gap:2px}
@@ -622,15 +678,15 @@ const CSS = `
 .nc-menu{position:absolute; top:calc(100% + 6px); right:0; background:#fff; border:1px solid #E6ECF3; border-radius:10px; box-shadow:0 12px 30px rgba(16,40,80,.14); padding:6px; z-index:20; min-width:190px; display:flex; flex-direction:column}
 .nc-menu button{text-align:left; background:none; border:none; padding:9px 11px; border-radius:7px; font-size:13px; color:#334155; cursor:pointer; font-family:inherit; white-space:nowrap}
 .nc-menu button:hover{background:#F1F5F9}
-.nc-body{width:100%; min-height:180px; border:1px solid #EDF1F6; border-top:none; border-radius:0 0 10px 10px; padding:14px; font-size:14.5px; line-height:1.6; color:#1B2A44; font-family:inherit; resize:vertical; outline:none}
+.nc-body{width:100%; flex:1; min-height:240px; border:1px solid #EDF1F6; border-top:none; border-radius:0 0 10px 10px; padding:16px; font-size:15.5px; line-height:1.65; color:#1B2A44; font-family:inherit; resize:vertical; outline:none}
 .nc-body:focus{border-color:#EDF1F6}
-.nc-ai{padding:16px 16px 18px; background:linear-gradient(180deg,#FBFBFF,#F7F8FF); border-color:#E9E7FB}
+.nc-ai{padding:14px; background:linear-gradient(180deg,#FBFBFF,#F7F8FF); border-color:#E9E7FB}
 .nc-ai.off{background:#fff}
-.nc-ai-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:12px}
-.nc-ai-title{font-size:14.5px; font-weight:800; color:#3A2Fb8; display:flex; align-items:center; gap:8px}
+.nc-ai-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:11px}
+.nc-ai-title{font-size:14px; font-weight:800; color:#3A2Fb8; display:flex; align-items:center; gap:8px}
 .nc-ai-title em{font-style:normal; font-size:10.5px; font-weight:700; background:#E6FBF0; color:#0E9F6E; padding:2px 8px; border-radius:999px; letter-spacing:.02em}
-.nc-ai-list{list-style:none; margin:0 0 14px; padding:0; display:flex; flex-direction:column; gap:12px}
-.nc-ai-list li{display:flex; align-items:flex-start; gap:9px; font-size:13.5px; color:#334155; line-height:1.4}
+.nc-ai-list{list-style:none; margin:0 0 12px; padding:0; display:flex; flex-direction:column; gap:10px}
+.nc-ai-list li{display:flex; align-items:flex-start; gap:9px; font-size:13px; color:#334155; line-height:1.4}
 .nc-chk{flex:none; width:19px; height:19px; border-radius:50%; background:#DCFCE7; color:#16A34A; display:grid; place-items:center; font-size:12px; font-weight:800; margin-top:1px}
 .nc-chk.warn{background:#FEF3C7; color:#D97706}
 .nc-ai-gen{width:100%; background:#fff; border:1px solid #DAD6FB; color:#5B49E0; border-radius:9px; padding:10px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit}
@@ -641,31 +697,37 @@ const CSS = `
 .nc-sw span{position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%; background:#fff; transition:left .16s; box-shadow:0 1px 2px rgba(0,0,0,.2)}
 .nc-sw.on span{left:18px}
 /* recipients */
-.nc-recip{padding:16px 18px; margin-bottom:16px}
-.nc-recip-head{display:flex; align-items:center; gap:16px; flex-wrap:wrap; margin-bottom:14px}
-.nc-recip-head b{font-size:15px; font-weight:800; color:#101B33}
+.nc-recip{padding:13px 16px; margin-bottom:12px}
+.nc-recip-head{display:flex; align-items:center; gap:14px; flex-wrap:wrap; margin-bottom:11px}
+.nc-recip-head b{font-size:14px; font-weight:800; color:#101B33}
 .nc-recip-head b i{color:#EF4444; font-style:normal}
-.nc-ic-chip{width:38px; height:38px; border-radius:10px; background:#EEF1FF; display:grid; place-items:center; font-size:17px}
-.nc-radio{display:flex; align-items:center; gap:7px; font-size:13.5px; font-weight:600; color:#334155; cursor:pointer}
+.nc-ic-chip{width:32px; height:32px; border-radius:9px; background:#EEF1FF; display:grid; place-items:center; font-size:15px}
+.nc-radio{display:flex; align-items:center; gap:6px; font-size:13px; font-weight:600; color:#334155; cursor:pointer}
 .nc-radio input{accent-color:#2F6BFF; width:15px; height:15px}
-.nc-recip-body{display:flex; gap:10px; align-items:center; flex-wrap:wrap}
-.nc-select{flex:1; min-width:240px; height:46px; border:1px solid #E1E8F0; border-radius:10px; padding:0 13px; font-size:14px; color:#101B33; background:#fff; font-family:inherit; cursor:pointer}
-.nc-csv{flex:1; min-width:240px; height:46px; border:1px dashed #C7D2E0; border-radius:10px; display:flex; align-items:center; justify-content:center; gap:8px; font-size:13.5px; font-weight:600; color:#475569; cursor:pointer; background:#FAFBFD}
+.nc-recip-body{display:flex; gap:9px; align-items:center; flex-wrap:wrap}
+.nc-select{flex:1; min-width:220px; height:40px; border:1px solid #E1E8F0; border-radius:9px; padding:0 12px; font-size:13.5px; color:#101B33; background:#fff; font-family:inherit; cursor:pointer}
+.nc-csv{flex:1; min-width:220px; height:40px; border:1px dashed #C7D2E0; border-radius:9px; display:flex; align-items:center; justify-content:center; gap:8px; font-size:13px; font-weight:600; color:#475569; cursor:pointer; background:#FAFBFD}
 .nc-csv:hover{background:#F1F5F9}
-.nc-obtn{height:46px; background:#fff; border:1px solid #E1E8F0; border-radius:10px; padding:0 15px; font-size:13px; font-weight:600; color:#334155; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:7px}
+.nc-obtn{height:40px; background:#fff; border:1px solid #E1E8F0; border-radius:9px; padding:0 13px; font-size:12.5px; font-weight:600; color:#334155; cursor:pointer; font-family:inherit; display:flex; align-items:center; gap:6px}
 .nc-obtn:hover{background:#F8FAFC}
-.nc-recip-count{margin-top:11px; font-size:12.5px; color:#64748B; font-weight:600}
+.nc-recip-count{margin-top:9px; font-size:12px; color:#64748B; font-weight:600}
 .nc-sample{margin-top:8px; font-size:12.5px; color:#475569; background:#F8FAFC; border:1px solid #EDF1F6; border-radius:8px; padding:9px 12px; line-height:1.5}
+.nc-sheet-setup{flex:1; min-width:240px; min-height:46px; display:flex; align-items:center; padding:0 14px; border:1px dashed #F0C36D; background:#FFFBEB; border-radius:10px; font-size:12.5px; color:#92610A; line-height:1.4}
 /* schedule + follow-ups */
-.nc-grid2{display:grid; grid-template-columns:1fr 1.35fr; gap:16px}
-.nc-card-h{display:flex; align-items:center; gap:11px; padding:15px 18px 0}
-.nc-card-h b{font-size:15px; font-weight:800; color:#101B33}
-.nc-sched, .nc-fups{padding-bottom:18px}
-.nc-sub{margin:8px 18px 14px; font-size:12.5px; color:#64748B}
-.nc-days{display:flex; gap:10px; flex-wrap:wrap; padding:0 18px}
-.nc-day{display:flex; flex-direction:column; align-items:center; gap:8px; font-size:12px; font-weight:700; color:#475569}
-.nc-min{display:flex; align-items:center; gap:9px; padding:16px 18px 0; font-size:13.5px; color:#334155; font-weight:600}
+.nc-grid2{display:grid; grid-template-columns:1fr 1.35fr; gap:14px}
+.nc-card-h{display:flex; align-items:center; gap:10px; padding:12px 16px 0}
+.nc-card-h b{font-size:14px; font-weight:800; color:#101B33}
+.nc-sched, .nc-fups{padding-bottom:14px}
+.nc-sub{margin:6px 16px 11px; font-size:12px; color:#64748B}
+.nc-days{display:flex; gap:8px; flex-wrap:wrap; padding:0 16px}
+.nc-day{display:flex; flex-direction:column; align-items:center; gap:6px; font-size:11.5px; font-weight:700; color:#475569}
+.nc-min{display:flex; align-items:center; gap:8px; padding:13px 16px 0; font-size:13px; color:#334155; font-weight:600}
 .nc-min input{width:56px; height:38px; border:1px solid #E1E8F0; border-radius:9px; text-align:center; font-size:14px; font-family:inherit; color:#101B33}
+.nc-rotate{display:flex; align-items:center; justify-content:space-between; gap:10px; margin:12px 16px 0; padding-top:11px; border-top:1px solid #EDF1F6}
+.nc-rotate-l{display:flex; flex-direction:column; gap:2px}
+.nc-rotate-l b{font-size:13px; font-weight:700; color:#334155}
+.nc-rotate-l span{font-size:11.5px; color:#64748B}
+.nc-senders{margin:8px 16px 0; padding:8px 11px; background:#F8FAFC; border:1px solid #EDF1F6; border-radius:8px; font-size:11.5px; color:#475569; line-height:1.5; word-break:break-word}
 .nc-fup-ctl{margin-left:auto; display:flex; align-items:center; gap:10px}
 .nc-uptok{font-size:12.5px; color:#64748B; font-weight:600; display:flex; align-items:center; gap:6px}
 .nc-uptok input{width:46px; height:32px; border:1px solid #E1E8F0; border-radius:8px; text-align:center; font-family:inherit; font-size:13px}
@@ -675,7 +737,7 @@ const CSS = `
 .nc-fup-table{width:100%; border-collapse:collapse; margin-top:12px}
 .nc-fup-table th{text-align:left; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:#94A3B8; padding:8px 10px; border-bottom:1px solid #EDF1F6}
 .nc-fup-table th:first-child{padding-left:18px}
-.nc-fup-table td{padding:9px 10px; border-bottom:1px solid #F1F5F9; vertical-align:middle}
+.nc-fup-table td{padding:6px 10px; border-bottom:1px solid #F1F5F9; vertical-align:middle}
 .nc-fup-table td:first-child{padding-left:18px}
 .nc-fup-n{width:24px; color:#94A3B8; font-weight:700}
 .nc-fup-day{white-space:nowrap; font-size:13px; font-weight:600; color:#334155}
@@ -686,12 +748,50 @@ const CSS = `
 .nc-fup-bodyrow td{padding:0 18px 12px}
 .nc-fup-bodyrow textarea{width:100%; border:1px solid #E1E8F0; border-radius:9px; padding:10px 12px; font-size:13.5px; font-family:inherit; color:#1B2A44; resize:vertical}
 /* footer */
-.nc-footer{display:flex; gap:12px; margin-top:20px}
+.nc-footer{display:flex; gap:12px; margin-top:12px}
 .nc-create{background:linear-gradient(180deg,#3B7BFF,#1E52C8); border:none; color:#fff; border-radius:11px; padding:13px 26px; font-size:14.5px; font-weight:700; cursor:pointer; font-family:inherit; box-shadow:0 6px 16px rgba(47,107,255,.28)}
 .nc-create:hover:not(:disabled){filter:brightness(1.05)}
 .nc-create:disabled{opacity:.6; cursor:default}
 .nc-draft{background:#fff; border:1px solid #E1E8F0; color:#334155; border-radius:11px; padding:13px 24px; font-size:14.5px; font-weight:600; cursor:pointer; font-family:inherit}
 .nc-draft:hover:not(:disabled){background:#F8FAFC}
-@media(max-width:1000px){.nc-grid-msg{grid-template-columns:1fr}.nc-grid2{grid-template-columns:1fr}}
+/* ===== Compose redesign: top toolbar + stacked email blocks ===== */
+.nc-compose{padding:14px}
+.nc-bar{position:sticky; top:0; z-index:30; display:flex; align-items:center; gap:9px; flex-wrap:wrap; background:#fff; border:1px solid #E6ECF3; border-radius:13px; padding:9px 12px; margin-bottom:14px; box-shadow:0 2px 8px rgba(16,40,80,.06)}
+.nc-ticon.sm{width:34px; height:34px; border-radius:9px; font-size:17px; flex:none}
+.nc-bar-name{flex:1; min-width:150px; height:38px; border:1px solid #E1E8F0; border-radius:9px; padding:0 12px; font-size:14px; font-weight:600; color:#101B33; font-family:inherit; outline:none}
+.nc-bar-name:focus{border-color:#2F6BFF; box-shadow:0 0 0 3px rgba(47,107,255,.1)}
+.nc-bar-sel{height:38px; border:1px solid #E1E8F0; border-radius:9px; padding:0 10px; font-size:13px; color:#334155; background:#fff; font-family:inherit; cursor:pointer}
+.nc-pop{position:relative}
+.nc-pop-btn{display:flex; align-items:center; gap:6px; height:38px; padding:0 12px; background:#F8FAFC; border:1px solid #E1E8F0; border-radius:9px; font-size:13px; font-weight:600; color:#334155; cursor:pointer; font-family:inherit; white-space:nowrap}
+.nc-pop-btn.on{background:#EEF3FF; border-color:#B9CDF7; color:#2F6BFF}
+.nc-pop-btn:hover{background:#F1F5F9}
+.nc-pop-badge{font-style:normal; background:#2F6BFF; color:#fff; font-size:11px; font-weight:700; padding:1px 7px; border-radius:999px}
+.nc-caret{font-style:normal; opacity:.55; font-size:11px}
+.nc-pop-panel{position:absolute; top:calc(100% + 7px); right:0; left:auto; z-index:40; background:#fff; border:1px solid #E6ECF3; border-radius:12px; box-shadow:0 16px 40px rgba(16,40,80,.16); padding:14px; width:300px; max-width:92vw}
+.nc-pop-panel.wide{width:380px}
+.nc-pop-lbl{display:block; font-size:12px; font-weight:700; color:#334155; margin:12px 0 6px}
+.nc-pop-hint{font-size:11px; color:#94A3B8; margin-top:8px}
+.nc-sender-edit{width:100%; border:1px solid #E1E8F0; border-radius:9px; padding:9px 11px; font-size:13px; font-family:inherit; color:#1B2A44; resize:vertical}
+.nc-sender-actions{display:flex; align-items:center; gap:10px; margin-top:8px}
+.nc-save-sm{background:#2F6BFF; border:none; color:#fff; border-radius:8px; padding:8px 14px; font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit}
+.nc-save-sm:disabled{opacity:.5}
+.nc-sender-msg{font-size:12px; color:#0E9F6E; font-weight:600}
+.nc-bar-actions{display:flex; gap:8px; margin-left:auto}
+.nc-stack{display:flex; flex-direction:column; gap:14px; max-width:900px; margin:0 auto}
+.nc-block{background:#fff; border:1px solid #E6ECF3; border-radius:14px; box-shadow:0 1px 2px rgba(16,40,80,.04); padding:14px 16px; display:flex; flex-direction:column; gap:10px}
+.nc-block-h{display:flex; align-items:center; gap:10px}
+.nc-block-tag{font-size:12.5px; font-weight:800; color:#5B49E0; background:#F0EEFF; padding:4px 11px; border-radius:999px}
+.nc-tag-initial{color:#0E7C86; background:#E6F7F5}
+.nc-block-day{font-size:12px; color:#64748B; font-weight:600}
+.nc-block-sw{margin-left:auto; display:flex; align-items:center}
+.nc-block-x{background:none; border:none; color:#94A3B8; font-size:12.5px; font-weight:600; cursor:pointer; font-family:inherit}
+.nc-block-x:hover{color:#E05A4E}
+.nc-block .nc-toolbar{border-radius:10px}
+.nc-body-big{min-height:300px; border:1px solid #EDF1F6!important; border-top:1px solid #EDF1F6!important; border-radius:10px!important}
+.nc-addblock{align-self:center; background:#fff; border:1.5px dashed #B9CDF7; color:#2F6BFF; border-radius:11px; padding:12px 28px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; margin-bottom:8px}
+.nc-addblock:hover:not(:disabled){background:#F5F8FF}
+.nc-addblock:disabled{opacity:.5; cursor:default; border-color:#E1E8F0; color:#94A3B8}
+@media(max-width:1150px){.nc-main{grid-template-columns:1fr 1fr}}
+@media(max-width:820px){.nc-main{grid-template-columns:1fr}.nc-bar-actions{margin-left:0; width:100%}}
 @media(max-width:720px){.nc-grid3{grid-template-columns:1fr}.nc-top{flex-direction:column; align-items:flex-start; gap:12px}}
 `;

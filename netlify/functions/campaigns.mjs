@@ -8,6 +8,8 @@ import {
   sendInitial,
   sendFollowups,
   syncInbox,
+  getSenders,
+  saveSenders,
 } from "../lib/campaigns-core.mjs";
 import { authorize } from "../lib/auth.mjs";
 
@@ -58,9 +60,16 @@ export default async (req) => {
     if (action === "list") {
       const campaigns = await listCampaigns();
       return json({
-        smtpReady: cfg.smtpReady,
+        smtpReady: cfg.sendReady,
+        graphReady: cfg.graphReady,
+        senders: cfg.graphReady ? await getSenders(cfg) : [],
         campaigns: campaigns.map((c) => ({ ...c, stats: stats(c) })),
       });
+    }
+
+    if (action === "saveSenders") {
+      const saved = await saveSenders(body.senders);
+      return json({ ok: true, senders: saved });
     }
 
     if (action === "sync") {
@@ -89,6 +98,7 @@ export default async (req) => {
           .slice(0, 6)
           .map((f) => ({ subject: String(f.subject).slice(0, 200), body: String(f.body) })),
         recipients,
+        rotateSenders: !!body.rotateSenders,
         status: "draft",
         createdAt: new Date().toISOString(),
       };

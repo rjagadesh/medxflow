@@ -21,21 +21,78 @@ export function config() {
   const pass = g("SMTP_PASS");
   const smtpReady =
     host && user && pass && !user.includes("your@email.com") && pass !== "your-app-password";
+  // Microsoft Graph (client-credentials) - preferred over SMTP when present.
+  const msTenant = g("MS_TENANT_ID");
+  const msClientId = g("MS_CLIENT_ID");
+  const msClientSecret = g("MS_CLIENT_SECRET");
+  const from = g("SMTP_FROM") || user;
+  // Sender pool: MS_SENDERS may be a JSON array or a comma/newline list; falls
+  // back to the single MS_SENDER / the SMTP_FROM address. Used for round-robin.
+  const parseSenders = (raw) => {
+    if (!raw) return [];
+    if (Array.isArray(raw)) return raw;
+    const s = String(raw).trim();
+    if (s.startsWith("[")) { try { const a = JSON.parse(s); if (Array.isArray(a)) return a; } catch {} }
+    return s.split(/[\n,;]+/);
+  };
+  const single = g("MS_SENDER") || (from.match(/[\w.+-]+@[\w-]+\.[\w.-]+/) || [])[0] || user;
+  const graphSenders = [
+    ...new Set(
+      parseSenders(process.env.MS_SENDERS || c.MS_SENDERS)
+        .concat(single)
+        .map((x) => String(x).trim().toLowerCase())
+        .filter((x) => x.includes("@"))
+    ),
+  ];
+  const graphSender = graphSenders[0] || single;
+  const graphReady = !!(msTenant && msClientId && msClientSecret && graphSender);
   return {
     host,
     port: parseInt(g("SMTP_PORT") || "465", 10),
     user,
     pass,
-    from: g("SMTP_FROM") || user,
+    from,
     imapHost: g("IMAP_HOST") || "imap.gmail.com",
     imapPort: parseInt(g("IMAP_PORT") || "993", 10),
     baseUrl: (g("CAMPAIGN_BASE_URL") || process.env.URL || "http://localhost:8888").replace(/\/+$/, ""),
     adminPassword: g("ADMIN_PASSWORD"),
+    msTenant,
+    msClientId,
+    msClientSecret,
+    graphSender,
+    graphSenders,
+    graphReady,
+    // Either transport means we can actually send (not simulate).
     smtpReady,
+    sendReady: smtpReady || graphReady,
   };
 }
 
 export const store = () => getStore("campaigns");
+
+// ---------- sender pool (editable, persisted in Blobs) ----------
+// Overrides the env MS_SENDERS list when the admin edits + saves senders.
+const settingsStore = () => getStore("campaign-settings");
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export async function getSenders(cfg) {
+  try {
+    const v = await settingsStore().get("senders", { type: "json" });
+    if (Array.isArray(v) && v.length) return v;
+  } catch {}
+  return cfg.graphSenders || [];
+}
+export async function saveSenders(list) {
+  const clean = [
+    ...new Set(
+      (list || [])
+        .map((s) => String(s).trim().toLowerCase())
+        .filter((s) => EMAIL_RE.test(s))
+    ),
+  ];
+  await settingsStore().setJSON("senders", clean);
+  return clean;
+}
 
 // ---------- data helpers ----------
 export async function listCampaigns() {
@@ -129,9 +186,60 @@ function transport(cfg) {
   return _tx;
 }
 
-async function sendOne(campaign, recip, msg, cfg) {
+// ---- Microsoft Graph transport (client-credentials, no dependencies) ----
+let _graphTok = null; // { token, exp }
+async function graphToken(cfg) {
+  if (_graphTok && Date.now() < _graphTok.exp) return _graphTok.token;
+  const res = await fetch(`https://login.microsoftonline.com/${cfg.msTenant}/oauth2/v2.0/token`, {
+    method: "POST",
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({
+      client_id: cfg.msClientId,
+      client_secret: cfg.msClientSecret,
+      scope: "https://graph.microsoft.com/.default",
+      grant_type: "client_credentials",
+    }),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.error_description || data.error || `token HTTP ${res.status}`);
+  _graphTok = { token: data.access_token, exp: Date.now() + (data.expires_in - 60) * 1000 };
+  return _graphTok.token;
+}
+
+async function sendViaGraph(cfg, { to, subject, html, unsubUrl, sender }) {
+  const token = await graphToken(cfg);
+  const from = sender || cfg.graphSender;
+  const res = await fetch(
+    `https://graph.microsoft.com/v1.0/users/${encodeURIComponent(from)}/sendMail`,
+    {
+      method: "POST",
+      headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
+      body: JSON.stringify({
+        message: {
+          subject,
+          body: { contentType: "HTML", content: html },
+          toRecipients: [{ emailAddress: { address: to } }],
+          internetMessageHeaders: unsubUrl ? [{ name: "List-Unsubscribe", value: `<${unsubUrl}>` }] : undefined,
+        },
+        saveToSentItems: true,
+      }),
+    }
+  );
+  if (res.status !== 202) {
+    const data = await res.json().catch(() => ({}));
+    throw new Error(data?.error?.message || `Graph sendMail HTTP ${res.status}`);
+  }
+}
+
+async function sendOne(campaign, recip, msg, cfg, sender) {
   const html = buildHtml(campaign, recip, msg, cfg);
   const subject = personalize(msg.subject, recip);
+  const unsubUrl = `${cfg.baseUrl}/.netlify/functions/campaign-track?t=u&c=${campaign.id}&e=${esc(recip.email)}`;
+  // Prefer Microsoft Graph; fall back to SMTP; else simulate.
+  if (cfg.graphReady) {
+    await sendViaGraph(cfg, { to: recip.email, subject, html, unsubUrl, sender });
+    return { simulated: false, via: "graph", from: sender || cfg.graphSender };
+  }
   if (!cfg.smtpReady) {
     return { simulated: true };
   }
@@ -140,28 +248,40 @@ async function sendOne(campaign, recip, msg, cfg) {
     to: recip.email,
     subject,
     html,
-    headers: {
-      "List-Unsubscribe": `<${cfg.baseUrl}/.netlify/functions/campaign-track?t=u&c=${campaign.id}&e=${esc(recip.email)}>`,
-    },
+    headers: { "List-Unsubscribe": `<${unsubUrl}>` },
   });
-  return { simulated: false };
+  return { simulated: false, via: "smtp" };
 }
 
 const DELAY = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// The sender addresses to use for a campaign. When rotation is on and Graph has
+// more than one sender, cycle through them round-robin (one mailbox per email);
+// otherwise always the single default sender.
+function senderPool(campaign, cfg, senders) {
+  return campaign.rotateSenders && cfg.graphReady && (senders || []).length > 1
+    ? senders
+    : [senders?.[0] || cfg.graphSender];
+}
+
 // Send the initial email to pending recipients (batched to avoid timeouts).
 export async function sendInitial(campaign, cfg, maxBatch = 30) {
   const msg = { subject: campaign.subject, body: campaign.body };
+  const pool = senderPool(campaign, cfg, await getSenders(cfg));
+  let cursor = campaign.rotateCursor || 0;
   let sent = 0,
     simulated = false;
   const pending = (campaign.recipients || []).filter((r) => r.status === "pending");
   for (const r of pending.slice(0, maxBatch)) {
+    const sender = pool[cursor % pool.length];
+    cursor++;
     try {
-      const res = await sendOne(campaign, r, msg, cfg);
+      const res = await sendOne(campaign, r, msg, cfg, sender);
       simulated = res.simulated;
       r.status = "sent";
       r.sentAt = new Date().toISOString();
       r.lastSentAt = r.sentAt;
+      if (res.from) r.sentFrom = res.from;
       sent++;
     } catch (err) {
       r.status = "failed";
@@ -169,6 +289,7 @@ export async function sendInitial(campaign, cfg, maxBatch = 30) {
     }
     await DELAY(150);
   }
+  campaign.rotateCursor = cursor;
   if (campaign.status === "draft") campaign.status = "active";
   campaign.updatedAt = new Date().toISOString();
   await saveCampaign(campaign);
@@ -184,13 +305,13 @@ export const STOP_STATES = ["replied", "unsubscribed", "bounced", "failed"];
 // stop the moment someone replies / unsubscribes / bounces.
 export async function sendFollowups(campaign, cfg, { respectDays = true, maxBatch = 60 } = {}) {
   const fups = campaign.followups || [];
-  if (!fups.length) return { sent: 0, remaining: 0, simulated: !cfg.smtpReady };
+  if (!fups.length) return { sent: 0, remaining: 0, simulated: !cfg.sendReady };
 
   const sendDays = campaign.sendDays && campaign.sendDays.length ? campaign.sendDays : [1, 2, 3, 4, 5];
   const minGap = campaign.minGapDays || 2;
   const today = new Date().getDay(); // 0=Sun … 6=Sat
   if (respectDays && !sendDays.includes(today)) {
-    return { sent: 0, remaining: 0, skipped: "not a send day", simulated: !cfg.smtpReady };
+    return { sent: 0, remaining: 0, skipped: "not a send day", simulated: !cfg.sendReady };
   }
 
   const now = Date.now();
@@ -202,21 +323,27 @@ export async function sendFollowups(campaign, cfg, { respectDays = true, maxBatc
     return daysSince >= minGap;
   });
 
+  const pool = senderPool(campaign, cfg, await getSenders(cfg));
+  let cursor = campaign.rotateCursor || 0;
   let sent = 0,
     simulated = false;
   for (const r of due.slice(0, maxBatch)) {
     const i = r.followupsSent || 0;
+    const sender = pool[cursor % pool.length];
+    cursor++;
     try {
-      const res = await sendOne(campaign, r, { subject: fups[i].subject, body: fups[i].body }, cfg);
+      const res = await sendOne(campaign, r, { subject: fups[i].subject, body: fups[i].body }, cfg, sender);
       simulated = res.simulated;
       r.followupsSent = i + 1;
       r.lastSentAt = new Date().toISOString();
+      if (res.from) r.sentFrom = res.from;
       sent++;
     } catch (err) {
       r.error = String(err.message || err).slice(0, 200);
     }
     await DELAY(150);
   }
+  campaign.rotateCursor = cursor;
   campaign.updatedAt = new Date().toISOString();
   await saveCampaign(campaign);
   return { sent, remaining: Math.max(0, due.length - maxBatch), simulated };
