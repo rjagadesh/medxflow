@@ -5,6 +5,7 @@
 //  A "group" is a workflow area; each process is [emoji, name, description].
 //  Groups are ordered pain-first: the biggest revenue leak leads the page,
 //  front-office / voice sits lower (except MedSpa, where it IS the top win).
+//  Every specialty carries 20+ automatable processes end-to-end.
 // ─────────────────────────────────────────────────────────────────────────
 
 export const SPECIALTIES = [
@@ -16,9 +17,9 @@ export const SPECIALTIES = [
     h1a: "High volume,",
     h1b: "nothing left on the table.",
     tagline:
-      "At primary-care volume, the money leaks in coding - E/M levels, preventive-plus-problem, AWV/CCM/RPM and risk-adjustment gaps. AI agents catch it before the claim goes out.",
+      "At primary-care volume, the money leaks in coding - E/M levels, preventive-plus-problem, AWV/CCM/RPM and risk-adjustment gaps. AI agents catch it before the claim goes out, across the whole cycle.",
     overview:
-      "Primary care wins on volume, prevention and chronic-care management - which is exactly where revenue slips away. AI agents support E/M and preventive-plus-problem coding, capture AWV, CCM and RPM, and flag open HCC and risk-adjustment gaps before the visit closes - then verify eligibility for every visit at scale.",
+      "Primary care wins on volume, prevention and chronic-care management - which is exactly where revenue slips away. AI agents support E/M and preventive-plus-problem coding, capture AWV, CCM and RPM, and flag open HCC and risk-adjustment gaps before the visit closes - then run eligibility, claims, posting, denials and collections behind it.",
     stat: { n: "25", suffix: " modifier", label: "Preventive-plus-problem visits split correctly so both get paid, automatically" },
     groups: [
       {
@@ -28,31 +29,61 @@ export const SPECIALTIES = [
           ["🏷️", "E/M & preventive-plus-problem coding", "Supports E/M level selection and preventive-plus-problem visits with modifier 25."],
           ["📋", "AWV, CCM & RPM capture", "Captures annual-wellness, chronic-care-management and remote-monitoring codes you're leaving behind."],
           ["🎯", "HCC / risk-adjustment gap flagging", "Flags open HCC and risk-adjustment gaps before the visit closes."],
+          ["📝", "ICD-10 specificity prompts", "Prompts for the specific diagnosis codes chronic conditions require."],
+          ["🔁", "Transitional Care Management capture", "Catches billable TCM after a hospital discharge."],
+          ["💉", "Immunization & admin code capture", "Captures vaccine product and administration codes so none are dropped."],
         ],
       },
       {
         title: "Eligibility & benefits",
         processes: [
           ["🛡️", "Real-time verification at scale", "Verifies eligibility for every visit and distinguishes preventive vs. problem coverage."],
+          ["🔎", "Coverage discovery for self-pay", "Finds active coverage for patients who present as self-pay."],
+          ["🔗", "Secondary coverage / COB detection", "Detects secondary and tertiary plans and coordinates benefits."],
         ],
       },
       {
-        title: "Prior authorization",
+        title: "Prior authorization & referrals",
         processes: [
-          ["📦", "Medication & referral PA", "Handles medication and referral authorizations."],
+          ["📦", "Medication prior authorization", "Assembles and submits medication PAs with clinical justification."],
+          ["↪️", "Imaging & specialist referral auth", "Requests referral authorizations and routes them to the right specialist."],
+          ["🔄", "Referral loop tracking", "Tracks outbound referrals to close the loop and recapture the patient."],
         ],
       },
       {
-        title: "Denials & AR",
+        title: "Claims & submission",
         processes: [
-          ["🔎", "Preventive-vs-problem denial recovery", "Auto-appeals preventive-vs-problem and other recurring denials."],
+          ["🧼", "Claim scrubbing & NCCI edits", "Scrubs claims against payer and bundling edits before submission."],
+          ["🔄", "Claim status follow-up", "Polls 276/277 status and chases stuck claims."],
         ],
       },
       {
-        title: "Front office & recall",
+        title: "Payments, denials & AR",
         processes: [
-          ["🔁", "Preventive & chronic recall", "Drives annual-wellness and chronic-care recall automatically."],
+          ["🏦", "ERA auto-posting", "Posts 835 remittances and contractual adjustments automatically."],
+          ["🔎", "Denial classification & auto-appeals", "Classifies denials and drafts appeals for preventive-vs-problem and medical-necessity."],
+          ["🗂️", "AR worklist prioritization", "Prioritizes the AR worklist by recoverable dollars and timely-filing risk."],
+        ],
+      },
+      {
+        title: "Patient engagement & collections",
+        processes: [
+          ["🔔", "Preventive & chronic recall", "Drives annual-wellness and chronic-care recall automatically."],
+          ["🧮", "Point-of-service estimates & collection", "Estimates patient responsibility and collects at the desk."],
+          ["💳", "Statements & payment plans", "Sends statements, reminders and self-service payment plans."],
+        ],
+      },
+      {
+        title: "Front office",
+        processes: [
           ["📞", "High-volume call answering & booking", "Absorbs call volume and books preventive and chronic-care visits."],
+          ["📇", "Digital intake & insurance-card capture", "Collects demographics and captures/reads the insurance card up front."],
+        ],
+      },
+      {
+        title: "Analytics",
+        processes: [
+          ["📊", "Panel & quality-gap dashboards", "Surfaces open care gaps and value-based quality measures."],
         ],
       },
     ],
@@ -175,9 +206,9 @@ export const SPECIALTIES = [
     h1a: "Verify the plan.",
     h1b: "Attach the proof.",
     tagline:
-      "Dental revenue leaks at verification and attachments - plans with maximums, frequencies and downgrades, and claims that reject without X-rays and narratives. AI agents get both right before the claim leaves.",
+      "Dental revenue leaks at verification and attachments - plans with maximums, frequencies and downgrades, and claims that reject without X-rays and narratives. AI agents get the whole cycle right before the claim leaves.",
     overview:
-      "Dental practices juggle complex plan structures, frequent eligibility changes and attachment-hungry claims. AI agents verify benefits down to frequencies and downgrades, auto-attach the right documentation to every claim, and keep the hygiene schedule full.",
+      "Dental practices juggle complex plan structures, frequent eligibility changes and attachment-hungry claims. AI agents verify benefits down to frequencies and downgrades, auto-attach the right documentation, code and appeal - and keep the hygiene schedule full.",
     stat: { n: "1", suffix: " min", label: "Full benefit breakdown - maximums, frequencies, downgrades - before the patient sits down" },
     groups: [
       {
@@ -186,21 +217,42 @@ export const SPECIALTIES = [
         processes: [
           ["🛡️", "Real-time eligibility & plan breakdown", "Pulls annual maximums, frequencies, downgrades and waiting periods before the visit."],
           ["📄", "Patient-responsibility estimation", "Computes what the patient owes so the front desk quotes accurately."],
+          ["🔗", "Coordination of benefits", "Detects dual coverage and orders primary/secondary correctly."],
+          ["🗓", "Frequency & history check", "Confirms last cleaning, exam and X-ray dates against plan frequencies."],
         ],
       },
       {
         title: "Claims & documentation",
         processes: [
-          ["📎", "Attachment automation", "Auto-attaches X-rays, perio charts and narratives to claims so they don't reject."],
+          ["📎", "Attachment automation", "Auto-attaches X-rays, perio charts and narratives so claims don't reject."],
           ["🏷️", "CDT coding assistance", "Suggests CDT codes from the clinical note and flags likely downgrades (e.g., composite to amalgam)."],
-          ["🧾", "Predetermination handling", "Submits and tracks predeterminations for major work."],
+          ["✍️", "Narrative generation", "Drafts medical-necessity narratives for scaling, crowns and extractions."],
+          ["🔁", "Medical-dental cross-coding", "Cross-codes eligible procedures to CPT for medical billing (e.g., surgical extractions, appliances)."],
+          ["🧾", "Predetermination submission & tracking", "Submits and tracks predeterminations for major work."],
         ],
       },
       {
-        title: "Denials, AR & payments",
+        title: "Prior authorization",
         processes: [
+          ["📦", "Pre-treatment estimates for major work", "Requests PAs/estimates for crowns, implants and perio."],
+          ["😬", "Ortho authorization & lifetime-max tracking", "Handles ortho authorizations and tracks the orthodontic lifetime maximum."],
+        ],
+      },
+      {
+        title: "Payments, denials & AR",
+        processes: [
+          ["🏦", "ERA/EOB auto-posting", "Posts electronic remittances and write-offs automatically."],
           ["🔎", "Denial & downgrade appeals", "Auto-generates appeals for common dental denials and downgrades."],
-          ["💳", "Payment posting & reconciliation", "Posts ERAs and reconciles patient payments."],
+          ["📉", "Underpayment vs. fee-schedule detection", "Flags payments below the contracted fee schedule."],
+          ["🗂️", "AR follow-up worklist", "Prioritizes aged claims by recoverable value and filing deadline."],
+        ],
+      },
+      {
+        title: "Patient billing & collections",
+        processes: [
+          ["💳", "Statements & reminders", "Sends statements and balance reminders by text and email."],
+          ["📅", "Payment & membership-plan billing", "Runs payment plans and in-house membership-plan billing."],
+          ["🧮", "Treatment-plan financial presentation", "Turns the treatment plan into a clear patient-cost breakdown at the desk."],
         ],
       },
       {
@@ -208,7 +260,14 @@ export const SPECIALTIES = [
         processes: [
           ["🔁", "Recall & hygiene reactivation", "Automated 6-month recall and reactivation of lapsed patients."],
           ["🪑", "No-show & waitlist backfill", "Fills cancellations from the waitlist automatically."],
-          ["📞", "24/7 call answering & booking", "Answers overflow calls and books or reschedules into Dentrix, Eaglesoft or Open Dental."],
+          ["📞", "24/7 call answering & booking", "Answers overflow calls and books into Dentrix, Eaglesoft or Open Dental."],
+          ["📇", "New-patient digital forms & insurance capture", "Collects forms and captures the insurance card before arrival."],
+        ],
+      },
+      {
+        title: "Analytics",
+        processes: [
+          ["📊", "Production & unscheduled-treatment dashboards", "Tracks production, collections and unscheduled treatment to recover."],
         ],
       },
     ],
@@ -230,9 +289,9 @@ export const SPECIALTIES = [
     h1a: "Medical and cosmetic,",
     h1b: "billed cleanly.",
     tagline:
-      "Two businesses under one roof - the cosmetic-vs-medical coding line is the biggest audit risk, and biologics are the biggest PA burden. AI agents keep both clean.",
+      "Two businesses under one roof - the cosmetic-vs-medical coding line is the biggest audit risk, and biologics are the biggest PA burden. AI agents keep both clean across the whole cycle.",
     overview:
-      "Dermatology mixes medical and cosmetic work with procedure-heavy coding and expensive biologics. AI agents keep the cosmetic-vs-medical line clean, get modifiers right on lesion removals and Mohs, and assemble step-therapy documentation for biologic authorizations.",
+      "Dermatology mixes medical and cosmetic work with procedure-heavy coding and expensive biologics. AI agents keep the cosmetic-vs-medical line clean, get modifiers right on lesion removals and Mohs, assemble biologic authorizations, and run claims, posting and denials behind it.",
     stat: { n: "25", suffix: " & 59", label: "Modifiers validated automatically on same-day procedures and lesion removals" },
     groups: [
       {
@@ -242,6 +301,8 @@ export const SPECIALTIES = [
           ["⚖️", "Cosmetic-vs-medical flagging", "Flags cosmetic services documented as medically necessary and holds the boundary."],
           ["🏷️", "Procedure coding & path correlation", "Codes biopsies, excisions and Mohs, correlating with pathology results."],
           ["🎯", "Modifier accuracy", "Validates modifiers 25 and 59 on same-day services."],
+          ["🔢", "Lesion & specimen reconciliation", "Reconciles lesion count and size with specimens submitted and billed."],
+          ["📝", "E/M + procedure same-day coding", "Supports a significant, separate E/M billed with a same-day procedure."],
         ],
       },
       {
@@ -250,6 +311,8 @@ export const SPECIALTIES = [
         processes: [
           ["📦", "Biologic PA assembly & renewal", "Assembles step-therapy documentation and prior-treatment history for biologics (e.g., Dupixent), and tracks renewals."],
           ["🧾", "Payer-policy matching", "Checks the encounter against payer criteria before submission."],
+          ["💊", "Specialty-pharmacy coordination", "Runs the benefit investigation and coordinates the specialty pharmacy."],
+          ["🎟️", "Copay-assistance / PAP enrollment", "Enrolls eligible patients in copay-assistance and patient-assistance programs."],
         ],
       },
       {
@@ -257,19 +320,43 @@ export const SPECIALTIES = [
         processes: [
           ["🛡️", "Eligibility & benefits", "Verifies coverage and out-of-pocket for medical services."],
           ["🔍", "Cosmetic vs. medical at booking", "Flags cosmetic vs. medical at booking time to prevent collections issues later."],
+          ["🧮", "Cosmetic cost estimate", "Produces a self-pay estimate for cosmetic services up front."],
         ],
       },
       {
-        title: "Denials & AR",
+        title: "Claims & submission",
         processes: [
-          ["🔎", "Medical-necessity appeals", "Auto-generates appeals for lesion-removal and medical-necessity denials."],
+          ["🧼", "Claim scrubbing & NCCI edits", "Scrubs claims against bundling and payer edits."],
+          ["🔬", "Pathology claim reconciliation", "Reconciles professional and technical pathology components."],
+          ["🔄", "Claim status follow-up", "Polls status and chases stuck claims."],
         ],
       },
       {
-        title: "Front office & scheduling",
+        title: "Payments, denials & AR",
+        processes: [
+          ["🏦", "ERA auto-posting", "Posts remittances and adjustments automatically."],
+          ["🔎", "Medical-necessity & lesion-removal appeals", "Auto-drafts appeals for lesion-removal and medical-necessity denials."],
+          ["📉", "Underpayment detection", "Flags payments below contracted rates."],
+        ],
+      },
+      {
+        title: "Patient collections",
+        processes: [
+          ["💳", "Cosmetic pre-payment & self-pay collection", "Collects cosmetic payment before service."],
+          ["📅", "Statements & payment plans", "Sends statements and offers self-service payment plans."],
+        ],
+      },
+      {
+        title: "Front office",
         processes: [
           ["🔁", "Recall & skin-check reminders", "Drives annual skin-check recall and reactivation."],
           ["📞", "Call answering & booking", "Answers calls and books into EMA/ModMed or Nextech."],
+        ],
+      },
+      {
+        title: "Analytics",
+        processes: [
+          ["📊", "Cosmetic vs. medical revenue mix", "Dashboards the cosmetic/medical revenue split and denial trends."],
         ],
       },
     ],
@@ -291,9 +378,9 @@ export const SPECIALTIES = [
     h1a: "Every dose authorized,",
     h1b: "billed and reconciled.",
     tagline:
-      "Eye-care revenue concentrates in expensive injectables and the medical-vs-vision split. AI agents assemble anti-VEGF authorizations, reconcile buy-and-bill down to the wasted unit, and route every claim to the right payer.",
+      "Eye-care revenue concentrates in expensive injectables and the medical-vs-vision split. AI agents assemble anti-VEGF authorizations, reconcile buy-and-bill down to the wasted unit, route every claim to the right payer, and work the rest of the cycle.",
     overview:
-      "The money in eye care rides on high-cost injectable drugs and a benefit split that trips up the front desk. Anti-VEGF PAs, J-code units and drug wastage are unforgiving, and sending a claim to the wrong plan means a write-off. MedXFlow's agents handle the parts that leak the most.",
+      "The money in eye care rides on high-cost injectable drugs and a benefit split that trips up the front desk. Anti-VEGF PAs, J-code units and drug wastage are unforgiving, and sending a claim to the wrong plan means a write-off. MedXFlow's agents handle the parts that leak the most - and everything downstream.",
     stat: { n: "JW/JZ", suffix: "", label: "Drug wastage documented on every single-use anti-VEGF vial, automatically" },
     groups: [
       {
@@ -303,6 +390,8 @@ export const SPECIALTIES = [
           ["📦", "Anti-VEGF prior authorization", "Assembles PA packets for Eylea, Lucentis, Avastin and Vabysmo - diagnosis, prior therapy and imaging - and tracks renewals."],
           ["💉", "J-code units & wastage", "Reconciles drug units drawn vs. documented vs. billed, with JW/JZ wastage-modifier validation on single-use vials."],
           ["💳", "Buy-and-bill reconciliation", "Matches drug purchases to administered doses and payments, so nothing bought goes unbilled."],
+          ["📦", "Drug inventory & lot/expiry tracking", "Tracks vials by lot and expiry to prevent waste and stockouts."],
+          ["🎟️", "Copay-assistance enrollment", "Enrolls patients in manufacturer copay and assistance programs."],
         ],
       },
       {
@@ -311,33 +400,58 @@ export const SPECIALTIES = [
         processes: [
           ["🔀", "Route to the right plan", "Determines medical vs. routine-vision coverage before the visit and sends the claim to the correct payer."],
           ["🛡️", "Dual-benefit verification", "Verifies both medical and vision benefits, copays and frequency limits."],
+          ["👓", "Vision-plan eligibility & authorization", "Checks VSP/EyeMed eligibility and materials authorizations."],
         ],
       },
       {
         title: "Coding & compliance",
         processes: [
-          ["🏷️", "Retina & imaging coding", "Codes OCT, fundus photography and visual fields, and respects payer frequency limits."],
-          ["⚖️", "Eye codes vs. E/M", "Chooses correctly between Eye codes (920xx) and E/M (992xx) and validates modifiers."],
+          ["🏷️", "Retina & imaging coding", "Codes OCT, fundus photography and visual fields, respecting payer frequency limits."],
+          ["⚖️", "Eye codes vs. E/M", "Chooses correctly between Eye codes (920xx) and E/M (992xx)."],
+          ["↔️", "Bilateral & modifier accuracy", "Applies RT/LT/50 and other modifiers correctly."],
+          ["🗓", "Post-cataract global tracking", "Tracks the surgical global period so post-op visits bill correctly."],
         ],
       },
       {
-        title: "Eligibility & benefits",
+        title: "Prior authorization (procedures)",
         processes: [
-          ["📄", "Coverage & OOP", "Confirms coverage and out-of-pocket for procedures and imaging."],
+          ["📦", "Cataract, YAG, laser & oculoplastics PA", "Assembles authorizations and medical-necessity documentation for procedures."],
+          ["🧾", "Medical-necessity matching", "Matches the encounter to payer coverage criteria."],
         ],
       },
       {
-        title: "Denials & AR",
+        title: "Claims & submission",
         processes: [
+          ["🧼", "Claim scrubbing & NCCI edits", "Scrubs claims against bundling and payer edits."],
+          ["🔄", "Claim status follow-up", "Polls status and chases stuck claims."],
+        ],
+      },
+      {
+        title: "Payments, denials & AR",
+        processes: [
+          ["🏦", "ERA auto-posting", "Posts remittances and adjustments automatically."],
           ["🔎", "Drug & imaging denial recovery", "Auto-appeals anti-VEGF and imaging-frequency denials."],
           ["📉", "Underpayment detection", "Flags J-code payments below contracted or ASP-based rates."],
+        ],
+      },
+      {
+        title: "Patient collections",
+        processes: [
+          ["💳", "Refraction & non-covered collection", "Collects refraction and other non-covered fees at the desk."],
+          ["📅", "Statements & payment plans", "Sends statements and offers payment plans."],
         ],
       },
       {
         title: "Front office & scheduling",
         processes: [
           ["🔁", "Recall for chronic care", "Recalls glaucoma, diabetic-eye and injection-series patients on schedule."],
-          ["📞", "Call answering & scheduling", "Answers calls and schedules clinic visits, imaging and injection appointments."],
+          ["📞", "Call answering & scheduling", "Answers calls and schedules clinic visits, imaging and injections."],
+        ],
+      },
+      {
+        title: "Analytics",
+        processes: [
+          ["📊", "Drug-margin & denial dashboards", "Dashboards drug margin, wastage and denial trends."],
         ],
       },
     ],
@@ -359,9 +473,9 @@ export const SPECIALTIES = [
     h1a: "Never lose a session",
     h1b: "to an expired auth.",
     tagline:
-      "Authorization-heavy, session-based billing done right - expired auths and exceeded units are the top leaks. AI agents renew authorizations before units run out and scrub every recurring claim.",
+      "Authorization-heavy, session-based billing done right - expired auths and exceeded units are the top leaks. AI agents renew authorizations before units run out and run the recurring cycle end to end.",
     overview:
-      "Behavioral health lives and dies on authorizations and recurring session billing. Missed auths, exceeded units and telehealth modifier errors are the top revenue leaks. AI agents renew auths before units run out, bill telehealth correctly, and scrub every recurring claim.",
+      "Behavioral health lives and dies on authorizations and recurring session billing. Missed auths, exceeded units and telehealth modifier errors are the top revenue leaks. AI agents renew auths before units run out, bill telehealth correctly, scrub recurring claims, and work denials and collections.",
     stat: { n: "0", suffix: "", label: "Sessions billed against an expired or exhausted authorization" },
     groups: [
       {
@@ -370,25 +484,47 @@ export const SPECIALTIES = [
         processes: [
           ["📦", "Auth request & renewal", "Assembles medical-necessity documentation and submits or renews authorizations before units run out."],
           ["⏱", "Unit & visit tracking", "Tracks authorized vs. used sessions and alerts before expiry."],
+          ["🔁", "Concurrent / continued-stay review", "Prepares continued-stay documentation for IOP/PHP levels of care."],
+          ["🚨", "Auth-expiry alerts", "Warns clinicians before an authorization lapses mid-treatment."],
         ],
       },
       {
         title: "Coding & claims",
         processes: [
           ["🏷️", "Session coding & modifiers", "Validates time-based CPT (90837 vs. 90834), telehealth POS/modifiers (95, GT) and add-on codes."],
+          ["➕", "Add-on & crisis-code capture", "Captures interactive-complexity and crisis codes when documented."],
           ["🔄", "Recurring claim scrubbing", "Scrubs and submits recurring session claims automatically."],
+          ["📝", "Time / documentation match check", "Confirms documented time supports the code billed."],
         ],
       },
       {
         title: "Eligibility & benefits",
         processes: [
           ["🛡️", "Behavioral-health eligibility", "Verifies coverage, copays and visit limits - often carved out to a separate payer."],
+          ["🔗", "Carve-out & secondary detection", "Detects behavioral carve-outs and secondary coverage."],
+          ["🤝", "EAP session verification", "Confirms EAP session authorizations and remaining visits."],
         ],
       },
       {
-        title: "Denials & AR",
+        title: "Claims & submission",
         processes: [
+          ["📤", "Claim submission & edits", "Submits claims through the clearinghouse with payer edits applied."],
+          ["🔄", "Claim status follow-up", "Polls 276/277 status and chases stuck claims."],
+        ],
+      },
+      {
+        title: "Payments, denials & AR",
+        processes: [
+          ["🏦", "ERA auto-posting", "Posts remittances and adjustments automatically."],
           ["🔎", "Auth & modifier denial recovery", "Auto-appeals the recurring denials: no auth, exceeded units, wrong modifier."],
+          ["🗂️", "AR worklist prioritization", "Prioritizes AR by recoverable value and timely-filing risk."],
+        ],
+      },
+      {
+        title: "Patient collections",
+        processes: [
+          ["🧾", "Superbill generation", "Generates out-of-network superbills for patient reimbursement."],
+          ["📅", "Sliding-scale & payment plans", "Runs sliding-scale billing, statements and payment plans."],
         ],
       },
       {
@@ -396,6 +532,13 @@ export const SPECIALTIES = [
         processes: [
           ["🔁", "Recurring appointment & no-show management", "Holds recurring slots, reminds patients and backfills cancellations."],
           ["📞", "Intake call answering & booking", "Answers inbound, screens and books into the EHR (SimplePractice, TherapyNotes, Kareo)."],
+          ["📇", "Digital intake & consent forms", "Collects intake, consent and insurance details before the first session."],
+        ],
+      },
+      {
+        title: "Analytics",
+        processes: [
+          ["📊", "Utilization & no-show dashboards", "Tracks authorization utilization and no-show patterns."],
         ],
       },
     ],
@@ -417,9 +560,9 @@ export const SPECIALTIES = [
     h1a: "Watch the visit cap.",
     h1b: "Bill the units right.",
     tagline:
-      "Visit caps, plan-of-care recerts and the 8-minute rule are where PT revenue leaks. AI agents track every authorized visit and validate every timed unit before the claim goes out.",
+      "Visit caps, plan-of-care recerts and the 8-minute rule are where PT revenue leaks. AI agents track every authorized visit, validate every timed unit, and run claims and collections behind it.",
     overview:
-      "Physical therapy is recurring, authorization-limited and easy to under- or over-bill. AI agents track authorized visits, validate timed-code units and threshold modifiers, and remind on plan-of-care recertification - then keep the schedule full.",
+      "Physical therapy is recurring, authorization-limited and easy to under- or over-bill. AI agents track authorized visits, validate timed-code units and threshold modifiers, remind on plan-of-care recertification, and keep the schedule and the cash flowing.",
     stat: { n: "8", suffix: "-min rule", label: "Timed-code units validated on every visit, automatically" },
     groups: [
       {
@@ -428,12 +571,16 @@ export const SPECIALTIES = [
         processes: [
           ["📦", "Auth request & renewal", "Requests and renews authorizations before visits run out."],
           ["⏱", "Visit & recert tracking", "Tracks authorized vs. used visits and reminds on plan-of-care recertification."],
+          ["✍️", "Plan-of-care signature tracking", "Chases physician signatures on the plan of care before they cost a claim."],
+          ["🔁", "Continued-authorization requests", "Prepares continued-auth requests as visit counts run down."],
         ],
       },
       {
         title: "Coding & claims",
         processes: [
           ["🏷️", "Timed-unit & modifier validation", "Validates units under the 8-minute rule and checks modifiers (GP, KX, 59)."],
+          ["🧩", "CCI edit check", "Checks timed vs. untimed code pairs against CCI edits."],
+          ["📝", "Evaluation-complexity coding", "Supports the correct evaluation-complexity level from the note."],
           ["🔄", "Recurring claim scrubbing", "Scrubs and submits recurring visit claims automatically."],
         ],
       },
@@ -441,19 +588,43 @@ export const SPECIALTIES = [
         title: "Eligibility & therapy caps",
         processes: [
           ["🛡️", "Benefits & cap tracking", "Verifies PT benefits and visit limits, and tracks the KX-modifier threshold."],
+          ["🔗", "Secondary coverage detection", "Detects secondary plans and coordinates benefits."],
         ],
       },
       {
-        title: "Denials & AR",
+        title: "Claims & submission",
         processes: [
+          ["📤", "Claim submission", "Submits scrubbed claims through the clearinghouse."],
+          ["🔄", "Claim status follow-up", "Polls status and chases stuck claims."],
+        ],
+      },
+      {
+        title: "Payments, denials & AR",
+        processes: [
+          ["🏦", "ERA auto-posting", "Posts remittances and adjustments automatically."],
           ["🔎", "Cap & auth denial recovery", "Auto-appeals therapy-cap and authorization denials."],
+          ["📉", "Underpayment detection", "Flags payments below contracted rates."],
+        ],
+      },
+      {
+        title: "Patient collections",
+        processes: [
+          ["💳", "Point-of-service copay collection", "Collects copays and coinsurance at each visit."],
+          ["📅", "Statements & payment plans", "Sends statements and offers payment plans."],
         ],
       },
       {
         title: "Scheduling & plan of care",
         processes: [
-          ["🔁", "No-show & waitlist backfill", "Reminds patients and backfills cancellations."],
+          ["🪑", "No-show & waitlist backfill", "Reminds patients and backfills cancellations."],
           ["📞", "Booking & recurring series", "Answers calls and sets up recurring visit series in the EMR."],
+          ["📇", "Digital intake & insurance capture", "Collects intake and captures the insurance card up front."],
+        ],
+      },
+      {
+        title: "Analytics",
+        processes: [
+          ["📊", "Visits-per-case & cancellation dashboards", "Tracks utilization, cancellations and cap risk."],
         ],
       },
     ],
@@ -475,9 +646,9 @@ export const SPECIALTIES = [
     h1a: "Every authorized visit,",
     h1b: "every discipline, tracked.",
     tagline:
-      "Multi-discipline rehab lives on authorizations, visit limits and recert deadlines - multiplied across PT, OT and speech. AI agents track each discipline separately so no authorization lapses and no visit is billed past the cap.",
+      "Multi-discipline rehab lives on authorizations, visit limits and recert deadlines - multiplied across PT, OT and speech. AI agents track each discipline separately and run the full billing cycle behind it.",
     overview:
-      "Rehabilitation revenue leaks through lapsed authorizations, missed plan-of-care recertifications and timed-unit coding errors - and each is multiplied across PT, OT and speech. MedXFlow's agents track each discipline's authorized visits, flag recerts before they expire, and validate every timed unit.",
+      "Rehabilitation revenue leaks through lapsed authorizations, missed plan-of-care recertifications and timed-unit coding errors - each multiplied across PT, OT and speech. MedXFlow's agents track every discipline's authorized visits, flag recerts before they expire, validate every timed unit, and work claims, posting and denials.",
     stat: { n: "3", suffix: " disciplines", label: "PT, OT and speech authorizations tracked separately, so none lapses" },
     groups: [
       {
@@ -486,38 +657,60 @@ export const SPECIALTIES = [
         processes: [
           ["📦", "Auth request & renewal by discipline", "Requests and renews authorizations for PT, OT and speech, each tracked separately."],
           ["⏱", "Visit-limit tracking", "Tracks authorized vs. used visits per discipline and alerts before the cap."],
+          ["🔁", "Concurrent review", "Prepares concurrent-review documentation for inpatient and SNF settings."],
+          ["🔗", "Cross-discipline cap coordination", "Coordinates shared caps across disciplines so nothing double-counts."],
         ],
       },
       {
         title: "Plan of care & recertification",
         processes: [
-          ["🗓", "Recert deadline tracking", "Flags plan-of-care recertification dates and missing physician signatures before they cost a claim."],
+          ["🗓", "Recert deadline tracking", "Flags plan-of-care recertification dates and missing physician signatures."],
           ["📈", "Progress reporting", "Prompts required progress notes and functional reporting at the right intervals."],
+          ["🏁", "Discharge planning documentation", "Assembles discharge documentation and outcomes."],
         ],
       },
       {
         title: "Coding & compliance",
         processes: [
-          ["🏷️", "Timed-unit & modifier validation", "Validates units under the 8-minute rule and discipline modifiers (GP, GO, GN), plus co-treatment rules."],
+          ["🏷️", "Timed-unit & modifier validation", "Validates units under the 8-minute rule and discipline modifiers (GP, GO, GN)."],
+          ["👥", "Co-treatment & group rules", "Applies co-treatment and group-vs-individual billing rules."],
           ["🎯", "KX threshold tracking", "Tracks the therapy-threshold amount and applies the KX modifier when appropriate."],
+          ["📋", "Functional-outcome coding", "Captures Section GG / functional-outcome data in facility settings."],
         ],
       },
       {
         title: "Eligibility & benefits",
         processes: [
           ["🛡️", "Benefits & cap verification", "Verifies therapy benefits and visit limits across disciplines."],
+          ["🔗", "Secondary coverage detection", "Detects secondary plans and coordinates benefits."],
         ],
       },
       {
-        title: "Denials & AR",
+        title: "Claims, payments & AR",
         processes: [
+          ["🧼", "Claim submission & scrubbing", "Scrubs and submits claims through the clearinghouse."],
+          ["🏦", "ERA auto-posting", "Posts remittances and adjustments automatically."],
           ["🔎", "Cap, auth & recert denial recovery", "Auto-appeals the recurring denials: exceeded cap, no auth, expired recert."],
         ],
       },
       {
-        title: "Scheduling & recurring series",
+        title: "Patient collections",
         processes: [
-          ["📞", "Booking & recurring series", "Sets up recurring visit series and backfills cancellations."],
+          ["💳", "Point-of-service collection", "Collects copays and coinsurance at each visit."],
+          ["📅", "Statements & payment plans", "Sends statements and offers payment plans."],
+        ],
+      },
+      {
+        title: "Scheduling",
+        processes: [
+          ["📞", "Booking & recurring series", "Sets up recurring visit series across disciplines."],
+          ["🪑", "No-show & waitlist backfill", "Reminds patients and backfills cancellations."],
+        ],
+      },
+      {
+        title: "Analytics",
+        processes: [
+          ["📊", "Discipline utilization & denial dashboards", "Tracks utilization and denials by discipline."],
         ],
       },
     ],
@@ -539,9 +732,9 @@ export const SPECIALTIES = [
     h1a: "High-value procedures,",
     h1b: "authorized and coded right.",
     tagline:
-      "Advanced imaging and device procedures carry heavy prior-auth and complex coding - that's where cardiology revenue is won or lost. AI agents match clinical criteria, split professional vs. technical, and catch underpayments.",
+      "Advanced imaging and device procedures carry heavy prior-auth and complex coding - that's where cardiology revenue is won or lost. AI agents match clinical criteria, split professional vs. technical, and run the whole cycle.",
     overview:
-      "Cardiology's revenue is concentrated in high-value imaging and procedures that are PA-heavy and easy to miscode. AI agents assemble authorization packets that match payer criteria, code cath, EP and echo correctly, and detect underpayments against contracted rates.",
+      "Cardiology's revenue is concentrated in high-value imaging and procedures that are PA-heavy and easy to miscode. AI agents assemble authorization packets that match payer criteria, code cath, EP and echo correctly, and detect underpayments - then run claims, posting, denials and collections.",
     stat: { n: "26", suffix: " / TC", label: "Professional vs. technical split handled automatically on every study" },
     groups: [
       {
@@ -550,6 +743,8 @@ export const SPECIALTIES = [
         processes: [
           ["📦", "Advanced-imaging & device PA", "Assembles PAs for nuclear studies, CT/MR angiography and device procedures, matching clinical criteria."],
           ["⏱", "PA status polling & expiry", "Polls status and tracks authorization expiry."],
+          ["✅", "Appropriate-use (AUC) matching", "Checks studies against appropriate-use criteria before ordering."],
+          ["🤝", "Peer-to-peer scheduling", "Books and preps peer-to-peer reviews when a PA is challenged."],
         ],
       },
       {
@@ -557,25 +752,52 @@ export const SPECIALTIES = [
         processes: [
           ["🏷️", "Cath, EP & echo coding", "Codes catheterization, EP and echo studies from the report."],
           ["⚖️", "Professional/technical split", "Applies modifiers 26 and TC correctly by setting."],
+          ["🧩", "Bundling / NCCI check", "Checks device and procedure combinations against bundling edits."],
+          ["📝", "Diagnostic vs. interventional coding", "Distinguishes diagnostic from interventional services in the same session."],
         ],
       },
       {
         title: "Eligibility & benefits",
         processes: [
           ["🛡️", "Coverage & OOP for high-cost procedures", "Verifies coverage and out-of-pocket before expensive studies and procedures."],
+          ["🔗", "Secondary coverage detection", "Detects secondary plans and coordinates benefits."],
+          ["🧮", "Good Faith Estimate", "Produces a self-pay Good Faith Estimate where required."],
         ],
       },
       {
-        title: "Denials & AR",
+        title: "Claims & submission",
         processes: [
+          ["🧼", "Claim scrubbing", "Scrubs claims against payer and bundling edits."],
+          ["📎", "Report attachment automation", "Attaches procedure and imaging reports to claims."],
+          ["🔄", "Claim status follow-up", "Polls status and chases stuck claims."],
+        ],
+      },
+      {
+        title: "Payments, denials & AR",
+        processes: [
+          ["🏦", "ERA auto-posting", "Posts remittances and adjustments automatically."],
           ["🔎", "Imaging-PA denial recovery", "Auto-appeals imaging authorization denials."],
           ["📉", "Underpayment detection", "Flags procedure payments below contracted rates."],
         ],
       },
       {
-        title: "Front office & scheduling",
+        title: "Patient collections",
+        processes: [
+          ["💳", "Point-of-service estimate & collection", "Estimates and collects patient responsibility before the procedure."],
+          ["📅", "Statements & payment plans", "Sends statements and offers payment plans."],
+        ],
+      },
+      {
+        title: "Front office",
         processes: [
           ["📞", "Call answering & test scheduling", "Answers calls and schedules tests and procedures."],
+          ["↪️", "Referral intake & tracking", "Captures inbound referrals and tracks them to a booked visit."],
+        ],
+      },
+      {
+        title: "Analytics",
+        processes: [
+          ["📊", "Procedure-margin & denial dashboards", "Dashboards procedure margin and denial trends."],
         ],
       },
     ],
@@ -597,9 +819,9 @@ export const SPECIALTIES = [
     h1a: "Surgery, imaging, DME -",
     h1b: "authorized and tracked.",
     tagline:
-      "Surgery-heavy and DME-heavy, orthopedics needs tight prior auth and global-period discipline - the biggest sources of lost revenue. AI agents assemble PAs and keep surgical modifiers and global periods straight.",
+      "Surgery-heavy and DME-heavy, orthopedics needs tight prior auth and global-period discipline - the biggest sources of lost revenue. AI agents assemble PAs, keep modifiers and globals straight, and run the full cycle.",
     overview:
-      "Orthopedics combines surgery, advanced imaging, injections and durable medical equipment - each with its own authorization and coding rules. AI agents assemble PAs, track global periods, and get surgical modifiers and DME HCPCS right.",
+      "Orthopedics combines surgery, advanced imaging, injections and durable medical equipment - each with its own authorization and coding rules. AI agents assemble PAs, track global periods, get surgical modifiers and DME HCPCS right, and work claims, posting, denials and collections.",
     stat: { n: "90", suffix: "-day globals", label: "Global periods tracked so post-op visits are billed correctly" },
     groups: [
       {
@@ -608,32 +830,60 @@ export const SPECIALTIES = [
         processes: [
           ["📦", "MRI, injection, surgery & DME PA", "Assembles authorizations for imaging, injections, surgery and durable medical equipment (braces)."],
           ["⏱", "PA status & expiry tracking", "Polls status and tracks expiry."],
+          ["🧾", "Conservative-therapy documentation", "Assembles the conservative-treatment history payers require before surgery."],
+          ["🤝", "Peer-to-peer scheduling", "Books and preps peer-to-peer reviews when a PA is challenged."],
         ],
       },
       {
         title: "Coding & compliance",
         processes: [
           ["🏷️", "Surgical coding & global periods", "Codes procedures and tracks 10/90-day global periods."],
-          ["⚖️", "Modifier & DME HCPCS accuracy", "Validates modifiers (24, 25, 58, 78, 79) and DME HCPCS codes."],
+          ["⚖️", "Modifier accuracy", "Validates modifiers 24, 25, 58, 78 and 79."],
+          ["🦿", "DME HCPCS coding", "Codes braces and equipment with the correct HCPCS and modifiers."],
+          ["🧩", "Bundling & assistant-surgeon check", "Checks NCCI bundling and assistant-surgeon eligibility."],
         ],
       },
       {
         title: "Eligibility & benefits",
         processes: [
           ["🛡️", "Surgical & DME coverage", "Verifies coverage and produces out-of-pocket estimates for surgery and DME."],
+          ["🔗", "Secondary coverage detection", "Detects secondary plans and coordinates benefits."],
         ],
       },
       {
-        title: "Denials & AR",
+        title: "Claims & submission",
         processes: [
+          ["📎", "Operative-note attachment", "Attaches operative notes and imaging to surgical claims."],
+          ["🧼", "Claim scrubbing", "Scrubs claims against payer and bundling edits."],
+          ["🔄", "Claim status follow-up", "Polls status and chases stuck claims."],
+        ],
+      },
+      {
+        title: "Payments, denials & AR",
+        processes: [
+          ["🏦", "ERA auto-posting", "Posts remittances and adjustments automatically."],
           ["🔎", "Surgical & DME denial recovery", "Auto-appeals surgical and DME denials."],
           ["📉", "Underpayment detection", "Flags payments below contracted surgical rates."],
         ],
       },
       {
-        title: "Front office & surgical scheduling",
+        title: "Patient collections",
+        processes: [
+          ["💳", "Surgery pre-payment & collection", "Collects the estimated patient portion before surgery."],
+          ["📅", "Statements & payment plans", "Sends statements and offers payment plans."],
+        ],
+      },
+      {
+        title: "Front office",
         processes: [
           ["📞", "Call answering & surgical scheduling", "Answers calls and coordinates surgical and clinic scheduling."],
+          ["↪️", "Referral intake & tracking", "Captures inbound referrals and tracks them to a booked visit."],
+        ],
+      },
+      {
+        title: "Analytics",
+        processes: [
+          ["📊", "Surgical-yield & denial dashboards", "Dashboards surgical conversion and denial trends."],
         ],
       },
     ],
