@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { LanguageProvider, useI18n, LangSwitcher } from "./i18n.jsx";
 import Tour from "./Tour.jsx";
 import { rcmProducts, engagementProducts, serviceProducts } from "./products.data.js";
+import { SPECIALTIES } from "./specialties.data.js";
 
 /* ============ EIRIM FRONT DESK - GP site (React) ============ */
 
@@ -150,6 +151,21 @@ export function Nav() {
               </div>
             </div>
           </div>
+          <div className="nav-dd">
+            <button className="nav-dd-btn" aria-haspopup="true">
+              Specialties <span className="nav-dd-caret">▼</span>
+            </button>
+            <div className="nav-dd-menu nav-dd-spec" role="menu">
+              <div className="nav-dd-spec-grid">
+                {SPECIALTIES.map((s) => (
+                  <a key={s.slug} href={`/specialties/${s.slug}`} role="menuitem">
+                    <span className="nav-dd-em">{s.icon}</span>{s.name}
+                  </a>
+                ))}
+              </div>
+              <a href="/specialties" role="menuitem" className="nav-dd-all">◆ All specialties</a>
+            </div>
+          </div>
           <a href="#cta">{t("nav.contact")}</a>
           <a href="/#faq">{t("nav.faq")}</a>
           <a href="#top" className="nav-tour" onClick={(e) => { e.preventDefault(); startTour(); }}>▶ {t("nav.tour")}</a>
@@ -162,6 +178,7 @@ export function Nav() {
       {/* Mobile menu */}
       <div className="nav-mobile">
         <a href="/products" onClick={closeMenu}>{t("nav.products")}</a>
+        <a href="/specialties" onClick={closeMenu}>Specialties</a>
         <a href="#cta" onClick={closeMenu}>{t("nav.contact")}</a>
         <a href="/#faq" onClick={closeMenu}>{t("nav.faq")}</a>
         <a href="#top" onClick={(e) => { e.preventDefault(); closeMenu(); startTour(); }}>▶ {t("nav.tour")}</a>
@@ -1079,6 +1096,9 @@ export const CSS = `
 .nav-scrolled ~ * .nav-dd-mega, .nav-dd-mega{top:57px}
 .nav-dd:hover .nav-dd-mega, .nav-dd:focus-within .nav-dd-mega{transform:none}
 .nav-dd-mega::before{content:""; position:absolute; top:-20px; left:0; right:0; height:20px}
+.nav-dd-spec{min-width:440px; left:auto; right:0}
+.nav-dd-spec-grid{display:grid; grid-template-columns:1fr 1fr; gap:2px}
+.nav-dd-spec .nav-dd-all{margin-top:6px; border-top:1px solid var(--line); padding-top:12px}
 .nav-dd-mega-inner{display:grid; grid-template-columns:repeat(6,1fr); gap:10px 26px; padding:30px clamp(20px,3vw,48px) 34px}
 .nav-dd-col{display:flex; flex-direction:column; gap:1px; min-width:0}
 .nav-dd-col-span2{grid-column:span 2}

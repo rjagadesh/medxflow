@@ -11,6 +11,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { PRODUCTS } from "../src/products.data.js";
+import { SPECIALTIES } from "../src/specialties.data.js";
 import { en } from "../src/i18n.strings.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -25,6 +26,8 @@ const routes = [
   { path: "/telehealth", title: "Telehealth · MedXFlow", desc: en.telehealth.hero_lead },
   { path: "/products", title: "Products · MedXFlow", desc: "The connected stages of Revenue Cycle Management, plus VoIP, telehealth and a human-led managed billing team - one platform for the whole practice." },
   ...PRODUCTS.map((p) => ({ path: `/products/${p.slug}`, title: `${p.name} · MedXFlow`, desc: p.tagline })),
+  { path: "/specialties", title: "Specialties · AI agents by practice type · MedXFlow", desc: "AI revenue-cycle agents tuned to your specialty - MedSpa, dental, mental health, dermatology, physical therapy, cardiology, orthopedics and primary care." },
+  ...SPECIALTIES.map((s) => ({ path: `/specialties/${s.slug}`, title: `${s.name} · AI agents for the revenue cycle · MedXFlow`, desc: s.tagline })),
 ];
 
 const template = fs.readFileSync(path.join(DIST, "index.html"), "utf8");

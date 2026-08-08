@@ -5,6 +5,7 @@ import Telehealth from "./Telehealth.jsx";
 import Chatbot from "./Chatbot.jsx";
 import Admin from "./Admin.jsx";
 import ProductPage, { ProductsIndex } from "./ProductPage.jsx";
+import SpecialtyPage, { SpecialtiesIndex } from "./SpecialtyPage.jsx";
 import { track } from "./track.js";
 
 const path = window.location.pathname.replace(/\/+$/, "");
@@ -12,6 +13,8 @@ const isAdmin = path === "/admin";
 const isTelehealth = path === "/telehealth";
 const isProductsIndex = path === "/products";
 const productMatch = path.match(/^\/products\/([a-z0-9-]+)$/);
+const isSpecialtiesIndex = path === "/specialties";
+const specialtyMatch = path.match(/^\/specialties\/([a-z0-9-]+)$/);
 
 // Self-referencing canonical per route. Navigation is via full page loads, so
 // setting this once per load from the current path covers every page.
@@ -47,6 +50,22 @@ function App() {
     return (
       <>
         <ProductPage slug={productMatch[1]} />
+        <Chatbot />
+      </>
+    );
+  }
+  if (isSpecialtiesIndex) {
+    return (
+      <>
+        <SpecialtiesIndex />
+        <Chatbot />
+      </>
+    );
+  }
+  if (specialtyMatch) {
+    return (
+      <>
+        <SpecialtyPage slug={specialtyMatch[1]} />
         <Chatbot />
       </>
     );
