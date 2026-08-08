@@ -68,6 +68,16 @@ export function Reveal({ children, delay = 0, className = "" }) {
 }
 
 /* ---------- Nav ---------- */
+// Specialties mega-menu, grouped into columns (left-to-right) like Products.
+const SPECIALTY_GROUPS = [
+  ["Primary & Preventive", ["primary-care"]],
+  ["Aesthetics & Skin", ["medspa", "dermatology"]],
+  ["Dental & Vision", ["dental", "eye-care"]],
+  ["Behavioral & Therapy", ["behavioral-health", "physical-therapy", "physical-rehabilitation"]],
+  ["Procedural & Surgical", ["cardiology", "orthopedics"]],
+];
+const specBySlug = Object.fromEntries(SPECIALTIES.map((s) => [s.slug, s]));
+
 export function Nav() {
   const { t } = useI18n();
   const [scrolled, setScrolled] = useState(false);
@@ -155,15 +165,27 @@ export function Nav() {
             <button className="nav-dd-btn" aria-haspopup="true">
               Specialties <span className="nav-dd-caret">▼</span>
             </button>
-            <div className="nav-dd-menu nav-dd-spec" role="menu">
-              <div className="nav-dd-spec-grid">
-                {SPECIALTIES.map((s) => (
-                  <a key={s.slug} href={`/specialties/${s.slug}`} role="menuitem">
-                    <span className="nav-dd-em">{s.icon}</span>{s.name}
-                  </a>
+            <div className="nav-dd-menu nav-dd-mega" role="menu">
+              <div className="nav-dd-mega-inner wrap">
+                {SPECIALTY_GROUPS.map(([title, slugs]) => (
+                  <div className="nav-dd-col" key={title}>
+                    <div className="nav-dd-head">{title}</div>
+                    {slugs.map((sl) => {
+                      const s = specBySlug[sl];
+                      return s ? (
+                        <a key={sl} href={`/specialties/${sl}`} role="menuitem">
+                          <span className="nav-dd-em">{s.icon}</span>{s.name}
+                        </a>
+                      ) : null;
+                    })}
+                  </div>
                 ))}
+                <div className="nav-dd-col">
+                  <div className="nav-dd-head">Explore</div>
+                  <a href="/specialties" role="menuitem" className="nav-dd-all">◆ All specialties</a>
+                  <p className="nav-dd-note">AI revenue-cycle agents tuned to your practice type - we banner the biggest revenue leak we automate for each.</p>
+                </div>
               </div>
-              <a href="/specialties" role="menuitem" className="nav-dd-all">◆ All specialties</a>
             </div>
           </div>
           <a href="#cta">{t("nav.contact")}</a>
@@ -1096,9 +1118,6 @@ export const CSS = `
 .nav-scrolled ~ * .nav-dd-mega, .nav-dd-mega{top:57px}
 .nav-dd:hover .nav-dd-mega, .nav-dd:focus-within .nav-dd-mega{transform:none}
 .nav-dd-mega::before{content:""; position:absolute; top:-20px; left:0; right:0; height:20px}
-.nav-dd-spec{min-width:440px; left:auto; right:0}
-.nav-dd-spec-grid{display:grid; grid-template-columns:1fr 1fr; gap:2px}
-.nav-dd-spec .nav-dd-all{margin-top:6px; border-top:1px solid var(--line); padding-top:12px}
 .nav-dd-mega-inner{display:grid; grid-template-columns:repeat(6,1fr); gap:10px 26px; padding:30px clamp(20px,3vw,48px) 34px}
 .nav-dd-col{display:flex; flex-direction:column; gap:1px; min-width:0}
 .nav-dd-col-span2{grid-column:span 2}
