@@ -8,6 +8,7 @@ import Settings from "./Settings.jsx";
 import Seo from "./Seo.jsx";
 import Meta from "./Meta.jsx";
 import WhatsApp from "./WhatsApp.jsx";
+import Media from "./Media.jsx";
 
 const DATA_ENDPOINT = "/.netlify/functions/admin-data";
 const PW_KEY = "eirim_admin_pw";
@@ -32,7 +33,7 @@ const tally = (arr, keyFn) => {
 };
 
 const SKEY = "eirim_admin_session";
-const TAB_ORDER = ["contacts", "pipeline", "campaigns", "meta", "whatsapp", "financials", "leads", "traffic", "seo", "chat", "tickets", "settings"];
+const TAB_ORDER = ["contacts", "pipeline", "campaigns", "meta", "whatsapp", "media", "financials", "leads", "traffic", "seo", "chat", "tickets", "settings"];
 const readSession = () => { try { return JSON.parse(sessionStorage.getItem(SKEY) || "null"); } catch { return null; } };
 const firstTab = (sess) => TAB_ORDER.find((m) => sess?.role === "owner" || (sess?.modules || []).includes(m)) || "contacts";
 
@@ -174,6 +175,7 @@ export default function Admin() {
           {can("campaigns") && <button className={tab === "campaigns" ? "on" : ""} onClick={() => setTab("campaigns")}>📣 Campaigns</button>}
           {can("meta") && <button className={tab === "meta" ? "on" : ""} onClick={() => setTab("meta")}>📱 Meta Suite</button>}
           {can("whatsapp") && <button className={tab === "whatsapp" ? "on" : ""} onClick={() => setTab("whatsapp")}>🟢 WhatsApp</button>}
+          {can("media") && <button className={tab === "media" ? "on" : ""} onClick={() => setTab("media")}>🖼 Media</button>}
           {can("financials") && <button className={tab === "financials" ? "on" : ""} onClick={() => setTab("financials")}>💶 Financials</button>}
           {can("leads") && <button className={tab === "leads" ? "on" : ""} onClick={() => setTab("leads")}>📥 Demo requests</button>}
           {can("tickets") && <button className={tab === "tickets" ? "on" : ""} onClick={() => setTab("tickets")}>🎫 Tickets</button>}
@@ -190,7 +192,7 @@ export default function Admin() {
       </aside>
 
       <main className="ad-main">
-        {!["campaigns", "meta", "whatsapp", "financials", "contacts", "pipeline", "tickets", "settings", "seo"].includes(tab) && (
+        {!["campaigns", "meta", "whatsapp", "media", "financials", "contacts", "pipeline", "tickets", "settings", "seo"].includes(tab) && (
           <div className="ad-stats">
             <div className="ad-stat ad-stat-hot"><b>{counts.leads ?? leads.length}</b><span>Demo requests</span></div>
             <div className="ad-stat"><b>{tab === "traffic" ? shownPV.length : (counts.pageviews ?? pageviews.length)}</b><span>Pageviews{tab === "traffic" && seg !== "human" ? ` · ${SEG_LABEL[seg]}` : ""}</span></div>
@@ -217,6 +219,8 @@ export default function Admin() {
       {tab === "meta" && can("meta") && <Meta pw={pw} />}
 
       {tab === "whatsapp" && can("whatsapp") && <WhatsApp pw={pw} />}
+
+      {tab === "media" && can("media") && <Media pw={pw} />}
 
       {tab === "financials" && <Finance pw={pw} />}
 
