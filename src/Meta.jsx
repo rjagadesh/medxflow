@@ -174,15 +174,34 @@ function Publish({ pw, hasIg }) {
   const [message, setMessage] = useState("");
   const [link, setLink] = useState("");
   const [imageUrl, setImageUrl] = useState("");
+  const [fileName, setFileName] = useState("");
+  const [uploading, setUploading] = useState(false);
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState(null);
+
+  const onFile = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    if (file.size > 8 * 1024 * 1024) { setResult({ ok: false, error: "Image too large (max 8 MB)." }); return; }
+    const reader = new FileReader();
+    reader.onload = async () => {
+      setUploading(true); setResult(null);
+      try {
+        const d = await call(pw, "uploadImage", { dataUrl: reader.result, name: file.name });
+        if (d.url) { setImageUrl(d.url); setFileName(file.name); }
+        else setResult({ ok: false, error: d.error || "Upload failed" });
+      } catch (err) { setResult({ ok: false, error: err.message }); }
+      finally { setUploading(false); }
+    };
+    reader.readAsDataURL(file);
+  };
 
   const post = async () => {
     setBusy(true); setResult(null);
     const r = await call(pw, "publish", { target, message, link, imageUrl });
     setBusy(false);
     setResult(r);
-    if (r.ok) { setMessage(""); setLink(""); setImageUrl(""); }
+    if (r.ok) { setMessage(""); setLink(""); setImageUrl(""); setFileName(""); }
   };
   const igNeedsImage = (target === "instagram" || target === "both") && !imageUrl;
 
@@ -206,12 +225,19 @@ function Publish({ pw, hasIg }) {
             <input value={link} onChange={(e) => setLink(e.target.value)} placeholder="https://medxflow.ai/…" />
           </>
         )}
-        <label>Image URL {target === "facebook" ? "(optional)" : "(required for Instagram)"}</label>
-        <input value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} placeholder="https://…/image.jpg (must be public)" />
-        <button className="mt-post" onClick={post} disabled={busy || !message.trim() || igNeedsImage}>
+        <label>Image {target === "facebook" ? "(optional)" : "(required for Instagram)"}</label>
+        <div className="mt-attach">
+          <label className="mt-attach-btn">📎 Attach image<input type="file" accept="image/jpeg,image/png,image/webp" onChange={onFile} hidden /></label>
+          {uploading && <span className="mt-attach-status">Uploading…</span>}
+          {!uploading && fileName && <span className="mt-attach-status">📷 {fileName}</span>}
+          {!uploading && imageUrl && <button type="button" className="mt-attach-x" onClick={() => { setImageUrl(""); setFileName(""); }}>✕ remove</button>}
+        </div>
+        {imageUrl && <img className="mt-attach-preview" src={imageUrl} alt="attachment preview" />}
+        <input className="mt-attach-url" value={imageUrl} onChange={(e) => { setImageUrl(e.target.value); setFileName(""); }} placeholder="…or paste a public image URL" />
+        <button className="mt-post" onClick={post} disabled={busy || uploading || !message.trim() || igNeedsImage}>
           {busy ? "Publishing…" : "Publish"}
         </button>
-        {igNeedsImage && <div className="mt-hint">Instagram posts need a public image URL.</div>}
+        {igNeedsImage && <div className="mt-hint">Instagram posts need an image — attach one above.</div>}
         {result && (
           <div className={"mt-result " + (result.ok ? "ok" : "bad")}>
             {result.ok
@@ -313,6 +339,13 @@ const CSS = `
 .mt-targets button{background:rgba(207,224,242,.06); border-color:rgba(207,224,242,.14); color:rgba(232,238,246,.7)}
 .mt-targets button.on{background:rgba(61,220,201,.16); border-color:rgba(61,220,201,.4); color:#7FD8CE}
 .mt-post{align-self:flex-start; margin-top:10px; padding:11px 22px}
+.mt-attach{display:flex; align-items:center; gap:10px; flex-wrap:wrap}
+.mt-attach-btn{display:inline-flex; align-items:center; gap:6px; background:rgba(61,220,201,.1); border:1px dashed rgba(61,220,201,.45); color:#7FD8CE; border-radius:9px; padding:9px 14px; font-size:13px; font-weight:700; cursor:pointer}
+.mt-attach-btn:hover{background:rgba(61,220,201,.16)}
+.mt-attach-status{font-size:12.5px; color:rgba(232,238,246,.7)}
+.mt-attach-x{background:none; border:none; color:#E05A4E; font-size:12.5px; font-weight:600; cursor:pointer}
+.mt-attach-preview{margin-top:10px; max-width:100%; max-height:220px; width:auto; border-radius:10px; border:1px solid rgba(207,224,242,.14)}
+.mt-attach-url{margin-top:8px}
 .mt-result{margin-top:10px; padding:10px 13px; border-radius:9px; font-size:13px; line-height:1.5}
 .mt-result.ok{background:rgba(61,220,201,.12); color:#7FD8CE} .mt-result.bad{background:rgba(224,90,78,.12); color:#E05A4E}
 @media(max-width:760px){ .mt-inbox{grid-template-columns:1fr} }

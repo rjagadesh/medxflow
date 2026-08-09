@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { getStore } from "@netlify/blobs";
 import { authorize, json } from "../lib/auth.mjs";
 
 // Meta Business Suite — Facebook Page + Instagram from inside the admin.
@@ -221,6 +222,19 @@ export default async (req) => {
   const action = body.action || "overview";
 
   try {
+    // Store an uploaded image and return a public URL that FB/IG can fetch.
+    if (action === "uploadImage") {
+      const m = /^data:([^;]+);base64,(.+)$/s.exec(body.dataUrl || "");
+      if (!m) return json({ error: "Invalid image data." }, 400);
+      const contentType = m[1];
+      if (!/^image\//.test(contentType)) return json({ error: "File must be an image." }, 400);
+      const id = `img-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 10)}`;
+      const store = getStore("meta-media");
+      await store.set(id, Buffer.from(m[2], "base64"), { metadata: { contentType, name: body.name || "" } });
+      const base = (process.env.URL || process.env.DEPLOY_PRIME_URL || "http://localhost:8888").replace(/\/+$/, "");
+      return json({ ok: true, url: `${base}/.netlify/functions/meta-media?id=${id}` });
+    }
+
     if (action === "overview") return json({ configured: true, ...(await overview(cfg)), hasIg: !!cfg.igId, hasAds: !!cfg.adAccount });
     if (action === "inbox") return json({ configured: true, ...(await inbox(cfg)) });
     if (action === "reply") { await reply(cfg, body); return json({ ok: true }); }
