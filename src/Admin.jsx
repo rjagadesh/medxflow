@@ -6,10 +6,7 @@ import Pipeline from "./Pipeline.jsx";
 import Tickets from "./Tickets.jsx";
 import Settings from "./Settings.jsx";
 import Seo from "./Seo.jsx";
-import Meta from "./Meta.jsx";
-import WhatsApp from "./WhatsApp.jsx";
-import Media from "./Media.jsx";
-import Scheduler from "./Scheduler.jsx";
+import Social from "./Social.jsx";
 
 const DATA_ENDPOINT = "/.netlify/functions/admin-data";
 const PW_KEY = "eirim_admin_pw";
@@ -34,7 +31,7 @@ const tally = (arr, keyFn) => {
 };
 
 const SKEY = "eirim_admin_session";
-const TAB_ORDER = ["contacts", "pipeline", "campaigns", "meta", "whatsapp", "scheduler", "media", "financials", "leads", "traffic", "seo", "chat", "tickets", "settings"];
+const TAB_ORDER = ["contacts", "pipeline", "campaigns", "social", "financials", "leads", "traffic", "seo", "chat", "tickets", "settings"];
 const readSession = () => { try { return JSON.parse(sessionStorage.getItem(SKEY) || "null"); } catch { return null; } };
 const firstTab = (sess) => TAB_ORDER.find((m) => sess?.role === "owner" || (sess?.modules || []).includes(m)) || "contacts";
 
@@ -174,10 +171,7 @@ export default function Admin() {
           {can("contacts") && <button className={tab === "contacts" ? "on" : ""} onClick={() => setTab("contacts")}>👤 Contacts</button>}
           {can("pipeline") && <button className={tab === "pipeline" ? "on" : ""} onClick={() => setTab("pipeline")}>🗂 Pipeline</button>}
           {can("campaigns") && <button className={tab === "campaigns" ? "on" : ""} onClick={() => setTab("campaigns")}>📣 Campaigns</button>}
-          {can("meta") && <button className={tab === "meta" ? "on" : ""} onClick={() => setTab("meta")}>📱 Meta Suite</button>}
-          {can("whatsapp") && <button className={tab === "whatsapp" ? "on" : ""} onClick={() => setTab("whatsapp")}>🟢 WhatsApp</button>}
-          {can("media") && <button className={tab === "scheduler" ? "on" : ""} onClick={() => setTab("scheduler")}>🗓 Scheduler</button>}
-          {can("media") && <button className={tab === "media" ? "on" : ""} onClick={() => setTab("media")}>🖼 Media</button>}
+          {can("social") && <button className={tab === "social" ? "on" : ""} onClick={() => setTab("social")}>📱 Social Media</button>}
           {can("financials") && <button className={tab === "financials" ? "on" : ""} onClick={() => setTab("financials")}>💶 Financials</button>}
           {can("leads") && <button className={tab === "leads" ? "on" : ""} onClick={() => setTab("leads")}>📥 Demo requests</button>}
           {can("tickets") && <button className={tab === "tickets" ? "on" : ""} onClick={() => setTab("tickets")}>🎫 Tickets</button>}
@@ -194,7 +188,7 @@ export default function Admin() {
       </aside>
 
       <main className="ad-main">
-        {!["campaigns", "meta", "whatsapp", "scheduler", "media", "financials", "contacts", "pipeline", "tickets", "settings", "seo"].includes(tab) && (
+        {!["campaigns", "social", "financials", "contacts", "pipeline", "tickets", "settings", "seo"].includes(tab) && (
           <div className="ad-stats">
             <div className="ad-stat ad-stat-hot"><b>{counts.leads ?? leads.length}</b><span>Demo requests</span></div>
             <div className="ad-stat"><b>{tab === "traffic" ? shownPV.length : (counts.pageviews ?? pageviews.length)}</b><span>Pageviews{tab === "traffic" && seg !== "human" ? ` · ${SEG_LABEL[seg]}` : ""}</span></div>
@@ -218,13 +212,7 @@ export default function Admin() {
 
       {tab === "campaigns" && <Campaigns pw={pw} leads={leads} visitors={visitors} />}
 
-      {tab === "meta" && can("meta") && <Meta pw={pw} />}
-
-      {tab === "whatsapp" && can("whatsapp") && <WhatsApp pw={pw} />}
-
-      {tab === "scheduler" && can("media") && <Scheduler pw={pw} />}
-
-      {tab === "media" && can("media") && <Media pw={pw} />}
+      {tab === "social" && can("social") && <Social pw={pw} />}
 
       {tab === "financials" && <Finance pw={pw} />}
 

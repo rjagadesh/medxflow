@@ -45,7 +45,7 @@ function bodyVarCount(components = []) {
 const digits = (s) => String(s || "").replace(/[^\d]/g, "");
 
 export default async (req) => {
-  const auth = authorize(req, "whatsapp");
+  const auth = authorize(req, "social");
   if (!auth.ok) return json({ error: auth.error }, auth.status);
 
   const c = cfg();

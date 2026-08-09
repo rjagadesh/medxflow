@@ -14,7 +14,7 @@ async function readIndex(s) {
 }
 
 export default async (req) => {
-  const auth = authorize(req, "media");
+  const auth = authorize(req, "social");
   if (!auth.ok) return json({ error: auth.error }, auth.status);
 
   let body = {};

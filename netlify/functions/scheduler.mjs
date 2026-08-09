@@ -5,7 +5,7 @@ const rid = () => `sp-${Date.now().toString(36)}-${Math.random().toString(36).sl
 const CHANNELS = ["facebook", "instagram", "whatsapp"];
 
 export default async (req) => {
-  const auth = authorize(req, "media");
+  const auth = authorize(req, "social");
   if (!auth.ok) return json({ error: auth.error }, auth.status);
 
   let body = {};

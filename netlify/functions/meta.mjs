@@ -272,7 +272,7 @@ async function ads(cfg) {
 
 // ---- handler ---------------------------------------------------------------
 export default async (req) => {
-  const auth = authorize(req, "meta");
+  const auth = authorize(req, "social");
   if (!auth.ok) return json({ error: auth.error }, auth.status);
 
   const cfg = metaConfig();

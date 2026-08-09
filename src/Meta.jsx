@@ -55,7 +55,7 @@ export default function Meta({ pw }) {
   );
 }
 
-function MetaSetup({ reason }) {
+export function MetaSetup({ reason }) {
   return (
     <div>
       <style>{CSS}</style>
@@ -76,7 +76,7 @@ function MetaSetup({ reason }) {
   );
 }
 
-function Insights({ ov }) {
+export function Insights({ ov }) {
   return (
     <div>
       {ov.page ? (
@@ -113,7 +113,7 @@ function Insights({ ov }) {
   );
 }
 
-function Feed({ pw, ov }) {
+export function Feed({ pw, ov }) {
   const [data, setData] = useState(null);
   const [tab, setTab] = useState(ov?.page ? "facebook" : "instagram");
   useEffect(() => { call(pw, "posts").then(setData).catch((e) => setData({ error: e.message })); }, [pw]);
@@ -186,7 +186,7 @@ const badge = (it) => {
 
 const FILTERS = [["all", "All"], ["messenger", "Messenger"], ["instagram", "Instagram"], ["whatsapp", "WhatsApp"], ["comment", "Comments"]];
 
-function Inbox({ pw }) {
+export function Inbox({ pw }) {
   const [items, setItems] = useState(null);
   const [errs, setErrs] = useState({});
   const [filter, setFilter] = useState("all");
@@ -269,7 +269,7 @@ function Inbox({ pw }) {
   );
 }
 
-function Publish({ pw, hasIg }) {
+export function Publish({ pw, hasIg }) {
   const [target, setTarget] = useState("facebook");
   const [message, setMessage] = useState("");
   const [link, setLink] = useState("");
@@ -352,7 +352,7 @@ function Publish({ pw, hasIg }) {
   );
 }
 
-function Ads({ pw }) {
+export function Ads({ pw }) {
   const [data, setData] = useState(null);
   useEffect(() => { call(pw, "ads").then(setData); }, [pw]);
 
@@ -399,7 +399,7 @@ function Ads({ pw }) {
   );
 }
 
-const CSS = `
+export const CSS = `
 .mt-subnav{display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap}
 .mt-subnav button{background:rgba(207,224,242,.06); border:1px solid rgba(207,224,242,.12); color:rgba(232,238,246,.75); padding:8px 14px; border-radius:9px; font-size:13.5px; font-weight:600; cursor:pointer}
 .mt-subnav button.on{background:rgba(61,220,201,.14); border-color:rgba(61,220,201,.45); color:#7FD8CE}

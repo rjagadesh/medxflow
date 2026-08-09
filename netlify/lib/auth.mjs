@@ -19,18 +19,18 @@ export function config() {
 }
 
 // ---- modules & role presets (IAM) ----
-export const MODULES = ["contacts", "pipeline", "campaigns", "financials", "leads", "traffic", "meta", "whatsapp", "media", "chat", "tickets", "settings"];
+export const MODULES = ["contacts", "pipeline", "campaigns", "financials", "leads", "traffic", "social", "chat", "tickets", "settings"];
 export const MODULE_LABEL = {
   contacts: "Contacts", pipeline: "Pipeline", campaigns: "Campaigns", financials: "Financials",
-  leads: "Demo requests", traffic: "Traffic", meta: "Meta Suite", whatsapp: "WhatsApp", media: "Media", chat: "Chatbot", tickets: "Tickets", settings: "Settings",
+  leads: "Demo requests", traffic: "Traffic", social: "Social Media", chat: "Chatbot", tickets: "Tickets", settings: "Settings",
 };
 export const ROLE_PRESETS = {
   owner: [...MODULES],
   admin: MODULES.filter((m) => m !== "settings"),
-  sales: ["contacts", "pipeline", "campaigns", "leads", "meta", "whatsapp", "media", "chat", "tickets"],
+  sales: ["contacts", "pipeline", "campaigns", "leads", "social", "chat", "tickets"],
   finance: ["financials", "contacts"],
-  support: ["tickets", "contacts", "chat", "whatsapp"],
-  analyst: ["traffic", "meta", "contacts", "pipeline"],
+  support: ["tickets", "contacts", "chat", "social"],
+  analyst: ["traffic", "social", "contacts", "pipeline"],
 };
 
 // ---- password hashing (scrypt) ----
