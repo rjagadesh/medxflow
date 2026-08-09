@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Insights, Feed, Inbox, Publish, Ads, MetaSetup, CSS as META_CSS } from "./Meta.jsx";
 import Scheduler from "./Scheduler.jsx";
 import WhatsApp from "./WhatsApp.jsx";
+import LinkedIn from "./LinkedIn.jsx";
 import Media from "./Media.jsx";
 
 // One unified Social Media tab: dashboard/metrics, feed, inbox, publish,
@@ -22,6 +23,7 @@ const SECTIONS = [
   { key: "publish", label: "✍️ Publish" },
   { key: "scheduler", label: "🗓 Scheduler" },
   { key: "whatsapp", label: "🟢 WhatsApp" },
+  { key: "linkedin", label: "💼 LinkedIn" },
   { key: "media", label: "🖼 Media" },
   { key: "ads", label: "📈 Ads" },
 ];
@@ -60,6 +62,7 @@ export default function Social({ pw }) {
       {sec === "inbox" && <Inbox pw={pw} />}
       {sec === "scheduler" && <Scheduler pw={pw} />}
       {sec === "whatsapp" && <WhatsApp pw={pw} />}
+      {sec === "linkedin" && <LinkedIn pw={pw} />}
       {sec === "media" && <Media pw={pw} />}
       {META_SECTIONS.includes(sec) && metaSection()}
     </div>

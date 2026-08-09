@@ -1,5 +1,5 @@
 import { getStore } from "@netlify/blobs";
-import { metaCfg, waCfg, publishFacebook, publishInstagram, sendWhatsAppImage } from "./social.mjs";
+import { metaCfg, waCfg, linkedinCfg, publishFacebook, publishInstagram, sendWhatsAppImage, publishLinkedIn } from "./social.mjs";
 
 export const store = () => getStore("scheduled-posts");
 
@@ -25,6 +25,9 @@ export async function publishPost(post) {
       } else if (ch === "instagram") {
         const r = await publishInstagram(metaCfg(), { caption: post.caption, imageUrl: post.imageUrl });
         results.instagram = { ok: true, id: r.id || null };
+      } else if (ch === "linkedin") {
+        const r = await publishLinkedIn(linkedinCfg(), { caption: post.caption, imageUrl: post.imageUrl });
+        results.linkedin = { ok: true, id: r.id || null };
       } else if (ch === "whatsapp") {
         const cfg = waCfg();
         const sent = [];

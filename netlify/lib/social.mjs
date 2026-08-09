@@ -44,6 +44,52 @@ export async function publishInstagram(cfg, { caption, imageUrl }) {
   return graph(cfg.version, `${cfg.igId}/media_publish`, { token: cfg.token, method: "POST", body: { creation_id: created.id } });
 }
 
+// ---- LinkedIn (organization page, versioned REST API) ----
+export function linkedinCfg() {
+  return { token: g("LINKEDIN_ACCESS_TOKEN"), org: g("LINKEDIN_ORG_ID"), version: g("LINKEDIN_VERSION") || "202409" };
+}
+
+async function liFetch(cfg, path, { method = "GET", body } = {}) {
+  const headers = {
+    authorization: `Bearer ${cfg.token}`,
+    "LinkedIn-Version": cfg.version,
+    "X-Restli-Protocol-Version": "2.0.0",
+  };
+  if (body) headers["content-type"] = "application/json";
+  const res = await fetch(`https://api.linkedin.com/rest${path}`, { method, headers, body: body ? JSON.stringify(body) : undefined });
+  const text = await res.text();
+  let data; try { data = text ? JSON.parse(text) : {}; } catch { data = { raw: text }; }
+  if (!res.ok) throw new Error(data?.message || `LinkedIn HTTP ${res.status}`);
+  return { data, headers: res.headers };
+}
+
+export async function publishLinkedIn(cfg, { caption, imageUrl }) {
+  if (!cfg.token || !cfg.org) throw new Error("LinkedIn not configured (LINKEDIN_ACCESS_TOKEN / LINKEDIN_ORG_ID).");
+  const author = `urn:li:organization:${cfg.org}`;
+  let content;
+  if (imageUrl) {
+    // 1) init an image upload, 2) PUT the bytes, 3) reference the image URN in the post.
+    const init = await liFetch(cfg, "/images?action=initializeUpload", { method: "POST", body: { initializeUploadRequest: { owner: author } } });
+    const uploadUrl = init.data?.value?.uploadUrl;
+    const imageUrn = init.data?.value?.image;
+    if (!uploadUrl || !imageUrn) throw new Error("LinkedIn upload init failed.");
+    const imgRes = await fetch(imageUrl);
+    if (!imgRes.ok) throw new Error("Couldn't fetch image for LinkedIn upload.");
+    const bytes = Buffer.from(await imgRes.arrayBuffer());
+    const up = await fetch(uploadUrl, { method: "PUT", headers: { authorization: `Bearer ${cfg.token}` }, body: bytes });
+    if (!up.ok) throw new Error(`LinkedIn image upload HTTP ${up.status}`);
+    content = { media: { title: "image", id: imageUrn } };
+  }
+  const post = {
+    author, commentary: caption || "", visibility: "PUBLIC",
+    distribution: { feedDistribution: "MAIN_FEED", targetEntities: [], thirdPartyDistributionChannels: [] },
+    lifecycleState: "PUBLISHED", isReshareDisabledByAuthor: false,
+  };
+  if (content) post.content = content;
+  const res = await liFetch(cfg, "/posts", { method: "POST", body: post });
+  return { id: res.headers.get("x-restli-id") || res.headers.get("x-linkedin-id") || res.data?.id || null };
+}
+
 export async function sendWhatsAppImage(cfg, { to, imageUrl, caption }) {
   if (!cfg.token || !cfg.phoneId) throw new Error("WhatsApp not configured.");
   const digits = String(to).replace(/[^\d]/g, "");

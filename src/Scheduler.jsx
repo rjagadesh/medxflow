@@ -15,6 +15,7 @@ async function api(path, pw, action, extra = {}) {
 const CHANNELS = [
   { key: "facebook", label: "Facebook", ic: "📘" },
   { key: "instagram", label: "Instagram", ic: "📷" },
+  { key: "linkedin", label: "LinkedIn", ic: "💼" },
   { key: "whatsapp", label: "WhatsApp", ic: "🟢" },
 ];
 const fmt = (iso) => (iso ? new Date(iso).toLocaleString() : "");
