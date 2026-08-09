@@ -221,11 +221,14 @@ async function publish(cfg, { target, message, link, imageUrl }) {
   const results = {};
   if ((target === "facebook" || target === "both")) {
     if (!cfg.pageId || !cfg.pageToken) throw new Error("Facebook Page not configured.");
-    results.facebook = await safe(() =>
-      imageUrl
-        ? graph(cfg, `${cfg.pageId}/photos`, { token: cfg.pageToken, method: "POST", body: { url: imageUrl, caption: message } })
-        : graph(cfg, `${cfg.pageId}/feed`, { token: cfg.pageToken, method: "POST", body: { message, link: link || undefined } })
-    );
+    results.facebook = await safe(async () => {
+      if (imageUrl) {
+        // Unpublished photo → feed post with attached_media = a real post.
+        const photo = await graph(cfg, `${cfg.pageId}/photos`, { token: cfg.pageToken, method: "POST", body: { url: imageUrl, published: false } });
+        return graph(cfg, `${cfg.pageId}/feed`, { token: cfg.pageToken, method: "POST", body: { message, attached_media: [{ media_fbid: photo.id }] } });
+      }
+      return graph(cfg, `${cfg.pageId}/feed`, { token: cfg.pageToken, method: "POST", body: { message, link: link || undefined } });
+    });
   }
   if ((target === "instagram" || target === "both")) {
     if (!cfg.igId || !cfg.pageToken) throw new Error("Instagram account not configured.");

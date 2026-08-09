@@ -14,6 +14,7 @@ export default async (req) => {
   const s = store();
 
   try {
+    if (action === "time") return json({ ok: true, now: new Date().toISOString() });
     if (action === "list") return json({ ok: true, posts: await listPosts() });
 
     if (action === "create") {

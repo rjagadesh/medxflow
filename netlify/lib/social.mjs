@@ -28,7 +28,12 @@ async function graph(version, node, { token, method = "GET", body } = {}) {
 
 export async function publishFacebook(cfg, { caption, imageUrl, link }) {
   if (!cfg.pageId || !cfg.token) throw new Error("Facebook not configured (META_PAGE_ID / META_PAGE_TOKEN).");
-  if (imageUrl) return graph(cfg.version, `${cfg.pageId}/photos`, { token: cfg.token, method: "POST", body: { url: imageUrl, caption } });
+  if (imageUrl) {
+    // Upload the photo UNPUBLISHED, then attach it to a feed post - this creates
+    // a proper timeline post (message + image), not just a bare photo upload.
+    const photo = await graph(cfg.version, `${cfg.pageId}/photos`, { token: cfg.token, method: "POST", body: { url: imageUrl, published: false } });
+    return graph(cfg.version, `${cfg.pageId}/feed`, { token: cfg.token, method: "POST", body: { message: caption, attached_media: [{ media_fbid: photo.id }] } });
+  }
   return graph(cfg.version, `${cfg.pageId}/feed`, { token: cfg.token, method: "POST", body: { message: caption, link: link || undefined } });
 }
 

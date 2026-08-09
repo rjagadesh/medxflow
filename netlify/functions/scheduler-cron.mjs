@@ -1,7 +1,7 @@
 import { store, listPosts, publishPost } from "../lib/scheduler-core.mjs";
 
-// Runs hourly; publishes any scheduled post whose time has arrived.
-export const config = { schedule: "@hourly" };
+// Runs every 5 minutes; publishes any scheduled post whose time has arrived.
+export const config = { schedule: "*/5 * * * *" };
 
 export default async () => {
   const now = Date.now();

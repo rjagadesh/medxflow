@@ -39,6 +39,19 @@ export default function Scheduler({ pw }) {
   const load = () => api("scheduler", pw, "list").then((d) => setPosts(d.posts || [])).catch((e) => setErr(e.message));
   useEffect(() => { load(); }, [pw]);
 
+  // Live server (UTC) clock so you can schedule against the real server time.
+  const [srv, setSrv] = useState(null);
+  const [, tick] = useState(0);
+  useEffect(() => {
+    const sync = () => api("scheduler", pw, "time").then((d) => { if (d.now) setSrv({ base: Date.parse(d.now), local: Date.now() }); }).catch(() => {});
+    sync();
+    const s = setInterval(sync, 60000);
+    const t = setInterval(() => tick((x) => x + 1), 1000);
+    return () => { clearInterval(s); clearInterval(t); };
+  }, [pw]);
+  const serverNow = srv ? new Date(srv.base + (Date.now() - srv.local)) : null;
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
   const onFile = (e) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -85,6 +98,15 @@ export default function Scheduler({ pw }) {
     <div className="sc">
       <style>{SC_CSS}</style>
 
+      <div className="sc-topbar">
+        <div className="sc-title">🗓 Social Scheduler</div>
+        <div className="sc-clock">
+          <span className="sc-clock-lbl">🕒 Server time (UTC)</span>
+          <span className="sc-clock-val">{serverNow ? serverNow.toUTCString().replace(" GMT", "") : "…"}</span>
+          <span className="sc-clock-tz">You schedule in your local time · {tz}</span>
+        </div>
+      </div>
+
       {/* Composer */}
       <div className="ad-card sc-card sc-compose">
         <div className="sc-cardh">📅 Schedule a post</div>
@@ -122,7 +144,7 @@ export default function Scheduler({ pw }) {
 
           <label className="sc-lbl">When to post</label>
           <input className="sc-when" type="datetime-local" value={when} onChange={(e) => setWhen(e.target.value)} />
-          <div className="sc-hint">Leave blank to post at the next cron run. Posts go out within the hour of the scheduled time.</div>
+          <div className="sc-hint">Uses your local time (converted to the server's UTC on save). The scheduler runs every 5 minutes, so a post goes out within ~5 min of its time.</div>
 
           <div className="sc-actions">
             <button className="sc-btn sc-primary" disabled={saving || !canSave} onClick={schedule}>{saving ? "Scheduling…" : "📅 Schedule post"}</button>
@@ -171,6 +193,12 @@ export default function Scheduler({ pw }) {
 }
 
 const SC_CSS = `
+.sc-topbar{display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:14px; flex-wrap:wrap}
+.sc-title{font-size:17px; font-weight:800; color:#E8EEF6}
+.sc-clock{display:flex; flex-direction:column; align-items:flex-end; gap:1px; background:rgba(61,220,201,.08); border:1px solid rgba(61,220,201,.25); border-radius:11px; padding:8px 14px}
+.sc-clock-lbl{font-size:11px; font-weight:700; color:#7FD8CE; text-transform:uppercase; letter-spacing:.04em}
+.sc-clock-val{font-size:15px; font-weight:800; color:#E8EEF6; font-variant-numeric:tabular-nums}
+.sc-clock-tz{font-size:11px; color:rgba(232,238,246,.5)}
 .sc-card{margin-bottom:16px}
 .sc-cardh{padding:14px 18px; font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.05em; color:rgba(232,238,246,.7); border-bottom:1px solid rgba(207,224,242,.09)}
 .sc-form{padding:16px 18px; display:flex; flex-direction:column; gap:6px}
