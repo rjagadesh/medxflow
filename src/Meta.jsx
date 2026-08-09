@@ -111,59 +111,115 @@ function Insights({ ov }) {
   );
 }
 
+async function waCall(pw, action, extra = {}) {
+  const res = await fetch("/.netlify/functions/whatsapp", {
+    method: "POST", headers: { "x-admin-password": pw, "content-type": "application/json" },
+    body: JSON.stringify({ action, ...extra }),
+  });
+  return res.json();
+}
+
+// Merge DMs (Messenger/IG), WhatsApp threads and FB/IG comments into one list.
+function normalize(dm, wa, cm) {
+  const items = [];
+  for (const t of dm?.threads || [])
+    items.push({ uid: "dm-" + t.id, kind: "dm", channel: t.platform, name: t.name, recipientId: t.recipientId, unread: t.unread || 0, updated: t.updated, snippet: t.snippet, messages: (t.messages || []).map((m) => ({ text: m.text, mine: !!m.fromPage })) });
+  for (const t of wa?.threads || []) {
+    const last = (t.messages || [])[t.messages.length - 1];
+    items.push({ uid: "wa-" + t.wa_id, kind: "wa", channel: "whatsapp", name: t.name || t.wa_id, wa_id: t.wa_id, unread: t.unread || 0, updated: t.updated, snippet: last?.text || "", messages: (t.messages || []).map((m) => ({ text: m.text, mine: m.dir === "out" })) });
+  }
+  for (const c of [...(cm?.facebook || []), ...(cm?.instagram || [])])
+    items.push({ uid: "cm-" + c.commentId, kind: "comment", channel: c.channel, name: c.from, commentId: c.commentId, postMsg: c.postMsg, updated: c.at, snippet: c.text, messages: [{ text: c.text, mine: false }] });
+  items.sort((a, b) => String(b.updated || "").localeCompare(String(a.updated || "")));
+  return items;
+}
+
+const badge = (it) => {
+  if (it.kind === "wa") return ["WA", "mt-whatsapp"];
+  if (it.kind === "comment") return [it.channel === "instagram" ? "IG💬" : "FB💬", "mt-" + it.channel];
+  return [it.channel === "instagram" ? "IG" : "FB", "mt-" + it.channel];
+};
+
+const FILTERS = [["all", "All"], ["messenger", "Messenger"], ["instagram", "Instagram"], ["whatsapp", "WhatsApp"], ["comment", "Comments"]];
+
 function Inbox({ pw }) {
-  const [data, setData] = useState(null);
+  const [items, setItems] = useState(null);
+  const [errs, setErrs] = useState({});
+  const [filter, setFilter] = useState("all");
   const [active, setActive] = useState(null);
   const [draft, setDraft] = useState("");
   const [sending, setSending] = useState(false);
   const [note, setNote] = useState("");
 
-  const load = useCallback(() => call(pw, "inbox").then(setData), [pw]);
+  const load = useCallback(async () => {
+    const [dm, wa, cm] = await Promise.all([
+      call(pw, "inbox").catch((e) => ({ error: e.message })),
+      waCall(pw, "inbox").catch((e) => ({ error: e.message })),
+      call(pw, "comments").catch((e) => ({ error: e.message })),
+    ]);
+    setErrs({ dm: dm.errors || dm.error, wa: wa.error || (wa.configured === false ? wa.reason : null), cm: cm.fbError || cm.igError });
+    setItems(normalize(dm, wa, cm));
+  }, [pw]);
   useEffect(() => { load(); }, [load]);
 
-  if (!data) return <div className="ad-empty">Loading conversations…</div>;
-  const threads = data.threads || [];
-  const cur = threads.find((t) => t.id === active) || null;
+  if (!items) return <div className="ad-empty">Loading conversations…</div>;
+  const shown = items.filter((it) => filter === "all" || (filter === "comment" ? it.kind === "comment" : it.channel === filter));
+  const cur = items.find((it) => it.uid === active) || null;
 
   const send = async () => {
-    if (!draft.trim() || !cur?.recipientId) return;
+    if (!draft.trim() || !cur) return;
     setSending(true); setNote("");
-    const r = await call(pw, "reply", { recipientId: cur.recipientId, text: draft.trim() });
+    let r;
+    if (cur.kind === "dm") r = await call(pw, "reply", { recipientId: cur.recipientId, text: draft.trim() });
+    else if (cur.kind === "wa") r = await waCall(pw, "replyText", { to: cur.wa_id, text: draft.trim() });
+    else r = await call(pw, "replyComment", { channel: cur.channel, commentId: cur.commentId, message: draft.trim() });
     setSending(false);
-    if (r.ok) { setDraft(""); setNote("Sent ✓"); setTimeout(load, 600); }
+    if (r.ok) { setDraft(""); setNote("Sent ✓"); setTimeout(load, 800); }
     else setNote(r.error || "Send failed");
   };
 
+  const [curLbl, curCls] = cur ? badge(cur) : ["", ""];
+
   return (
-    <div className="mt-inbox">
-      <div className="mt-threads">
-        {threads.length === 0 && <div className="ad-empty">No conversations{data.errors ? " (or missing messaging permission)" : ""}.</div>}
-        {threads.map((t) => (
-          <button key={t.id} className={"mt-thread" + (t.id === active ? " on" : "")} onClick={() => { setActive(t.id); setNote(""); }}>
-            <span className={"mt-plat mt-" + t.platform}>{t.platform === "instagram" ? "IG" : "FB"}</span>
-            <span className="mt-tname">{t.name}{t.unread ? <em className="mt-unread">{t.unread}</em> : null}</span>
-            <span className="mt-tsnip">{t.snippet}</span>
-          </button>
-        ))}
+    <div>
+      <div className="mt-filter">
+        {FILTERS.map(([k, lbl]) => <button key={k} className={filter === k ? "on" : ""} onClick={() => setFilter(k)}>{lbl}</button>)}
+        <button className="mt-refresh" onClick={load} title="Refresh">⟳</button>
       </div>
-      <div className="mt-convo">
-        {!cur ? (
-          <div className="ad-empty">Select a conversation.</div>
-        ) : (
-          <>
-            <div className="mt-convo-h"><span className={"mt-plat mt-" + cur.platform}>{cur.platform === "instagram" ? "IG" : "FB"}</span> {cur.name}</div>
-            <div className="mt-msgs">
-              {(cur.messages || []).map((m, i) => (
-                <div key={i} className={"mt-msg" + (m.fromPage ? " mine" : "")}>{m.text}</div>
-              ))}
-            </div>
-            <div className="mt-reply">
-              <textarea value={draft} onChange={(e) => setDraft(e.target.value)} placeholder="Type a reply…" rows={2} />
-              <button onClick={send} disabled={sending || !draft.trim()}>{sending ? "Sending…" : "Send"}</button>
-            </div>
-            {note && <div className="mt-note">{note}</div>}
-          </>
-        )}
+      {(errs.wa || errs.cm) && <div className="mt-hint">{errs.wa ? `WhatsApp: ${errs.wa}. ` : ""}{errs.cm ? `Comments: ${errs.cm}` : ""}</div>}
+      <div className="mt-inbox">
+        <div className="mt-threads">
+          {shown.length === 0 && <div className="ad-empty">Nothing here yet.</div>}
+          {shown.map((it) => {
+            const [lbl, cls] = badge(it);
+            return (
+              <button key={it.uid} className={"mt-thread" + (it.uid === active ? " on" : "")} onClick={() => { setActive(it.uid); setNote(""); if (it.kind === "wa" && it.unread) waCall(pw, "markRead", { wa_id: it.wa_id }); }}>
+                <span className={"mt-plat " + cls}>{lbl}</span>
+                <span className="mt-tname">{it.name}{it.unread ? <em className="mt-unread">{it.unread}</em> : null}</span>
+                <span className="mt-tsnip">{it.snippet}</span>
+              </button>
+            );
+          })}
+        </div>
+        <div className="mt-convo">
+          {!cur ? (
+            <div className="ad-empty">Select a conversation.</div>
+          ) : (
+            <>
+              <div className="mt-convo-h"><span className={"mt-plat " + curCls}>{curLbl}</span> {cur.name}{cur.kind === "comment" && cur.postMsg ? <span className="mt-post-ctx"> · on “{cur.postMsg.slice(0, 40)}”</span> : null}</div>
+              <div className="mt-msgs">
+                {(cur.messages || []).map((m, i) => (
+                  <div key={i} className={"mt-msg" + (m.mine ? " mine" : "")}>{m.text}</div>
+                ))}
+              </div>
+              <div className="mt-reply">
+                <textarea value={draft} onChange={(e) => setDraft(e.target.value)} placeholder={cur.kind === "comment" ? "Reply to this comment…" : "Type a reply…"} rows={2} />
+                <button onClick={send} disabled={sending || !draft.trim()}>{sending ? "Sending…" : "Send"}</button>
+              </div>
+              {note && <div className="mt-note">{note}</div>}
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
@@ -317,6 +373,12 @@ const CSS = `
 .mt-thread.on{background:rgba(61,220,201,.1)}
 .mt-plat{font-size:10px; font-weight:800; padding:2px 6px; border-radius:5px; align-self:center}
 .mt-messenger,.mt-facebook{background:#1877F2; color:#fff} .mt-instagram{background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF); color:#fff}
+.mt-whatsapp{background:#25D366; color:#062b16}
+.mt-filter{display:flex; gap:7px; align-items:center; margin-bottom:12px; flex-wrap:wrap}
+.mt-filter button{background:rgba(207,224,242,.06); border:1px solid rgba(207,224,242,.12); color:rgba(232,238,246,.75); padding:6px 13px; border-radius:8px; font-size:12.5px; font-weight:600; cursor:pointer}
+.mt-filter button.on{background:rgba(61,220,201,.16); border-color:rgba(61,220,201,.45); color:#7FD8CE}
+.mt-refresh{margin-left:auto}
+.mt-post-ctx{font-size:12px; color:rgba(232,238,246,.5); font-weight:400}
 .mt-tname{font-size:13.5px; font-weight:700; display:flex; align-items:center; gap:6px}
 .mt-unread{font-style:normal; background:#E05A4E; color:#fff; font-size:10px; padding:1px 6px; border-radius:9px}
 .mt-tsnip{grid-column:2; font-size:12px; color:rgba(232,238,246,.55); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}

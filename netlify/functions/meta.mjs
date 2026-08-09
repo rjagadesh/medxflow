@@ -144,6 +144,40 @@ async function inbox(cfg) {
   return { threads, errors };
 }
 
+// Comments on recent FB/IG posts - "who replied to a post".
+async function comments(cfg) {
+  const out = { facebook: [], instagram: [], fbError: null, igError: null };
+  if (cfg.pageId && cfg.pageToken) {
+    const r = await safe(() => graph(cfg, `${cfg.pageId}/posts`, {
+      token: cfg.pageToken,
+      params: { fields: "message,created_time,permalink_url,comments.limit(15){id,from,message,created_time}", limit: 10 },
+    }));
+    if (r.ok) {
+      for (const post of r.data.data || [])
+        for (const cm of post.comments?.data || [])
+          out.facebook.push({ channel: "facebook", postId: post.id, postMsg: post.message || "", commentId: cm.id, from: cm.from?.name || "Someone", text: cm.message, at: cm.created_time });
+    } else out.fbError = r.error;
+  }
+  if (cfg.igId && cfg.pageToken) {
+    const r = await safe(() => graph(cfg, `${cfg.igId}/media`, {
+      token: cfg.pageToken,
+      params: { fields: "caption,permalink,comments.limit(15){id,from,text,username,timestamp}", limit: 10 },
+    }));
+    if (r.ok) {
+      for (const media of r.data.data || [])
+        for (const cm of media.comments?.data || [])
+          out.instagram.push({ channel: "instagram", postId: media.id, postMsg: media.caption || "", commentId: cm.id, from: cm.username || "Someone", text: cm.text, at: cm.timestamp });
+    } else out.igError = r.error;
+  }
+  return out;
+}
+
+async function replyComment(cfg, { channel, commentId, message }) {
+  if (!commentId || !message) throw new Error("commentId and message are required.");
+  const node = channel === "instagram" ? `${commentId}/replies` : `${commentId}/comments`;
+  return graph(cfg, node, { token: cfg.pageToken, method: "POST", body: { message } });
+}
+
 async function reply(cfg, { recipientId, text }) {
   if (!cfg.pageId || !cfg.pageToken) throw new Error("Page not configured.");
   if (!recipientId || !text) throw new Error("recipientId and text are required.");
@@ -237,6 +271,8 @@ export default async (req) => {
 
     if (action === "overview") return json({ configured: true, ...(await overview(cfg)), hasIg: !!cfg.igId, hasAds: !!cfg.adAccount });
     if (action === "inbox") return json({ configured: true, ...(await inbox(cfg)) });
+    if (action === "comments") return json({ configured: true, ...(await comments(cfg)) });
+    if (action === "replyComment") { await replyComment(cfg, body); return json({ ok: true }); }
     if (action === "reply") { await reply(cfg, body); return json({ ok: true }); }
     if (action === "publish") return json({ ok: true, results: await publish(cfg, body) });
     if (action === "ads") return json({ configured: true, ...(await ads(cfg)) });

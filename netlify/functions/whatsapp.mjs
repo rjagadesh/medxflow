@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { getStore } from "@netlify/blobs";
 import { authorize, json } from "../lib/auth.mjs";
 
 // WhatsApp Business (Cloud API) - send template and text messages from the
@@ -72,6 +73,41 @@ export default async (req) => {
         .filter((t) => t.status === "APPROVED")
         .map((t) => ({ name: t.name, language: t.language, category: t.category, vars: bodyVarCount(t.components) }));
       return json({ configured: true, templates });
+    }
+
+    // Inbound message threads (captured by whatsapp-webhook.mjs).
+    if (action === "inbox") {
+      const s = getStore("wa-inbox");
+      const { blobs } = await s.list();
+      const threads = [];
+      for (const b of blobs) { try { const t = await s.get(b.key, { type: "json" }); if (t) threads.push(t); } catch {} }
+      threads.sort((a, b) => String(b.updated || "").localeCompare(String(a.updated || "")));
+      return json({ configured: true, threads });
+    }
+
+    if (action === "replyText") {
+      const to = digits(body.to);
+      if (!to || !body.text) return json({ error: "recipient and text required" }, 400);
+      const res = await graph(c, `${c.phoneId}/messages`, { method: "POST", body: { messaging_product: "whatsapp", to, type: "text", text: { body: String(body.text) } } });
+      try {
+        const s = getStore("wa-inbox");
+        const k = `wa-${to}`;
+        const t = (await s.get(k, { type: "json" })) || { wa_id: to, name: to, messages: [], unread: 0 };
+        t.messages.push({ dir: "out", text: String(body.text), type: "text", at: new Date().toISOString() });
+        t.updated = new Date().toISOString();
+        await s.setJSON(k, t);
+      } catch {}
+      return json({ ok: true, id: res.messages?.[0]?.id || null });
+    }
+
+    if (action === "markRead") {
+      try {
+        const s = getStore("wa-inbox");
+        const k = `wa-${digits(body.wa_id)}`;
+        const t = await s.get(k, { type: "json" });
+        if (t) { t.unread = 0; await s.setJSON(k, t); }
+      } catch {}
+      return json({ ok: true });
     }
 
     if (action === "send") {
