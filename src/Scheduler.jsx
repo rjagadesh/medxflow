@@ -19,11 +19,13 @@ const CHANNELS = [
   { key: "threads", label: "Threads", ic: "🧵" },
   { key: "gbp", label: "Google Business", ic: "📍" },
   { key: "youtube", label: "YouTube", ic: "▶️" },
+  { key: "tiktok", label: "TikTok", ic: "🎵" },
   { key: "telegram", label: "Telegram", ic: "✈️" },
   { key: "bluesky", label: "Bluesky", ic: "🦋" },
   { key: "mastodon", label: "Mastodon", ic: "🐘" },
   { key: "reddit", label: "Reddit", ic: "👽" },
   { key: "tumblr", label: "Tumblr", ic: "📓" },
+  { key: "discord", label: "Discord", ic: "💬" },
   { key: "whatsapp", label: "WhatsApp", ic: "🟢" },
 ];
 const fmt = (iso) => (iso ? new Date(iso).toLocaleString() : "");
@@ -102,7 +104,7 @@ export default function Scheduler({ pw }) {
   const del = async (id) => { if (!window.confirm("Delete this scheduled post?")) return; await api("scheduler", pw, "delete", { id }); setPosts((p) => p.filter((x) => x.id !== id)); };
 
   const needsWa = channels.includes("whatsapp");
-  const needsVideo = channels.includes("youtube");
+  const needsVideo = channels.includes("youtube") || channels.includes("tiktok");
   const canSave = channels.length && (caption.trim() || imageUrl) && (!channels.includes("instagram") || imageUrl) && (!needsVideo || videoUrl.trim()) && !uploading;
 
   return (

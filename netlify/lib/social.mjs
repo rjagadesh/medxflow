@@ -178,6 +178,31 @@ export async function publishGBP(cfg, { caption, imageUrl }) {
   return { id: d.name || null };
 }
 
+// ---- Discord (channel webhook) ----
+export function discordCfg() { return { webhook: g("DISCORD_WEBHOOK_URL") }; }
+export async function publishDiscord(cfg, { caption, imageUrl }) {
+  if (!cfg.webhook) throw new Error("Discord not configured (DISCORD_WEBHOOK_URL).");
+  const body = { content: caption || "" };
+  if (imageUrl) body.embeds = [{ image: { url: imageUrl } }];
+  const res = await fetch(cfg.webhook, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+  if (!res.ok) { const t = await res.text().catch(() => ""); throw new Error(t || `Discord HTTP ${res.status}`); }
+  return { id: null };
+}
+
+// ---- TikTok (Content Posting API, video via PULL_FROM_URL) ----
+export function tiktokCfg() { return { token: g("TIKTOK_ACCESS_TOKEN") }; }
+export async function publishTikTok(cfg, { caption, videoUrl }) {
+  if (!cfg.token) throw new Error("TikTok not configured (TIKTOK_ACCESS_TOKEN).");
+  if (!videoUrl) throw new Error("TikTok needs a video URL (from a verified domain).");
+  const res = await fetch("https://open.tiktokapis.com/v2/post/publish/video/init/", {
+    method: "POST", headers: { authorization: `Bearer ${cfg.token}`, "content-type": "application/json; charset=UTF-8" },
+    body: JSON.stringify({ post_info: { title: (caption || "").slice(0, 150), privacy_level: "PUBLIC_TO_EVERYONE" }, source_info: { source: "PULL_FROM_URL", video_url: videoUrl } }),
+  });
+  const d = await res.json().catch(() => ({}));
+  if (!res.ok || (d?.error && d.error.code && d.error.code !== "ok")) throw new Error(d?.error?.message || `TikTok HTTP ${res.status}`);
+  return { id: d?.data?.publish_id || null };
+}
+
 // ---- Reddit (submit to a subreddit) ----
 export function redditCfg() {
   return { clientId: g("REDDIT_CLIENT_ID"), clientSecret: g("REDDIT_CLIENT_SECRET"), refreshToken: g("REDDIT_REFRESH_TOKEN"), userAgent: g("REDDIT_USER_AGENT") || "MedXFlow/1.0", subreddit: g("REDDIT_SUBREDDIT") };

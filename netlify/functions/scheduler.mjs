@@ -2,7 +2,7 @@ import { authorize, json } from "../lib/auth.mjs";
 import { store, listPosts, publishPost } from "../lib/scheduler-core.mjs";
 
 const rid = () => `sp-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
-const CHANNELS = ["facebook", "instagram", "linkedin", "threads", "gbp", "youtube", "telegram", "bluesky", "mastodon", "reddit", "tumblr", "whatsapp"];
+const CHANNELS = ["facebook", "instagram", "linkedin", "threads", "gbp", "youtube", "tiktok", "telegram", "bluesky", "mastodon", "reddit", "tumblr", "discord", "whatsapp"];
 
 export default async (req) => {
   const auth = authorize(req, "social");
@@ -22,7 +22,7 @@ export default async (req) => {
       if (!channels.length) return json({ error: "Pick at least one channel." }, 400);
       if (!body.caption && !body.imageUrl) return json({ error: "Add a caption or an image." }, 400);
       if (channels.includes("instagram") && !body.imageUrl) return json({ error: "Instagram posts need an image." }, 400);
-      if (channels.includes("youtube") && !body.videoUrl) return json({ error: "YouTube needs a video URL." }, 400);
+      if ((channels.includes("youtube") || channels.includes("tiktok")) && !body.videoUrl) return json({ error: "YouTube/TikTok need a video URL." }, 400);
       const waRecipients = (body.waRecipients || []).map((x) => String(x).replace(/[^\d]/g, "")).filter(Boolean);
       if (channels.includes("whatsapp") && !waRecipients.length) return json({ error: "WhatsApp needs at least one recipient number." }, 400);
       const post = {
