@@ -99,6 +99,9 @@ export default async (req) => {
           .map((f) => ({ subject: String(f.subject).slice(0, 200), body: String(f.body) })),
         recipients,
         rotateSenders: !!body.rotateSenders,
+        // Sending pace: 0 = all at once; N = send `sendBatch` emails every N minutes.
+        sendIntervalMinutes: Math.max(0, parseInt(body.sendIntervalMinutes, 10) || 0),
+        sendBatch: Math.min(50, Math.max(1, parseInt(body.sendBatch, 10) || 1)),
         status: "draft",
         createdAt: new Date().toISOString(),
       };
@@ -111,6 +114,15 @@ export default async (req) => {
     if (id && !campaign) return json({ error: "Campaign not found" }, 404);
 
     if (action === "send") {
+      const interval = campaign.sendIntervalMinutes || 0;
+      if (interval > 0) {
+        // Drip mode: send the first batch now, then the drip cron sends the
+        // rest one batch every `interval` minutes.
+        campaign.lastDripAt = new Date().toISOString();
+        campaign.dripActive = true;
+        const r = await sendInitial(campaign, cfg, campaign.sendBatch || 1);
+        return json({ ok: true, ...r, dripping: r.remaining > 0, campaign: { ...campaign, stats: stats(campaign) } });
+      }
       const r = await sendInitial(campaign, cfg);
       return json({ ok: true, ...r, campaign: { ...campaign, stats: stats(campaign) } });
     }

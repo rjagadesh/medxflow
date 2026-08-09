@@ -232,6 +232,8 @@ function NewCampaign({ pw, senders = [], leads, visitors, onCancel, onCreated, c
   const [expanded, setExpanded] = useState(null);
   const [sendDays, setSendDays] = useState([1, 3, 5]);
   const [minGap, setMinGap] = useState(2);
+  const [sendInterval, setSendInterval] = useState(0); // minutes between sends; 0 = all at once
+  const [sendBatch, setSendBatch] = useState(1);
   const [maxFup, setMaxFup] = useState(6);
   const [rotateSenders, setRotateSenders] = useState(senders.length > 1);
   const [aiOn, setAiOn] = useState(true);
@@ -349,7 +351,7 @@ function NewCampaign({ pw, senders = [], leads, visitors, onCancel, onCreated, c
     setErr("");
     try {
       const fups = followups.filter((f) => f.enabled !== false).map(({ subject, body }) => ({ subject, body }));
-      const r = await call({ action: "create", name, fromName: "MedXFlow Health", subject, body, type, status: asDraft ? "draft" : "ready", recipients, followups: fups, sendDays, minGapDays: minGap, sheetTab: recipMode === "sheet" ? sheetTab : undefined, rotateSenders: senderList.length > 1 && rotateSenders });
+      const r = await call({ action: "create", name, fromName: "MedXFlow Health", subject, body, type, status: asDraft ? "draft" : "ready", recipients, followups: fups, sendDays, minGapDays: minGap, sheetTab: recipMode === "sheet" ? sheetTab : undefined, rotateSenders: senderList.length > 1 && rotateSenders, sendIntervalMinutes: sendInterval, sendBatch });
       onCreated(r.id);
     } catch (e) {
       setErr(e.message);
@@ -453,6 +455,22 @@ function NewCampaign({ pw, senders = [], leads, visitors, onCancel, onCreated, c
             ))}
           </div>
           <div className="nc-min"><span>Minimum</span><input type="number" min="1" max="30" value={minGap} onChange={(e) => setMinGap(Math.max(1, +e.target.value || 1))} /><span>days between emails</span></div>
+          <label className="nc-pop-lbl">Sending pace</label>
+          <select className="nc-select" value={sendInterval} onChange={(e) => setSendInterval(+e.target.value)}>
+            <option value={0}>Send all at once</option>
+            <option value={2}>Every 2 minutes</option>
+            <option value={5}>Every 5 minutes</option>
+            <option value={10}>Every 10 minutes</option>
+            <option value={15}>Every 15 minutes</option>
+            <option value={30}>Every 30 minutes</option>
+            <option value={60}>Every hour</option>
+          </select>
+          {sendInterval > 0 && (
+            <div className="nc-min" style={{ marginTop: 8 }}>
+              <input type="number" min="1" max="50" value={sendBatch} onChange={(e) => setSendBatch(Math.max(1, +e.target.value || 1))} />
+              <span>email(s) every {sendInterval} min · first batch sends immediately</span>
+            </div>
+          )}
         </BarPopover>
 
         <BarPopover icon="✉️" label="Senders" badge={senderList.length} open={openPop === "senders"} onToggle={() => togglePop("senders")} wide>
@@ -538,7 +556,10 @@ function Detail({ c, busy, onBack, act, onSync }) {
       </div>
       <h3 style={{ margin: "6px 0 2px" }}>{c.name}</h3>
       <div className="cmp-sub">{c.subject}</div>
-      <div className="cmp-sched">📅 Sends on {dayNames} · min {c.minGapDays || 2} days apart · {(c.followups || []).length} follow-up(s) · stops on reply</div>
+      <div className="cmp-sched">📅 Sends on {dayNames} · min {c.minGapDays || 2} days apart · {(c.followups || []).length} follow-up(s) · stops on reply{c.sendIntervalMinutes ? ` · ⏱ ${c.sendBatch || 1} email(s) / ${c.sendIntervalMinutes} min` : ""}</div>
+      {c.sendIntervalMinutes > 0 && c.dripActive && s.pending > 0 && (
+        <div className="cmp-drip">⏱ Dripping — sending {c.sendBatch || 1} email(s) every {c.sendIntervalMinutes} min. {s.pending} remaining; next batch goes out automatically.</div>
+      )}
 
       <div className="cmp-stats">
         <Stat n={s.total} label="Recipients" />
@@ -552,7 +573,7 @@ function Detail({ c, busy, onBack, act, onSync }) {
 
       <div className="cmp-actions">
         <button className="cmp-btn cmp-primary" disabled={!!busy || !(s.pending + s.failed)} onClick={() => act({ action: "send", id: c.id }, (r) => `Sent ${r.sent}${r.simulated ? " (simulated)" : ""}. ${r.remaining} remaining.`)}>
-          {busy === "send" + c.id ? "Sending…" : s.failed && !s.pending ? `Retry failed (${s.failed})` : `Send first email${s.pending ? ` (${s.pending})` : ""}`}
+          {busy === "send" + c.id ? "Sending…" : s.failed && !s.pending ? `Retry failed (${s.failed})` : c.sendIntervalMinutes ? `Start sending${s.pending ? ` (${s.pending})` : ""}` : `Send first email${s.pending ? ` (${s.pending})` : ""}`}
         </button>
         <button className="cmp-btn" disabled={!!busy || !(c.followups || []).length} onClick={() => act({ action: "followup", id: c.id }, (r) => `Follow-ups sent: ${r.sent}${r.simulated ? " (simulated)" : ""}.`)}>
           {busy === "followup" + c.id ? "Sending…" : "Send due follow-ups now"}
@@ -633,6 +654,7 @@ const CSS = `
 .cmp-inline input{width:60px!important; margin:0!important; padding:5px 8px!important}
 .cmp-x{margin-left:auto; background:none; border:none; color:#e88; cursor:pointer; font-size:14px}
 .cmp-sched{font-size:12.5px; color:rgba(232,238,246,.6); margin-top:6px}
+.cmp-drip{margin-top:10px; padding:9px 13px; background:rgba(127,179,213,.12); border:1px solid rgba(127,179,213,.35); border-radius:9px; font-size:13px; color:#9fc4e0}
 .cmp-days{display:flex; gap:6px; flex-wrap:wrap}
 .cmp-day{background:#0A1830; border:1px solid rgba(207,224,242,.2); color:rgba(232,238,246,.6); border-radius:8px; padding:7px 12px; font-size:13px; font-weight:700; cursor:pointer; font-family:inherit}
 .cmp-day.on{background:#1A5DAD; border-color:#1A5DAD; color:#fff}
