@@ -144,6 +144,35 @@ async function inbox(cfg) {
   return { threads, errors };
 }
 
+// Recent posts on the FB Page and IG account - the "page feed".
+async function posts(cfg) {
+  const out = { facebook: [], instagram: [], fbError: null, igError: null };
+  if (cfg.pageId && cfg.pageToken) {
+    const r = await safe(() => graph(cfg, `${cfg.pageId}/posts`, {
+      token: cfg.pageToken,
+      params: { fields: "message,created_time,permalink_url,full_picture,likes.summary(true),comments.summary(true),shares", limit: 25 },
+    }));
+    if (r.ok) out.facebook = (r.data.data || []).map((p) => ({
+      id: p.id, message: p.message || "", createdTime: p.created_time, url: p.permalink_url, image: p.full_picture || null,
+      likes: p.likes?.summary?.total_count ?? null, comments: p.comments?.summary?.total_count ?? null, shares: p.shares?.count ?? null,
+    }));
+    else out.fbError = r.error;
+  }
+  if (cfg.igId && cfg.pageToken) {
+    const r = await safe(() => graph(cfg, `${cfg.igId}/media`, {
+      token: cfg.pageToken,
+      params: { fields: "caption,media_type,media_url,thumbnail_url,permalink,timestamp,like_count,comments_count", limit: 25 },
+    }));
+    if (r.ok) out.instagram = (r.data.data || []).map((m) => ({
+      id: m.id, message: m.caption || "", createdTime: m.timestamp, url: m.permalink, type: m.media_type,
+      image: m.media_type === "VIDEO" ? (m.thumbnail_url || null) : (m.media_url || null),
+      likes: m.like_count ?? null, comments: m.comments_count ?? null,
+    }));
+    else out.igError = r.error;
+  }
+  return out;
+}
+
 // Comments on recent FB/IG posts - "who replied to a post".
 async function comments(cfg) {
   const out = { facebook: [], instagram: [], fbError: null, igError: null };
@@ -271,6 +300,7 @@ export default async (req) => {
 
     if (action === "overview") return json({ configured: true, ...(await overview(cfg)), hasIg: !!cfg.igId, hasAds: !!cfg.adAccount });
     if (action === "inbox") return json({ configured: true, ...(await inbox(cfg)) });
+    if (action === "posts") return json({ configured: true, ...(await posts(cfg)) });
     if (action === "comments") return json({ configured: true, ...(await comments(cfg)) });
     if (action === "replyComment") { await replyComment(cfg, body); return json({ ok: true }); }
     if (action === "reply") { await reply(cfg, body); return json({ ok: true }); }

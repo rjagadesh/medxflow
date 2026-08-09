@@ -7,6 +7,7 @@ import { useState, useEffect, useCallback } from "react";
 
 const SUBS = [
   { key: "insights", label: "📊 Insights" },
+  { key: "feed", label: "📰 Feed" },
   { key: "inbox", label: "💬 Inbox" },
   { key: "publish", label: "✍️ Publish" },
   { key: "ads", label: "📈 Ads" },
@@ -46,6 +47,7 @@ export default function Meta({ pw }) {
         ))}
       </div>
       {sub === "insights" && <Insights ov={overview} />}
+      {sub === "feed" && <Feed pw={pw} ov={overview} />}
       {sub === "inbox" && <Inbox pw={pw} />}
       {sub === "publish" && <Publish pw={pw} hasIg={overview.hasIg} />}
       {sub === "ads" && <Ads pw={pw} />}
@@ -106,6 +108,48 @@ function Insights({ ov }) {
         <div className="ad-card seo-card"><div className="seo-card-h">📷 Instagram</div><div className="mt-carderr">Couldn't load Instagram: {ov.igError}</div></div>
       ) : (
         <div className="mt-hint">Set <code>META_IG_ID</code> to show Instagram insights.</div>
+      )}
+    </div>
+  );
+}
+
+function Feed({ pw, ov }) {
+  const [data, setData] = useState(null);
+  const [tab, setTab] = useState(ov?.page ? "facebook" : "instagram");
+  useEffect(() => { call(pw, "posts").then(setData).catch((e) => setData({ error: e.message })); }, [pw]);
+
+  if (!data) return <div className="ad-empty">Loading feed…</div>;
+  if (data.error) return <div className="ad-err">{data.error}</div>;
+
+  const list = tab === "facebook" ? (data.facebook || []) : (data.instagram || []);
+  const err = tab === "facebook" ? data.fbError : data.igError;
+  const num = (n) => (n == null ? "—" : Number(n).toLocaleString());
+  const fmt = (iso) => (iso ? new Date(iso).toLocaleDateString() : "");
+
+  return (
+    <div>
+      <div className="mt-subnav">
+        <button className={tab === "facebook" ? "on" : ""} onClick={() => setTab("facebook")}>📘 Facebook{data.facebook ? ` (${data.facebook.length})` : ""}</button>
+        {ov?.hasIg !== false && <button className={tab === "instagram" ? "on" : ""} onClick={() => setTab("instagram")}>📷 Instagram{data.instagram ? ` (${data.instagram.length})` : ""}</button>}
+      </div>
+      {err && <div className="mt-carderr">{err}</div>}
+      {list.length === 0 && !err ? (
+        <div className="ad-empty">No posts on this {tab === "facebook" ? "Page" : "account"} yet.</div>
+      ) : (
+        <div className="mt-feed">
+          {list.map((p) => (
+            <a key={p.id} className="mt-post" href={p.url} target="_blank" rel="noreferrer">
+              {p.image ? <div className="mt-post-img"><img src={p.image} alt="" loading="lazy" /></div> : <div className="mt-post-img mt-post-noimg">📝</div>}
+              <div className="mt-post-b">
+                <div className="mt-post-msg">{p.message || <em>(no caption)</em>}</div>
+                <div className="mt-post-meta">
+                  <span>🕒 {fmt(p.createdTime)}</span>
+                  <span className="mt-post-stats">❤️ {num(p.likes)} · 💬 {num(p.comments)}{p.shares != null ? ` · 🔁 ${num(p.shares)}` : ""}</span>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
       )}
     </div>
   );
@@ -379,6 +423,17 @@ const CSS = `
 .mt-filter button.on{background:rgba(61,220,201,.16); border-color:rgba(61,220,201,.45); color:#7FD8CE}
 .mt-refresh{margin-left:auto}
 .mt-post-ctx{font-size:12px; color:rgba(232,238,246,.5); font-weight:400}
+/* feed */
+.mt-feed{display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px}
+.mt-post{display:flex; flex-direction:column; background:rgba(207,224,242,.04); border:1px solid rgba(207,224,242,.1); border-radius:14px; overflow:hidden; text-decoration:none; color:inherit; transition:transform .15s, border-color .15s}
+.mt-post:hover{transform:translateY(-2px); border-color:rgba(61,220,201,.4)}
+.mt-post-img{height:170px; background:rgba(10,24,48,.5); overflow:hidden}
+.mt-post-img img{width:100%; height:100%; object-fit:cover}
+.mt-post-noimg{display:grid; place-items:center; font-size:34px; opacity:.6}
+.mt-post-b{padding:12px 13px; display:flex; flex-direction:column; gap:8px}
+.mt-post-msg{font-size:13.5px; color:#E8EEF6; line-height:1.45; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden}
+.mt-post-meta{display:flex; flex-direction:column; gap:3px; font-size:11.5px; color:rgba(232,238,246,.55)}
+.mt-post-stats{color:rgba(232,238,246,.7)}
 .mt-tname{font-size:13.5px; font-weight:700; display:flex; align-items:center; gap:6px}
 .mt-unread{font-style:normal; background:#E05A4E; color:#fff; font-size:10px; padding:1px 6px; border-radius:9px}
 .mt-tsnip{grid-column:2; font-size:12px; color:rgba(232,238,246,.55); overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
