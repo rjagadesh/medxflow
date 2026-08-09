@@ -1,8 +1,8 @@
 import { getStore } from "@netlify/blobs";
 import {
-  metaCfg, waCfg, linkedinCfg, threadsCfg, telegramCfg, blueskyCfg, mastodonCfg, gbpCfg,
+  metaCfg, waCfg, linkedinCfg, threadsCfg, telegramCfg, blueskyCfg, mastodonCfg, gbpCfg, youtubeCfg, redditCfg, tumblrCfg,
   publishFacebook, publishInstagram, sendWhatsAppImage, publishLinkedIn,
-  publishThreads, publishTelegram, publishBluesky, publishMastodon, publishGBP,
+  publishThreads, publishTelegram, publishBluesky, publishMastodon, publishGBP, publishYouTube, publishReddit, publishTumblr,
 } from "./social.mjs";
 
 export const store = () => getStore("scheduled-posts");
@@ -47,6 +47,15 @@ export async function publishPost(post) {
       } else if (ch === "gbp") {
         const r = await publishGBP(gbpCfg(), { caption: post.caption, imageUrl: post.imageUrl });
         results.gbp = { ok: true, id: r.id || null };
+      } else if (ch === "youtube") {
+        const r = await publishYouTube(youtubeCfg(), { title: (post.caption || "").split("\n")[0], description: post.caption, videoUrl: post.videoUrl });
+        results.youtube = { ok: true, id: r.id || null };
+      } else if (ch === "reddit") {
+        const r = await publishReddit(redditCfg(), { caption: post.caption, imageUrl: post.imageUrl });
+        results.reddit = { ok: true, id: r.id || null };
+      } else if (ch === "tumblr") {
+        const r = await publishTumblr(tumblrCfg(), { caption: post.caption, imageUrl: post.imageUrl });
+        results.tumblr = { ok: true, id: r.id || null };
       } else if (ch === "whatsapp") {
         const cfg = waCfg();
         const sent = [];

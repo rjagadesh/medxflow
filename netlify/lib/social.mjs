@@ -178,6 +178,97 @@ export async function publishGBP(cfg, { caption, imageUrl }) {
   return { id: d.name || null };
 }
 
+// ---- Reddit (submit to a subreddit) ----
+export function redditCfg() {
+  return { clientId: g("REDDIT_CLIENT_ID"), clientSecret: g("REDDIT_CLIENT_SECRET"), refreshToken: g("REDDIT_REFRESH_TOKEN"), userAgent: g("REDDIT_USER_AGENT") || "MedXFlow/1.0", subreddit: g("REDDIT_SUBREDDIT") };
+}
+let _redTok = null;
+async function redditAccessToken(cfg) {
+  if (_redTok && Date.now() < _redTok.exp) return _redTok.token;
+  const basic = Buffer.from(`${cfg.clientId}:${cfg.clientSecret}`).toString("base64");
+  const res = await fetch("https://www.reddit.com/api/v1/access_token", {
+    method: "POST",
+    headers: { authorization: `Basic ${basic}`, "content-type": "application/x-www-form-urlencoded", "user-agent": cfg.userAgent },
+    body: new URLSearchParams({ grant_type: "refresh_token", refresh_token: cfg.refreshToken }),
+  });
+  const d = await res.json();
+  if (!res.ok || !d.access_token) throw new Error(d.error || "Reddit token refresh failed");
+  _redTok = { token: d.access_token, exp: Date.now() + (d.expires_in - 60) * 1000 };
+  return d.access_token;
+}
+export async function publishReddit(cfg, { caption, imageUrl }) {
+  if (!cfg.clientId || !cfg.clientSecret || !cfg.refreshToken || !cfg.subreddit) throw new Error("Reddit not configured (REDDIT_CLIENT_ID / SECRET / REFRESH_TOKEN / SUBREDDIT).");
+  const token = await redditAccessToken(cfg);
+  const title = (caption || "").split("\n")[0].slice(0, 300) || "MedXFlow";
+  const params = new URLSearchParams({ sr: cfg.subreddit, title, api_type: "json" });
+  if (imageUrl) { params.set("kind", "link"); params.set("url", imageUrl); }
+  else { params.set("kind", "self"); params.set("text", caption || ""); }
+  const res = await fetch("https://oauth.reddit.com/api/submit", {
+    method: "POST", headers: { authorization: `Bearer ${token}`, "content-type": "application/x-www-form-urlencoded", "user-agent": cfg.userAgent }, body: params,
+  });
+  const d = await res.json().catch(() => ({}));
+  const err = d?.json?.errors?.length ? d.json.errors[0].join(" ") : null;
+  if (!res.ok || err) throw new Error(err || `Reddit HTTP ${res.status}`);
+  return { id: d?.json?.data?.name || d?.json?.data?.id || null };
+}
+
+// ---- Tumblr (create a post on a blog) ----
+export function tumblrCfg() {
+  return { token: g("TUMBLR_ACCESS_TOKEN"), blog: g("TUMBLR_BLOG_ID") };
+}
+export async function publishTumblr(cfg, { caption, imageUrl }) {
+  if (!cfg.token || !cfg.blog) throw new Error("Tumblr not configured (TUMBLR_ACCESS_TOKEN / TUMBLR_BLOG_ID).");
+  const content = [];
+  if (imageUrl) content.push({ type: "image", media: [{ url: imageUrl }] });
+  if (caption) content.push({ type: "text", text: caption });
+  const res = await fetch(`https://api.tumblr.com/v2/blog/${cfg.blog}/posts`, {
+    method: "POST", headers: { authorization: `Bearer ${cfg.token}`, "content-type": "application/json" }, body: JSON.stringify({ content }),
+  });
+  const d = await res.json().catch(() => ({}));
+  if (!res.ok || (d.meta && d.meta.status >= 400)) throw new Error(d?.errors?.[0]?.detail || d?.meta?.msg || `Tumblr HTTP ${res.status}`);
+  return { id: d?.response?.id || null };
+}
+
+// ---- YouTube (video upload, Data API v3, OAuth) ----
+export function youtubeCfg() {
+  return { clientId: g("YOUTUBE_CLIENT_ID"), clientSecret: g("YOUTUBE_CLIENT_SECRET"), refreshToken: g("YOUTUBE_REFRESH_TOKEN"), privacy: g("YOUTUBE_PRIVACY") || "public" };
+}
+let _ytTok = null;
+async function ytAccessToken(cfg) {
+  if (_ytTok && Date.now() < _ytTok.exp) return _ytTok.token;
+  const res = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({ grant_type: "refresh_token", client_id: cfg.clientId, client_secret: cfg.clientSecret, refresh_token: cfg.refreshToken }),
+  });
+  const d = await res.json();
+  if (!res.ok) throw new Error(d.error_description || d.error || "YouTube token refresh failed");
+  _ytTok = { token: d.access_token, exp: Date.now() + (d.expires_in - 60) * 1000 };
+  return d.access_token;
+}
+export async function publishYouTube(cfg, { title, description, videoUrl }) {
+  if (!cfg.clientId || !cfg.clientSecret || !cfg.refreshToken) throw new Error("YouTube not configured (YOUTUBE_CLIENT_ID / SECRET / REFRESH_TOKEN).");
+  if (!videoUrl) throw new Error("YouTube needs a video URL (a public .mp4).");
+  const token = await ytAccessToken(cfg);
+  const vid = await fetch(videoUrl);
+  if (!vid.ok) throw new Error("Couldn't fetch the video URL.");
+  const bytes = Buffer.from(await vid.arrayBuffer());
+  const contentType = vid.headers.get("content-type") || "video/mp4";
+  const meta = { snippet: { title: (title || "MedXFlow").slice(0, 100), description: description || "" }, status: { privacyStatus: cfg.privacy } };
+  // 1) initialise a resumable upload
+  const init = await fetch("https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status", {
+    method: "POST",
+    headers: { authorization: `Bearer ${token}`, "content-type": "application/json; charset=UTF-8", "X-Upload-Content-Type": contentType, "X-Upload-Content-Length": String(bytes.length) },
+    body: JSON.stringify(meta),
+  });
+  if (!init.ok) { const e = await init.json().catch(() => ({})); throw new Error(e?.error?.message || `YouTube init HTTP ${init.status}`); }
+  const uploadUrl = init.headers.get("location");
+  // 2) upload the bytes
+  const up = await fetch(uploadUrl, { method: "PUT", headers: { "content-type": contentType, "content-length": String(bytes.length) }, body: bytes });
+  const ud = await up.json().catch(() => ({}));
+  if (!up.ok) throw new Error(ud?.error?.message || `YouTube upload HTTP ${up.status}`);
+  return { id: ud.id || null };
+}
+
 // ---- Mastodon ----
 export function mastodonCfg() { return { url: (g("MASTODON_URL") || "").replace(/\/+$/, ""), token: g("MASTODON_TOKEN") }; }
 export async function publishMastodon(cfg, { caption, imageUrl }) {

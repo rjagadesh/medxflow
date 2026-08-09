@@ -18,9 +18,12 @@ const CHANNELS = [
   { key: "linkedin", label: "LinkedIn", ic: "💼" },
   { key: "threads", label: "Threads", ic: "🧵" },
   { key: "gbp", label: "Google Business", ic: "📍" },
+  { key: "youtube", label: "YouTube", ic: "▶️" },
   { key: "telegram", label: "Telegram", ic: "✈️" },
   { key: "bluesky", label: "Bluesky", ic: "🦋" },
   { key: "mastodon", label: "Mastodon", ic: "🐘" },
+  { key: "reddit", label: "Reddit", ic: "👽" },
+  { key: "tumblr", label: "Tumblr", ic: "📓" },
   { key: "whatsapp", label: "WhatsApp", ic: "🟢" },
 ];
 const fmt = (iso) => (iso ? new Date(iso).toLocaleString() : "");
@@ -37,6 +40,7 @@ export default function Scheduler({ pw }) {
   const [caption, setCaption] = useState("");
   const [channels, setChannels] = useState(["facebook", "instagram"]);
   const [waRecipients, setWaRecipients] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
   const [when, setWhen] = useState("");
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
@@ -80,13 +84,13 @@ export default function Scheduler({ pw }) {
     setSaving(true); setErr(""); setMsg("");
     try {
       const d = await api("scheduler", pw, "create", {
-        imageUrl, caption, channels,
+        imageUrl, caption, channels, videoUrl,
         waRecipients: waRecipients.split(/[\n,;]+/).map((s) => s.trim()).filter(Boolean),
         scheduledAt: when ? new Date(when).toISOString() : new Date().toISOString(),
       });
       if (d.ok) {
         setMsg("Scheduled ✓");
-        setImageUrl(""); setFileName(""); setCaption(""); setWaRecipients(""); setWhen("");
+        setImageUrl(""); setFileName(""); setCaption(""); setWaRecipients(""); setVideoUrl(""); setWhen("");
         if (fileRef.current) fileRef.current.value = "";
         load();
       } else setErr(d.error || "Failed");
@@ -98,7 +102,8 @@ export default function Scheduler({ pw }) {
   const del = async (id) => { if (!window.confirm("Delete this scheduled post?")) return; await api("scheduler", pw, "delete", { id }); setPosts((p) => p.filter((x) => x.id !== id)); };
 
   const needsWa = channels.includes("whatsapp");
-  const canSave = channels.length && (caption.trim() || imageUrl) && (!channels.includes("instagram") || imageUrl) && !uploading;
+  const needsVideo = channels.includes("youtube");
+  const canSave = channels.length && (caption.trim() || imageUrl) && (!channels.includes("instagram") || imageUrl) && (!needsVideo || videoUrl.trim()) && !uploading;
 
   return (
     <div className="sc">
@@ -145,6 +150,13 @@ export default function Scheduler({ pw }) {
             <>
               <label className="sc-lbl">WhatsApp recipients <span>— numbers, one per line (must be opted-in / within 24h)</span></label>
               <textarea className="sc-wa" rows={2} value={waRecipients} onChange={(e) => setWaRecipients(e.target.value)} placeholder={"+14695551234\n+919876543210"} />
+            </>
+          )}
+
+          {needsVideo && (
+            <>
+              <label className="sc-lbl">Video URL <span>— YouTube uploads a video; paste a public .mp4 link. Caption becomes the title + description.</span></label>
+              <input className="sc-when" style={{ maxWidth: "100%" }} value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="https://…/video.mp4" />
             </>
           )}
 
