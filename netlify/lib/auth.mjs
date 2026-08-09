@@ -19,17 +19,17 @@ export function config() {
 }
 
 // ---- modules & role presets (IAM) ----
-export const MODULES = ["contacts", "pipeline", "campaigns", "financials", "leads", "traffic", "meta", "chat", "tickets", "settings"];
+export const MODULES = ["contacts", "pipeline", "campaigns", "financials", "leads", "traffic", "meta", "whatsapp", "chat", "tickets", "settings"];
 export const MODULE_LABEL = {
   contacts: "Contacts", pipeline: "Pipeline", campaigns: "Campaigns", financials: "Financials",
-  leads: "Demo requests", traffic: "Traffic", meta: "Meta Suite", chat: "Chatbot", tickets: "Tickets", settings: "Settings",
+  leads: "Demo requests", traffic: "Traffic", meta: "Meta Suite", whatsapp: "WhatsApp", chat: "Chatbot", tickets: "Tickets", settings: "Settings",
 };
 export const ROLE_PRESETS = {
   owner: [...MODULES],
   admin: MODULES.filter((m) => m !== "settings"),
-  sales: ["contacts", "pipeline", "campaigns", "leads", "meta", "chat", "tickets"],
+  sales: ["contacts", "pipeline", "campaigns", "leads", "meta", "whatsapp", "chat", "tickets"],
   finance: ["financials", "contacts"],
-  support: ["tickets", "contacts", "chat"],
+  support: ["tickets", "contacts", "chat", "whatsapp"],
   analyst: ["traffic", "meta", "contacts", "pipeline"],
 };
 
