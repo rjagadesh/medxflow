@@ -2,7 +2,7 @@ import { authorize, json } from "../lib/auth.mjs";
 import { store, listPosts, publishPost } from "../lib/scheduler-core.mjs";
 
 const rid = () => `sp-${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
-const CHANNELS = ["facebook", "instagram", "linkedin", "whatsapp"];
+const CHANNELS = ["facebook", "instagram", "linkedin", "threads", "telegram", "bluesky", "mastodon", "whatsapp"];
 
 export default async (req) => {
   const auth = authorize(req, "social");

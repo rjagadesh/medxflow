@@ -5,6 +5,32 @@ import WhatsApp from "./WhatsApp.jsx";
 import LinkedIn from "./LinkedIn.jsx";
 import Media from "./Media.jsx";
 
+function Connections({ pw }) {
+  const [conns, setConns] = useState(null);
+  useEffect(() => {
+    fetch("/.netlify/functions/connections", { method: "POST", headers: { "x-admin-password": pw, "content-type": "application/json" }, body: "{}" })
+      .then((r) => r.json()).then((d) => setConns(d.connections || [])).catch(() => setConns([]));
+  }, [pw]);
+  if (!conns) return <div className="ad-empty">Loading connections…</div>;
+  return (
+    <div>
+      <div className="soc-conn-head">Platform connections — set each platform's env vars to enable it in the Scheduler.</div>
+      <div className="soc-conns">
+        {conns.map((c) => (
+          <div key={c.key} className={"soc-conn" + (c.ok ? " ok" : "")}>
+            <span className="soc-conn-ic">{c.ic}</span>
+            <div className="soc-conn-b">
+              <b>{c.label} <span className={"soc-conn-badge " + (c.ok ? "on" : "off")}>{c.ok ? "Connected" : "Not set"}</span></b>
+              <span className="soc-conn-note">{c.note}</span>
+              <span className="soc-conn-vars">{c.vars.join(" · ")}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // One unified Social Media tab: dashboard/metrics, feed, inbox, publish,
 // scheduler, WhatsApp and media - all in a single top-level tab.
 
@@ -25,6 +51,7 @@ const SECTIONS = [
   { key: "whatsapp", label: "🟢 WhatsApp" },
   { key: "linkedin", label: "💼 LinkedIn" },
   { key: "media", label: "🖼 Media" },
+  { key: "connections", label: "🔌 Connections" },
   { key: "ads", label: "📈 Ads" },
 ];
 // Sections that depend on the Meta (FB/IG) connection.
@@ -64,6 +91,7 @@ export default function Social({ pw }) {
       {sec === "whatsapp" && <WhatsApp pw={pw} />}
       {sec === "linkedin" && <LinkedIn pw={pw} />}
       {sec === "media" && <Media pw={pw} />}
+      {sec === "connections" && <Connections pw={pw} />}
       {META_SECTIONS.includes(sec) && metaSection()}
     </div>
   );
@@ -74,4 +102,15 @@ const SOC_CSS = `
 .soc-nav button{background:rgba(207,224,242,.06); border:1px solid rgba(207,224,242,.12); color:rgba(232,238,246,.8); padding:9px 16px; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit}
 .soc-nav button:hover{background:rgba(207,224,242,.12)}
 .soc-nav button.on{background:rgba(61,220,201,.16); border-color:rgba(61,220,201,.5); color:#7FD8CE}
+.soc-conn-head{font-size:13.5px; color:rgba(232,238,246,.65); margin-bottom:14px}
+.soc-conns{display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:12px}
+.soc-conn{display:flex; gap:12px; align-items:flex-start; background:rgba(207,224,242,.04); border:1px solid rgba(207,224,242,.1); border-radius:12px; padding:14px}
+.soc-conn.ok{border-color:rgba(61,220,201,.35); background:rgba(61,220,201,.06)}
+.soc-conn-ic{font-size:22px}
+.soc-conn-b{display:flex; flex-direction:column; gap:3px; min-width:0}
+.soc-conn-b b{font-size:14px; color:#E8EEF6; display:flex; align-items:center; gap:8px}
+.soc-conn-badge{font-size:10px; font-weight:800; padding:2px 8px; border-radius:999px; text-transform:uppercase; letter-spacing:.03em}
+.soc-conn-badge.on{background:rgba(61,220,201,.2); color:#3DDCC9} .soc-conn-badge.off{background:rgba(207,224,242,.1); color:rgba(232,238,246,.5)}
+.soc-conn-note{font-size:12px; color:rgba(232,238,246,.6)}
+.soc-conn-vars{font-size:11px; color:rgba(232,238,246,.4); font-family:'Spline Sans Mono',monospace}
 `;

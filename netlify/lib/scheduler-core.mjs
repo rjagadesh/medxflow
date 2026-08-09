@@ -1,5 +1,9 @@
 import { getStore } from "@netlify/blobs";
-import { metaCfg, waCfg, linkedinCfg, publishFacebook, publishInstagram, sendWhatsAppImage, publishLinkedIn } from "./social.mjs";
+import {
+  metaCfg, waCfg, linkedinCfg, threadsCfg, telegramCfg, blueskyCfg, mastodonCfg,
+  publishFacebook, publishInstagram, sendWhatsAppImage, publishLinkedIn,
+  publishThreads, publishTelegram, publishBluesky, publishMastodon,
+} from "./social.mjs";
 
 export const store = () => getStore("scheduled-posts");
 
@@ -28,6 +32,18 @@ export async function publishPost(post) {
       } else if (ch === "linkedin") {
         const r = await publishLinkedIn(linkedinCfg(), { caption: post.caption, imageUrl: post.imageUrl });
         results.linkedin = { ok: true, id: r.id || null };
+      } else if (ch === "threads") {
+        const r = await publishThreads(threadsCfg(), { caption: post.caption, imageUrl: post.imageUrl });
+        results.threads = { ok: true, id: r.id || null };
+      } else if (ch === "telegram") {
+        const r = await publishTelegram(telegramCfg(), { caption: post.caption, imageUrl: post.imageUrl });
+        results.telegram = { ok: true, id: r.id || null };
+      } else if (ch === "bluesky") {
+        const r = await publishBluesky(blueskyCfg(), { caption: post.caption, imageUrl: post.imageUrl });
+        results.bluesky = { ok: true, id: r.id || null };
+      } else if (ch === "mastodon") {
+        const r = await publishMastodon(mastodonCfg(), { caption: post.caption, imageUrl: post.imageUrl });
+        results.mastodon = { ok: true, id: r.id || null };
       } else if (ch === "whatsapp") {
         const cfg = waCfg();
         const sent = [];

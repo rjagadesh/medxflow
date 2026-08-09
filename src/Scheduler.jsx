@@ -16,6 +16,10 @@ const CHANNELS = [
   { key: "facebook", label: "Facebook", ic: "📘" },
   { key: "instagram", label: "Instagram", ic: "📷" },
   { key: "linkedin", label: "LinkedIn", ic: "💼" },
+  { key: "threads", label: "Threads", ic: "🧵" },
+  { key: "telegram", label: "Telegram", ic: "✈️" },
+  { key: "bluesky", label: "Bluesky", ic: "🦋" },
+  { key: "mastodon", label: "Mastodon", ic: "🐘" },
   { key: "whatsapp", label: "WhatsApp", ic: "🟢" },
 ];
 const fmt = (iso) => (iso ? new Date(iso).toLocaleString() : "");

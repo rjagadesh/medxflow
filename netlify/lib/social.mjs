@@ -98,3 +98,65 @@ export async function sendWhatsAppImage(cfg, { to, imageUrl, caption }) {
     body: { messaging_product: "whatsapp", to: digits, type: "image", image: { link: imageUrl, caption } },
   });
 }
+
+// ---- Threads (Meta) ----
+export function threadsCfg() { return { token: g("THREADS_TOKEN"), userId: g("THREADS_USER_ID") }; }
+export async function publishThreads(cfg, { caption, imageUrl }) {
+  if (!cfg.token || !cfg.userId) throw new Error("Threads not configured (THREADS_TOKEN / THREADS_USER_ID).");
+  const base = `https://graph.threads.net/v1.0/${cfg.userId}`;
+  const create = new URLSearchParams({ access_token: cfg.token, media_type: imageUrl ? "IMAGE" : "TEXT", text: caption || "" });
+  if (imageUrl) create.set("image_url", imageUrl);
+  const c = await fetch(`${base}/threads`, { method: "POST", body: create });
+  const cd = await c.json(); if (!c.ok) throw new Error(cd?.error?.message || "Threads create failed");
+  const p = await fetch(`${base}/threads_publish`, { method: "POST", body: new URLSearchParams({ access_token: cfg.token, creation_id: cd.id }) });
+  const pd = await p.json(); if (!p.ok) throw new Error(pd?.error?.message || "Threads publish failed");
+  return { id: pd.id };
+}
+
+// ---- Telegram (bot → channel/chat) ----
+export function telegramCfg() { return { token: g("TELEGRAM_BOT_TOKEN"), chatId: g("TELEGRAM_CHAT_ID") }; }
+export async function publishTelegram(cfg, { caption, imageUrl }) {
+  if (!cfg.token || !cfg.chatId) throw new Error("Telegram not configured (TELEGRAM_BOT_TOKEN / TELEGRAM_CHAT_ID).");
+  const base = `https://api.telegram.org/bot${cfg.token}`;
+  const url = imageUrl ? `${base}/sendPhoto` : `${base}/sendMessage`;
+  const body = imageUrl ? { chat_id: cfg.chatId, photo: imageUrl, caption: caption || "" } : { chat_id: cfg.chatId, text: caption || "" };
+  const res = await fetch(url, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify(body) });
+  const d = await res.json(); if (!d.ok) throw new Error(d.description || "Telegram send failed");
+  return { id: d.result?.message_id || null };
+}
+
+// ---- Bluesky (AT Protocol) ----
+export function blueskyCfg() { return { handle: g("BLUESKY_HANDLE"), password: g("BLUESKY_APP_PASSWORD"), service: g("BLUESKY_SERVICE") || "https://bsky.social" }; }
+export async function publishBluesky(cfg, { caption, imageUrl }) {
+  if (!cfg.handle || !cfg.password) throw new Error("Bluesky not configured (BLUESKY_HANDLE / BLUESKY_APP_PASSWORD).");
+  const s = await fetch(`${cfg.service}/xrpc/com.atproto.server.createSession`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ identifier: cfg.handle, password: cfg.password }) });
+  const sd = await s.json(); if (!s.ok) throw new Error(sd?.message || "Bluesky login failed");
+  const record = { $type: "app.bsky.feed.post", text: caption || "", createdAt: new Date().toISOString() };
+  if (imageUrl) {
+    const img = await fetch(imageUrl); const bytes = Buffer.from(await img.arrayBuffer());
+    const up = await fetch(`${cfg.service}/xrpc/com.atproto.repo.uploadBlob`, { method: "POST", headers: { authorization: `Bearer ${sd.accessJwt}`, "content-type": img.headers.get("content-type") || "image/jpeg" }, body: bytes });
+    const ud = await up.json(); if (!up.ok) throw new Error(ud?.message || "Bluesky blob upload failed");
+    record.embed = { $type: "app.bsky.embed.images", images: [{ alt: "", image: ud.blob }] };
+  }
+  const post = await fetch(`${cfg.service}/xrpc/com.atproto.repo.createRecord`, { method: "POST", headers: { authorization: `Bearer ${sd.accessJwt}`, "content-type": "application/json" }, body: JSON.stringify({ repo: sd.did, collection: "app.bsky.feed.post", record }) });
+  const pd = await post.json(); if (!post.ok) throw new Error(pd?.message || "Bluesky post failed");
+  return { id: pd.uri || null };
+}
+
+// ---- Mastodon ----
+export function mastodonCfg() { return { url: (g("MASTODON_URL") || "").replace(/\/+$/, ""), token: g("MASTODON_TOKEN") }; }
+export async function publishMastodon(cfg, { caption, imageUrl }) {
+  if (!cfg.url || !cfg.token) throw new Error("Mastodon not configured (MASTODON_URL / MASTODON_TOKEN).");
+  let mediaId;
+  if (imageUrl) {
+    const img = await fetch(imageUrl); const bytes = Buffer.from(await img.arrayBuffer());
+    const fd = new FormData();
+    fd.append("file", new Blob([bytes], { type: img.headers.get("content-type") || "image/jpeg" }), "image.jpg");
+    const m = await fetch(`${cfg.url}/api/v2/media`, { method: "POST", headers: { authorization: `Bearer ${cfg.token}` }, body: fd });
+    const md = await m.json(); if (!m.ok) throw new Error(md?.error || "Mastodon media failed"); mediaId = md.id;
+  }
+  const body = { status: caption || "" }; if (mediaId) body.media_ids = [mediaId];
+  const res = await fetch(`${cfg.url}/api/v1/statuses`, { method: "POST", headers: { authorization: `Bearer ${cfg.token}`, "content-type": "application/json" }, body: JSON.stringify(body) });
+  const d = await res.json(); if (!res.ok) throw new Error(d?.error || "Mastodon post failed");
+  return { id: d.id || null };
+}
