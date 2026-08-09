@@ -17,6 +17,7 @@ const CHANNELS = [
   { key: "instagram", label: "Instagram", ic: "📷" },
   { key: "linkedin", label: "LinkedIn", ic: "💼" },
   { key: "threads", label: "Threads", ic: "🧵" },
+  { key: "gbp", label: "Google Business", ic: "📍" },
   { key: "telegram", label: "Telegram", ic: "✈️" },
   { key: "bluesky", label: "Bluesky", ic: "🦋" },
   { key: "mastodon", label: "Mastodon", ic: "🐘" },

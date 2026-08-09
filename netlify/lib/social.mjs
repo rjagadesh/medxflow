@@ -143,6 +143,41 @@ export async function publishBluesky(cfg, { caption, imageUrl }) {
   return { id: pd.uri || null };
 }
 
+// ---- Google Business Profile (local posts) ----
+export function gbpCfg() {
+  return {
+    clientId: g("GBP_CLIENT_ID"), clientSecret: g("GBP_CLIENT_SECRET"), refreshToken: g("GBP_REFRESH_TOKEN"),
+    account: g("GBP_ACCOUNT_ID"), location: g("GBP_LOCATION_ID"), ctaUrl: g("GBP_CTA_URL") || "https://medxflow.ai",
+  };
+}
+let _gbpTok = null;
+async function gbpAccessToken(cfg) {
+  if (_gbpTok && Date.now() < _gbpTok.exp) return _gbpTok.token;
+  const res = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({ grant_type: "refresh_token", client_id: cfg.clientId, client_secret: cfg.clientSecret, refresh_token: cfg.refreshToken }),
+  });
+  const d = await res.json();
+  if (!res.ok) throw new Error(d.error_description || d.error || "GBP token refresh failed");
+  _gbpTok = { token: d.access_token, exp: Date.now() + (d.expires_in - 60) * 1000 };
+  return d.access_token;
+}
+export async function publishGBP(cfg, { caption, imageUrl }) {
+  if (!cfg.clientId || !cfg.clientSecret || !cfg.refreshToken || !cfg.account || !cfg.location) {
+    throw new Error("Google Business Profile not configured (GBP_CLIENT_ID / SECRET / REFRESH_TOKEN / ACCOUNT_ID / LOCATION_ID).");
+  }
+  const token = await gbpAccessToken(cfg);
+  const body = { languageCode: "en-US", summary: caption || "", topicType: "STANDARD" };
+  if (imageUrl) body.media = [{ mediaFormat: "PHOTO", sourceUrl: imageUrl }];
+  if (cfg.ctaUrl) body.callToAction = { actionType: "LEARN_MORE", url: cfg.ctaUrl };
+  const res = await fetch(`https://mybusiness.googleapis.com/v4/accounts/${cfg.account}/locations/${cfg.location}/localPosts`, {
+    method: "POST", headers: { authorization: `Bearer ${token}`, "content-type": "application/json" }, body: JSON.stringify(body),
+  });
+  const d = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(d?.error?.message || `Google Business HTTP ${res.status}`);
+  return { id: d.name || null };
+}
+
 // ---- Mastodon ----
 export function mastodonCfg() { return { url: (g("MASTODON_URL") || "").replace(/\/+$/, ""), token: g("MASTODON_TOKEN") }; }
 export async function publishMastodon(cfg, { caption, imageUrl }) {

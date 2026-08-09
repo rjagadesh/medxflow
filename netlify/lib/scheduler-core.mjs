@@ -1,8 +1,8 @@
 import { getStore } from "@netlify/blobs";
 import {
-  metaCfg, waCfg, linkedinCfg, threadsCfg, telegramCfg, blueskyCfg, mastodonCfg,
+  metaCfg, waCfg, linkedinCfg, threadsCfg, telegramCfg, blueskyCfg, mastodonCfg, gbpCfg,
   publishFacebook, publishInstagram, sendWhatsAppImage, publishLinkedIn,
-  publishThreads, publishTelegram, publishBluesky, publishMastodon,
+  publishThreads, publishTelegram, publishBluesky, publishMastodon, publishGBP,
 } from "./social.mjs";
 
 export const store = () => getStore("scheduled-posts");
@@ -44,6 +44,9 @@ export async function publishPost(post) {
       } else if (ch === "mastodon") {
         const r = await publishMastodon(mastodonCfg(), { caption: post.caption, imageUrl: post.imageUrl });
         results.mastodon = { ok: true, id: r.id || null };
+      } else if (ch === "gbp") {
+        const r = await publishGBP(gbpCfg(), { caption: post.caption, imageUrl: post.imageUrl });
+        results.gbp = { ok: true, id: r.id || null };
       } else if (ch === "whatsapp") {
         const cfg = waCfg();
         const sent = [];
