@@ -64,6 +64,12 @@ export default function Campaigns({ pw, leads = [], visitors = [] }) {
     setMsg("");
     try {
       const r = await call(payload);
+      // Optimistic update: the send/followup response returns the updated
+      // campaign with fresh stats - merge it immediately so the UI reflects
+      // the new statuses without waiting on a (possibly lagging) reload.
+      if (r.campaign?.id) {
+        setCampaigns((cs) => cs.map((c) => (c.id === r.campaign.id ? { ...c, ...r.campaign } : c)));
+      }
       await load();
       if (note) setMsg(typeof note === "function" ? note(r) : note);
     } catch (e) {

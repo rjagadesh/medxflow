@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import crypto from "node:crypto";
 import { getStore } from "@netlify/blobs";
 import nodemailer from "nodemailer";
 import { ImapFlow } from "imapflow";
@@ -92,6 +93,63 @@ export async function saveSenders(list) {
   ];
   await settingsStore().setJSON("senders", clean);
   return clean;
+}
+
+// ---------- Google Sheet status write-back (best-effort) ----------
+// When a campaign was built from a Google Sheet tab, mirror each recipient's
+// status/timestamp back into that tab. Silent no-op if Sheets isn't configured.
+let _sheetsTok = null; // { token, exp }
+async function sheetsAuth() {
+  const c = readCreds();
+  const g = (k) => process.env[k] || c[k] || "";
+  const rawSa = g("GSC_SERVICE_ACCOUNT");
+  const workbookId = g("SHEETS_WORKBOOK_ID");
+  if (!rawSa || !workbookId) return null;
+  const sa = typeof rawSa === "string" ? JSON.parse(rawSa) : rawSa;
+  if (_sheetsTok && Date.now() < _sheetsTok.exp) return { token: _sheetsTok.token, workbookId };
+  const b64 = (o) => Buffer.from(JSON.stringify(o)).toString("base64url");
+  const now = Math.floor(Date.now() / 1000);
+  const si = `${b64({ alg: "RS256", typ: "JWT" })}.${b64({ iss: sa.client_email, scope: "https://www.googleapis.com/auth/spreadsheets", aud: "https://oauth2.googleapis.com/token", iat: now, exp: now + 3600 })}`;
+  const sig = crypto.createSign("RSA-SHA256").update(si).sign(sa.private_key).toString("base64url");
+  const res = await fetch("https://oauth2.googleapis.com/token", {
+    method: "POST",
+    headers: { "content-type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({ grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer", assertion: `${si}.${sig}` }),
+  });
+  const d = await res.json();
+  if (!res.ok) throw new Error(d.error_description || d.error || "sheets token failed");
+  _sheetsTok = { token: d.access_token, exp: Date.now() + 3300 * 1000 };
+  return { token: d.access_token, workbookId };
+}
+
+export async function writeSheetStatus(campaign, recip, status, whenIso) {
+  try {
+    if (!campaign?.sheetTab || !recip?.email) return;
+    const auth = await sheetsAuth();
+    if (!auth) return;
+    const { token, workbookId } = auth;
+    const tab = campaign.sheetTab;
+    const q = (x) => encodeURIComponent(x);
+    const base = `https://sheets.googleapis.com/v4/spreadsheets/${workbookId}`;
+    // Find the recipient's row by email in column A.
+    const colRes = await fetch(`${base}/values/${q(`'${tab}'!A1:A`)}`, { headers: { authorization: `Bearer ${token}` } });
+    if (!colRes.ok) return;
+    const col = await colRes.json();
+    const idx = (col.values || []).findIndex((r) => String(r[0] || "").trim().toLowerCase() === recip.email.toLowerCase());
+    if (idx < 0) return;
+    const row = idx + 1;
+    const ts = (whenIso || new Date().toISOString()).replace("T", " ").slice(0, 16);
+    const tsCol = status === "opened" ? "F" : status === "replied" ? "G" : status === "sent" ? "E" : null;
+    const data = [{ range: `'${tab}'!D${row}`, values: [[status]] }];
+    if (tsCol) data.push({ range: `'${tab}'!${tsCol}${row}`, values: [[ts]] });
+    await fetch(`${base}/values:batchUpdate`, {
+      method: "POST",
+      headers: { authorization: `Bearer ${token}`, "content-type": "application/json" },
+      body: JSON.stringify({ valueInputOption: "RAW", data }),
+    });
+  } catch {
+    // best-effort: never let a Sheets hiccup break sending
+  }
 }
 
 // ---------- data helpers ----------
@@ -288,9 +346,11 @@ export async function sendInitial(campaign, cfg, maxBatch = 30) {
       if (res.from) r.sentFrom = res.from;
       delete r.error;
       sent++;
+      await writeSheetStatus(campaign, r, "sent", r.sentAt);
     } catch (err) {
       r.status = "failed";
       r.error = String(err.message || err).slice(0, 200);
+      await writeSheetStatus(campaign, r, "failed");
     }
     await DELAY(150);
   }

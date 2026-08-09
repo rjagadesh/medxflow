@@ -1,4 +1,4 @@
-import { loadCampaign, saveCampaign } from "../lib/campaigns-core.mjs";
+import { loadCampaign, saveCampaign, writeSheetStatus } from "../lib/campaigns-core.mjs";
 
 // 1x1 transparent GIF
 const PIXEL = Buffer.from(
@@ -47,6 +47,7 @@ export default async (req) => {
       recip.openedAt = new Date().toISOString();
       if (recip.status === "sent") recip.status = "opened";
       await save();
+      await writeSheetStatus(campaign, recip, "opened", recip.openedAt);
     }
     return gif();
   }
@@ -59,6 +60,7 @@ export default async (req) => {
         recip.respondedAt = recip.respondedAt || new Date().toISOString();
       }
       await save();
+      await writeSheetStatus(campaign, recip, "responded", recip.respondedAt);
     }
     const dest = target && /^https?:\/\//i.test(target) ? target : "/";
     return new Response(null, { status: 302, headers: { location: dest } });
@@ -69,6 +71,7 @@ export default async (req) => {
       recip.status = "unsubscribed";
       recip.unsubscribedAt = new Date().toISOString();
       await save();
+      await writeSheetStatus(campaign, recip, "unsubscribed", recip.unsubscribedAt);
     }
     return html("You've been unsubscribed and won't receive further emails from this campaign.");
   }
