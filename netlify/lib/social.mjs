@@ -303,7 +303,8 @@ export function youtubeCfg() {
   return { clientId: g("YOUTUBE_CLIENT_ID"), clientSecret: g("YOUTUBE_CLIENT_SECRET"), refreshToken: g("YOUTUBE_REFRESH_TOKEN"), privacy: g("YOUTUBE_PRIVACY") || "public" };
 }
 let _ytTok = null;
-async function ytAccessToken(cfg) {
+export async function youtubeAccessToken(cfg) {
+  if (!cfg.clientId || !cfg.clientSecret || !cfg.refreshToken) throw new Error("YouTube not configured (YOUTUBE_CLIENT_ID / SECRET / REFRESH_TOKEN).");
   if (_ytTok && Date.now() < _ytTok.exp) return _ytTok.token;
   const res = await fetch("https://oauth2.googleapis.com/token", {
     method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" },
@@ -314,16 +315,16 @@ async function ytAccessToken(cfg) {
   _ytTok = { token: d.access_token, exp: Date.now() + (d.expires_in - 60) * 1000 };
   return d.access_token;
 }
-export async function publishYouTube(cfg, { title, description, videoUrl }) {
-  if (!cfg.clientId || !cfg.clientSecret || !cfg.refreshToken) throw new Error("YouTube not configured (YOUTUBE_CLIENT_ID / SECRET / REFRESH_TOKEN).");
+export async function uploadYouTube(cfg, { title, description, tags, privacy, videoUrl }) {
   if (!videoUrl) throw new Error("YouTube needs a video URL (a public .mp4).");
-  const token = await ytAccessToken(cfg);
+  const token = await youtubeAccessToken(cfg);
   const vid = await fetch(videoUrl);
   if (!vid.ok) throw new Error("Couldn't fetch the video URL.");
   const bytes = Buffer.from(await vid.arrayBuffer());
   const contentType = vid.headers.get("content-type") || "video/mp4";
-  const meta = { snippet: { title: (title || "MedXFlow").slice(0, 100), description: description || "" }, status: { privacyStatus: cfg.privacy } };
-  // 1) initialise a resumable upload
+  const snippet = { title: (title || "MedXFlow").slice(0, 100), description: description || "", categoryId: "28" };
+  if (Array.isArray(tags) && tags.length) snippet.tags = tags.slice(0, 30);
+  const meta = { snippet, status: { privacyStatus: privacy || cfg.privacy || "unlisted", selfDeclaredMadeForKids: false } };
   const init = await fetch("https://www.googleapis.com/upload/youtube/v3/videos?uploadType=resumable&part=snippet,status", {
     method: "POST",
     headers: { authorization: `Bearer ${token}`, "content-type": "application/json; charset=UTF-8", "X-Upload-Content-Type": contentType, "X-Upload-Content-Length": String(bytes.length) },
@@ -331,11 +332,14 @@ export async function publishYouTube(cfg, { title, description, videoUrl }) {
   });
   if (!init.ok) { const e = await init.json().catch(() => ({})); throw new Error(e?.error?.message || `YouTube init HTTP ${init.status}`); }
   const uploadUrl = init.headers.get("location");
-  // 2) upload the bytes
   const up = await fetch(uploadUrl, { method: "PUT", headers: { "content-type": contentType, "content-length": String(bytes.length) }, body: bytes });
   const ud = await up.json().catch(() => ({}));
   if (!up.ok) throw new Error(ud?.error?.message || `YouTube upload HTTP ${up.status}`);
   return { id: ud.id || null };
+}
+// Scheduler path (public by default).
+export async function publishYouTube(cfg, { title, description, videoUrl }) {
+  return uploadYouTube(cfg, { title, description, videoUrl, privacy: cfg.privacy });
 }
 
 // ---- Mastodon ----

@@ -3,6 +3,7 @@ import { Insights, Feed, Inbox, Publish, Ads, MetaSetup, CSS as META_CSS } from 
 import Scheduler from "./Scheduler.jsx";
 import WhatsApp from "./WhatsApp.jsx";
 import LinkedIn from "./LinkedIn.jsx";
+import YouTube from "./YouTube.jsx";
 import Media from "./Media.jsx";
 
 async function connectOauth(pw, fn) {
@@ -60,6 +61,7 @@ const SECTIONS = [
   { key: "scheduler", label: "🗓 Scheduler" },
   { key: "whatsapp", label: "🟢 WhatsApp" },
   { key: "linkedin", label: "💼 LinkedIn" },
+  { key: "youtube", label: "▶️ YouTube" },
   { key: "media", label: "🖼 Media" },
   { key: "connections", label: "🔌 Connections" },
   { key: "ads", label: "📈 Ads" },
@@ -100,6 +102,7 @@ export default function Social({ pw }) {
       {sec === "scheduler" && <Scheduler pw={pw} />}
       {sec === "whatsapp" && <WhatsApp pw={pw} />}
       {sec === "linkedin" && <LinkedIn pw={pw} />}
+      {sec === "youtube" && <YouTube pw={pw} />}
       {sec === "media" && <Media pw={pw} />}
       {sec === "connections" && <Connections pw={pw} />}
       {META_SECTIONS.includes(sec) && metaSection()}
