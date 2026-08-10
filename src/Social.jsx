@@ -5,6 +5,15 @@ import WhatsApp from "./WhatsApp.jsx";
 import LinkedIn from "./LinkedIn.jsx";
 import Media from "./Media.jsx";
 
+async function connectOauth(pw, fn) {
+  try {
+    const res = await fetch(`/.netlify/functions/${fn}`, { method: "POST", headers: { "x-admin-password": pw, "content-type": "application/json" }, body: "{}" });
+    const d = await res.json();
+    if (d.url) window.open(d.url, "_blank", "noopener");
+    else alert(d.error || "Couldn't start the connect flow.");
+  } catch (e) { alert(e.message); }
+}
+
 function Connections({ pw }) {
   const [conns, setConns] = useState(null);
   useEffect(() => {
@@ -23,6 +32,7 @@ function Connections({ pw }) {
               <b>{c.label} <span className={"soc-conn-badge " + (c.ok ? "on" : "off")}>{c.ok ? "Connected" : "Not set"}</span></b>
               <span className="soc-conn-note">{c.note}</span>
               <span className="soc-conn-vars">{c.vars.join(" · ")}</span>
+              {c.oauth && <button className="soc-conn-connect" onClick={() => connectOauth(pw, c.oauthFn)}>Connect →</button>}
             </div>
           </div>
         ))}
@@ -113,4 +123,6 @@ const SOC_CSS = `
 .soc-conn-badge.on{background:rgba(61,220,201,.2); color:#3DDCC9} .soc-conn-badge.off{background:rgba(207,224,242,.1); color:rgba(232,238,246,.5)}
 .soc-conn-note{font-size:12px; color:rgba(232,238,246,.6)}
 .soc-conn-vars{font-size:11px; color:rgba(232,238,246,.4); font-family:'Spline Sans Mono',monospace}
+.soc-conn-connect{margin-top:8px; align-self:flex-start; background:rgba(61,220,201,.16); border:1px solid rgba(61,220,201,.45); color:#7FD8CE; border-radius:8px; padding:6px 13px; font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit}
+.soc-conn-connect:hover{background:rgba(61,220,201,.24)}
 `;

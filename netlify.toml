@@ -8,6 +8,12 @@
   # fail the build. Real secrets live only in Netlify env vars / gitignored creds.json.
   SECRETS_SCAN_OMIT_PATHS = ".env.example"
 
+# OAuth callback (TikTok) - must come before the SPA fallback
+[[redirects]]
+  from = "/callback"
+  to = "/.netlify/functions/tiktok-callback"
+  status = 200
+
 # SPA fallback so deep links resolve to the app
 [[redirects]]
   from = "/*"

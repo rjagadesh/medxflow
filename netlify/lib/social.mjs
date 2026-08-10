@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { getStore } from "@netlify/blobs";
 
 // Shared social publishing - Facebook & Instagram feed posts and WhatsApp image
 // messages, over the Meta Graph API. Config from env / creds.json.
@@ -189,14 +190,57 @@ export async function publishDiscord(cfg, { caption, imageUrl }) {
   return { id: null };
 }
 
-// ---- TikTok (Content Posting API, video via PULL_FROM_URL) ----
-export function tiktokCfg() { return { token: g("TIKTOK_ACCESS_TOKEN") }; }
+// ---- TikTok (Content Posting API, OAuth) ----
+export function tiktokCfg() {
+  return {
+    clientKey: g("TIKTOK_CLIENT_KEY"), clientSecret: g("TIKTOK_CLIENT_SECRET"),
+    redirectUri: g("TIKTOK_REDIRECT_URI") || "https://medxflow.ai/callback",
+    scope: g("TIKTOK_SCOPE") || "user.info.basic,video.publish,video.upload",
+    // Unaudited/sandbox apps can only post SELF_ONLY (private). After production
+    // approval, set TIKTOK_PRIVACY=PUBLIC_TO_EVERYONE.
+    privacy: g("TIKTOK_PRIVACY") || "SELF_ONLY",
+  };
+}
+const tiktokStore = () => getStore("social-oauth");
+export async function tiktokTokens() { try { return await tiktokStore().get("tiktok", { type: "json" }); } catch { return null; } }
+export async function tiktokSaveTokens(t) { await tiktokStore().setJSON("tiktok", t); }
+
+export function tiktokAuthUrl(cfg, state) {
+  const p = new URLSearchParams({ client_key: cfg.clientKey, scope: cfg.scope, response_type: "code", redirect_uri: cfg.redirectUri, state: state || "medxflow" });
+  return `https://www.tiktok.com/v2/auth/authorize/?${p}`;
+}
+export async function tiktokExchangeCode(cfg, code) {
+  const res = await fetch("https://open.tiktokapis.com/v2/oauth/token/", {
+    method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({ client_key: cfg.clientKey, client_secret: cfg.clientSecret, code, grant_type: "authorization_code", redirect_uri: cfg.redirectUri }),
+  });
+  const d = await res.json();
+  if (!res.ok || d.error) throw new Error(d.error_description || d.error || "TikTok token exchange failed");
+  const t = { access_token: d.access_token, refresh_token: d.refresh_token, open_id: d.open_id, scope: d.scope, exp: Date.now() + (d.expires_in - 60) * 1000 };
+  await tiktokSaveTokens(t);
+  return t;
+}
+async function tiktokValidToken(cfg) {
+  const t = await tiktokTokens();
+  if (!t?.refresh_token) throw new Error("TikTok not connected — click Connect in the Connections panel first.");
+  if (t.access_token && Date.now() < (t.exp || 0)) return t.access_token;
+  const res = await fetch("https://open.tiktokapis.com/v2/oauth/token/", {
+    method: "POST", headers: { "content-type": "application/x-www-form-urlencoded" },
+    body: new URLSearchParams({ client_key: cfg.clientKey, client_secret: cfg.clientSecret, grant_type: "refresh_token", refresh_token: t.refresh_token }),
+  });
+  const d = await res.json();
+  if (!res.ok || d.error) throw new Error(d.error_description || d.error || "TikTok refresh failed");
+  const nt = { access_token: d.access_token, refresh_token: d.refresh_token || t.refresh_token, open_id: t.open_id, scope: d.scope || t.scope, exp: Date.now() + (d.expires_in - 60) * 1000 };
+  await tiktokSaveTokens(nt);
+  return nt.access_token;
+}
 export async function publishTikTok(cfg, { caption, videoUrl }) {
-  if (!cfg.token) throw new Error("TikTok not configured (TIKTOK_ACCESS_TOKEN).");
+  if (!cfg.clientKey || !cfg.clientSecret) throw new Error("TikTok not configured (TIKTOK_CLIENT_KEY / TIKTOK_CLIENT_SECRET).");
   if (!videoUrl) throw new Error("TikTok needs a video URL (from a verified domain).");
+  const token = await tiktokValidToken(cfg);
   const res = await fetch("https://open.tiktokapis.com/v2/post/publish/video/init/", {
-    method: "POST", headers: { authorization: `Bearer ${cfg.token}`, "content-type": "application/json; charset=UTF-8" },
-    body: JSON.stringify({ post_info: { title: (caption || "").slice(0, 150), privacy_level: "PUBLIC_TO_EVERYONE" }, source_info: { source: "PULL_FROM_URL", video_url: videoUrl } }),
+    method: "POST", headers: { authorization: `Bearer ${token}`, "content-type": "application/json; charset=UTF-8" },
+    body: JSON.stringify({ post_info: { title: (caption || "").slice(0, 150), privacy_level: cfg.privacy }, source_info: { source: "PULL_FROM_URL", video_url: videoUrl } }),
   });
   const d = await res.json().catch(() => ({}));
   if (!res.ok || (d?.error && d.error.code && d.error.code !== "ok")) throw new Error(d?.error?.message || `TikTok HTTP ${res.status}`);
