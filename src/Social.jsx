@@ -6,6 +6,27 @@ import LinkedIn from "./LinkedIn.jsx";
 import YouTube from "./YouTube.jsx";
 import Media from "./Media.jsx";
 
+const num = (n) => (n == null ? "—" : Number(n).toLocaleString());
+
+function YouTubeDash({ pw }) {
+  const [c, setC] = useState(null);
+  useEffect(() => {
+    fetch("/.netlify/functions/youtube", { method: "POST", headers: { "x-admin-password": pw, "content-type": "application/json" }, body: JSON.stringify({ action: "channel" }) })
+      .then((r) => r.json()).then((d) => setC(d.channel || null)).catch(() => setC(null));
+  }, [pw]);
+  if (!c) return null;
+  return (
+    <div className="ad-card seo-card" style={{ marginTop: 16 }}>
+      <div className="seo-card-h">▶️ YouTube — {c.title || "channel"}</div>
+      <div className="ad-stats mt-stats">
+        <div className="ad-stat"><b>{num(c.subscribers)}</b><span>Subscribers</span></div>
+        <div className="ad-stat"><b>{num(c.videos)}</b><span>Videos</span></div>
+        <div className="ad-stat"><b>{num(c.views)}</b><span>Total views</span></div>
+      </div>
+    </div>
+  );
+}
+
 async function connectOauth(pw, fn) {
   try {
     const res = await fetch(`/.netlify/functions/${fn}`, { method: "POST", headers: { "x-admin-password": pw, "content-type": "application/json" }, body: "{}" });
@@ -81,7 +102,7 @@ export default function Social({ pw }) {
     if (!ov) return <div className="ad-empty">Connecting to Meta…</div>;
     if (ov.error) return <div className="ad-err">Couldn't connect to Meta. Check the META_* configuration.</div>;
     if (ov.configured === false) return <MetaSetup reason={ov.reason} />;
-    if (sec === "dashboard") return <Insights ov={ov} />;
+    if (sec === "dashboard") return <><Insights ov={ov} /><YouTubeDash pw={pw} /></>;
     if (sec === "feed") return <Feed pw={pw} ov={ov} />;
     if (sec === "publish") return <Publish pw={pw} hasIg={ov.hasIg} />;
     if (sec === "ads") return <Ads pw={pw} />;
