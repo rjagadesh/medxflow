@@ -11,15 +11,23 @@ function readCreds() {
 }
 const g = (k) => process.env[k] || readCreds()[k] || "";
 
+// Known Veo model IDs, newest first. Veo's names churn (preview → GA), so we
+// try each until one is reachable rather than pinning a single ID.
+const VEO_FALLBACKS = ["veo-3.0-generate-001", "veo-3.0-fast-generate-001", "veo-3.0-generate-preview", "veo-2.0-generate-001"];
+
 export function veoCfg() {
   const raw = g("VERTEX_SERVICE_ACCOUNT");
   let sa = null;
   try { sa = typeof raw === "string" ? JSON.parse(raw) : raw; } catch {}
+  const preferred = g("VEO_MODEL");
+  // env/creds model first (if set), then the fallback list, de-duped
+  const models = [...new Set([preferred, ...VEO_FALLBACKS].filter(Boolean))];
   return {
     sa,
     project: g("VERTEX_PROJECT") || "voice-2-490513",
     location: g("VERTEX_LOCATION") || "us-central1",
-    model: g("VEO_MODEL") || "veo-3.0-generate-preview",
+    model: models[0],
+    models,
   };
 }
 
@@ -46,16 +54,25 @@ export async function generateVeoVideo(cfg, { prompt, imageBase64, mimeType = "i
   if (!cfg.sa?.client_email) throw new Error("Vertex service account not configured (VERTEX_SERVICE_ACCOUNT).");
   if (!prompt && !imageBase64) throw new Error("A prompt or image is required.");
   const token = await accessToken(cfg.sa);
-  const base = `https://${cfg.location}-aiplatform.googleapis.com/v1/projects/${cfg.project}/locations/${cfg.location}/publishers/google/models/${cfg.model}`;
+  const host = `https://${cfg.location}-aiplatform.googleapis.com/v1/projects/${cfg.project}/locations/${cfg.location}/publishers/google/models`;
   const instance = {};
   if (prompt) instance.prompt = prompt;
   if (imageBase64) instance.image = { bytesBase64Encoded: imageBase64, mimeType };
   const body = { instances: [instance], parameters: { aspectRatio, sampleCount: 1, durationSeconds: String(durationSeconds), generateAudio: true } };
 
-  const start = await fetch(`${base}:predictLongRunning`, { method: "POST", headers: { authorization: `Bearer ${token}`, "content-type": "application/json" }, body: JSON.stringify(body) });
-  const sd = await start.json();
-  if (!start.ok) throw new Error(sd?.error?.message || `Veo start HTTP ${start.status}`);
-  const opName = sd.name;
+  // Try each candidate model ID; use the first that the project can reach.
+  const candidates = cfg.models?.length ? cfg.models : [cfg.model];
+  let opName = null, base = null, lastErr = "";
+  for (const model of candidates) {
+    base = `${host}/${model}`;
+    const start = await fetch(`${base}:predictLongRunning`, { method: "POST", headers: { authorization: `Bearer ${token}`, "content-type": "application/json" }, body: JSON.stringify(body) });
+    const sd = await start.json();
+    if (start.ok && sd.name) { opName = sd.name; onStatus?.(`using model ${model}`); break; }
+    lastErr = sd?.error?.message || `HTTP ${start.status}`;
+    // 404 = this model isn't available to the project; try the next one.
+    if (start.status !== 404 && !/not found or your project does not have access/i.test(lastErr)) throw new Error(lastErr);
+  }
+  if (!opName) throw new Error(`No Veo model is available to this project. Enable Veo in Vertex Model Garden. Last error: ${lastErr}`);
 
   for (let i = 0; i < 90; i++) {
     await DELAY(8000);
