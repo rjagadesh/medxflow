@@ -5,6 +5,7 @@ import WhatsApp from "./WhatsApp.jsx";
 import LinkedIn from "./LinkedIn.jsx";
 import YouTube from "./YouTube.jsx";
 import Media from "./Media.jsx";
+import AICreate from "./AICreate.jsx";
 
 const num = (n) => (n == null ? "—" : Number(n).toLocaleString());
 
@@ -79,6 +80,7 @@ const SECTIONS = [
   { key: "feed", label: "📰 Feed" },
   { key: "inbox", label: "💬 Inbox" },
   { key: "publish", label: "✍️ Publish" },
+  { key: "aicreate", label: "✨ AI Create" },
   { key: "scheduler", label: "🗓 Scheduler" },
   { key: "whatsapp", label: "🟢 WhatsApp" },
   { key: "linkedin", label: "💼 LinkedIn" },
@@ -120,6 +122,7 @@ export default function Social({ pw }) {
       </div>
 
       {sec === "inbox" && <Inbox pw={pw} />}
+      {sec === "aicreate" && <AICreate pw={pw} />}
       {sec === "scheduler" && <Scheduler pw={pw} />}
       {sec === "whatsapp" && <WhatsApp pw={pw} />}
       {sec === "linkedin" && <LinkedIn pw={pw} />}
