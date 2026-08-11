@@ -232,7 +232,7 @@ function NewCampaign({ pw, senders = [], leads, visitors, onCancel, onCreated, c
   const [expanded, setExpanded] = useState(null);
   const [sendDays, setSendDays] = useState([1, 3, 5]);
   const [minGap, setMinGap] = useState(2);
-  const [sendInterval, setSendInterval] = useState(0); // minutes between sends; 0 = all at once
+  const [sendInterval, setSendInterval] = useState(5); // minutes between sends; default: one email every 5 min
   const [sendBatch, setSendBatch] = useState(1);
   const [maxFup, setMaxFup] = useState(6);
   const [rotateSenders, setRotateSenders] = useState(senders.length > 1);
