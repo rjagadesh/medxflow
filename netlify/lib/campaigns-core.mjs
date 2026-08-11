@@ -417,6 +417,10 @@ export async function sendFollowups(campaign, cfg, { respectDays = true, maxBatc
 // Read the Gmail inbox (IMAP) to detect replies (→ stop follow-ups) and
 // bounce-backs (→ marked "not delivered"). Idempotent; safe to run often.
 export async function syncInbox(cfg) {
+  // When sending via Microsoft Graph, replies land in the Graph sender
+  // mailboxes (e.g. raj@/jay@medxflow.ai) - not the IMAP/Gmail inbox - so read
+  // those over Graph. Fall back to IMAP only when Graph isn't the transport.
+  if (cfg.graphReady) return syncInboxGraph(cfg);
   if (!cfg.smtpReady) return { replies: 0, bounces: 0, skipped: "no mailbox credentials" };
 
   const campaigns = await listCampaigns();
@@ -483,6 +487,76 @@ export async function syncInbox(cfg) {
       c.updatedAt = new Date().toISOString();
       await saveCampaign(c);
     }
+  }
+  return { replies, bounces };
+}
+
+// Reply/bounce detection over Microsoft Graph: reads each sender mailbox's
+// inbox and matches messages from campaign recipients as replies (or
+// mailer-daemon/postmaster messages that mention a recipient as bounces).
+export async function syncInboxGraph(cfg) {
+  const campaigns = await listCampaigns();
+  const active = campaigns.filter((c) => c.status === "active");
+  const map = new Map(); // email -> { c, r }
+  for (const c of active) for (const r of c.recipients || []) map.set(r.email.toLowerCase(), { c, r });
+  if (!map.size) return { replies: 0, bounces: 0 };
+
+  let token;
+  try { token = await graphToken(cfg); }
+  catch (e) { return { replies: 0, bounces: 0, error: `Graph auth: ${String(e.message || e)}` }; }
+
+  const senders = (cfg.graphSenders && cfg.graphSenders.length ? cfg.graphSenders : [cfg.graphSender]).filter(Boolean);
+  const sinceIso = new Date(Date.now() - 14 * 86400000).toISOString();
+  let replies = 0, bounces = 0;
+  const changed = new Set();
+
+  try {
+    for (const mailbox of senders) {
+      // Newest 100 inbox messages in the window; $search isn't needed - we
+      // filter by receivedDateTime and inspect from/subject/bodyPreview.
+      let url = `https://graph.microsoft.com/v1.0/users/${encodeURIComponent(mailbox)}/mailFolders/inbox/messages` +
+        `?$filter=receivedDateTime ge ${sinceIso}` +
+        `&$select=from,subject,bodyPreview,toRecipients&$top=100&$orderby=receivedDateTime desc`;
+      // follow one page of results (100 is plenty for a campaign window)
+      const res = await fetch(url, { headers: { authorization: `Bearer ${token}`, "content-type": "application/json" } });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) return { replies, bounces, error: `Graph read ${mailbox}: ${data?.error?.message || res.status}` };
+      for (const msg of data.value || []) {
+        const from = (msg.from?.emailAddress?.address || "").toLowerCase();
+        const subject = msg.subject || "";
+        if (map.has(from)) {
+          const { c, r } = map.get(from);
+          if (!["replied", "unsubscribed"].includes(r.status)) {
+            r.status = "replied";
+            r.repliedAt = new Date().toISOString();
+            r.respondedAt = r.respondedAt || r.repliedAt;
+            changed.add(c.id);
+            replies++;
+          }
+        } else if (/mailer-daemon|postmaster|mail delivery|delivery status|undeliverable|failure notice|returned mail/i.test(from + " " + subject)) {
+          const hay = (subject + " " + (msg.bodyPreview || "")).toLowerCase();
+          for (const [email, { c, r }] of map) {
+            if (hay.includes(email)) {
+              if (!["bounced", "replied", "unsubscribed"].includes(r.status)) {
+                r.status = "bounced";
+                r.bouncedAt = new Date().toISOString();
+                changed.add(c.id);
+                bounces++;
+              }
+              break;
+            }
+          }
+        }
+      }
+    }
+  } catch (err) {
+    return { replies, bounces, error: String(err.message || err) };
+  }
+
+  const byId = new Map(campaigns.map((c) => [c.id, c]));
+  for (const id of changed) {
+    const c = byId.get(id);
+    if (c) { c.updatedAt = new Date().toISOString(); await saveCampaign(c); }
   }
   return { replies, bounces };
 }
