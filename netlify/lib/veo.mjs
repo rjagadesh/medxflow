@@ -15,10 +15,25 @@ const g = (k) => process.env[k] || readCreds()[k] || "";
 // try each until one is reachable rather than pinning a single ID.
 const VEO_FALLBACKS = ["veo-3.0-generate-001", "veo-3.0-fast-generate-001", "veo-3.0-generate-preview", "veo-2.0-generate-001"];
 
-export function veoCfg() {
+// Parse the service account from either a base64 blob (VERTEX_SERVICE_ACCOUNT_B64
+// — the safest form for env vars, no newline/quote pitfalls) or raw JSON /
+// object (VERTEX_SERVICE_ACCOUNT). Repairs a common paste bug where the
+// private_key's \n escapes got turned into real newlines.
+function parseSA() {
+  const b64 = g("VERTEX_SERVICE_ACCOUNT_B64");
+  if (b64) { try { return JSON.parse(Buffer.from(String(b64).trim(), "base64").toString("utf8")); } catch {} }
   const raw = g("VERTEX_SERVICE_ACCOUNT");
-  let sa = null;
-  try { sa = typeof raw === "string" ? JSON.parse(raw) : raw; } catch {}
+  if (!raw) return null;
+  if (typeof raw !== "string") return raw;
+  try { return JSON.parse(raw); } catch {}
+  // Real newlines inside the JSON string values are invalid JSON — re-escape
+  // those that fall inside the private_key block and retry.
+  try { return JSON.parse(raw.replace(/-----BEGIN[\s\S]*?-----END[^"]*/g, (m) => m.replace(/\r?\n/g, "\\n"))); } catch {}
+  return null;
+}
+
+export function veoCfg() {
+  const sa = parseSA();
   const preferred = g("VEO_MODEL");
   // env/creds model first (if set), then the fallback list, de-duped
   const models = [...new Set([preferred, ...VEO_FALLBACKS].filter(Boolean))];
