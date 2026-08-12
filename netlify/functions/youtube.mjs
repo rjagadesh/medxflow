@@ -29,12 +29,22 @@ export default async (req) => {
       const d = await yt(token, "/channels?part=snippet,statistics,contentDetails&mine=true");
       const c = d.items?.[0];
       if (!c) return json({ configured: true, channel: null });
+      const uploads = c.contentDetails?.relatedPlaylists?.uploads || null;
+      // statistics.videoCount only counts PUBLIC videos and lags for hours
+      // after an upload; the uploads playlist's totalResults is the accurate,
+      // immediate count (incl. unlisted/private), so prefer it when higher.
+      let videoCount = Number(c.statistics.videoCount || 0);
+      if (uploads) {
+        const pl = await yt(token, `/playlistItems?part=id&maxResults=1&playlistId=${uploads}`);
+        const total = Number(pl.pageInfo?.totalResults);
+        if (Number.isFinite(total)) videoCount = Math.max(videoCount, total);
+      }
       return json({
         configured: true,
         channel: {
           id: c.id, title: c.snippet.title, thumbnail: c.snippet.thumbnails?.default?.url || null,
-          subscribers: c.statistics.subscriberCount, videos: c.statistics.videoCount, views: c.statistics.viewCount,
-          uploadsPlaylist: c.contentDetails?.relatedPlaylists?.uploads || null,
+          subscribers: c.statistics.subscriberCount, videos: String(videoCount), views: c.statistics.viewCount,
+          uploadsPlaylist: uploads,
         },
       });
     }
