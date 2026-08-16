@@ -54,7 +54,7 @@ async function safe(fn) {
 async function oneMetric(cfg, node, metric, extra = {}) {
   const r = await safe(() => graph(cfg, `${node}/insights`, {
     token: cfg.pageToken,
-    params: { metric, period: "days_28", ...extra },
+    params: { metric, period: "days_28", ...extra },  // extra can override period
   }));
   if (!r.ok) {
     const e = r.error || "";
@@ -106,9 +106,15 @@ async function overview(cfg) {
       params: { fields: "username,followers_count,media_count,profile_picture_url" },
     }));
     if (info.ok) {
+      // IG's newer insights want period=day + metric_type=total_value over a
+      // date range (days_28 is rejected for reach/profile_views). Aggregate the
+      // last 28 days ourselves.
+      const until = Math.floor(Date.now() / 1000);
+      const since = until - 27 * 86400;
+      const igExtra = { period: "day", metric_type: "total_value", since, until };
       const [reach, profileViews] = await Promise.all([
-        oneMetric(cfg, cfg.igId, "reach", { metric_type: "total_value" }),
-        oneMetric(cfg, cfg.igId, "profile_views", { metric_type: "total_value" }),
+        oneMetric(cfg, cfg.igId, "reach", igExtra),
+        oneMetric(cfg, cfg.igId, "profile_views", igExtra),
       ]);
       out.instagram = {
         username: info.data.username,
