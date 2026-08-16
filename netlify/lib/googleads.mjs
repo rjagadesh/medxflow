@@ -13,7 +13,7 @@ const g = (k) => process.env[k] || readCreds()[k] || "";
 
 export function googleAdsCfg() {
   return {
-    version: g("GOOGLE_ADS_API_VERSION") || "v18",
+    version: g("GOOGLE_ADS_API_VERSION") || "v24",
     developerToken: g("GOOGLE_ADS_DEVELOPER_TOKEN"),
     // OAuth can reuse the same Google app as YouTube, but the refresh token must
     // have been granted the AdWords scope, so keep it separate.
@@ -53,10 +53,17 @@ async function gaql(cfg, token, query) {
       },
       body: JSON.stringify(pageToken ? { query, pageToken } : { query }),
     });
+    const ct = res.headers.get("content-type") || "";
+    if (!ct.includes("json")) throw new Error(`Google Ads API ${cfg.version} returned no JSON (version may be retired). HTTP ${res.status}.`);
     const d = await res.json();
     if (!res.ok) {
-      const msg = d?.error?.message || d?.[0]?.error?.message || `Google Ads HTTP ${res.status}`;
-      throw new Error(msg);
+      // Prefer the nested GoogleAdsFailure message (e.g. DEVELOPER_TOKEN_NOT_APPROVED).
+      const gaErr = d?.error?.details?.[0]?.errors?.[0];
+      const code = gaErr?.errorCode ? Object.values(gaErr.errorCode)[0] : null;
+      const msg = gaErr?.message || d?.error?.message || d?.[0]?.error?.message || `Google Ads HTTP ${res.status}`;
+      const e = new Error(msg);
+      e.gaCode = code;
+      throw e;
     }
     for (const r of d.results || []) rows.push(r);
     pageToken = d.nextPageToken;

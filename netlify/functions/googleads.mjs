@@ -24,6 +24,9 @@ export default async (req) => {
     const m = await googleAdsMetrics(cfg, days);
     return json({ configured: true, ...m });
   } catch (e) {
-    return json({ configured: true, error: String(e.message || e) });
+    // Surface the token-approval state distinctly so the UI can show a
+    // "pending approval" note rather than a hard error.
+    const pending = /DEVELOPER_TOKEN_NOT_APPROVED|test account/i.test(String(e.message || ""));
+    return json({ configured: true, error: String(e.message || e), pendingApproval: pending });
   }
 };

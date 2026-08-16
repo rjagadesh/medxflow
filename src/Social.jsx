@@ -52,6 +52,15 @@ function GoogleAdsDash({ pw }) {
       </div>
     );
   }
+  if (d.pendingApproval) return (
+    <div className="ad-card seo-card" style={{ marginTop: 16 }}>
+      <div className="seo-card-h">📣 Google Ads — connecting</div>
+      <div className="gads-setup">
+        <p>✅ Google Ads is connected (OAuth + account IDs verified). Metrics will appear automatically once Google approves your <b>developer token</b> for Basic Access — the test-level token only works against test accounts.</p>
+        <p className="gads-vars">Status: developer-token Basic Access application pending (~5 business days). No further setup needed on this end.</p>
+      </div>
+    </div>
+  );
   if (d.error) return <div className="ad-card seo-card" style={{ marginTop: 16 }}><div className="seo-card-h">📣 Google Ads</div><div className="mt-carderr" style={{ padding: "12px 16px" }}>Couldn't load Google Ads: {d.error}</div></div>;
 
   const t = d.totals || {};
