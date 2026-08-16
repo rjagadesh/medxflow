@@ -496,6 +496,164 @@ export const POSTS = [
       { q: "Does it handle payment reconciliation?", a: "Patient payments post and reconcile alongside payer remittances, so balances stay accurate across the revenue cycle." },
     ],
   },
+  {
+    slug: "ai-agents-revenue-cycle-management-buyers-guide",
+    title: "AI Agents for Revenue Cycle Management: A Buyer's Guide",
+    description:
+      "A practical buyer's guide to AI agents for revenue cycle management — what they automate, how to evaluate vendors, the questions to ask, and how to decide build vs. buy.",
+    date: "2026-08-16",
+    category: "Buyer's Guide",
+    readMins: 9,
+    keywords: ["AI agents for revenue cycle management", "AI RCM vendor", "choose AI RCM software", "AI revenue cycle buyer's guide"],
+    related: { label: "See MedXFlow AI Agents for RCM", href: "/ai-agents-rcm" },
+    intro:
+      "\"AI agents for revenue cycle management\" is a crowded, fast-moving category, and the marketing sounds identical from vendor to vendor. This guide cuts through it: what these systems actually do, which workflows to automate first, how to evaluate a vendor honestly, and the specific questions that separate real capability from a demo. It's written to help you choose well — including whether MedXFlow is the right fit or not.",
+    sections: [
+      {
+        h: "What 'AI agents for RCM' actually means",
+        p: [
+          "An AI agent is software that completes a revenue-cycle task end to end — navigating payer portals and your systems, extracting and validating data, applying your rules, and escalating exceptions to staff. That's different from a dashboard (which shows you work) or RPA (which repeats a fixed script). The useful question isn't \"do you use AI?\" — every vendor says yes — but \"which specific tasks does an agent complete without a human, and what happens when it's unsure?\"",
+        ],
+      },
+      {
+        h: "Which workflows to automate first",
+        p: [
+          "You don't buy all of RCM at once. The highest-ROI starting points are the repetitive, high-volume, rules-based steps where errors are expensive: eligibility and benefits verification, prior authorization, claim scrubbing and follow-up, and denial triage. Automating these first removes the biggest denial drivers and frees the most staff time. Coding, payment posting and patient collections follow.",
+        ],
+      },
+      {
+        h: "How to evaluate a vendor (the criteria that matter)",
+        list: [
+          "Scope: which exact workflows an agent completes end to end — not just \"assists with.\"",
+          "Exception handling: what the agent does when it's unsure, and how those escalations reach your team.",
+          "Integrations: does it write back into your actual PMS/EHR (Epic, athenahealth, eClinicalWorks…), or just read?",
+          "Auditability: is every automated action logged, assigned and reversible?",
+          "Security: HIPAA handling, a signed BAA, encryption, US data residency, access controls.",
+          "Time-to-live: how long from contract to working on real claims.",
+          "Human fallback: is there a managed-services option if you'd rather hand more over?",
+        ],
+      },
+      {
+        h: "Questions to ask any vendor",
+        list: [
+          "\"Show me an agent completing an eligibility check and a denial from start to finish on a real case.\"",
+          "\"What percentage of this workflow runs without a human, and how is the rest escalated?\"",
+          "\"Which of my systems do you write back into, and how?\"",
+          "\"What happens when a payer changes their portal?\"",
+          "\"Will you sign a BAA, and where is PHI stored?\"",
+          "\"What does month one look like — supervised pilot or straight to production?\"",
+        ],
+      },
+      {
+        h: "Build vs. buy vs. outsource",
+        p: [
+          "Building AI agents in-house is rarely worth it for a practice or billing company — payer workflows change constantly, and maintaining that is a full-time engineering job. Buying an agent platform makes sense when you want to keep your team and give them leverage. Outsourcing to a human-led managed team makes sense when you'd rather hand the whole cycle over. The strongest option is often hybrid: agents handle the volume, and a managed team is there for overflow and complex work.",
+        ],
+      },
+      {
+        h: "Where MedXFlow fits",
+        p: [
+          "MedXFlow is an agent platform: AI agents run eligibility, prior authorization, coding, claims, denials, payment posting and patient collections, writing back into the systems you already use, with humans handling exceptions — and a human-led Managed Billing team available if you'd rather outsource entirely. Whether or not it's your pick, use the criteria above on every vendor you shortlist.",
+        ],
+      },
+    ],
+    faq: [
+      { q: "How much does AI RCM automation cost?", a: "Pricing varies by vendor and scope (per-workflow, per-claim, or managed-services models). More useful than the sticker price is the net effect: fewer denials, lower AR days, and staff time returned. Ask each vendor to model that against your volume." },
+      { q: "How is this different from our current RCM software?", a: "Most RCM software helps people do the work faster; AI agents complete specific tasks without a person and escalate exceptions. The line to test is how much runs with no human involved." },
+      { q: "Do we have to replace our systems?", a: "You shouldn't have to. Good AI RCM works alongside your existing PMS/EHR, writing data back rather than requiring a rip-and-replace." },
+    ],
+  },
+
+  {
+    slug: "ai-agents-vs-traditional-rcm-software",
+    title: "AI Agents vs. Traditional RCM Software: What's Different?",
+    description:
+      "Traditional RCM software helps your team work faster; AI agents complete the work. Here's how they differ, where each fits, and how to tell them apart in a demo.",
+    date: "2026-08-16",
+    category: "AI & Automation",
+    readMins: 6,
+    keywords: ["AI agents vs RCM software", "traditional RCM software", "AI revenue cycle software", "RCM automation software"],
+    related: { label: "See MedXFlow AI Agents for RCM", href: "/ai-agents-rcm" },
+    intro:
+      "Traditional RCM software and AI agents get marketed with the same words, but they do fundamentally different jobs. Understanding the difference tells you what you're actually buying — and what to look for in a demo.",
+    sections: [
+      {
+        h: "What traditional RCM software does",
+        p: [
+          "Classic RCM software organizes the work: it stores claims, surfaces worklists, flags issues, and reports on KPIs. It makes your team faster and more informed — but a person still does each step. The software is the workspace; the humans are the workers.",
+        ],
+      },
+      {
+        h: "What AI agents add",
+        p: [
+          "AI agents do the step, not just surface it. Instead of putting an eligibility check on a worklist, an agent runs the check, reads the result, validates it, and writes it back — escalating only what's ambiguous. The shift is from \"software that helps people work\" to \"software that does the work, supervised by people.\"",
+        ],
+      },
+      {
+        h: "Side by side",
+        list: [
+          "Worklists: traditional software surfaces them; agents work them down.",
+          "Payer portals: staff log in with traditional software; agents navigate them directly.",
+          "Denials: traditional software categorizes; agents triage, draft appeals and flag root cause.",
+          "Scaling volume: traditional software needs more staff; agents absorb volume and escalate exceptions.",
+        ],
+      },
+      {
+        h: "Where each fits",
+        p: [
+          "They're not mutually exclusive — most practices need a system of record and a way to see the work. AI agents sit on top of that, taking the repetitive volume off the team. The best setups combine both: clear visibility plus agents doing the grind. MedXFlow provides the agents and writes back into the systems you already run.",
+        ],
+      },
+    ],
+    faq: [
+      { q: "Do AI agents replace our RCM software?", a: "Not necessarily — you still need a system of record and visibility. Agents work on top of that, doing the repetitive tasks your team otherwise does by hand." },
+      { q: "How do I tell them apart in a demo?", a: "Ask the vendor to show a task running with no human clicking through it. If a person is doing every step and the software is just displaying it, that's traditional software, not an agent." },
+    ],
+  },
+
+  {
+    slug: "in-house-vs-outsourced-vs-ai-rcm",
+    title: "In-House vs. Outsourced vs. AI-Agent RCM: How to Decide",
+    description:
+      "Three ways to run your revenue cycle — an in-house team, an outsourced billing company, or AI agents. Here's the trade-off in cost, control and scale, and how to choose.",
+    date: "2026-08-16",
+    category: "Healthcare RCM",
+    readMins: 7,
+    keywords: ["in-house vs outsourced billing", "outsourced medical billing", "AI RCM vs outsourcing", "revenue cycle staffing"],
+    related: { label: "See MedXFlow Managed Billing", href: "/products/managed-billing" },
+    intro:
+      "Every practice runs its revenue cycle one of three ways: an in-house team, an outsourced billing company, or automation — and increasingly, a mix. Each trades cost, control and scalability differently. Here's how to think about which fits you.",
+    sections: [
+      {
+        h: "In-house team",
+        p: [
+          "Maximum control and institutional knowledge, but you carry the cost, hiring, training and turnover. Small teams fall behind during volume spikes, and losing an experienced biller can set you back for months. Works well when volume is steady and you value tight control.",
+        ],
+      },
+      {
+        h: "Outsourced billing company",
+        p: [
+          "Someone else runs the cycle for a percentage of collections. It removes the staffing headache and adds specialist expertise, but you trade some visibility and control, and quality varies by vendor. Works well when you'd rather not run billing at all.",
+        ],
+      },
+      {
+        h: "AI agents",
+        p: [
+          "Automation keeps the work in-house but takes the repetitive volume off your team — eligibility, authorization, claims follow-up, denials — with staff handling exceptions. You keep control and visibility while scaling capacity without hiring. Works well when you want leverage for the team you already have.",
+        ],
+      },
+      {
+        h: "The hybrid most practices land on",
+        p: [
+          "In practice the strongest setup blends them: AI agents handle the high-volume, repetitive work; your team owns the judgment calls; and a managed billing team is available for overflow or the parts you'd rather hand off. MedXFlow supports this directly — agents plus an optional human-led Managed Billing team — so you can shift the balance as you grow.",
+        ],
+      },
+    ],
+    faq: [
+      { q: "Is outsourcing cheaper than AI automation?", a: "It depends on volume and model. Outsourcing is usually a percentage of collections; automation is typically a platform cost. The better comparison is net revenue and control, not just the fee — model both against your numbers." },
+      { q: "Can we combine AI agents with a billing team?", a: "Yes, and many practices do. Agents handle repetitive volume while a managed team covers overflow and complex work — you decide where the line sits." },
+    ],
+  },
 ];
 
 export const post = (slug) => POSTS.find((p) => p.slug === slug);
