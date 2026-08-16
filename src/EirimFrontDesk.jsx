@@ -188,6 +188,7 @@ export function Nav() {
               </div>
             </div>
           </div>
+          <a href="https://platform.medxflow.ai/login" className="nav-platform">Platform</a>
           <a href="#cta">{t("nav.contact")}</a>
           <a href="/#faq">{t("nav.faq")}</a>
           <a href="#top" className="nav-tour" onClick={(e) => { e.preventDefault(); startTour(); }}>▶ {t("nav.tour")}</a>
@@ -201,6 +202,7 @@ export function Nav() {
       <div className="nav-mobile">
         <a href="/products" onClick={closeMenu}>{t("nav.products")}</a>
         <a href="/specialties" onClick={closeMenu}>Specialties</a>
+        <a href="https://platform.medxflow.ai/login" onClick={closeMenu}>Platform</a>
         <a href="#cta" onClick={closeMenu}>{t("nav.contact")}</a>
         <a href="/#faq" onClick={closeMenu}>{t("nav.faq")}</a>
         <a href="#top" onClick={(e) => { e.preventDefault(); closeMenu(); startTour(); }}>▶ {t("nav.tour")}</a>
@@ -1101,6 +1103,8 @@ export const CSS = `
 .brand span{line-height:1}
 .nav-links{display:flex; align-items:center; gap:24px; font-weight:600; font-size:15px; color:rgba(13,43,82,.72)}
 .nav-links a:hover{color:var(--spruce)}
+.nav-platform{display:inline-flex; align-items:center; padding:7px 16px; border:1px solid rgba(13,43,82,.22); border-radius:8px; color:var(--spruce); font-weight:700; transition:background .15s,border-color .15s}
+.nav-platform:hover{background:rgba(13,43,82,.06); border-color:rgba(13,43,82,.4)}
 
 /* products dropdown */
 .nav-dd{position:relative}
