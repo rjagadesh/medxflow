@@ -171,6 +171,163 @@ export const POSTS = [
       },
     ],
   },
+  {
+    slug: "ai-agents-vs-rpa-healthcare-rcm",
+    title: "AI Agents vs. RPA in Healthcare RCM: What's the Difference?",
+    description:
+      "AI agents and RPA both automate revenue-cycle work, but they fail — and scale — very differently. Here's how they compare for healthcare RCM, in plain terms.",
+    date: "2026-08-15",
+    category: "AI & Automation",
+    readMins: 6,
+    keywords: ["AI agents vs RPA", "RPA healthcare RCM", "AI agents revenue cycle", "RCM automation"],
+    related: { label: "See MedXFlow AI Agents for RCM", href: "/ai-agents-rcm" },
+    intro:
+      "\"Automation\" in healthcare RCM usually means one of two things: traditional RPA (robotic process automation) or newer AI agents. They sound similar and often get lumped together, but they behave very differently when a payer portal changes or a claim doesn't fit the script. Understanding the difference helps you pick the right tool — and set the right expectations.",
+    sections: [
+      {
+        h: "What RPA does",
+        p: [
+          "RPA follows a recorded script: click here, copy this field, paste it there. It's fast and reliable for stable, high-volume tasks that never change. But RPA is brittle — when a payer redesigns a portal or an unexpected screen appears, the script breaks and someone has to re-record it. RPA doesn't understand the task; it repeats keystrokes.",
+        ],
+      },
+      {
+        h: "What AI agents do",
+        p: [
+          "An AI agent works from the goal, not a fixed script. It reads the screen or document, decides the next step, extracts and validates data, and adapts when something is different. When it isn't sure, it escalates to a person instead of failing silently. That adaptability is what lets agents handle the messy variety of real payer workflows.",
+        ],
+      },
+      {
+        h: "Where each fits in the revenue cycle",
+        p: [
+          "RPA suits narrow, unchanging steps. AI agents suit end-to-end workflows that span systems and vary by payer — eligibility, prior authorization, claims follow-up and denials. MedXFlow uses AI agents so automation survives the constant change in payer rules and portals, with humans handling the exceptions.",
+        ],
+      },
+      {
+        h: "The practical test",
+        p: [
+          "Ask a simple question of any \"automation\": what happens when the payer changes something? If the answer is \"it breaks until we rebuild the script,\" that's RPA. If it's \"it adapts and flags anything unusual to staff,\" that's an AI agent. For a revenue cycle that changes weekly, the second behavior is what keeps cash moving.",
+        ],
+      },
+    ],
+    faq: [
+      { q: "Is RPA still useful in RCM?", a: "Yes, for narrow, stable, high-volume steps that rarely change. The limitation is brittleness — RPA breaks when portals or rules change, which happens constantly in healthcare." },
+      { q: "Do AI agents remove the need for staff?", a: "No. They handle repetitive volume and escalate exceptions to staff, who focus on judgment calls. Every action stays tracked and auditable." },
+    ],
+  },
+
+  {
+    slug: "how-ai-automates-eligibility-verification",
+    title: "How AI Automates Insurance Eligibility Verification",
+    description:
+      "A step-by-step look at how AI automates insurance eligibility verification — from patient data to a verified benefits result written back to your system.",
+    date: "2026-08-15",
+    category: "Eligibility",
+    readMins: 6,
+    keywords: ["AI eligibility verification", "automated eligibility verification", "AI insurance verification", "eligibility automation"],
+    related: { label: "See MedXFlow Eligibility Verification", href: "/products/eligibility-verification" },
+    intro:
+      "Eligibility is the first place claims go wrong — and the cheapest place to fix them. Verifying coverage before the visit stops denials that would otherwise surface weeks later. AI automates that check so it happens for every appointment, not just the ones staff have time for.",
+    sections: [
+      {
+        h: "The workflow, step by step",
+        p: [
+          "Automated eligibility verification runs the same path a staffer would, without the manual portal work: take the patient and insurance details, look up the payer, request eligibility, read back active coverage, co-pays, deductibles and plan limits, validate it against the visit, document the result, and write it into your system. Anything ambiguous is flagged for a person.",
+        ],
+      },
+      {
+        h: "Why timing matters",
+        p: [
+          "Coverage changes — especially at month boundaries. Checking once at scheduling and again shortly before the visit catches plan changes while you can still act on them, rather than discovering them on a denied claim. Automation makes that double-check practical because it costs no extra staff time.",
+        ],
+      },
+      {
+        h: "What it prevents",
+        p: [
+          "Eligibility is consistently one of the top denial reasons. Verifying every patient up front removes that whole category of denials at the source, so fewer claims bounce and less staff time goes to rework and appeals.",
+        ],
+      },
+    ],
+    faq: [
+      { q: "Can eligibility really be checked for every patient?", a: "Yes — that's the point of automating it. Because the check runs without manual portal work, it can cover every appointment instead of a sample, including a re-check close to the visit." },
+      { q: "Does it work with our practice management system?", a: "Verified coverage is written back into the systems you already run, so front-desk and billing staff see results in their normal workflow." },
+    ],
+  },
+
+  {
+    slug: "ai-ar-follow-up-healthcare",
+    title: "AI-Powered AR Follow-Up in Healthcare",
+    description:
+      "How AI keeps accounts receivable moving — automating payer follow-up, denial triage and patient balance outreach so cash doesn't stall in aging AR.",
+    date: "2026-08-16",
+    category: "Accounts Receivable",
+    readMins: 6,
+    keywords: ["AI AR follow-up", "accounts receivable automation healthcare", "AI payer follow-up", "reduce AR days"],
+    related: { label: "See MedXFlow Denial Management", href: "/products/denial-management" },
+    intro:
+      "Accounts receivable is where revenue goes to wait. Claims that aren't followed up on age, and aging claims get paid slower — or not at all. AR follow-up is high-volume, repetitive, and easy to fall behind on, which makes it a natural fit for automation.",
+    sections: [
+      {
+        h: "Why AR days climb",
+        p: [
+          "Follow-up is manual and endless: checking claim status on payer portals, re-working denials, chasing patient balances. When staff fall behind, claims cross timely-filing and appeal windows, and AR days rise. The problem isn't effort — it's that there's more repetitive follow-up than any team can keep up with.",
+        ],
+      },
+      {
+        h: "What AI automates",
+        p: [
+          "AI agents check claim status automatically instead of staff logging into portals, triage denials by reason and draft appeals, and run patient balance follow-up with clear statements and reminders. Staff step in on the exceptions — the complex payer disputes that actually need a person.",
+        ],
+      },
+      {
+        h: "The result: lower AR days",
+        p: [
+          "When follow-up never stalls, claims get worked inside payer windows and cash arrives faster. Combined with fewer denials up front, automated follow-up is one of the most direct levers on AR days and cash flow.",
+        ],
+      },
+    ],
+    faq: [
+      { q: "What is a good AR days number?", a: "It varies by specialty, but lower and trending-down is the goal. The biggest driver of high AR days is follow-up that falls behind — which is exactly what automation prevents." },
+      { q: "Does AI handle patient balances too?", a: "Yes — automated patient statements and gentle follow-up cover the patient side of AR, alongside payer follow-up and denial work." },
+    ],
+  },
+
+  {
+    slug: "how-ai-automates-claims-management",
+    title: "How AI Automates Healthcare Claims Management",
+    description:
+      "From clean claim creation to submission and status follow-up — how AI automates healthcare claims management to reduce rejections and speed up payment.",
+    date: "2026-08-16",
+    category: "Claims",
+    readMins: 6,
+    keywords: ["AI claims management", "healthcare claims automation", "claims processing automation", "clean claims"],
+    related: { label: "See MedXFlow Claims Submission", href: "/products/claims-submission" },
+    intro:
+      "A clean claim gets paid the first time; a dirty one comes back as a denial or rejection and has to be reworked. Claims management is really about getting more claims right before they leave — and following up on the rest so nothing stalls. AI automates both sides.",
+    sections: [
+      {
+        h: "Clean claims before submission",
+        p: [
+          "Automation scrubs claims against payer rules and flags problems — missing modifiers, medical-necessity mismatches, incomplete data — before the claim is submitted. Catching errors here, rather than after a denial, is the single biggest lever on first-pass acceptance.",
+        ],
+      },
+      {
+        h: "Submission and tracking",
+        p: [
+          "AI generates and submits compliant claims to every payer and clearinghouse, then tracks status automatically instead of staff checking portals. When a payer needs something, it surfaces the exception rather than letting the claim sit.",
+        ],
+      },
+      {
+        h: "Closing the loop with denials",
+        p: [
+          "Claims that do come back are triaged by reason and routed for correction and appeal, with the root-cause pattern fed back upstream. Over time that loop raises first-pass acceptance and shrinks the rework pile.",
+        ],
+      },
+    ],
+    faq: [
+      { q: "What is first-pass acceptance?", a: "The share of claims a payer accepts on the first submission, without a rejection or denial. Higher first-pass acceptance means faster payment and less rework — which claim scrubbing before submission directly improves." },
+      { q: "Does AI submit to all payers?", a: "MedXFlow generates and submits compliant claims to every major payer and clearinghouse, and follows up on status automatically." },
+    ],
+  },
 ];
 
 export const post = (slug) => POSTS.find((p) => p.slug === slug);
