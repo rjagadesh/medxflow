@@ -42,6 +42,17 @@ export async function publishInstagram(cfg, { caption, imageUrl }) {
   if (!cfg.igId || !cfg.token) throw new Error("Instagram not configured (META_IG_ID).");
   if (!imageUrl) throw new Error("Instagram requires an image.");
   const created = await graph(cfg.version, `${cfg.igId}/media`, { token: cfg.token, method: "POST", body: { image_url: imageUrl, caption } });
+  // Instagram downloads the image from image_url asynchronously; publishing
+  // before the container is FINISHED gives "Media ID is not available".
+  // Poll status_code until ready (up to ~30s), then publish.
+  for (let i = 0; i < 15; i++) {
+    const st = await graph(cfg.version, `${created.id}?fields=status_code,status`, { token: cfg.token });
+    if (st.status_code === "FINISHED") break;
+    if (st.status_code === "ERROR" || st.status_code === "EXPIRED") {
+      throw new Error(`Instagram couldn't process the image (${st.status_code}${st.status ? ": " + st.status : ""}). The image URL must be public, JPEG/PNG, and under 8MB.`);
+    }
+    await new Promise((r) => setTimeout(r, 2000));
+  }
   return graph(cfg.version, `${cfg.igId}/media_publish`, { token: cfg.token, method: "POST", body: { creation_id: created.id } });
 }
 
