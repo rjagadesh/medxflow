@@ -131,6 +131,42 @@ async function overview(cfg) {
   return out;
 }
 
+// Fetch a daily time-series for one metric → [{ d:"YYYY-MM-DD", v:number }].
+async function series(cfg, node, metric, since, until, extra = {}) {
+  const r = await safe(() => graph(cfg, `${node}/insights`, {
+    token: cfg.pageToken,
+    params: { metric, period: "day", since, until, ...extra },
+  }));
+  if (!r.ok) return { points: [], error: r.error };
+  const m = (r.data.data || [])[0];
+  const points = (m?.values || []).map((v) => ({ d: (v.end_time || "").slice(0, 10), v: Number(v.value) || 0 }));
+  return { points };
+}
+
+// Day-by-day trends for the charts. profile_views has no daily series (totals
+// only), so it's intentionally omitted here.
+async function trends(cfg) {
+  const until = Math.floor(Date.now() / 1000);
+  const since = until - 27 * 86400;
+  const out = { since, until, page: null, instagram: null };
+
+  if (cfg.pageId && cfg.pageToken) {
+    const [views, engagements, follows] = await Promise.all([
+      series(cfg, cfg.pageId, "page_views_total", since, until),
+      series(cfg, cfg.pageId, "page_post_engagements", since, until),
+      series(cfg, cfg.pageId, "page_daily_follows_unique", since, until),
+    ]);
+    out.page = { views, engagements, follows };
+  }
+  if (cfg.igId && cfg.pageToken) {
+    const [reach] = await Promise.all([
+      series(cfg, cfg.igId, "reach", since, until),
+    ]);
+    out.instagram = { reach };
+  }
+  return out;
+}
+
 // Normalise Messenger + Instagram conversations into one inbox list.
 async function inbox(cfg) {
   if (!cfg.pageId || !cfg.pageToken) return { threads: [] };
@@ -327,6 +363,7 @@ export default async (req) => {
     }
 
     if (action === "overview") return json({ configured: true, ...(await overview(cfg)), hasIg: !!cfg.igId, hasAds: !!cfg.adAccount });
+    if (action === "trends") return json({ configured: true, ...(await trends(cfg)) });
     if (action === "inbox") return json({ configured: true, ...(await inbox(cfg)) });
     if (action === "posts") return json({ configured: true, ...(await posts(cfg)) });
     if (action === "comments") return json({ configured: true, ...(await comments(cfg)) });

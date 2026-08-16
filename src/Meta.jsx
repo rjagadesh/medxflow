@@ -124,6 +124,79 @@ export function Insights({ ov }) {
   );
 }
 
+// One day-by-day area chart (inline SVG, theme-aware). Emphasizes the latest
+// point and reports the total + last value.
+function TrendChart({ title, ic, points, color = "#3DDCC9" }) {
+  const pts = (points || []).filter((p) => p.d);
+  const W = 300, H = 84, PT = 8, PB = 16, PL = 4, PR = 4;
+  const total = pts.reduce((s, p) => s + p.v, 0);
+  const last = pts.length ? pts[pts.length - 1].v : null;
+  const max = Math.max(1, ...pts.map((p) => p.v));
+  const n = pts.length;
+  const x = (i) => (n <= 1 ? PL : PL + (i * (W - PL - PR)) / (n - 1));
+  const y = (v) => PT + (1 - v / max) * (H - PT - PB);
+  const line = pts.map((p, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(p.v).toFixed(1)}`).join(" ");
+  const area = pts.length ? `${line} L${x(n - 1).toFixed(1)},${H - PB} L${x(0).toFixed(1)},${H - PB} Z` : "";
+  const gid = "g_" + title.replace(/\W/g, "");
+  const short = (d) => (d || "").slice(5).replace("-", "/");
+  return (
+    <div className="tr-card">
+      <div className="tr-head">
+        <span className="tr-title">{ic} {title}</span>
+        <span className="tr-vals"><b>{total.toLocaleString()}</b> total · last {last ?? "—"}</span>
+      </div>
+      {n === 0 ? (
+        <div className="tr-empty">No daily data available.</div>
+      ) : (
+        <svg className="tr-svg" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" role="img" aria-label={`${title} daily trend`}>
+          <defs>
+            <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stopColor={color} stopOpacity="0.35" />
+              <stop offset="100%" stopColor={color} stopOpacity="0.02" />
+            </linearGradient>
+          </defs>
+          <line x1={PL} y1={H - PB} x2={W - PR} y2={H - PB} className="tr-base" />
+          {area && <path d={area} fill={`url(#${gid})`} />}
+          <path d={line} fill="none" stroke={color} strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+          {pts.map((p, i) => (
+            <circle key={i} cx={x(i)} cy={y(p.v)} r={i === n - 1 ? 3.2 : 1.6} fill={color}>
+              <title>{p.d}: {p.v}</title>
+            </circle>
+          ))}
+          {pts.length > 1 && (
+            <>
+              <text className="tr-x" x={PL} y={H - 4} textAnchor="start">{short(pts[0].d)}</text>
+              <text className="tr-x" x={W - PR} y={H - 4} textAnchor="end">{short(pts[n - 1].d)}</text>
+            </>
+          )}
+        </svg>
+      )}
+    </div>
+  );
+}
+
+export function Trends({ pw }) {
+  const [t, setT] = useState(null);
+  useEffect(() => { call(pw, "trends").then(setT).catch((e) => setT({ error: e.message })); }, [pw]);
+  if (!t) return <div className="ad-card seo-card" style={{ marginTop: 16 }}><div className="seo-card-h">📈 Daily trends</div><div className="ad-empty">Loading trends…</div></div>;
+  if (t.error) return null;
+  const p = t.page, ig = t.instagram;
+  const hasAny = (p && (p.views?.points?.length || p.engagements?.points?.length || p.follows?.points?.length)) || (ig && ig.reach?.points?.length);
+  if (!hasAny) return null;
+  return (
+    <div className="ad-card seo-card" style={{ marginTop: 16 }}>
+      <div className="seo-card-h">📈 Daily trends — last 28 days</div>
+      <div className="tr-grid">
+        {p && <TrendChart title="Facebook — Page views" ic="📘" points={p.views?.points} color="#5AA9F5" />}
+        {p && <TrendChart title="Facebook — Engagements" ic="📘" points={p.engagements?.points} color="#5AA9F5" />}
+        {p && <TrendChart title="Facebook — New follows" ic="📘" points={p.follows?.points} color="#5AA9F5" />}
+        {ig && <TrendChart title="Instagram — Reach" ic="📷" points={ig.reach?.points} color="#3DDCC9" />}
+      </div>
+      <div className="tr-note">Instagram profile views are totals-only in Meta's API, so they're shown as a stat above, not a daily chart.</div>
+    </div>
+  );
+}
+
 export function Feed({ pw, ov }) {
   const [data, setData] = useState(null);
   const [tab, setTab] = useState(ov?.page ? "facebook" : "instagram");
@@ -454,6 +527,18 @@ export function Ads({ pw }) {
 }
 
 export const CSS = `
+.tr-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; padding:16px}
+.tr-card{background:rgba(207,224,242,.04); border:1px solid rgba(207,224,242,.1); border-radius:12px; padding:12px 14px 6px}
+.tr-head{display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:6px}
+.tr-title{font-size:13px; font-weight:700; color:#E8EEF6}
+.tr-vals{font-size:11.5px; color:rgba(232,238,246,.5); font-variant-numeric:tabular-nums; white-space:nowrap}
+.tr-vals b{color:#7FD8CE; font-weight:800}
+.tr-svg{width:100%; height:84px; display:block}
+.tr-base{stroke:rgba(207,224,242,.14); stroke-width:1}
+.tr-x{fill:rgba(232,238,246,.4); font-size:9px; font-family:'Spline Sans Mono',monospace}
+.tr-empty{font-size:12px; color:rgba(232,238,246,.4); padding:24px 4px; text-align:center}
+.tr-note{padding:0 16px 14px; font-size:11.5px; color:rgba(232,238,246,.45)}
+@media(max-width:640px){.tr-grid{grid-template-columns:1fr}}
 .mt-subnav{display:flex; gap:8px; margin-bottom:16px; flex-wrap:wrap}
 .mt-subnav button{background:rgba(207,224,242,.06); border:1px solid rgba(207,224,242,.12); color:rgba(232,238,246,.75); padding:8px 14px; border-radius:9px; font-size:13.5px; font-weight:600; cursor:pointer}
 .mt-subnav button.on{background:rgba(61,220,201,.14); border-color:rgba(61,220,201,.45); color:#7FD8CE}

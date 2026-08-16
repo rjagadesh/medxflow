@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Insights, Feed, Inbox, Publish, Ads, MetaSetup, CSS as META_CSS } from "./Meta.jsx";
+import { Insights, Trends, Feed, Inbox, Publish, Ads, MetaSetup, CSS as META_CSS } from "./Meta.jsx";
 import Scheduler from "./Scheduler.jsx";
 import WhatsApp from "./WhatsApp.jsx";
 import LinkedIn from "./LinkedIn.jsx";
@@ -104,7 +104,7 @@ export default function Social({ pw }) {
     if (!ov) return <div className="ad-empty">Connecting to Meta…</div>;
     if (ov.error) return <div className="ad-err">Couldn't connect to Meta. Check the META_* configuration.</div>;
     if (ov.configured === false) return <MetaSetup reason={ov.reason} />;
-    if (sec === "dashboard") return <><Insights ov={ov} /><YouTubeDash pw={pw} /></>;
+    if (sec === "dashboard") return <><Insights ov={ov} /><Trends pw={pw} /><YouTubeDash pw={pw} /></>;
     if (sec === "feed") return <Feed pw={pw} ov={ov} />;
     if (sec === "publish") return <Publish pw={pw} hasIg={ov.hasIg} />;
     if (sec === "ads") return <Ads pw={pw} />;
