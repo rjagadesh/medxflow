@@ -4,6 +4,7 @@ import {
   promoteToCampaign,
   convertWonToIncome,
   createContact,
+  deleteContact,
   loadCrm,
   saveCrm,
   normEmail,
@@ -44,6 +45,9 @@ export default async (req) => {
     if (action === "create") {
       const crm = await createContact(body);
       return json({ ok: true, crm });
+    }
+    if (action === "delete") {
+      return json(await deleteContact(body.email));
     }
     if (action === "promote") {
       const r = await promoteToCampaign(body.email, body.campaignId, body.name, body.clinic);

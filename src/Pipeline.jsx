@@ -39,6 +39,20 @@ export default function Pipeline({ pw, onOpen }) {
       setContacts(prev);
     }
   };
+  const remove = async (email, label) => {
+    if (!window.confirm(`Remove ${label} from the pipeline?`)) return;
+    setErr("");
+    setMsg("");
+    const prev = contacts;
+    setContacts((cs) => cs.filter((c) => c.email !== email));
+    try {
+      await contactsApi(pw, { action: "delete", email });
+      setMsg(`Removed ${label} from the pipeline ✓`);
+    } catch (e) {
+      setErr(e.message);
+      setContacts(prev);
+    }
+  };
   const convert = async (email) => {
     setMsg("");
     try {
@@ -112,6 +126,15 @@ export default function Pipeline({ pw, onOpen }) {
                     onDragStart={(e) => e.dataTransfer.setData("text", c.email)}
                     onClick={() => onOpen(c.email)}
                   >
+                    <button
+                      className="pl-del"
+                      draggable={false}
+                      title="Remove from pipeline"
+                      aria-label={`Remove ${c.name || c.email} from the pipeline`}
+                      onClick={(e) => { e.stopPropagation(); remove(c.email, c.name || c.email); }}
+                    >
+                      ×
+                    </button>
                     <div className="pl-card-name">{c.name || c.email}</div>
                     <div className="pl-card-clinic">{c.clinic || c.email}</div>
                     <div className="pl-card-foot">
@@ -197,10 +220,15 @@ const CSS = `
 .pl-col-hd{display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; gap:6px}
 .pl-col-meta{font-size:11.5px; color:rgba(232,238,246,.5); white-space:nowrap}
 .pl-cards{display:flex; flex-direction:column; gap:8px; min-height:40px}
-.pl-card{background:#16305A; border:1px solid rgba(207,224,242,.14); border-radius:10px; padding:11px 12px; cursor:pointer; transition:transform .1s, box-shadow .1s}
+.pl-card{position:relative; background:#16305A; border:1px solid rgba(207,224,242,.14); border-radius:10px; padding:11px 12px; cursor:pointer; transition:transform .1s, box-shadow .1s}
 .pl-card:hover{transform:translateY(-1px); box-shadow:0 8px 20px rgba(0,0,0,.3)}
 .pl-card:active{cursor:grabbing}
-.pl-card-name{font-weight:700; font-size:14px; color:#fff}
+.pl-card-name{font-weight:700; font-size:14px; color:#fff; padding-right:20px}
+.pl-del{position:absolute; top:5px; right:5px; width:20px; height:20px; display:grid; place-items:center; padding:0; background:transparent; border:1px solid transparent; border-radius:6px; color:rgba(232,238,246,.45); font-size:16px; line-height:1; font-family:inherit; cursor:pointer; opacity:0; transition:opacity .12s, background .12s, color .12s}
+.pl-card:hover .pl-del{opacity:1}
+.pl-del:hover{background:rgba(224,122,95,.18); border-color:rgba(224,122,95,.4); color:#E07A5F}
+.pl-del:focus-visible{opacity:1; outline:2px solid #3DDCC9; outline-offset:1px}
+@media (hover:none){.pl-del{opacity:1}}
 .pl-card-clinic{font-size:12.5px; color:rgba(232,238,246,.65); margin:2px 0 8px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
 .pl-card-foot{display:flex; align-items:center; justify-content:space-between; gap:6px}
 .pl-val{font-size:12.5px; font-weight:700; color:#3DDCC9}

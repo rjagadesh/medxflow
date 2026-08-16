@@ -50,6 +50,20 @@ async function loadAllCrm() {
   return new Map(list.map((r) => [normEmail(r.email), r]));
 }
 
+// Remove a contact from the pipeline. Most contacts are derived from source
+// feeds (leads/visitors/campaigns), so dropping the CRM record would just let
+// them reappear on the next build — instead we flag the overlay and filter it
+// out in buildContacts. Reversible: clear `deleted` on the record to restore.
+export async function deleteContact(email) {
+  const key = normEmail(email);
+  if (!key || !key.includes("@")) throw new Error("A valid email is required.");
+  const crm = (await loadCrm(key)) || { email: key };
+  crm.deleted = true;
+  crm.deletedAt = new Date().toISOString();
+  await saveCrm(crm);
+  return { ok: true, email: key };
+}
+
 // Manually add a prospect to the pipeline (stored as a CRM record with the
 // contact fields, since there's no source feed for it). Merges onto any
 // existing record for that email rather than clobbering it.
@@ -61,6 +75,9 @@ export async function createContact({ email, name, clinic, phone, stage, dealVal
     ...existing,
     email: key,
     manual: true,
+    // Re-adding an email that was removed earlier brings it back.
+    deleted: false,
+    deletedAt: null,
     name: name || existing.name || "",
     clinic: clinic || existing.clinic || "",
     phone: phone || existing.phone || "",
@@ -82,10 +99,14 @@ export async function buildContacts({ includePageless = false } = {}) {
     loadAllCrm(),
   ]);
 
+  // Removed from the pipeline — skipped no matter which feed surfaces them.
+  const removed = new Set([...crmMap].filter(([, r]) => r.deleted).map(([k]) => k));
+
   const map = new Map();
   const ensure = (email) => {
     const key = normEmail(email);
     if (!key || !key.includes("@")) return null;
+    if (removed.has(key)) return null;
     if (!map.has(key)) {
       map.set(key, {
         email: key, name: "", clinic: "", phone: "", visitorId: null,
