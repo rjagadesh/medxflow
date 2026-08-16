@@ -12,6 +12,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { PRODUCTS } from "../src/products.data.js";
 import { SPECIALTIES } from "../src/specialties.data.js";
+import { POSTS } from "../src/blog.data.js";
 import { en } from "../src/i18n.strings.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -28,7 +29,29 @@ const routes = [
   ...PRODUCTS.map((p) => ({ path: `/products/${p.slug}`, title: `${p.name} · MedXFlow`, desc: p.tagline })),
   { path: "/specialties", title: "Specialties · AI agents by practice type · MedXFlow", desc: "AI revenue-cycle agents tuned to your specialty - MedSpa, dental, mental health, dermatology, physical therapy, cardiology, orthopedics and primary care." },
   ...SPECIALTIES.map((s) => ({ path: `/specialties/${s.slug}`, title: `${s.name} · AI agents for the revenue cycle · MedXFlow`, desc: s.tagline })),
+  { path: "/blog", title: "Resources · RCM insights for medical practices · MedXFlow", desc: "Practical guides on claim denials, prior authorization, coding and the healthcare revenue cycle - for the people who run medical billing." },
+  ...POSTS.map((p) => ({ path: `/blog/${p.slug}`, title: `${p.title} · MedXFlow`, desc: p.description, article: p })),
 ];
+
+// Article + FAQ JSON-LD for a blog post (richer than the default WebPage graph).
+function articleLd(p, url) {
+  const graph = [
+    {
+      "@type": "Article", headline: p.title, description: p.description,
+      datePublished: p.date, dateModified: p.date, url,
+      author: { "@type": "Organization", name: "MedXFlow" },
+      publisher: { "@id": `${ORIGIN}/#organization` },
+      mainEntityOfPage: url, articleSection: p.category, keywords: (p.keywords || []).join(", "),
+    },
+  ];
+  if (p.faq?.length) {
+    graph.push({
+      "@type": "FAQPage",
+      mainEntity: p.faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+    });
+  }
+  return JSON.stringify({ "@context": "https://schema.org", "@graph": graph });
+}
 
 const template = fs.readFileSync(path.join(DIST, "index.html"), "utf8");
 
@@ -47,11 +70,24 @@ function headFor(r) {
     .replace(/<meta[^>]*\bname="twitter:title"[^>]*>/, `<meta name="twitter:title" content="${t}" />`)
     .replace(/<meta[^>]*\bname="twitter:description"[^>]*>/, `<meta name="twitter:description" content="${d}" />`);
 
-  const ld = JSON.stringify({
-    "@context": "https://schema.org", "@type": "WebPage",
-    name: r.title, description: r.desc, url, isPartOf: { "@id": `${ORIGIN}/#website` },
-  });
+  const ld = r.article
+    ? articleLd(r.article, url)
+    : JSON.stringify({
+        "@context": "https://schema.org", "@type": "WebPage",
+        name: r.title, description: r.desc, url, isPartOf: { "@id": `${ORIGIN}/#website` },
+      });
   return out.replace("</head>", `    <script type="application/ld+json">${ld}</script>\n  </head>`);
+}
+
+// Regenerate sitemap.xml from every known route (homepage + all prerendered
+// routes) so new pages like blog posts are always included.
+function writeSitemap() {
+  const today = new Date().toISOString().slice(0, 10);
+  const urls = ["/", ...routes.map((r) => r.path)];
+  const body = urls.map((u) => `  <url>\n    <loc>${ORIGIN}${u === "/" ? "/" : u}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>${u === "/" ? "1.0" : "0.7"}</priority>\n  </url>`).join("\n");
+  fs.writeFileSync(path.join(DIST, "sitemap.xml"),
+    `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`);
+  return urls.length;
 }
 
 let n = 0;
@@ -61,4 +97,6 @@ for (const r of routes) {
   fs.writeFileSync(path.join(dir, "index.html"), headFor(r));
   n++;
 }
+const smCount = writeSitemap();
 console.log(`✓ prerendered ${n} routes with per-page meta + JSON-LD`);
+console.log(`✓ sitemap.xml regenerated with ${smCount} URLs`);

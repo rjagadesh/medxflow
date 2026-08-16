@@ -6,6 +6,7 @@ import Chatbot from "./Chatbot.jsx";
 import Admin from "./Admin.jsx";
 import ProductPage, { ProductsIndex } from "./ProductPage.jsx";
 import SpecialtyPage, { SpecialtiesIndex } from "./SpecialtyPage.jsx";
+import { BlogIndex, BlogPost } from "./Blog.jsx";
 import { track } from "./track.js";
 
 const path = window.location.pathname.replace(/\/+$/, "");
@@ -15,6 +16,8 @@ const isProductsIndex = path === "/products";
 const productMatch = path.match(/^\/products\/([a-z0-9-]+)$/);
 const isSpecialtiesIndex = path === "/specialties";
 const specialtyMatch = path.match(/^\/specialties\/([a-z0-9-]+)$/);
+const isBlogIndex = path === "/blog";
+const blogMatch = path.match(/^\/blog\/([a-z0-9-]+)$/);
 
 // Self-referencing canonical per route. Navigation is via full page loads, so
 // setting this once per load from the current path covers every page.
@@ -66,6 +69,22 @@ function App() {
     return (
       <>
         <SpecialtyPage slug={specialtyMatch[1]} />
+        <Chatbot />
+      </>
+    );
+  }
+  if (isBlogIndex) {
+    return (
+      <>
+        <BlogIndex />
+        <Chatbot />
+      </>
+    );
+  }
+  if (blogMatch) {
+    return (
+      <>
+        <BlogPost slug={blogMatch[1]} />
         <Chatbot />
       </>
     );
