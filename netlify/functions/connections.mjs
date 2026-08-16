@@ -1,6 +1,7 @@
 import { authorize, json } from "../lib/auth.mjs";
 import { metaCfg, waCfg, linkedinCfg, threadsCfg, telegramCfg, blueskyCfg, mastodonCfg, gbpCfg, youtubeCfg, redditCfg, tumblrCfg, discordCfg, tiktokCfg, tiktokTokens } from "../lib/social.mjs";
 import { veoCfg } from "../lib/veo.mjs";
+import { googleAdsCfg, googleAdsReady } from "../lib/googleads.mjs";
 
 // Reports which social platforms are configured (booleans only - never returns
 // the secret values) plus the env vars each needs, for the Connections panel.
@@ -11,8 +12,10 @@ export default async (req) => {
   const meta = metaCfg(), wa = waCfg(), li = linkedinCfg(), th = threadsCfg(), tg = telegramCfg(), bs = blueskyCfg(), ma = mastodonCfg(), gb = gbpCfg(), yt = youtubeCfg(), rd = redditCfg(), tb = tumblrCfg(), dc = discordCfg(), tk = tiktokCfg();
   const tkTokens = tk.clientKey ? await tiktokTokens() : null;
   const veo = veoCfg();
+  const gads = googleAdsCfg();
   const connections = [
     { key: "vertex", label: "Vertex AI (Veo)", ic: "✨", ok: !!veo.sa?.client_email, vars: ["VERTEX_SERVICE_ACCOUNT", "VERTEX_PROJECT"], note: "AI video generation for AI Create — service account JSON" },
+    { key: "googleads", label: "Google Ads", ic: "📣", ok: googleAdsReady(gads), vars: ["GOOGLE_ADS_DEVELOPER_TOKEN", "GOOGLE_ADS_REFRESH_TOKEN", "GOOGLE_ADS_CUSTOMER_ID"], note: "Ad spend / clicks / conversions on the dashboard — needs a developer token" },
     { key: "facebook", label: "Facebook", ic: "📘", ok: !!(meta.pageId && meta.token), vars: ["META_PAGE_ID", "META_PAGE_TOKEN"], note: "Meta app + Page token" },
     { key: "instagram", label: "Instagram", ic: "📷", ok: !!(meta.igId && meta.token), vars: ["META_IG_ID", "META_PAGE_TOKEN"], note: "Linked to the Page" },
     { key: "whatsapp", label: "WhatsApp", ic: "🟢", ok: !!(wa.token && wa.phoneId), vars: ["META_WHATSAPP_TOKEN", "META_WHATSAPP_PHONE_ID"], note: "WhatsApp Cloud API" },

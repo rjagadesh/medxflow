@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Insights, Trends, Feed, Inbox, Publish, Ads, MetaSetup, CSS as META_CSS } from "./Meta.jsx";
+import { Insights, Trends, TrendChart, Feed, Inbox, Publish, Ads, MetaSetup, CSS as META_CSS } from "./Meta.jsx";
 import Scheduler from "./Scheduler.jsx";
 import WhatsApp from "./WhatsApp.jsx";
 import LinkedIn from "./LinkedIn.jsx";
@@ -23,6 +23,62 @@ function YouTubeDash({ pw }) {
         <div className="ad-stat"><b>{num(c.subscribers)}</b><span>Subscribers</span></div>
         <div className="ad-stat"><b>{num(c.videos)}</b><span>Videos</span></div>
         <div className="ad-stat"><b>{num(c.views)}</b><span>Total views</span></div>
+      </div>
+    </div>
+  );
+}
+
+function GoogleAdsDash({ pw }) {
+  const [d, setD] = useState(null);
+  useEffect(() => {
+    fetch("/.netlify/functions/googleads", { method: "POST", headers: { "x-admin-password": pw, "content-type": "application/json" }, body: JSON.stringify({ days: 28 }) })
+      .then((r) => r.json()).then(setD).catch(() => setD({ error: "load failed" }));
+  }, [pw]);
+  if (!d) return null;
+
+  if (d.configured === false) {
+    return (
+      <div className="ad-card seo-card" style={{ marginTop: 16 }}>
+        <div className="seo-card-h">🟡 Google Ads — not connected</div>
+        <div className="gads-setup">
+          <p>Connect Google Ads to track ad spend, clicks and conversions here. You'll need:</p>
+          <ul>
+            <li><b>Developer token</b> — Google Ads → Tools → API Center (apply for access).</li>
+            <li><b>OAuth</b> — a refresh token with the <code>adwords</code> scope (can reuse your Google app).</li>
+            <li><b>Customer ID</b> — the 10-digit account id (and manager id if applicable).</li>
+          </ul>
+          <p className="gads-vars">Env vars: <code>GOOGLE_ADS_DEVELOPER_TOKEN</code> · <code>GOOGLE_ADS_CLIENT_ID</code> · <code>GOOGLE_ADS_CLIENT_SECRET</code> · <code>GOOGLE_ADS_REFRESH_TOKEN</code> · <code>GOOGLE_ADS_CUSTOMER_ID</code> · <code>GOOGLE_ADS_LOGIN_CUSTOMER_ID</code> (optional)</p>
+        </div>
+      </div>
+    );
+  }
+  if (d.error) return <div className="ad-card seo-card" style={{ marginTop: 16 }}><div className="seo-card-h">📣 Google Ads</div><div className="mt-carderr" style={{ padding: "12px 16px" }}>Couldn't load Google Ads: {d.error}</div></div>;
+
+  const t = d.totals || {};
+  const cur = (v) => new Intl.NumberFormat(undefined, { style: "currency", currency: d.currency || "USD", maximumFractionDigits: 2 }).format(v || 0);
+  const P = d.points || [];
+  const s = (key) => P.map((p) => ({ d: p.d, v: Number(p[key] || 0) }));
+  const sCost = P.map((p) => ({ d: p.d, v: Number(p.cost || 0) }));
+  return (
+    <div className="ad-card seo-card" style={{ marginTop: 16 }}>
+      <div className="seo-card-h">📣 Google Ads — last 28 days</div>
+      <div className="ad-stats mt-stats">
+        <div className="ad-stat"><b>{num(Math.round(t.impressions))}</b><span>Impressions</span></div>
+        <div className="ad-stat"><b>{num(Math.round(t.clicks))}</b><span>Clicks</span></div>
+        <div className="ad-stat"><b>{cur(t.cost)}</b><span>Spend</span></div>
+        <div className="ad-stat"><b>{num(Math.round(t.conversions))}</b><span>Conversions</span></div>
+      </div>
+      <div className="ad-stats mt-stats" style={{ marginTop: 0 }}>
+        <div className="ad-stat"><b>{(t.ctr || 0).toFixed(2)}%</b><span>CTR</span></div>
+        <div className="ad-stat"><b>{cur(t.avgCpc)}</b><span>Avg. CPC</span></div>
+        <div className="ad-stat"><b>{t.conversions ? cur(t.costPerConv) : "—"}</b><span>Cost / conv.</span></div>
+        <div className="ad-stat"><b>{t.clicks ? ((t.conversions / t.clicks) * 100).toFixed(1) + "%" : "—"}</b><span>Conv. rate</span></div>
+      </div>
+      <div className="tr-grid">
+        <TrendChart title="Impressions" ic="👁" points={s("impressions")} color="#5AA9F5" />
+        <TrendChart title="Clicks" ic="🖱" points={s("clicks")} color="#3DDCC9" />
+        <TrendChart title="Spend" ic="💵" points={sCost} color="#F2C14E" fmtTotal={cur} fmtLast={cur} />
+        <TrendChart title="Conversions" ic="🎯" points={s("conversions")} color="#B79CE0" />
       </div>
     </div>
   );
@@ -104,7 +160,7 @@ export default function Social({ pw }) {
     if (!ov) return <div className="ad-empty">Connecting to Meta…</div>;
     if (ov.error) return <div className="ad-err">Couldn't connect to Meta. Check the META_* configuration.</div>;
     if (ov.configured === false) return <MetaSetup reason={ov.reason} />;
-    if (sec === "dashboard") return <><Insights ov={ov} /><Trends pw={pw} /><YouTubeDash pw={pw} /></>;
+    if (sec === "dashboard") return <><Insights ov={ov} /><Trends pw={pw} /><YouTubeDash pw={pw} /><GoogleAdsDash pw={pw} /></>;
     if (sec === "feed") return <Feed pw={pw} ov={ov} />;
     if (sec === "publish") return <Publish pw={pw} hasIg={ov.hasIg} />;
     if (sec === "ads") return <Ads pw={pw} />;
@@ -152,4 +208,9 @@ const SOC_CSS = `
 .soc-conn-vars{font-size:11px; color:rgba(232,238,246,.4); font-family:'Spline Sans Mono',monospace}
 .soc-conn-connect{margin-top:8px; align-self:flex-start; background:rgba(61,220,201,.16); border:1px solid rgba(61,220,201,.45); color:#7FD8CE; border-radius:8px; padding:6px 13px; font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit}
 .soc-conn-connect:hover{background:rgba(61,220,201,.24)}
+.gads-setup{padding:14px 18px; font-size:13.5px; color:rgba(232,238,246,.75); line-height:1.6}
+.gads-setup ul{margin:8px 0; padding-left:20px}
+.gads-setup li{margin:4px 0}
+.gads-setup code{background:rgba(207,224,242,.1); padding:1px 6px; border-radius:5px; font-size:12px; color:#7FD8CE; font-family:'Spline Sans Mono',monospace}
+.gads-vars{font-size:12px; color:rgba(232,238,246,.5); margin-top:10px}
 `;

@@ -126,7 +126,7 @@ export function Insights({ ov }) {
 
 // One day-by-day area chart (inline SVG, theme-aware). Emphasizes the latest
 // point and reports the total + last value.
-function TrendChart({ title, ic, points, color = "#3DDCC9" }) {
+export function TrendChart({ title, ic, points, color = "#3DDCC9", fmtTotal, fmtLast }) {
   const pts = (points || []).filter((p) => p.d);
   const W = 300, H = 84, PT = 8, PB = 16, PL = 4, PR = 4;
   const total = pts.reduce((s, p) => s + p.v, 0);
@@ -143,7 +143,7 @@ function TrendChart({ title, ic, points, color = "#3DDCC9" }) {
     <div className="tr-card">
       <div className="tr-head">
         <span className="tr-title">{ic} {title}</span>
-        <span className="tr-vals"><b>{total.toLocaleString()}</b> total · last {last ?? "—"}</span>
+        <span className="tr-vals"><b>{fmtTotal ? fmtTotal(total) : total.toLocaleString()}</b> total · last {last == null ? "—" : (fmtLast ? fmtLast(last) : last)}</span>
       </div>
       {n === 0 ? (
         <div className="tr-empty">No daily data available.</div>
