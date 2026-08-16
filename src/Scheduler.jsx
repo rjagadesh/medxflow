@@ -31,6 +31,201 @@ const CHANNELS = [
 const fmt = (iso) => (iso ? new Date(iso).toLocaleString() : "");
 const STATUS_COLOR = { scheduled: "#7FB3D5", posted: "#3DDCC9", partial: "#F2C14E", failed: "#E05A4E" };
 
+// Channels a bulk (image + caption) post can go to without extra per-post
+// fields. Video-only (youtube/tiktok) and whatsapp (needs recipients) excluded.
+const BULK_CHANNELS = CHANNELS.filter((c) => !["youtube", "tiktok", "whatsapp"].includes(c.key));
+
+// ---- Browser-side ZIP reader (central-directory based, no dependency) -------
+async function unzip(buf) {
+  const dv = new DataView(buf), u8 = new Uint8Array(buf);
+  let eocd = -1;
+  for (let i = buf.byteLength - 22; i >= 0; i--) { if (dv.getUint32(i, true) === 0x06054b50) { eocd = i; break; } }
+  if (eocd < 0) throw new Error("Not a valid ZIP file.");
+  const count = dv.getUint16(eocd + 10, true);
+  let off = dv.getUint32(eocd + 16, true);
+  const entries = [];
+  for (let i = 0; i < count && dv.getUint32(off, true) === 0x02014b50; i++) {
+    const method = dv.getUint16(off + 10, true);
+    const compSize = dv.getUint32(off + 20, true);
+    const nameLen = dv.getUint16(off + 28, true);
+    const extraLen = dv.getUint16(off + 30, true);
+    const commentLen = dv.getUint16(off + 32, true);
+    const localOff = dv.getUint32(off + 42, true);
+    const name = new TextDecoder().decode(u8.subarray(off + 46, off + 46 + nameLen));
+    entries.push({ name, method, compSize, localOff });
+    off += 46 + nameLen + extraLen + commentLen;
+  }
+  const out = [];
+  for (const e of entries) {
+    if (e.name.endsWith("/") || e.name.startsWith("__MACOSX")) continue;
+    const lnameLen = dv.getUint16(e.localOff + 26, true);
+    const lextraLen = dv.getUint16(e.localOff + 28, true);
+    const dataStart = e.localOff + 30 + lnameLen + lextraLen;
+    const comp = u8.subarray(dataStart, dataStart + e.compSize);
+    let bytes;
+    if (e.method === 0) bytes = comp;
+    else if (e.method === 8) bytes = new Uint8Array(await new Response(new Blob([comp]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).arrayBuffer());
+    else continue;
+    out.push({ name: e.name, bytes });
+  }
+  return out;
+}
+
+const MIME = { png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", webp: "image/webp", gif: "image/gif" };
+
+// Group ZIP entries by top-level folder → { folder, caption, imageBytes, mime }.
+function buildPosts(entries) {
+  const folders = {};
+  for (const e of entries) {
+    const parts = e.name.split("/");
+    if (parts.length < 2) continue; // skip top-level files like INDEX.txt
+    const folder = parts[0];
+    const file = parts[parts.length - 1].toLowerCase();
+    const ext = file.split(".").pop();
+    (folders[folder] = folders[folder] || {});
+    if (file === "description.txt" || file === "caption.txt") folders[folder].caption = cleanCaption(new TextDecoder().decode(e.bytes));
+    else if (MIME[ext]) { folders[folder].imageBytes = e.bytes; folders[folder].imageName = parts[parts.length - 1]; folders[folder].mime = MIME[ext]; }
+  }
+  return Object.keys(folders).sort().map((f) => ({ folder: f, ...folders[f] })).filter((p) => p.imageBytes || p.caption);
+}
+
+// Strip markdown headings/bold so captions read cleanly on social (keeps
+// #hashtags and emojis).
+function cleanCaption(md) {
+  return (md || "").replace(/\r/g, "").replace(/^#{1,6}[ \t]+/gm, "").replace(/\*\*(.+?)\*\*/g, "$1").replace(/\n{3,}/g, "\n\n").trim();
+}
+
+const bytesToDataUrl = (bytes, mime) => new Promise((res) => { const r = new FileReader(); r.onload = () => res(r.result); r.readAsDataURL(new Blob([bytes], { type: mime })); });
+
+// Compute the datetime for each post: `perDay` posts each day starting at
+// `firstTime`, spaced `gapHours` apart, beginning on `startDate` (local time).
+function scheduleTimes(count, startDate, firstTime, perDay, gapHours) {
+  const [hh, mm] = firstTime.split(":").map(Number);
+  const times = [];
+  for (let i = 0; i < count; i++) {
+    const day = Math.floor(i / perDay), slot = i % perDay;
+    const d = new Date(`${startDate}T00:00:00`);
+    d.setDate(d.getDate() + day);
+    d.setHours(hh + slot * gapHours, mm, 0, 0);
+    times.push(d);
+  }
+  return times;
+}
+
+function BulkZip({ pw, onDone }) {
+  const [posts, setPosts] = useState(null); // parsed [{folder, caption, imageBytes, mime}]
+  const [zipName, setZipName] = useState("");
+  const [parsing, setParsing] = useState(false);
+  const [channels, setChannels] = useState(["facebook", "instagram"]);
+  const [startDate, setStartDate] = useState(() => new Date(Date.now() + 86400000).toISOString().slice(0, 10));
+  const [firstTime, setFirstTime] = useState("09:00");
+  const [perDay, setPerDay] = useState(2);
+  const [gapHours, setGapHours] = useState(4);
+  const [running, setRunning] = useState(false);
+  const [progress, setProgress] = useState({ done: 0, total: 0, note: "" });
+  const [err, setErr] = useState("");
+  const [msg, setMsg] = useState("");
+  const zipRef = useRef(null);
+
+  const onZip = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setParsing(true); setErr(""); setMsg(""); setPosts(null);
+    try {
+      const buf = await file.arrayBuffer();
+      const parsed = buildPosts(await unzip(buf));
+      if (!parsed.length) throw new Error("No posts found. Expected folders each containing image + description.txt.");
+      setPosts(parsed); setZipName(file.name);
+    } catch (e2) { setErr(e2.message); }
+    finally { setParsing(false); }
+  };
+
+  const toggleCh = (k) => setChannels((c) => (c.includes(k) ? c.filter((x) => x !== k) : [...c, k]));
+
+  const times = posts ? scheduleTimes(posts.length, startDate, firstTime, Math.max(1, perDay), Math.max(0, gapHours)) : [];
+
+  const scheduleAll = async () => {
+    if (!posts?.length || !channels.length) return;
+    setRunning(true); setErr(""); setMsg("");
+    let created = 0;
+    try {
+      for (let i = 0; i < posts.length; i++) {
+        const p = posts[i];
+        setProgress({ done: i, total: posts.length, note: p.folder });
+        let imageUrl = "";
+        if (p.imageBytes) {
+          const dataUrl = await bytesToDataUrl(p.imageBytes, p.mime);
+          const up = await api("media", pw, "upload", { dataUrl, name: p.imageName || `${p.folder}.png` });
+          if (!up.file) throw new Error(`Image upload failed for ${p.folder}: ${up.error || "unknown"}`);
+          imageUrl = up.file.url;
+        }
+        const d = await api("scheduler", pw, "create", { imageUrl, caption: p.caption || "", channels, scheduledAt: times[i].toISOString() });
+        if (!d.ok) throw new Error(`Schedule failed for ${p.folder}: ${d.error || "unknown"}`);
+        created++;
+      }
+      setProgress({ done: posts.length, total: posts.length, note: "" });
+      setMsg(`Scheduled ${created} posts ✓`);
+      setPosts(null); setZipName(""); if (zipRef.current) zipRef.current.value = "";
+      onDone?.();
+    } catch (e) { setErr(`${e.message} (${created} scheduled before this)`); }
+    finally { setRunning(false); }
+  };
+
+  return (
+    <div className="ad-card sc-card">
+      <div className="sc-cardh">📦 Bulk upload — schedule a whole ZIP</div>
+      <div className="sc-form">
+        {!posts ? (
+          <>
+            <div className="sc-hint" style={{ marginTop: 0 }}>Upload one ZIP where each folder holds an <code>image</code> + a <code>description.txt</code>. Each folder becomes one scheduled post.</div>
+            <label className="sc-zip">{parsing ? "Reading ZIP…" : "📦 Choose ZIP file"}<input ref={zipRef} type="file" accept=".zip,application/zip" hidden onChange={onZip} disabled={parsing} /></label>
+          </>
+        ) : (
+          <>
+            <div className="sc-zip-loaded">✅ <b>{zipName}</b> — {posts.length} posts found</div>
+
+            <label className="sc-lbl">Post to</label>
+            <div className="sc-channels">
+              {BULK_CHANNELS.map((c) => (
+                <button key={c.key} className={"sc-ch" + (channels.includes(c.key) ? " on" : "")} onClick={() => toggleCh(c.key)}>{c.ic} {c.label}</button>
+              ))}
+            </div>
+
+            <div className="sc-bulk-grid">
+              <div><label className="sc-lbl" style={{ marginTop: 0 }}>Start date</label><input className="sc-when" type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} /></div>
+              <div><label className="sc-lbl" style={{ marginTop: 0 }}>First post time</label><input className="sc-when" type="time" value={firstTime} onChange={(e) => setFirstTime(e.target.value)} /></div>
+              <div><label className="sc-lbl" style={{ marginTop: 0 }}>Posts per day</label><input className="sc-when" type="number" min="1" max="12" value={perDay} onChange={(e) => setPerDay(Math.max(1, +e.target.value || 1))} /></div>
+              <div><label className="sc-lbl" style={{ marginTop: 0 }}>Hours between posts</label><input className="sc-when" type="number" min="1" max="12" value={gapHours} onChange={(e) => setGapHours(Math.max(1, +e.target.value || 1))} /></div>
+            </div>
+            <div className="sc-hint">{posts.length} posts · {perDay}/day → spans {Math.ceil(posts.length / perDay)} days ({fmt(times[0])} → {fmt(times[times.length - 1])}), your local time.</div>
+
+            <label className="sc-lbl">Preview</label>
+            <div className="sc-bulk-list">
+              {posts.map((p, i) => (
+                <div key={p.folder} className="sc-bulk-item">
+                  <div className="sc-thumb sc-bulk-thumb">{p.imageBytes ? <img src={URL.createObjectURL(new Blob([p.imageBytes], { type: p.mime }))} alt="" /> : <span>📝</span>}</div>
+                  <div className="sc-bulk-cap"><b>{p.folder.replace(/^\d+_/, "").replace(/_/g, " ")}</b><span>{(p.caption || "").slice(0, 90)}…</span></div>
+                  <div className="sc-bulk-time">🕒 {fmt(times[i])}</div>
+                </div>
+              ))}
+            </div>
+
+            {running && <div className="sc-prog"><div className="sc-prog-bar"><div style={{ width: `${(progress.done / progress.total) * 100}%` }} /></div><span>{progress.done}/{progress.total} {progress.note}</span></div>}
+
+            <div className="sc-actions">
+              <button className="sc-btn sc-primary" disabled={running || !channels.length} onClick={scheduleAll}>{running ? "Scheduling…" : `📅 Schedule all ${posts.length} posts`}</button>
+              <button className="sc-btn" disabled={running} onClick={() => { setPosts(null); setZipName(""); if (zipRef.current) zipRef.current.value = ""; }}>Cancel</button>
+              {msg && <span className="sc-msg">{msg}</span>}
+            </div>
+          </>
+        )}
+        {err && <div className="ad-err">{err}</div>}
+        {msg && !posts && <div className="sc-msg" style={{ marginTop: 8 }}>{msg}</div>}
+      </div>
+    </div>
+  );
+}
+
 export default function Scheduler({ pw }) {
   const [posts, setPosts] = useState(null);
   const [err, setErr] = useState("");
@@ -119,6 +314,9 @@ export default function Scheduler({ pw }) {
           <span className="sc-clock-tz">You schedule in your local time · {tz}</span>
         </div>
       </div>
+
+      {/* Bulk ZIP upload */}
+      <BulkZip pw={pw} onDone={load} />
 
       {/* Composer */}
       <div className="ad-card sc-card sc-compose">
@@ -259,5 +457,22 @@ const SC_CSS = `
 .sc-res.ok{background:rgba(61,220,201,.14); color:#7FD8CE} .sc-res.bad{background:rgba(224,90,78,.14); color:#E05A4E}
 .sc-side{display:flex; flex-direction:column; align-items:flex-end; gap:7px; flex:none}
 .sc-status{font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.04em}
-@media(max-width:720px){.sc-row2{grid-template-columns:1fr}.sc-item{flex-wrap:wrap}}
+.sc-zip{display:flex; align-items:center; justify-content:center; height:70px; border:2px dashed rgba(61,220,201,.4); background:rgba(61,220,201,.05); border-radius:12px; color:#7FD8CE; font-size:14px; font-weight:700; cursor:pointer; margin-top:8px}
+.sc-zip:hover{background:rgba(61,220,201,.1)}
+.sc-zip-loaded{font-size:14px; color:#E8EEF6; padding:6px 0 4px}
+.sc-zip-loaded b{color:#7FD8CE}
+.sc-bulk-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-top:10px}
+.sc-bulk-grid .sc-when{max-width:100%; width:100%}
+.sc-bulk-list{display:flex; flex-direction:column; gap:2px; max-height:300px; overflow-y:auto; border:1px solid rgba(207,224,242,.1); border-radius:10px; margin-top:6px}
+.sc-bulk-item{display:flex; gap:12px; align-items:center; padding:8px 12px; border-bottom:1px solid rgba(207,224,242,.06)}
+.sc-bulk-thumb{width:44px; height:44px; border-radius:8px}
+.sc-bulk-cap{flex:1; min-width:0; display:flex; flex-direction:column; gap:2px}
+.sc-bulk-cap b{font-size:13px; color:#E8EEF6}
+.sc-bulk-cap span{font-size:11.5px; color:rgba(232,238,246,.5); white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
+.sc-bulk-time{font-size:11.5px; color:rgba(127,179,213,.9); white-space:nowrap; flex:none}
+.sc-prog{display:flex; align-items:center; gap:10px; margin-top:12px}
+.sc-prog-bar{flex:1; height:8px; background:rgba(207,224,242,.1); border-radius:99px; overflow:hidden}
+.sc-prog-bar div{height:100%; background:#3DDCC9; transition:width .2s}
+.sc-prog span{font-size:12px; color:rgba(232,238,246,.7); white-space:nowrap}
+@media(max-width:720px){.sc-row2{grid-template-columns:1fr}.sc-item{flex-wrap:wrap}.sc-bulk-grid{grid-template-columns:1fr 1fr}}
 `;
