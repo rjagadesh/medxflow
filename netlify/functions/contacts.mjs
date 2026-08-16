@@ -3,6 +3,7 @@ import {
   contactDetail,
   promoteToCampaign,
   convertWonToIncome,
+  createContact,
   loadCrm,
   saveCrm,
   normEmail,
@@ -38,6 +39,10 @@ export default async (req) => {
       if (patch.notes !== undefined) crm.notes = String(patch.notes).slice(0, 2000);
       if (patch.status !== undefined) crm.status = patch.status || null;
       await saveCrm(crm);
+      return json({ ok: true, crm });
+    }
+    if (action === "create") {
+      const crm = await createContact(body);
       return json({ ok: true, crm });
     }
     if (action === "promote") {

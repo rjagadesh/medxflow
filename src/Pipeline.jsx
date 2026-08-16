@@ -10,6 +10,7 @@ export default function Pipeline({ pw, onOpen }) {
   const [err, setErr] = useState("");
   const [msg, setMsg] = useState("");
   const [over, setOver] = useState(null);
+  const [adding, setAdding] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -61,10 +62,22 @@ export default function Pipeline({ pw, onOpen }) {
       <style>{CSS}</style>
       <div className="cmp-head">
         <h3>Pipeline</h3>
-        <button className="cmp-btn" onClick={load} disabled={loading}>{loading ? "…" : "⟳ Refresh"}</button>
+        <div style={{ display: "flex", gap: 8 }}>
+          <button className="pl-add-btn" onClick={() => setAdding(true)}>+ Add prospect</button>
+          <button className="cmp-btn" onClick={load} disabled={loading}>{loading ? "…" : "⟳ Refresh"}</button>
+        </div>
       </div>
       {err && <div className="ad-err" style={{ marginBottom: 12 }}>{err}</div>}
       {msg && <div className="cmp-ok">{msg}</div>}
+
+      {adding && (
+        <AddProspect
+          pw={pw}
+          onClose={() => setAdding(false)}
+          onAdded={(name) => { setAdding(false); setMsg(`Added ${name} to the pipeline ✓`); load(); }}
+          onError={(e) => setErr(e)}
+        />
+      )}
 
       <div className="pl-metrics">
         <Metric label="Total deals" v={total} />
@@ -121,6 +134,48 @@ export default function Pipeline({ pw, onOpen }) {
   );
 }
 
+function AddProspect({ pw, onClose, onAdded, onError }) {
+  const [f, setF] = useState({ name: "", email: "", clinic: "", phone: "", stage: "new", dealValue: "" });
+  const [saving, setSaving] = useState(false);
+  const set = (k) => (e) => setF((s) => ({ ...s, [k]: e.target.value }));
+
+  const submit = async (e) => {
+    e.preventDefault();
+    if (!f.email.includes("@")) { onError("A valid email is required."); return; }
+    setSaving(true);
+    try {
+      const r = await contactsApi(pw, { action: "create", ...f });
+      if (r.ok) onAdded(f.name || f.email);
+      else onError(r.error || "Couldn't add prospect.");
+    } catch (e2) { onError(e2.message); }
+    finally { setSaving(false); }
+  };
+
+  return (
+    <div className="pl-modal-bg" onClick={onClose}>
+      <form className="pl-modal" onClick={(e) => e.stopPropagation()} onSubmit={submit}>
+        <div className="pl-modal-hd">Add a prospect</div>
+        <label>Name<input value={f.name} onChange={set("name")} placeholder="Jane Doe" autoFocus /></label>
+        <label>Email *<input type="email" value={f.email} onChange={set("email")} placeholder="jane@clinic.com" required /></label>
+        <label>Clinic / company<input value={f.clinic} onChange={set("clinic")} placeholder="Bright Health Clinic" /></label>
+        <label>Phone<input value={f.phone} onChange={set("phone")} placeholder="(210) 555-0100" /></label>
+        <div className="pl-modal-row">
+          <label>Stage
+            <select value={f.stage} onChange={set("stage")}>
+              {STAGES.map((s) => <option key={s} value={s}>{STAGE_LABEL[s]}</option>)}
+            </select>
+          </label>
+          <label>Deal value ($)<input type="number" min="0" value={f.dealValue} onChange={set("dealValue")} placeholder="0" /></label>
+        </div>
+        <div className="pl-modal-actions">
+          <button type="button" className="cmp-btn" onClick={onClose}>Cancel</button>
+          <button type="submit" className="pl-add-btn" disabled={saving}>{saving ? "Adding…" : "Add prospect"}</button>
+        </div>
+      </form>
+    </div>
+  );
+}
+
 function Metric({ label, v, tone }) {
   return (
     <div className="pl-metric">
@@ -158,4 +213,15 @@ const CSS = `
 .ct-stage{font-size:11px; font-weight:700; padding:3px 8px; border-radius:999px; background:rgba(255,255,255,.08)}
 .st-won{background:rgba(61,220,201,.2); color:#3DDCC9} .st-lost{background:rgba(224,122,95,.18); color:#E07A5F}
 .st-demo_scheduled,.st-demo_completed{background:rgba(23,195,178,.16); color:#17C3B2} .st-proposal{background:rgba(123,179,213,.16); color:#7FB3D5}
+.ct-manual{background:rgba(190,160,235,.18); color:#c3a6ec}
+.pl-add-btn{background:#3DDCC9; border:1px solid #3DDCC9; color:#062b28; border-radius:9px; padding:8px 14px; font-size:13px; font-weight:800; cursor:pointer; font-family:inherit}
+.pl-add-btn:hover{background:#5fe6d5} .pl-add-btn:disabled{opacity:.5; cursor:not-allowed}
+.pl-modal-bg{position:fixed; inset:0; background:rgba(6,16,32,.72); display:grid; place-items:center; z-index:50; padding:20px}
+.pl-modal{background:#0D1F3C; border:1px solid rgba(207,224,242,.16); border-radius:16px; padding:22px; width:100%; max-width:440px; display:flex; flex-direction:column; gap:12px; box-shadow:0 20px 60px rgba(0,0,0,.5)}
+.pl-modal-hd{font-size:17px; font-weight:800; color:#fff; margin-bottom:2px}
+.pl-modal label{display:flex; flex-direction:column; gap:5px; font-size:12.5px; font-weight:700; color:rgba(232,238,246,.7)}
+.pl-modal input,.pl-modal select{background:rgba(207,224,242,.06); border:1px solid rgba(207,224,242,.16); border-radius:9px; color:#E8EEF6; padding:10px 12px; font:inherit; font-size:14px; outline:none}
+.pl-modal input:focus,.pl-modal select:focus{border-color:#3DDCC9}
+.pl-modal-row{display:grid; grid-template-columns:1fr 1fr; gap:12px}
+.pl-modal-actions{display:flex; justify-content:flex-end; gap:10px; margin-top:8px}
 `;

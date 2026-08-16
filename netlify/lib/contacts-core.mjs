@@ -50,6 +50,27 @@ async function loadAllCrm() {
   return new Map(list.map((r) => [normEmail(r.email), r]));
 }
 
+// Manually add a prospect to the pipeline (stored as a CRM record with the
+// contact fields, since there's no source feed for it). Merges onto any
+// existing record for that email rather than clobbering it.
+export async function createContact({ email, name, clinic, phone, stage, dealValue } = {}) {
+  const key = normEmail(email);
+  if (!key || !key.includes("@")) throw new Error("A valid email is required.");
+  const existing = (await loadCrm(key)) || {};
+  const rec = {
+    ...existing,
+    email: key,
+    manual: true,
+    name: name || existing.name || "",
+    clinic: clinic || existing.clinic || "",
+    phone: phone || existing.phone || "",
+    stage: STAGES.includes(stage) ? stage : existing.stage || "new",
+    dealValue: Math.max(0, parseFloat(dealValue) || existing.dealValue || 0),
+  };
+  await saveCrm(rec);
+  return rec;
+}
+
 // Build the unified contact list by merging leads (demo requests), visitors
 // (chat leads) and campaign recipients — matched by email — with the CRM overlay.
 export async function buildContacts({ includePageless = false } = {}) {
@@ -120,6 +141,19 @@ export async function buildContacts({ includePageless = false } = {}) {
       if (r.status === "bounced") c.campaign.bounced++;
       touch(c, maxIso(r.sentAt, r.openedAt, r.repliedAt, r.bouncedAt));
     }
+  }
+
+  // Manually-added prospects have no source feed — pull them in from the CRM
+  // store so they appear in the pipeline.
+  for (const [key, crm] of crmMap) {
+    if (!crm.manual) continue;
+    const c = ensure(key);
+    if (!c) continue;
+    c.sources.add("manual");
+    c.name = c.name || crm.name || "";
+    c.clinic = c.clinic || crm.clinic || "";
+    c.phone = c.phone || crm.phone || "";
+    touch(c, crm.createdAt);
   }
 
   return [...map.values()]
