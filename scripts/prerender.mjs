@@ -14,6 +14,7 @@ import { PRODUCTS } from "../src/products.data.js";
 import { SPECIALTIES } from "../src/specialties.data.js";
 import { POSTS } from "../src/blog.data.js";
 import { AI_AGENTS_FAQ } from "../src/ai-agents-rcm.data.js";
+import { SEO_PAGES } from "../src/seo-pages.data.js";
 import { en } from "../src/i18n.strings.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -36,25 +37,48 @@ const routes = [
     path: "/ai-agents-rcm",
     title: "AI Agents for Healthcare RCM | MedXFlow",
     desc: "AI agents for healthcare revenue cycle management - automate eligibility, prior authorization, coding, claims, denials, payment posting and patient collections. Book a free MedXFlow demo.",
-    jsonld: JSON.stringify({
-      "@context": "https://schema.org",
-      "@graph": [
-        {
-          "@type": "Service", name: "AI Agents for Healthcare Revenue Cycle Management",
-          serviceType: "AI revenue cycle management agents",
-          provider: { "@id": `${ORIGIN}/#organization` },
-          areaServed: { "@type": "Country", name: "United States" },
-          url: `${ORIGIN}/ai-agents-rcm`,
-          description: "AI agents that automate the healthcare revenue cycle - eligibility verification, prior authorization, medical coding, claims submission and follow-up, denial management, payment posting and patient collections.",
-        },
-        {
-          "@type": "FAQPage",
-          mainEntity: AI_AGENTS_FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
-        },
-      ],
+    jsonld: serviceLd({
+      name: "AI Agents for Healthcare Revenue Cycle Management",
+      serviceType: "AI revenue cycle management agents",
+      url: `${ORIGIN}/ai-agents-rcm/`,
+      description: "AI agents that automate the healthcare revenue cycle - eligibility verification, prior authorization, medical coding, claims submission and follow-up, denial management, payment posting and patient collections.",
+      faq: AI_AGENTS_FAQ,
+      crumbs: [["Home", "/"], ["AI Agents for Healthcare RCM", "/ai-agents-rcm/"]],
     }),
   },
+  ...SEO_PAGES.map((p) => ({
+    path: `/${p.slug}`,
+    title: p.title,
+    desc: p.description,
+    jsonld: serviceLd({
+      name: p.h1,
+      serviceType: p.kind === "audience" ? "AI revenue cycle management for " + p.eyebrow : "Healthcare RCM automation",
+      url: `${ORIGIN}/${p.slug}/`,
+      description: p.description,
+      faq: p.faq,
+      crumbs: [["Home", "/"], ["Products", "/products/"], [p.h1, `/${p.slug}/`]],
+    }),
+  })),
 ];
+
+// Service + FAQPage + BreadcrumbList JSON-LD for a commercial landing page.
+function serviceLd({ name, serviceType, url, description, faq, crumbs }) {
+  const graph = [
+    {
+      "@type": "Service", name, serviceType, url, description,
+      provider: { "@id": `${ORIGIN}/#organization` },
+      areaServed: { "@type": "Country", name: "United States" },
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: crumbs.map(([n, u], i) => ({ "@type": "ListItem", position: i + 1, name: n, item: `${ORIGIN}${u}` })),
+    },
+  ];
+  if (faq?.length) {
+    graph.push({ "@type": "FAQPage", mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) });
+  }
+  return JSON.stringify({ "@context": "https://schema.org", "@graph": graph });
+}
 
 // Article + FAQ JSON-LD for a blog post (richer than the default WebPage graph).
 function articleLd(p, url) {
@@ -81,7 +105,10 @@ const template = fs.readFileSync(path.join(DIST, "index.html"), "utf8");
 // [^>]* matches across newlines, so these are safe whether Vite emits the tags
 // single-line or multi-line. Each replacement rewrites the whole tag cleanly.
 function headFor(r) {
-  const url = ORIGIN + r.path;
+  // Netlify serves prerendered directory pages with a trailing slash and 301s
+  // the non-slash form to it, so the canonical + og:url must use the slash form
+  // (otherwise the canonical points at a URL that redirects).
+  const url = ORIGIN + r.path + "/";
   const t = esc(r.title), d = esc(r.desc);
   let out = template
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${t}</title>`)
@@ -108,8 +135,9 @@ function headFor(r) {
 // routes) so new pages like blog posts are always included.
 function writeSitemap() {
   const today = new Date().toISOString().slice(0, 10);
-  const urls = ["/", ...routes.map((r) => r.path)];
-  const body = urls.map((u) => `  <url>\n    <loc>${ORIGIN}${u === "/" ? "/" : u}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>${u === "/" ? "1.0" : "0.7"}</priority>\n  </url>`).join("\n");
+  // Trailing slash on sub-pages to match what Netlify serves + the canonical.
+  const urls = ["/", ...routes.map((r) => r.path + "/")];
+  const body = urls.map((u) => `  <url>\n    <loc>${ORIGIN}${u}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>${u === "/" ? "1.0" : "0.7"}</priority>\n  </url>`).join("\n");
   fs.writeFileSync(path.join(DIST, "sitemap.xml"),
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`);
   return urls.length;

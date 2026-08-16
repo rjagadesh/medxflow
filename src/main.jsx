@@ -8,6 +8,8 @@ import ProductPage, { ProductsIndex } from "./ProductPage.jsx";
 import SpecialtyPage, { SpecialtiesIndex } from "./SpecialtyPage.jsx";
 import { BlogIndex, BlogPost } from "./Blog.jsx";
 import AiAgentsRcm from "./AiAgentsRcm.jsx";
+import SeoPage from "./SeoPage.jsx";
+import { SEO_PAGES } from "./seo-pages.data.js";
 import { track } from "./track.js";
 
 const path = window.location.pathname.replace(/\/+$/, "");
@@ -20,11 +22,13 @@ const specialtyMatch = path.match(/^\/specialties\/([a-z0-9-]+)$/);
 const isBlogIndex = path === "/blog";
 const blogMatch = path.match(/^\/blog\/([a-z0-9-]+)$/);
 const isAiAgentsRcm = path === "/ai-agents-rcm";
+const seoSlug = SEO_PAGES.some((p) => `/${p.slug}` === path) ? path.slice(1) : null;
 
 // Self-referencing canonical per route. Navigation is via full page loads, so
 // setting this once per load from the current path covers every page.
 (() => {
-  const url = "https://medxflow.ai" + (path || "/");
+  // Match the prerendered canonical: trailing slash on sub-pages, bare "/" home.
+  const url = "https://medxflow.ai" + (path ? path + "/" : "/");
   let c = document.querySelector('link[rel="canonical"]');
   if (!c) { c = document.createElement("link"); c.rel = "canonical"; document.head.appendChild(c); }
   c.setAttribute("href", url);
@@ -95,6 +99,14 @@ function App() {
     return (
       <>
         <AiAgentsRcm />
+        <Chatbot />
+      </>
+    );
+  }
+  if (seoSlug) {
+    return (
+      <>
+        <SeoPage slug={seoSlug} />
         <Chatbot />
       </>
     );
