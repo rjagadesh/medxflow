@@ -32,7 +32,7 @@ const tally = (arr, keyFn) => {
 
 const SKEY = "eirim_admin_session";
 const TAB_ORDER = ["contacts", "pipeline", "campaigns", "social", "financials", "leads", "traffic", "seo", "chat", "tickets", "settings"];
-const readSession = () => { try { return JSON.parse(sessionStorage.getItem(SKEY) || "null"); } catch { return null; } };
+const readSession = () => { try { return JSON.parse(localStorage.getItem(SKEY) || "null"); } catch { return null; } };
 const firstTab = (sess) => TAB_ORDER.find((m) => sess?.role === "owner" || (sess?.modules || []).includes(m)) || "contacts";
 
 export default function Admin() {
@@ -85,7 +85,7 @@ export default function Admin() {
       const d = await res.json().catch(() => ({}));
       if (!res.ok) throw new Error(d.error || "Sign-in failed.");
       const sess = { token: d.token, name: d.name, role: d.role, modules: d.modules };
-      sessionStorage.setItem(SKEY, JSON.stringify(sess));
+      localStorage.setItem(SKEY, JSON.stringify(sess));
       setSession(sess);
       setPw(d.token);
       setTab(firstTab(sess));
@@ -111,7 +111,7 @@ export default function Admin() {
   }, []);
 
   const logout = () => {
-    sessionStorage.removeItem(SKEY);
+    localStorage.removeItem(SKEY);
     setAuthed(false); setData(null); setPw(""); setSession(null);
   };
 

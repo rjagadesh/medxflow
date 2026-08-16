@@ -160,8 +160,22 @@ const META_SECTIONS = ["dashboard", "feed", "publish", "ads"];
 export default function Social({ pw }) {
   const [sec, setSec] = useState("dashboard");
   const [ov, setOv] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => { metaCall(pw, "overview").then(setOv).catch(() => setOv({ error: true })); }, [pw]);
+  const loadOv = () => metaCall(pw, "overview").then(setOv).catch(() => setOv({ error: true }));
+  useEffect(() => { loadOv(); }, [pw]);
+
+  // In-place refresh: re-fetch the Meta overview and remount the active section
+  // (bumping refreshKey re-runs every child's data fetch) — no full page reload,
+  // so the admin session stays intact.
+  const refresh = async () => {
+    setRefreshing(true);
+    setOv(null);
+    await loadOv();
+    setRefreshKey((k) => k + 1);
+    setRefreshing(false);
+  };
 
   const sections = SECTIONS.filter((s) => (s.key === "ads" ? ov?.hasAds : true));
 
@@ -184,23 +198,31 @@ export default function Social({ pw }) {
         {sections.map((s) => (
           <button key={s.key} className={sec === s.key ? "on" : ""} onClick={() => setSec(s.key)}>{s.label}</button>
         ))}
+        <button className="soc-refresh" onClick={refresh} disabled={refreshing} title="Refresh this tab's data">
+          {refreshing ? "Refreshing…" : "⟳ Refresh"}
+        </button>
       </div>
 
-      {sec === "inbox" && <Inbox pw={pw} />}
-      {sec === "aicreate" && <AICreate pw={pw} />}
-      {sec === "scheduler" && <Scheduler pw={pw} />}
-      {sec === "whatsapp" && <WhatsApp pw={pw} />}
-      {sec === "linkedin" && <LinkedIn pw={pw} />}
-      {sec === "youtube" && <YouTube pw={pw} />}
-      {sec === "media" && <Media pw={pw} />}
-      {sec === "connections" && <Connections pw={pw} />}
-      {META_SECTIONS.includes(sec) && metaSection()}
+      <div key={refreshKey}>
+        {sec === "inbox" && <Inbox pw={pw} />}
+        {sec === "aicreate" && <AICreate pw={pw} />}
+        {sec === "scheduler" && <Scheduler pw={pw} />}
+        {sec === "whatsapp" && <WhatsApp pw={pw} />}
+        {sec === "linkedin" && <LinkedIn pw={pw} />}
+        {sec === "youtube" && <YouTube pw={pw} />}
+        {sec === "media" && <Media pw={pw} />}
+        {sec === "connections" && <Connections pw={pw} />}
+        {META_SECTIONS.includes(sec) && metaSection()}
+      </div>
     </div>
   );
 }
 
 const SOC_CSS = `
-.soc-nav{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid rgba(207,224,242,.1)}
+.soc-nav{display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid rgba(207,224,242,.1)}
+.soc-refresh{margin-left:auto; background:rgba(61,220,201,.14) !important; border:1px solid rgba(61,220,201,.4) !important; color:#7FD8CE !important; font-weight:700 !important}
+.soc-refresh:hover{background:rgba(61,220,201,.24) !important}
+.soc-refresh:disabled{opacity:.6; cursor:wait}
 .soc-nav button{background:rgba(207,224,242,.06); border:1px solid rgba(207,224,242,.12); color:rgba(232,238,246,.8); padding:9px 16px; border-radius:10px; font-size:14px; font-weight:600; cursor:pointer; font-family:inherit}
 .soc-nav button:hover{background:rgba(207,224,242,.12)}
 .soc-nav button.on{background:rgba(61,220,201,.16); border-color:rgba(61,220,201,.5); color:#7FD8CE}
