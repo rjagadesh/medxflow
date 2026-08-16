@@ -111,6 +111,7 @@ export function Nav() {
               <div className="nav-dd-mega-inner wrap">
                 <div className="nav-dd-col">
                   <div className="nav-dd-head">Platforms</div>
+                  <a href="/ai-agents-rcm" role="menuitem"><span className="nav-dd-em">🤖</span>AI Agents for RCM</a>
                   <a href="/#checkin" role="menuitem"><span className="nav-dd-em">🏥</span>{t("nav.p_kiosk")}</a>
                   <a href="/#voice" role="menuitem"><span className="nav-dd-em">📞</span>{t("nav.p_voice")}</a>
                   <a href="/telehealth" role="menuitem"><span className="nav-dd-em">💻</span>{t("nav.p_telehealth")}</a>

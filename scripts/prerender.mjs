@@ -13,6 +13,7 @@ import { fileURLToPath } from "node:url";
 import { PRODUCTS } from "../src/products.data.js";
 import { SPECIALTIES } from "../src/specialties.data.js";
 import { POSTS } from "../src/blog.data.js";
+import { AI_AGENTS_FAQ } from "../src/ai-agents-rcm.data.js";
 import { en } from "../src/i18n.strings.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -31,6 +32,28 @@ const routes = [
   ...SPECIALTIES.map((s) => ({ path: `/specialties/${s.slug}`, title: `${s.name} · AI agents for the revenue cycle · MedXFlow`, desc: s.tagline })),
   { path: "/blog", title: "Resources · RCM insights for medical practices · MedXFlow", desc: "Practical guides on claim denials, prior authorization, coding and the healthcare revenue cycle - for the people who run medical billing." },
   ...POSTS.map((p) => ({ path: `/blog/${p.slug}`, title: `${p.title} · MedXFlow`, desc: p.description, article: p })),
+  {
+    path: "/ai-agents-rcm",
+    title: "AI Agents for Healthcare RCM | MedXFlow",
+    desc: "AI agents for healthcare revenue cycle management - automate eligibility, prior authorization, coding, claims, denials, payment posting and patient collections. Book a free MedXFlow demo.",
+    jsonld: JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Service", name: "AI Agents for Healthcare Revenue Cycle Management",
+          serviceType: "AI revenue cycle management agents",
+          provider: { "@id": `${ORIGIN}/#organization` },
+          areaServed: { "@type": "Country", name: "United States" },
+          url: `${ORIGIN}/ai-agents-rcm`,
+          description: "AI agents that automate the healthcare revenue cycle - eligibility verification, prior authorization, medical coding, claims submission and follow-up, denial management, payment posting and patient collections.",
+        },
+        {
+          "@type": "FAQPage",
+          mainEntity: AI_AGENTS_FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+        },
+      ],
+    }),
+  },
 ];
 
 // Article + FAQ JSON-LD for a blog post (richer than the default WebPage graph).
@@ -70,7 +93,9 @@ function headFor(r) {
     .replace(/<meta[^>]*\bname="twitter:title"[^>]*>/, `<meta name="twitter:title" content="${t}" />`)
     .replace(/<meta[^>]*\bname="twitter:description"[^>]*>/, `<meta name="twitter:description" content="${d}" />`);
 
-  const ld = r.article
+  const ld = r.jsonld
+    ? r.jsonld
+    : r.article
     ? articleLd(r.article, url)
     : JSON.stringify({
         "@context": "https://schema.org", "@type": "WebPage",
