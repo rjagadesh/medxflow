@@ -13,7 +13,7 @@ import { fileURLToPath } from "node:url";
 import { PRODUCTS } from "../src/products.data.js";
 import { SPECIALTIES } from "../src/specialties.data.js";
 import { POSTS } from "../src/blog.data.js";
-import { AI_AGENTS_FAQ } from "../src/ai-agents-rcm.data.js";
+import { AI_AGENTS, AI_AGENTS_INTRO, AI_AGENTS_FAQ } from "../src/ai-agents-rcm.data.js";
 import { SEO_PAGES } from "../src/seo-pages.data.js";
 import { en } from "../src/i18n.strings.mjs";
 
@@ -24,6 +24,44 @@ const ORIGIN = "https://medxflow.ai";
 const esc = (s) => String(s)
   .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
+// --- Static body content (so non-JS + AI crawlers get the real text, not just
+// the <head>). React replaces this on hydration; it's SEO fodder + fast paint.
+const p = (t) => `<p>${esc(t)}</p>`;
+const h2 = (t) => `<h2>${esc(t)}</h2>`;
+const faqHtml = (faq) => (faq && faq.length ? `<section><h2>Frequently asked questions</h2>${faq.map((f) => `<h3>${esc(f.q)}</h3><p>${esc(f.a)}</p>`).join("")}</section>` : "");
+
+function blogPostBody(post) {
+  return `<article>` +
+    `<p>${esc(post.category)}</p>` +
+    `<h1>${esc(post.title)}</h1>` +
+    p(post.intro) +
+    post.sections.map((s) => h2(s.h) + (s.p || []).map(p).join("")).join("") +
+    faqHtml(post.faq) +
+    `</article>`;
+}
+function blogIndexBody() {
+  return `<section><h1>RCM insights for medical practices</h1>` +
+    POSTS.map((post) => `<article><h2><a href="/blog/${post.slug}">${esc(post.title)}</a></h2>${p(post.description)}</article>`).join("") +
+    `</section>`;
+}
+function seoPageBody(pg) {
+  return `<article><h1>${esc(pg.h1)}</h1>${p(pg.intro)}` +
+    pg.sections.map((s) => h2(s.h) + (s.p || []).map(p).join("") + (s.list ? `<ul>${s.list.map((li) => `<li>${esc(li)}</li>`).join("")}</ul>` : "")).join("") +
+    (pg.related ? `<nav><h2>Related</h2>${pg.related.map((r) => `<a href="${r.href}">${esc(r.label)}</a>`).join("")}</nav>` : "") +
+    faqHtml(pg.faq) +
+    `</article>`;
+}
+function aiAgentsBody() {
+  return `<article><h1>AI Agents for Healthcare Revenue Cycle Management</h1>` +
+    p(AI_AGENTS_INTRO) +
+    h2("The RCM agents MedXFlow runs") +
+    AI_AGENTS.map((a) => `<h3><a href="${a.href}">${esc(a.h)}</a></h3>${p(a.p)}`).join("") +
+    h2("How the agents work") +
+    p("Every MedXFlow RCM agent follows the same loop: Receive, Understand, Process, Validate, Escalate, Track - with your staff handling the exceptions.") +
+    faqHtml(AI_AGENTS_FAQ) +
+    `</article>`;
+}
+
 // Every route to prerender (homepage keeps its own index.html untouched).
 const routes = [
   { path: "/telehealth", title: "Telehealth · MedXFlow", desc: en.telehealth.hero_lead },
@@ -31,12 +69,13 @@ const routes = [
   ...PRODUCTS.map((p) => ({ path: `/products/${p.slug}`, title: `${p.name} · MedXFlow`, desc: p.tagline })),
   { path: "/specialties", title: "Specialties · AI agents by practice type · MedXFlow", desc: "AI revenue-cycle agents tuned to your specialty - MedSpa, dental, mental health, dermatology, physical therapy, cardiology, orthopedics and primary care." },
   ...SPECIALTIES.map((s) => ({ path: `/specialties/${s.slug}`, title: `${s.name} · AI agents for the revenue cycle · MedXFlow`, desc: s.tagline })),
-  { path: "/blog", title: "Resources · RCM insights for medical practices · MedXFlow", desc: "Practical guides on claim denials, prior authorization, coding and the healthcare revenue cycle - for the people who run medical billing." },
-  ...POSTS.map((p) => ({ path: `/blog/${p.slug}`, title: `${p.title} · MedXFlow`, desc: p.description, article: p })),
+  { path: "/blog", title: "Resources · RCM insights for medical practices · MedXFlow", desc: "Practical guides on claim denials, prior authorization, coding and the healthcare revenue cycle - for the people who run medical billing.", body: blogIndexBody() },
+  ...POSTS.map((p) => ({ path: `/blog/${p.slug}`, title: `${p.title} · MedXFlow`, desc: p.description, article: p, body: blogPostBody(p) })),
   {
     path: "/ai-agents-rcm",
     title: "AI Agents for Healthcare RCM | MedXFlow",
     desc: "AI agents for healthcare revenue cycle management - automate eligibility, prior authorization, coding, claims, denials, payment posting and patient collections. Book a free MedXFlow demo.",
+    body: aiAgentsBody(),
     jsonld: serviceLd({
       name: "AI Agents for Healthcare Revenue Cycle Management",
       serviceType: "AI revenue cycle management agents",
@@ -50,6 +89,7 @@ const routes = [
     path: `/${p.slug}`,
     title: p.title,
     desc: p.description,
+    body: seoPageBody(p),
     jsonld: serviceLd({
       name: p.h1,
       serviceType: p.kind === "audience" ? "AI revenue cycle management for " + p.eyebrow : "Healthcare RCM automation",
@@ -128,7 +168,18 @@ function headFor(r) {
         "@context": "https://schema.org", "@type": "WebPage",
         name: r.title, description: r.desc, url, isPartOf: { "@id": `${ORIGIN}/#website` },
       });
-  return out.replace("</head>", `    <script type="application/ld+json">${ld}</script>\n  </head>`);
+  out = out.replace("</head>", `    <script type="application/ld+json">${ld}</script>\n  </head>`);
+
+  // Inject static body content into #root for crawlers that don't run JS.
+  // Visually hidden so there's no unstyled flash before React mounts and
+  // replaces it. Rendered content is identical in meaning to the React output.
+  if (r.body) {
+    out = out.replace(
+      /<div id="root">\s*<\/div>/,
+      `<div id="root"><div id="prerender" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">${r.body}</div></div>`
+    );
+  }
+  return out;
 }
 
 // Regenerate sitemap.xml from every known route (homepage + all prerendered

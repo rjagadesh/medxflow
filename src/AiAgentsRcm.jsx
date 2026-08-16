@@ -2,16 +2,7 @@
 // the URL (/ai-agents-rcm), <title>, H1, section headings and body, with
 // internal links to product pages + blog. Prerendered with Service + FAQ schema.
 
-import { AI_AGENTS_FAQ as FAQ } from "./ai-agents-rcm.data.js";
-
-const AGENTS = [
-  { h: "Eligibility & benefits verification", href: "/products/eligibility-verification", p: "An AI agent checks coverage before every visit and re-verifies at month boundaries, so claims don't bounce for inactive or changed plans." },
-  { h: "Prior authorization", href: "/products/eligibility-verification", p: "Determines what needs auth, submits the request, tracks status, and attaches the approval to the claim — the manual portal work, handled." },
-  { h: "Medical coding & charge capture", href: "/products/charge-capture-coding", p: "Drafts codes from documentation, flags medical-necessity mismatches, and clears repetitive charts so coders focus on complex cases." },
-  { h: "Claims submission & follow-up", href: "/products", p: "Scrubs and submits claims, then follows up on status automatically instead of staff logging into payer portals." },
-  { h: "Denial management", href: "/products/denial-management", p: "Triages denials by reason, drafts appeals, and surfaces the root-cause patterns so the same denial doesn't keep coming back." },
-  { h: "Payment posting & patient collections", href: "/products", p: "Posts ERAs/EOBs, reconciles payments, and runs patient balance follow-up — closing the loop from claim to cash." },
-];
+import { AI_AGENTS as AGENTS, AI_AGENTS_INTRO, AI_AGENTS_FAQ as FAQ } from "./ai-agents-rcm.data.js";
 
 export default function AiAgentsRcm() {
   return (
@@ -31,7 +22,7 @@ export default function AiAgentsRcm() {
         <div className="wrap">
           <p className="eyebrow">AI Agents · Revenue Cycle Management</p>
           <h1>AI Agents for Healthcare Revenue Cycle Management</h1>
-          <p className="pl-lede">MedXFlow runs your entire revenue cycle with AI agents — eligibility, prior authorization, coding, claims, denials, payment posting and patient collections. The repetitive RCM work, automated; your team freed for the calls that need judgment.</p>
+          <p className="pl-lede">{AI_AGENTS_INTRO}</p>
           <div className="pl-cta-row">
             <a className="btn" href="/#cta">Book a free demo</a>
             <a className="btn btn-ghost" href="/products">See all products</a>
