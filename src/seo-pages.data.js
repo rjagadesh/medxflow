@@ -145,6 +145,48 @@ export const SEO_PAGES = [
       { q: "Can each practice keep its own payers and rules?", a: "Yes. The agents run with each practice's specific payers, plans and business rules." },
     ],
   },
+
+  {
+    slug: "ai-for-physician-practices",
+    kind: "audience",
+    title: "AI Revenue Cycle Automation for Physician Practices | MedXFlow",
+    h1: "AI Revenue Cycle Automation for Physician Practices",
+    eyebrow: "For Physician Practices",
+    description:
+      "MedXFlow gives physician practices AI agents that automate eligibility, prior authorization, coding, claims and denials — so a small billing team keeps the revenue cycle moving without falling behind.",
+    intro:
+      "Physician practices rarely have a big billing department — often it's a handful of people doing everything from the front desk to denials. MedXFlow's AI agents take the repetitive revenue-cycle work off that small team, so the practice gets paid faster without needing to hire.",
+    sections: [
+      {
+        h: "Built for lean billing teams",
+        p: [
+          "When one or two people run the revenue cycle, the repetitive work — eligibility checks, authorizations, claim follow-up, denials — is what eats the day and causes backlogs. Automating it lets a small team stay current and focus on the cases that actually need a person.",
+        ],
+      },
+      {
+        h: "Fewer denials, faster payment",
+        p: [
+          "Catching eligibility and coding issues before the claim goes out means fewer denials and less rework — which matters most when there's no one to spare for chasing claims. Cleaner claims and automated follow-up shorten the time from visit to payment.",
+        ],
+      },
+      {
+        h: "Works with the systems you already run",
+        p: [
+          "MedXFlow writes back into your existing practice management and EHR systems, so there's no rip-and-replace and no new workflow for staff to learn — the agents simply handle the volume in the background.",
+        ],
+      },
+    ],
+    related: [
+      { label: "AI Agents for Healthcare RCM", href: "/ai-agents-rcm" },
+      { label: "Healthcare RCM Automation", href: "/healthcare-rcm-automation" },
+      { label: "Eligibility Verification", href: "/products/eligibility-verification" },
+      { label: "Managed Billing Services", href: "/products/managed-billing" },
+    ],
+    faq: [
+      { q: "Is MedXFlow only for large groups?", a: "No — it's designed to help lean billing teams at small and mid-size physician practices keep the revenue cycle current without adding headcount." },
+      { q: "Do we need to replace our EHR?", a: "No. MedXFlow works alongside your existing EHR and practice management system, writing data back into them." },
+    ],
+  },
 ];
 
 export const seoPage = (slug) => SEO_PAGES.find((p) => p.slug === slug);

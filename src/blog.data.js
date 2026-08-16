@@ -421,6 +421,81 @@ export const POSTS = [
       { q: "Do we have to replace our systems?", a: "No. AI works alongside the practice management and EHR systems you already run, writing data back so your existing workflow stays intact." },
     ],
   },
+  {
+    slug: "medical-coding-automation-how-ai-assists-coders",
+    title: "Medical Coding Automation: How AI Assists Coders",
+    description:
+      "How AI assists medical coders — drafting codes from documentation, flagging medical-necessity mismatches, and clearing routine charts so coders focus on complex cases.",
+    date: "2026-08-16",
+    category: "Coding & Charge Capture",
+    readMins: 6,
+    keywords: ["medical coding automation", "AI medical coding", "computer-assisted coding", "coding automation"],
+    related: { label: "See MedXFlow Charge Capture & Coding", href: "/products/charge-capture-coding" },
+    intro:
+      "Coding is where clinical work becomes a billable claim — and where a surprising amount of revenue leaks. Automation doesn't replace certified coders; it removes the repetitive volume and catches errors early, so coders spend their expertise where it counts.",
+    sections: [
+      {
+        h: "Drafting codes from documentation",
+        p: [
+          "AI reads clinical documentation and drafts the likely CPT/ICD codes, giving coders a starting point instead of a blank chart. For routine, well-documented encounters this clears the queue quickly; for anything ambiguous, the coder reviews and decides.",
+        ],
+      },
+      {
+        h: "Catching medical-necessity mismatches",
+        p: [
+          "A large share of denials come from diagnosis/procedure mismatches that a scrub should have caught. AI flags medical-necessity mismatches before the claim goes out — turning a future denial into a quick pre-submission fix.",
+        ],
+      },
+      {
+        h: "Clearing the backlog",
+        p: [
+          "When routine charts are handled automatically, coders aren't buried in volume, and DNFB (discharged-not-final-billed) days fall. The expensive, high-judgment cases get the attention they need instead of waiting behind a pile of straightforward ones.",
+        ],
+      },
+    ],
+    faq: [
+      { q: "Does automation replace certified coders?", a: "No. It drafts codes and flags issues, but coders review and own the final coding — especially for complex cases. Automation removes repetitive volume, not judgment." },
+      { q: "How does coding automation reduce denials?", a: "By flagging medical-necessity mismatches and incomplete coding before submission, so those errors are fixed rather than denied and reworked." },
+    ],
+  },
+
+  {
+    slug: "automate-patient-billing-and-collections",
+    title: "How to Automate Patient Billing and Collections",
+    description:
+      "How AI automates patient billing and collections — clear statements, digital payment options and gentle automated follow-up that collects more without straining staff.",
+    date: "2026-08-16",
+    category: "Patient Collections",
+    readMins: 5,
+    keywords: ["patient billing automation", "automated patient collections", "patient statements", "healthcare patient payments"],
+    related: { label: "See MedXFlow Patient Statements & Collections", href: "/products/patient-collections" },
+    intro:
+      "As patients cover more of the bill, patient collections have become a bigger slice of practice revenue — and one of the hardest to chase. Automation makes patient billing consistent and less awkward, so you collect more without adding collections staff.",
+    sections: [
+      {
+        h: "Clear statements patients understand",
+        p: [
+          "Confusing bills don't get paid. Automated statements present balances clearly and consistently, which removes a major reason patients delay payment or call the office for an explanation.",
+        ],
+      },
+      {
+        h: "Easy digital payment",
+        p: [
+          "The fewer steps to pay, the more people pay. Digital payment options let patients settle a balance in a tap, rather than mailing a check or calling in card details — which lifts collection rates and cuts inbound calls.",
+        ],
+      },
+      {
+        h: "Gentle, automated follow-up",
+        p: [
+          "Most unpaid balances just need a reminder. Automated, respectful follow-up keeps balances moving without staff manually working a call list — and escalates only the accounts that genuinely need a human touch.",
+        ],
+      },
+    ],
+    faq: [
+      { q: "Does automating collections feel impersonal to patients?", a: "Done well, it's the opposite — clearer statements and easy payment reduce friction and confused calls. Follow-up stays gentle, and staff step in on the accounts that need a personal conversation." },
+      { q: "Does it handle payment reconciliation?", a: "Patient payments post and reconcile alongside payer remittances, so balances stay accurate across the revenue cycle." },
+    ],
+  },
 ];
 
 export const post = (slug) => POSTS.find((p) => p.slug === slug);
