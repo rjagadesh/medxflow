@@ -66,9 +66,21 @@ function aiAgentsBody() {
 const routes = [
   { path: "/telehealth", title: "Telehealth · MedXFlow", desc: en.telehealth.hero_lead },
   { path: "/products", title: "Products · MedXFlow", desc: "The connected stages of Revenue Cycle Management, plus VoIP, telehealth and a human-led managed billing team - one platform for the whole practice." },
-  ...PRODUCTS.map((p) => ({ path: `/products/${p.slug}`, title: `${p.name} · MedXFlow`, desc: p.tagline })),
+  ...PRODUCTS.map((p) => ({
+    path: `/products/${p.slug}`, title: `${p.name} · MedXFlow`, desc: p.tagline,
+    jsonld: serviceLd({
+      name: p.name, serviceType: "Healthcare revenue cycle management", url: `${ORIGIN}/products/${p.slug}/`,
+      description: p.tagline, crumbs: [["Home", "/"], ["Products", "/products/"], [p.name, `/products/${p.slug}/`]],
+    }),
+  })),
   { path: "/specialties", title: "Specialties · AI agents by practice type · MedXFlow", desc: "AI revenue-cycle agents tuned to your specialty - MedSpa, dental, mental health, dermatology, physical therapy, cardiology, orthopedics and primary care." },
-  ...SPECIALTIES.map((s) => ({ path: `/specialties/${s.slug}`, title: `${s.name} · AI agents for the revenue cycle · MedXFlow`, desc: s.tagline })),
+  ...SPECIALTIES.map((s) => ({
+    path: `/specialties/${s.slug}`, title: `${s.name} · AI agents for the revenue cycle · MedXFlow`, desc: s.tagline,
+    jsonld: serviceLd({
+      name: `${s.name} revenue cycle management`, serviceType: "Healthcare revenue cycle management", url: `${ORIGIN}/specialties/${s.slug}/`,
+      description: s.tagline, crumbs: [["Home", "/"], ["Specialties", "/specialties/"], [s.name, `/specialties/${s.slug}/`]],
+    }),
+  })),
   { path: "/blog", title: "Resources · RCM insights for medical practices · MedXFlow", desc: "Practical guides on claim denials, prior authorization, coding and the healthcare revenue cycle - for the people who run medical billing.", body: blogIndexBody() },
   ...POSTS.map((p) => ({ path: `/blog/${p.slug}`, title: `${p.title} · MedXFlow`, desc: p.description, article: p, body: blogPostBody(p) })),
   {

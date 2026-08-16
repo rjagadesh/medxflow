@@ -328,6 +328,99 @@ export const POSTS = [
       { q: "Does AI submit to all payers?", a: "MedXFlow generates and submits compliant claims to every major payer and clearinghouse, and follows up on status automatically." },
     ],
   },
+  {
+    slug: "ai-denial-management-classification-to-appeal",
+    title: "AI Denial Management: From Classification to Appeal",
+    description:
+      "How AI works a denial end to end — classifying it, finding the root cause, correcting and appealing, and feeding the pattern back upstream to prevent the next one.",
+    date: "2026-08-16",
+    category: "Denial Management",
+    readMins: 6,
+    keywords: ["AI denial management", "denial classification", "automated denial appeals", "healthcare denial workflow"],
+    related: { label: "See MedXFlow Denial Management", href: "/products/denial-management" },
+    intro:
+      "A denial isn't the end of a claim — it's a workflow. The practices that recover the most revenue treat every denial as two jobs: work this one, and prevent the next one. AI makes both practical at volume, where manual teams usually only manage the first.",
+    sections: [
+      {
+        h: "Step 1 — Classify and prioritize",
+        p: [
+          "Denials arrive with reason codes (CARC/RARC), but the codes alone don't tell you what to do. AI classifies each denial by type and prioritizes by recoverable value and appeal deadline, so the work queue reflects what actually matters instead of arrival order.",
+        ],
+      },
+      {
+        h: "Step 2 — Find the root cause",
+        p: [
+          "The reason code says what the payer flagged; the root cause is why it happened — a missing modifier, an eligibility miss, a documentation gap. Identifying root cause is what turns a one-off fix into a prevention. AI surfaces the pattern across many denials, not just the single claim.",
+        ],
+      },
+      {
+        h: "Step 3 — Correct and appeal",
+        p: [
+          "For correctable denials, the fix is applied and the claim resubmitted; for the rest, AI drafts the appeal with the right documentation and submits it inside the payer's window. Speed matters here — many appeals are lost simply to missed deadlines.",
+        ],
+      },
+      {
+        h: "Step 4 — Feed it back upstream",
+        p: [
+          "The most valuable output of denial management isn't the recovered claim — it's the signal telling you which upstream step to fix. When root-cause patterns flow back to eligibility, coding or authorization, the same denial stops recurring and your first-pass rate climbs.",
+        ],
+      },
+    ],
+    faq: [
+      { q: "Why treat denials as a workflow, not one-off fixes?", a: "Because the same root causes recur. Working a denial recovers one claim; fixing its root cause prevents dozens. AI makes the prevention loop practical by surfacing patterns across all denials." },
+      { q: "Can AI write appeals?", a: "AI drafts appeals with the appropriate documentation and submits them within payer deadlines, escalating complex disputes to staff." },
+    ],
+  },
+
+  {
+    slug: "healthcare-revenue-cycle-management-with-ai",
+    title: "Healthcare Revenue Cycle Management with AI: A Practical Overview",
+    description:
+      "A practical overview of using AI across healthcare revenue cycle management — which stages it automates, where humans stay in the loop, and what changes for your team.",
+    date: "2026-08-16",
+    category: "Healthcare RCM",
+    readMins: 7,
+    keywords: ["healthcare revenue cycle management with AI", "AI in RCM", "AI revenue cycle management", "RCM AI"],
+    related: { label: "See MedXFlow AI Agents for RCM", href: "/ai-agents-rcm" },
+    intro:
+      "AI in the revenue cycle isn't one feature — it's automation applied across a chain of tasks that were previously manual. This overview walks through where AI fits, stage by stage, and what actually changes for the people doing the work.",
+    sections: [
+      {
+        h: "The revenue cycle, briefly",
+        p: [
+          "The revenue cycle runs from the first appointment to the final payment: patient access and scheduling, eligibility and prior authorization, charge capture and coding, claims submission, payment posting, denial management, and patient collections. Each stage hands off to the next, and each handoff is a place work can stall.",
+        ],
+      },
+      {
+        h: "Where AI automates",
+        list: [
+          "Eligibility and benefits verification before the visit.",
+          "Prior authorization detection, submission and tracking.",
+          "Charge capture and coding with medical-necessity checks.",
+          "Claim scrubbing, submission and status follow-up.",
+          "Payment posting and reconciliation.",
+          "Denial classification, appeals and root-cause analysis.",
+          "Patient statements and balance follow-up.",
+        ],
+      },
+      {
+        h: "Where humans stay in the loop",
+        p: [
+          "AI handles the repetitive volume and escalates anything uncertain — complex payer disputes, unusual cases, judgment calls. Nothing runs unattended, and every action is documented, assigned and auditable. The shift for staff is away from portal busywork and toward the exceptions that need their expertise.",
+        ],
+      },
+      {
+        h: "What changes for your team",
+        p: [
+          "The headline change is capacity: the same team handles more volume because the repetitive work is automated. The secondary change is consistency — rules get applied the same way every time, so quality doesn't swing with staffing. The goal isn't fewer people; it's people focused on higher-value work.",
+        ],
+      },
+    ],
+    faq: [
+      { q: "Is AI in RCM proven, or experimental?", a: "The tasks AI automates in RCM — eligibility, authorization, coding, claims follow-up, denials — are well-defined, rules-based workflows. That's what makes them a good fit for automation, with humans handling exceptions." },
+      { q: "Do we have to replace our systems?", a: "No. AI works alongside the practice management and EHR systems you already run, writing data back so your existing workflow stays intact." },
+    ],
+  },
 ];
 
 export const post = (slug) => POSTS.find((p) => p.slug === slug);
