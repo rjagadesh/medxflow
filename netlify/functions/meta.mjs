@@ -48,6 +48,25 @@ async function safe(fn) {
 }
 
 // ---- actions ---------------------------------------------------------------
+// Fetch one insights metric on its own, so a single invalid/ungranted metric
+// only blanks its own tile (batching them means one bad metric 400s the lot).
+// Returns { value, note } - note explains a blank when we can.
+async function oneMetric(cfg, node, metric, extra = {}) {
+  const r = await safe(() => graph(cfg, `${node}/insights`, {
+    token: cfg.pageToken,
+    params: { metric, period: "days_28", ...extra },
+  }));
+  if (!r.ok) {
+    const e = r.error || "";
+    if (/valid insights metric/i.test(e)) return { value: null, note: "retired by Meta" };
+    if (/permission/i.test(e)) return { value: null, note: "needs instagram_manage_insights permission" };
+    return { value: null, note: e.slice(0, 80) };
+  }
+  const m = (r.data.data || [])[0];
+  const v = m?.total_value?.value ?? (m?.values?.length ? m.values[m.values.length - 1].value : null);
+  return { value: v ?? null, note: v == null ? "no data yet" : null };
+}
+
 async function overview(cfg) {
   const out = { page: null, instagram: null, pageError: null, igError: null };
 
@@ -56,24 +75,27 @@ async function overview(cfg) {
       token: cfg.pageToken,
       params: { fields: "name,fan_count,followers_count,link,new_like_count" },
     }));
-    const ins = await safe(() => graph(cfg, `${cfg.pageId}/insights`, {
-      token: cfg.pageToken,
-      params: { metric: "page_impressions,page_post_engagements,page_views_total", period: "days_28" },
-    }));
     if (info.ok) {
-      const metric = (name) => {
-        const m = ins.ok && (ins.data.data || []).find((x) => x.name === name);
-        const vals = m?.values || [];
-        return vals.length ? vals[vals.length - 1].value : null;
-      };
+      // Metrics fetched individually; page_impressions was retired by Meta, so
+      // we surface new-follows instead of a permanently-blank impressions tile.
+      const [engagements, views, newFollows] = await Promise.all([
+        oneMetric(cfg, cfg.pageId, "page_post_engagements"),
+        oneMetric(cfg, cfg.pageId, "page_views_total"),
+        oneMetric(cfg, cfg.pageId, "page_daily_follows_unique"),
+      ]);
       out.page = {
         name: info.data.name,
         link: info.data.link,
         fans: info.data.fan_count ?? info.data.followers_count ?? null,
         followers: info.data.followers_count ?? null,
-        impressions28: metric("page_impressions"),
-        engagements28: metric("page_post_engagements"),
-        views28: metric("page_views_total"),
+        engagements28: engagements.value,
+        views28: views.value,
+        newFollows28: newFollows.value,
+        notes: {
+          engagements28: engagements.note,
+          views28: views.note,
+          newFollows28: newFollows.note,
+        },
       };
     } else out.pageError = info.error;
   }
@@ -83,22 +105,19 @@ async function overview(cfg) {
       token: cfg.pageToken,
       params: { fields: "username,followers_count,media_count,profile_picture_url" },
     }));
-    const ins = await safe(() => graph(cfg, `${cfg.igId}/insights`, {
-      token: cfg.pageToken,
-      params: { metric: "reach,profile_views", period: "days_28", metric_type: "total_value" },
-    }));
     if (info.ok) {
-      const metric = (name) => {
-        const m = ins.ok && (ins.data.data || []).find((x) => x.name === name);
-        return m?.total_value?.value ?? (m?.values?.[m.values.length - 1]?.value ?? null);
-      };
+      const [reach, profileViews] = await Promise.all([
+        oneMetric(cfg, cfg.igId, "reach", { metric_type: "total_value" }),
+        oneMetric(cfg, cfg.igId, "profile_views", { metric_type: "total_value" }),
+      ]);
       out.instagram = {
         username: info.data.username,
         avatar: info.data.profile_picture_url,
         followers: info.data.followers_count ?? null,
         posts: info.data.media_count ?? null,
-        reach28: metric("reach"),
-        profileViews28: metric("profile_views"),
+        reach28: reach.value,
+        profileViews28: profileViews.value,
+        notes: { reach28: reach.note, profileViews28: profileViews.note },
       };
     } else out.igError = info.error;
   }

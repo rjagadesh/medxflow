@@ -77,16 +77,24 @@ export function MetaSetup({ reason }) {
 }
 
 export function Insights({ ov }) {
+  // A stat tile that shows the value, or "—" plus the reason it's blank.
+  const Stat = ({ value, label, note }) => (
+    <div className="ad-stat">
+      <b>{num(value)}</b>
+      <span>{label}</span>
+      {value == null && note && <em className="mt-stat-note">{note}</em>}
+    </div>
+  );
   return (
     <div>
       {ov.page ? (
         <div className="ad-card seo-card">
           <div className="seo-card-h">📘 Facebook Page — {ov.page.name}</div>
           <div className="ad-stats mt-stats">
-            <div className="ad-stat"><b>{num(ov.page.followers ?? ov.page.fans)}</b><span>Followers</span></div>
-            <div className="ad-stat"><b>{num(ov.page.impressions28)}</b><span>Impressions (28d)</span></div>
-            <div className="ad-stat"><b>{num(ov.page.engagements28)}</b><span>Engagements (28d)</span></div>
-            <div className="ad-stat"><b>{num(ov.page.views28)}</b><span>Page views (28d)</span></div>
+            <Stat value={ov.page.followers ?? ov.page.fans} label="Followers" />
+            <Stat value={ov.page.engagements28} label="Engagements (28d)" note={ov.page.notes?.engagements28} />
+            <Stat value={ov.page.views28} label="Page views (28d)" note={ov.page.notes?.views28} />
+            <Stat value={ov.page.newFollows28} label="New follows (28d)" note={ov.page.notes?.newFollows28} />
           </div>
           {ov.page.link && <div className="mt-link"><a href={ov.page.link} target="_blank" rel="noreferrer">Open Page ↗</a></div>}
         </div>
@@ -98,11 +106,14 @@ export function Insights({ ov }) {
         <div className="ad-card seo-card">
           <div className="seo-card-h">📷 Instagram — @{ov.instagram.username}</div>
           <div className="ad-stats mt-stats">
-            <div className="ad-stat"><b>{num(ov.instagram.followers)}</b><span>Followers</span></div>
-            <div className="ad-stat"><b>{num(ov.instagram.posts)}</b><span>Posts</span></div>
-            <div className="ad-stat"><b>{num(ov.instagram.reach28)}</b><span>Reach (28d)</span></div>
-            <div className="ad-stat"><b>{num(ov.instagram.profileViews28)}</b><span>Profile views (28d)</span></div>
+            <Stat value={ov.instagram.followers} label="Followers" />
+            <Stat value={ov.instagram.posts} label="Posts" />
+            <Stat value={ov.instagram.reach28} label="Reach (28d)" note={ov.instagram.notes?.reach28} />
+            <Stat value={ov.instagram.profileViews28} label="Profile views (28d)" note={ov.instagram.notes?.profileViews28} />
           </div>
+          {(ov.instagram.notes?.reach28 || "").includes("instagram_manage_insights") && (
+            <div className="mt-link"><span className="mt-stat-note" style={{ fontStyle: "normal" }}>Reach & profile views need the <code>instagram_manage_insights</code> permission (add it in the Meta app + re-generate the Page token).</span></div>
+          )}
         </div>
       ) : ov.igError ? (
         <div className="ad-card seo-card"><div className="seo-card-h">📷 Instagram</div><div className="mt-carderr">Couldn't load Instagram: {ov.igError}</div></div>
@@ -447,6 +458,8 @@ export const CSS = `
 .mt-subnav button{background:rgba(207,224,242,.06); border:1px solid rgba(207,224,242,.12); color:rgba(232,238,246,.75); padding:8px 14px; border-radius:9px; font-size:13.5px; font-weight:600; cursor:pointer}
 .mt-subnav button.on{background:rgba(61,220,201,.14); border-color:rgba(61,220,201,.45); color:#7FD8CE}
 .mt-stats{margin:16px}
+.mt-stat-note{display:block; margin-top:4px; font-size:10.5px; font-style:italic; color:rgba(232,238,246,.4); line-height:1.35}
+.mt-stat-note code{font-style:normal; font-family:'Spline Sans Mono',monospace; font-size:10px}
 .mt-link{padding:0 16px 14px} .mt-link a{color:#7FD8CE; font-size:13px; text-decoration:none}
 .mt-hint{padding:12px 16px; font-size:13px; color:rgba(232,238,246,.55)}
 .mt-hint code,.mt-setup code{background:rgba(207,224,242,.12); padding:1px 6px; border-radius:5px; font-size:12.5px; color:#7FD8CE}
