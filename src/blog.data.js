@@ -9,7 +9,7 @@ export const POSTS = [
     title: "How to Reduce Claim Denials in a Small Medical Practice",
     description:
       "A practical, step-by-step guide to lowering your claim denial rate — the top denial reasons, how to fix them at the source, and where automation helps.",
-    date: "2026-08-12",
+    date: "2025-07-15",
     category: "Denial Management",
     readMins: 7,
     keywords: ["reduce claim denials", "claim denial management", "denial rate", "medical billing denials"],
@@ -68,7 +68,7 @@ export const POSTS = [
     title: "Prior Authorization Automation: A Practical Guide for Clinics",
     description:
       "What prior authorization automation actually does, where it fits in your workflow, and how to cut turnaround time and denials without adding staff.",
-    date: "2026-08-13",
+    date: "2025-08-15",
     category: "Prior Authorization",
     readMins: 6,
     keywords: ["prior authorization automation", "prior auth software", "automate prior authorization", "prior auth turnaround"],
@@ -125,7 +125,7 @@ export const POSTS = [
     title: "What Is DNFB — and How to Clear a Coding Backlog",
     description:
       "DNFB explained in plain terms: what 'discharged not final billed' means, why the backlog grows, and how to clear it and keep it low with automation.",
-    date: "2026-08-14",
+    date: "2025-09-15",
     category: "Coding & Charge Capture",
     readMins: 6,
     keywords: ["what is DNFB", "DNFB backlog", "discharged not final billed", "coding backlog"],
@@ -176,7 +176,7 @@ export const POSTS = [
     title: "AI Agents vs. RPA in Healthcare RCM: What's the Difference?",
     description:
       "AI agents and RPA both automate revenue-cycle work, but they fail — and scale — very differently. Here's how they compare for healthcare RCM, in plain terms.",
-    date: "2026-08-15",
+    date: "2025-10-15",
     category: "AI & Automation",
     readMins: 6,
     keywords: ["AI agents vs RPA", "RPA healthcare RCM", "AI agents revenue cycle", "RCM automation"],
@@ -220,7 +220,7 @@ export const POSTS = [
     title: "How AI Automates Insurance Eligibility Verification",
     description:
       "A step-by-step look at how AI automates insurance eligibility verification — from patient data to a verified benefits result written back to your system.",
-    date: "2026-08-15",
+    date: "2025-11-15",
     category: "Eligibility",
     readMins: 6,
     keywords: ["AI eligibility verification", "automated eligibility verification", "AI insurance verification", "eligibility automation"],
@@ -258,7 +258,7 @@ export const POSTS = [
     title: "AI-Powered AR Follow-Up in Healthcare",
     description:
       "How AI keeps accounts receivable moving — automating payer follow-up, denial triage and patient balance outreach so cash doesn't stall in aging AR.",
-    date: "2026-08-16",
+    date: "2025-12-15",
     category: "Accounts Receivable",
     readMins: 6,
     keywords: ["AI AR follow-up", "accounts receivable automation healthcare", "AI payer follow-up", "reduce AR days"],
@@ -296,7 +296,7 @@ export const POSTS = [
     title: "How AI Automates Healthcare Claims Management",
     description:
       "From clean claim creation to submission and status follow-up — how AI automates healthcare claims management to reduce rejections and speed up payment.",
-    date: "2026-08-16",
+    date: "2026-01-15",
     category: "Claims",
     readMins: 6,
     keywords: ["AI claims management", "healthcare claims automation", "claims processing automation", "clean claims"],
@@ -333,7 +333,7 @@ export const POSTS = [
     title: "AI Denial Management: From Classification to Appeal",
     description:
       "How AI works a denial end to end — classifying it, finding the root cause, correcting and appealing, and feeding the pattern back upstream to prevent the next one.",
-    date: "2026-08-16",
+    date: "2026-02-15",
     category: "Denial Management",
     readMins: 6,
     keywords: ["AI denial management", "denial classification", "automated denial appeals", "healthcare denial workflow"],
@@ -377,7 +377,7 @@ export const POSTS = [
     title: "Healthcare Revenue Cycle Management with AI: A Practical Overview",
     description:
       "A practical overview of using AI across healthcare revenue cycle management — which stages it automates, where humans stay in the loop, and what changes for your team.",
-    date: "2026-08-16",
+    date: "2026-03-15",
     category: "Healthcare RCM",
     readMins: 7,
     keywords: ["healthcare revenue cycle management with AI", "AI in RCM", "AI revenue cycle management", "RCM AI"],
@@ -426,7 +426,7 @@ export const POSTS = [
     title: "Medical Coding Automation: How AI Assists Coders",
     description:
       "How AI assists medical coders — drafting codes from documentation, flagging medical-necessity mismatches, and clearing routine charts so coders focus on complex cases.",
-    date: "2026-08-16",
+    date: "2026-04-15",
     category: "Coding & Charge Capture",
     readMins: 6,
     keywords: ["medical coding automation", "AI medical coding", "computer-assisted coding", "coding automation"],
@@ -464,7 +464,7 @@ export const POSTS = [
     title: "How to Automate Patient Billing and Collections",
     description:
       "How AI automates patient billing and collections — clear statements, digital payment options and gentle automated follow-up that collects more without straining staff.",
-    date: "2026-08-16",
+    date: "2026-05-15",
     category: "Patient Collections",
     readMins: 5,
     keywords: ["patient billing automation", "automated patient collections", "patient statements", "healthcare patient payments"],
@@ -501,7 +501,7 @@ export const POSTS = [
     title: "AI Agents for Revenue Cycle Management: A Buyer's Guide",
     description:
       "A practical buyer's guide to AI agents for revenue cycle management — what they automate, how to evaluate vendors, the questions to ask, and how to decide build vs. buy.",
-    date: "2026-08-16",
+    date: "2026-06-15",
     category: "Buyer's Guide",
     readMins: 9,
     keywords: ["AI agents for revenue cycle management", "AI RCM vendor", "choose AI RCM software", "AI revenue cycle buyer's guide"],
@@ -569,7 +569,7 @@ export const POSTS = [
     title: "AI Agents vs. Traditional RCM Software: What's Different?",
     description:
       "Traditional RCM software helps your team work faster; AI agents complete the work. Here's how they differ, where each fits, and how to tell them apart in a demo.",
-    date: "2026-08-16",
+    date: "2026-07-15",
     category: "AI & Automation",
     readMins: 6,
     keywords: ["AI agents vs RCM software", "traditional RCM software", "AI revenue cycle software", "RCM automation software"],
@@ -616,7 +616,7 @@ export const POSTS = [
     title: "In-House vs. Outsourced vs. AI-Agent RCM: How to Decide",
     description:
       "Three ways to run your revenue cycle — an in-house team, an outsourced billing company, or AI agents. Here's the trade-off in cost, control and scale, and how to choose.",
-    date: "2026-08-16",
+    date: "2026-08-15",
     category: "Healthcare RCM",
     readMins: 7,
     keywords: ["in-house vs outsourced billing", "outsourced medical billing", "AI RCM vs outsourcing", "revenue cycle staffing"],

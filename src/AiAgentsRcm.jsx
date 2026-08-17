@@ -2,21 +2,17 @@
 // the URL (/ai-agents-rcm), <title>, H1, section headings and body, with
 // internal links to product pages + blog. Prerendered with Service + FAQ schema.
 
+import { LanguageProvider } from "./i18n.jsx";
+import { Nav, Footer, BookDemo, CSS as SITE_CSS } from "./EirimFrontDesk.jsx";
 import { AI_AGENTS as AGENTS, AI_AGENTS_INTRO, AI_AGENTS_FAQ as FAQ } from "./ai-agents-rcm.data.js";
 
 export default function AiAgentsRcm() {
   return (
-    <div className="pillar">
-      <style>{CSS}</style>
-      <nav className="pl-nav">
-        <a href="/" className="pl-brand"><b>Med<span>X</span>Flow</b></a>
-        <div className="pl-nav-links">
-          <a href="/products">Products</a>
-          <a href="/specialties">Specialties</a>
-          <a href="/blog">Resources</a>
-          <a href="/#cta" className="pl-nav-cta">Book a demo</a>
-        </div>
-      </nav>
+    <LanguageProvider>
+      <div className="eirim pillar">
+        <style>{SITE_CSS}</style>
+        <style>{CSS}</style>
+        <Nav resources />
 
       <header className="pl-hero">
         <div className="wrap">
@@ -97,20 +93,17 @@ export default function AiAgentsRcm() {
         </section>
       </main>
 
-      <footer className="pl-foot">
-        <div className="wrap">
-          <span>© MedXFlow — AI revenue cycle management for medical practices.</span>
-          <span><a href="/products">Products</a> · <a href="/specialties">Specialties</a> · <a href="/blog">Resources</a></span>
-        </div>
-      </footer>
-    </div>
+        <Footer />
+        <BookDemo />
+      </div>
+    </LanguageProvider>
   );
 }
 
 const CSS = `
 .pillar{--ink:#0D2B52;--spruce:#1A5DAD;--gorse:#17C3B2;--mist:#F2F6FB;--paper:#FFFFFF;--seaglass:#CFE0F2;
   background:var(--paper); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; line-height:1.65}
-.pillar .wrap{max-width:1000px; margin:0 auto; padding:0 24px}
+.pillar .wrap:not(.nav-in):not(.foot-in){max-width:1000px; margin:0 auto; padding:0 24px}
 .pillar .eyebrow{font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--spruce); margin:0 0 12px}
 .pillar h1{font-size:clamp(30px,5vw,46px); line-height:1.08; letter-spacing:-.02em; margin:0 0 16px; font-weight:800; text-wrap:balance}
 .pl-nav{display:flex; align-items:center; justify-content:space-between; gap:16px; max-width:1000px; margin:0 auto; padding:18px 24px; flex-wrap:wrap}
