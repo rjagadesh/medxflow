@@ -73,10 +73,11 @@ export default async (req) => {
     const start = new Date(Date.now() - 30 * 864e5);
     const range = { startDate: ymd(start), endDate: ymd(end) };
 
-    const [totalsRes, rowsRes, pagesRes] = await Promise.all([
+    const [totalsRes, rowsRes, pagesRes, dateRes] = await Promise.all([
       query(token, siteUrl, { ...range }),
       query(token, siteUrl, { ...range, dimensions: ["query"], rowLimit: 25 }),
       query(token, siteUrl, { ...range, dimensions: ["page"], rowLimit: 25 }),
+      query(token, siteUrl, { ...range, dimensions: ["date"], rowLimit: 60 }),
     ]);
     const totals = totalsRes.rows?.[0] || { clicks: 0, impressions: 0, ctr: 0, position: 0 };
     const rows = (rowsRes.rows || []).map((r) => ({
@@ -84,10 +85,16 @@ export default async (req) => {
       clicks: r.clicks, impressions: r.impressions, ctr: r.ctr, position: r.position,
     }));
 
+    // Daily series for the trend graphs (sorted oldest → newest).
+    const series = (dateRes.rows || [])
+      .map((r) => ({ date: r.keys?.[0], clicks: r.clicks || 0, impressions: r.impressions || 0, ctr: r.ctr || 0, position: r.position || 0 }))
+      .sort((a, b) => String(a.date).localeCompare(String(b.date)));
+
     return json({
       configured: true,
       range,
       totals,
+      series,
       rows,
       // Google anonymizes low-volume queries; flag when impressions exist but no
       // query rows came back, so the UI can explain the empty table.

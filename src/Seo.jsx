@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { flatEn } from "./i18n.strings.mjs";
 import { PRODUCTS } from "./products.data.js";
+import { TrendChart } from "./Meta.jsx";
 
 // ── Self-audit rules ──────────────────────────────────────────────────────
 const TITLE_MIN = 30, TITLE_MAX = 60;
@@ -190,6 +191,20 @@ export default function Seo({ pw }) {
                   <div className="ad-stat"><b>{gsc.totals?.ctr != null ? (gsc.totals.ctr * 100).toFixed(1) + "%" : "-"}</b><span>CTR</span></div>
                   <div className="ad-stat"><b>{gsc.totals?.position != null ? gsc.totals.position.toFixed(1) : "-"}</b><span>Avg. position</span></div>
                 </div>
+
+                {gsc.series?.length ? (
+                  <>
+                    <div className="seo-gsc-sub">Trends — last 30 days</div>
+                    <div className="tr-grid">
+                      <TrendChart title="Clicks" ic="🖱" points={gsc.series.map((s) => ({ d: s.date, v: s.clicks }))} color="#3DDCC9" />
+                      <TrendChart title="Impressions" ic="👁" points={gsc.series.map((s) => ({ d: s.date, v: s.impressions }))} color="#5AA9F5" />
+                      <TrendChart title="Avg. position" ic="📍" points={gsc.series.map((s) => ({ d: s.date, v: s.position }))} color="#F2C14E" fmtTotal={() => (gsc.totals?.position != null ? gsc.totals.position.toFixed(1) : "—")} fmtLast={(v) => v.toFixed(1)} />
+                      <TrendChart title="CTR %" ic="🎯" points={gsc.series.map((s) => ({ d: s.date, v: +(s.ctr * 100).toFixed(1) }))} color="#B79CE0" fmtTotal={() => (gsc.totals?.ctr != null ? (gsc.totals.ctr * 100).toFixed(1) + "%" : "—")} fmtLast={(v) => v + "%"} />
+                    </div>
+                    <p className="seo-hint" style={{ marginTop: 6 }}>Note: for “Avg. position”, lower is better — a falling line means you're ranking higher.</p>
+                  </>
+                ) : null}
+
                 <div className="seo-gsc-sub">Top queries</div>
                 {(gsc.rows || []).length ? (
                   <div className="ad-scroll ad-scroll-tall">
@@ -247,6 +262,17 @@ export default function Seo({ pw }) {
 }
 
 const CSS = `
+.tr-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; margin:8px 0 4px}
+.tr-card{background:rgba(207,224,242,.04); border:1px solid rgba(207,224,242,.1); border-radius:12px; padding:12px 14px 6px}
+.tr-head{display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:6px}
+.tr-title{font-size:13px; font-weight:700; color:#E8EEF6}
+.tr-vals{font-size:11.5px; color:rgba(232,238,246,.5); font-variant-numeric:tabular-nums; white-space:nowrap}
+.tr-vals b{color:#7FD8CE; font-weight:800}
+.tr-svg{width:100%; height:84px; display:block}
+.tr-base{stroke:rgba(207,224,242,.14); stroke-width:1}
+.tr-x{fill:rgba(232,238,246,.4); font-size:9px; font-family:'Spline Sans Mono',monospace}
+.tr-empty{font-size:12px; color:rgba(232,238,246,.4); padding:24px 4px; text-align:center}
+@media(max-width:640px){.tr-grid{grid-template-columns:1fr}}
 .seo-top{display:flex; align-items:center; gap:20px; margin-bottom:20px}
 .seo-score{width:110px; height:110px; flex:none; border-radius:50%; display:grid; place-items:center; text-align:center; border:5px solid}
 .seo-score b{font-size:34px; font-weight:800; line-height:1} .seo-score span{font-size:12px; opacity:.7}
