@@ -813,7 +813,7 @@ function CTA() {
             <p className="lead-light">{t("cta.lead")}</p>
             <div className="cta-contact">
               <a href="tel:+12103969718">📞 (210) 396-9718</a>
-              <a href="https://wa.me/14693128805?text=Hi%20MedXFlow%2C%20I%27d%20like%20to%20learn%20more%20about%20your%20AI%20RCM%20platform." target="_blank" rel="noopener noreferrer">💬 WhatsApp us</a>
+              <a href="https://wa.me/14693128805?text=Hi%20MedXFlow%2C%20I%27d%20like%20to%20know%20more%20about%20your%20AI%20RCM%20platform." target="_blank" rel="noopener noreferrer">💬 WhatsApp us</a>
               <a href="mailto:sales@medxflow.ai">✉ sales@medxflow.ai</a>
             </div>
           </Reveal>
@@ -837,7 +837,7 @@ export function Footer() {
         <div className="brand brand-foot"><ShamrockMark size={24} variant="light" /><span>MedXFlow <b>Health</b></span></div>
         <div className="foot-links">
           <a href="tel:+12103969718">📞 (210) 396-9718</a>
-          <a href="https://wa.me/14693128805?text=Hi%20MedXFlow%2C%20I%27d%20like%20to%20learn%20more%20about%20your%20AI%20RCM%20platform." target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
+          <a href="https://wa.me/14693128805?text=Hi%20MedXFlow%2C%20I%27d%20like%20to%20know%20more%20about%20your%20AI%20RCM%20platform." target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
           <a href="mailto:sales@medxflow.ai">sales@medxflow.ai</a>
         </div>
         <div className="foot-legal">{t("footer.legal")}</div>
