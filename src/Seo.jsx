@@ -121,51 +121,6 @@ export default function Seo({ pw }) {
     <div>
       <style>{CSS}</style>
       {err && <div className="ad-err">{err}</div>}
-      {!audit ? (
-        <div className="ad-empty">Running SEO audit…</div>
-      ) : (
-        <>
-          <div className="seo-top">
-            <div className={"seo-score s-" + (audit.score >= 90 ? "good" : audit.score >= 70 ? "ok" : "bad")}>
-              <b>{audit.score}</b><span>/ 100</span>
-            </div>
-            <div className="seo-score-lbl">
-              <h3>On-page SEO Health</h3>
-              <p>A self-audit of your own pages, meta, structured data and sitemap. It doesn't measure Google position - see Search Console below for that.</p>
-            </div>
-          </div>
-
-          <div className="ad-card seo-card">
-            <div className="seo-card-h">Site-wide checks</div>
-            {audit.checks.map(([label, status, detail]) => (
-              <div key={label} className="seo-row">
-                <span className="seo-ic">{ICON[status]}</span>
-                <span className="seo-label">{label}</span>
-                <span className={"seo-detail sd-" + status}>{detail}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="ad-card seo-card">
-            <div className="seo-card-h">Per-page ({audit.pages.length} routes)</div>
-            <div className="ad-scroll ad-scroll-tall">
-              <table>
-                <thead><tr><th>Route</th><th>Title</th><th>Description</th><th>In sitemap</th><th>OG / JSON-LD</th></tr></thead>
-                <tbody>
-                  {audit.pages.map((p) => (
-                    <tr key={p.path}>
-                      <td className="ad-nowrap"><b>{p.path}</b></td>
-                      <td>{ICON[p.titleOk]} <span className="seo-len">{(p.title || "").length}</span></td>
-                      <td>{ICON[p.descOk]} <span className="seo-len">{(p.desc || "").length}</span></td>
-                      <td>{p.inSitemap ? "✅" : "❌"}</td>
-                      <td>{ICON[p.ogOk]} {p.ogOk === "warn" ? <span className="seo-hint">shares homepage card</span> : "own"}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            <div className="seo-note">Each row's OG/JSON-LD is checked against the route's actual served HTML. ⚠️ means it's still serving the homepage card - expected in local dev (Vite serves the SPA shell); the production build prerenders every route (<code>scripts/prerender.mjs</code>), so these turn ✅ on the live site.</div>
-          </div>
 
           <div className="ad-card seo-card">
             <div className="seo-card-h">🔍 Google Search Console - real rankings</div>
@@ -254,6 +209,51 @@ export default function Seo({ pw }) {
                 )}
               </>
             )}
+          </div>
+      {!audit ? (
+        <div className="ad-empty">Running SEO audit…</div>
+      ) : (
+        <>
+          <div className="seo-top">
+            <div className={"seo-score s-" + (audit.score >= 90 ? "good" : audit.score >= 70 ? "ok" : "bad")}>
+              <b>{audit.score}</b><span>/ 100</span>
+            </div>
+            <div className="seo-score-lbl">
+              <h3>On-page SEO Health</h3>
+              <p>A self-audit of your own pages, meta, structured data and sitemap. It doesn't measure Google position - see Search Console below for that.</p>
+            </div>
+          </div>
+
+          <div className="ad-card seo-card">
+            <div className="seo-card-h">Site-wide checks</div>
+            {audit.checks.map(([label, status, detail]) => (
+              <div key={label} className="seo-row">
+                <span className="seo-ic">{ICON[status]}</span>
+                <span className="seo-label">{label}</span>
+                <span className={"seo-detail sd-" + status}>{detail}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="ad-card seo-card">
+            <div className="seo-card-h">Per-page ({audit.pages.length} routes)</div>
+            <div className="ad-scroll ad-scroll-tall">
+              <table>
+                <thead><tr><th>Route</th><th>Title</th><th>Description</th><th>In sitemap</th><th>OG / JSON-LD</th></tr></thead>
+                <tbody>
+                  {audit.pages.map((p) => (
+                    <tr key={p.path}>
+                      <td className="ad-nowrap"><b>{p.path}</b></td>
+                      <td>{ICON[p.titleOk]} <span className="seo-len">{(p.title || "").length}</span></td>
+                      <td>{ICON[p.descOk]} <span className="seo-len">{(p.desc || "").length}</span></td>
+                      <td>{p.inSitemap ? "✅" : "❌"}</td>
+                      <td>{ICON[p.ogOk]} {p.ogOk === "warn" ? <span className="seo-hint">shares homepage card</span> : "own"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="seo-note">Each row's OG/JSON-LD is checked against the route's actual served HTML. ⚠️ means it's still serving the homepage card - expected in local dev (Vite serves the SPA shell); the production build prerenders every route (<code>scripts/prerender.mjs</code>), so these turn ✅ on the live site.</div>
           </div>
         </>
       )}
