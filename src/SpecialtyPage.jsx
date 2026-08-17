@@ -30,7 +30,7 @@ export default function SpecialtyPage({ slug }) {
       <div className="eirim">
         <style>{CSS}</style>
         <style>{SP_CSS}</style>
-        <Nav />
+        <Nav resources />
 
         {/* Hero */}
         <header className="pp-hero">
@@ -168,7 +168,7 @@ export function SpecialtiesIndex() {
       <div className="eirim">
         <style>{CSS}</style>
         <style>{SP_CSS}</style>
-        <Nav />
+        <Nav resources />
 
         <header className="pp-hero pp-hero-index">
           <div className="wrap pp-hero-in">

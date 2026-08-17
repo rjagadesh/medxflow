@@ -78,7 +78,7 @@ const SPECIALTY_GROUPS = [
 ];
 const specBySlug = Object.fromEntries(SPECIALTIES.map((s) => [s.slug, s]));
 
-export function Nav() {
+export function Nav({ resources = false } = {}) {
   const { t } = useI18n();
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -190,7 +190,7 @@ export function Nav() {
               </div>
             </div>
           </div>
-          <a href="/blog">Resources</a>
+          {resources && <a href="/blog">Resources</a>}
           <a href="https://platform.medxflow.ai/login" className="nav-platform">Platform</a>
           <a href="#cta">{t("nav.contact")}</a>
           <a href="/#faq">{t("nav.faq")}</a>
@@ -205,7 +205,7 @@ export function Nav() {
       <div className="nav-mobile">
         <a href="/products" onClick={closeMenu}>{t("nav.products")}</a>
         <a href="/specialties" onClick={closeMenu}>Specialties</a>
-        <a href="/blog" onClick={closeMenu}>Resources</a>
+        {resources && <a href="/blog" onClick={closeMenu}>Resources</a>}
         <a href="https://platform.medxflow.ai/login" onClick={closeMenu}>Platform</a>
         <a href="#cta" onClick={closeMenu}>{t("nav.contact")}</a>
         <a href="/#faq" onClick={closeMenu}>{t("nav.faq")}</a>
