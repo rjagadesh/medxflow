@@ -191,7 +191,7 @@ export default function Admin() {
         {!["campaigns", "social", "financials", "contacts", "pipeline", "tickets", "settings", "seo"].includes(tab) && (
           <div className="ad-stats">
             <div className="ad-stat ad-stat-hot"><b>{counts.leads ?? leads.length}</b><span>Demo requests</span></div>
-            <div className="ad-stat"><b>{tab === "traffic" ? shownPV.length : (counts.pageviews ?? pageviews.length)}</b><span>Pageviews{tab === "traffic" && seg !== "human" ? ` · ${SEG_LABEL[seg]}` : ""}</span></div>
+            <div className="ad-stat"><b>{tab === "traffic" ? shownPV.length : (segments.human ?? pageviews.length)}</b><span>Pageviews{tab === "traffic" && seg !== "human" ? ` · ${SEG_LABEL[seg]}` : " · Real"}</span></div>
             <div className="ad-stat"><b>{uniqueVisitors}</b><span>Unique visitors</span></div>
             <div className="ad-stat"><b>{counts.visitors ?? visitors.length}</b><span>Chat leads</span></div>
             <div className="ad-stat"><b>{counts.transcripts ?? transcripts.length}</b><span>Chat sessions</span></div>
