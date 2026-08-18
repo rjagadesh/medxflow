@@ -668,6 +668,154 @@ export const POSTS = [
       { q: "Can we combine AI agents with a billing team?", a: "Yes, and many practices do. Agents handle repetitive volume while a managed team covers overflow and complex work - you decide where the line sits." },
     ],
   },
+  {
+    slug: "what-is-an-837-claim-file",
+    title: "What Is an 837 Claim File? EDI 837P vs 837I Explained",
+    description: "The 837 is the standard EDI file used to submit healthcare claims. Here is what it contains, how 837P, 837I and 837D differ, and how it travels to payers.",
+    date: "2026-08-16", category: "Technical / EDI", readMins: 6,
+    keywords: ["837 claim file", "EDI 837", "837P vs 837I", "healthcare claim format", "X12 837"],
+    related: { label: "See MedXFlow Claims Submission", href: "/products/claims-submission" },
+    snippet: "An 837 is the standard EDI (X12) electronic file format used to submit healthcare claims to payers. The 837P is for professional (physician) claims, the 837I for institutional (hospital) claims, and the 837D for dental. It carries patient, provider, diagnosis, procedure and charge data.",
+    intro: "Behind every electronic claim is an 837 file. It is the format that carries a claim from your billing system, through a clearinghouse, to the payer. Understanding what is in it (and which variant you are sending) makes claim rejections much easier to diagnose.",
+    sections: [
+      { h: "What is an 837 file?", p: ["The 837 is an X12 EDI transaction set for submitting healthcare claims electronically. It is the digital replacement for paper claim forms, structured into segments and loops that carry every data element a payer needs to adjudicate the claim."] },
+      { h: "837P vs 837I vs 837D", p: ["There are three variants: the 837P (professional) for physician and outpatient services, historically tied to the CMS-1500 form; the 837I (institutional) for hospital and facility claims, tied to the UB-04; and the 837D for dental. Using the wrong variant for the service is a common rejection cause."] },
+      { h: "What an 837 contains", p: ["An 837 includes the billing and rendering provider (with NPIs), the subscriber and patient, the payer, diagnosis codes (ICD-10), service lines with procedure codes (CPT/HCPCS) and modifiers, charges, units, dates of service, and any prior authorization or referral numbers. Missing or invalid values here cause CO-16 and MA130 rejections."] },
+      { h: "How it travels: clearinghouse and acknowledgments", p: ["The 837 goes to a clearinghouse, which runs edits and forwards it to the payer. You get back acknowledgments: a 999 confirms the file was syntactically accepted, and a 277CA reports whether each claim was accepted or rejected before adjudication. A rejection at this stage is different from a payer denial and is fixed by correcting and resubmitting."] },
+    ],
+    faq: [
+      { q: "What is the difference between 837P and 837I?", a: "837P is the professional claim (physician/outpatient services, based on the CMS-1500). 837I is the institutional claim (hospital/facility services, based on the UB-04). Dental uses 837D." },
+      { q: "What is the 277CA?", a: "The 277CA is a claim acknowledgment from the payer or clearinghouse that reports whether each claim in your 837 was accepted or rejected before adjudication. Rejections here are corrected and resubmitted, not appealed." },
+    ],
+  },
+
+  {
+    slug: "270-271-eligibility-transaction-explained",
+    title: "The 270/271 Eligibility Transaction Explained",
+    description: "The 270/271 is how electronic eligibility verification works. Here is what the 270 inquiry and 271 response contain and how real-time eligibility checks run.",
+    date: "2026-08-16", category: "Technical / EDI", readMins: 5,
+    keywords: ["270 271 transaction", "eligibility EDI", "real-time eligibility", "270 eligibility inquiry", "271 response"],
+    related: { label: "See MedXFlow Eligibility Verification", href: "/products/eligibility-verification" },
+    snippet: "The 270 is an EDI eligibility and benefit inquiry sent to a payer; the 271 is the payer's response confirming coverage, plan details, co-pays, deductibles and benefits. Together they are how eligibility verification happens electronically, often in real time.",
+    intro: "When software verifies a patient's insurance in seconds, it is usually running a 270/271 transaction. It is the EDI standard behind real-time eligibility, and knowing what it returns explains why some benefit details are precise and others are not.",
+    sections: [
+      { h: "The 270 inquiry", p: ["The 270 is a request sent to a payer asking whether a patient is covered and what their benefits are. It identifies the provider, the payer, the subscriber/patient, and the specific benefits or service types being asked about."] },
+      { h: "The 271 response", p: ["The 271 comes back with the answer: active or inactive coverage, plan and group details, co-pay, deductible and coinsurance amounts, and coverage for the requested service types. The level of detail depends on what the payer supports in their 271."] },
+      { h: "Real-time vs batch", p: ["270/271 can run in real time (a single patient, answer in seconds) or in batch (many patients at once, response returned later). Real-time is what powers point-of-service eligibility checks at scheduling and check-in."] },
+      { h: "Why automation matters here", p: ["Because 270/271 is a standard electronic exchange, it can be automated end to end: software sends the 270, reads the 271, validates coverage against the visit, and writes the result back, so every appointment gets checked instead of a sample."] },
+    ],
+    faq: [
+      { q: "Is 270/271 real time?", a: "It can be. Real-time 270/271 returns a single patient's eligibility in seconds, which is what enables eligibility checks at scheduling and check-in. Batch mode handles many patients with a delayed response." },
+      { q: "What does the 271 tell you?", a: "Active or inactive coverage, plan and group information, co-pay, deductible and coinsurance amounts, and benefits for the requested service types, to the level of detail the payer supports." },
+    ],
+  },
+
+  {
+    slug: "835-era-explained",
+    title: "835 ERA Explained: How Electronic Remittance Advice Works",
+    description: "The 835 (ERA) is how payers tell you electronically how a claim was paid. Here is what it contains, how it differs from an EOB, and how auto-posting works.",
+    date: "2026-08-17", category: "Technical / EDI", readMins: 5,
+    keywords: ["835 ERA", "electronic remittance advice", "835 file", "ERA vs EOB", "auto posting"],
+    related: { label: "See MedXFlow Payment Posting", href: "/products/payment-posting" },
+    snippet: "The 835 is the EDI electronic remittance advice (ERA) a payer sends to explain how a claim was adjudicated: payments, adjustments, and denial codes (CARC/RARC). It lets payments post automatically with line-level reconciliation, far faster than manual EOB entry.",
+    intro: "The 835 is the payment side of EDI. Where the 837 sends a claim out, the 835 comes back telling you exactly how each claim and line was paid, adjusted, or denied, and it is what makes automated payment posting possible.",
+    sections: [
+      { h: "What is an 835?", p: ["The 835 is the X12 electronic remittance advice. It carries the payer's adjudication decision for each claim: the paid amount, contractual adjustments, patient responsibility, and any adjustment reason codes (CARC) and remark codes (RARC)."] },
+      { h: "835 vs EOB", p: ["The 835 is the machine-readable version; the EOB (explanation of benefits) is the human-readable version of the same information. Posting from an 835 can be automated line by line, while posting from paper EOBs is manual and slower."] },
+      { h: "How auto-posting works", p: ["Posting software reads the 835, matches each payment to the right claim and service line, posts the paid amount and contractual adjustment, and routes denials (by their CARC/RARC) into the denial workflow. This reconciliation is where underpayments and denials surface."] },
+      { h: "Why the codes matter", p: ["The CARC and RARC codes on the 835 drive everything downstream: they tell you why a line was adjusted or denied, which is the starting point for denial management and for spotting underpayments against the fee schedule."] },
+    ],
+    faq: [
+      { q: "What is the difference between an 835 and an EOB?", a: "They contain the same adjudication information. The 835 is the electronic, machine-readable remittance used for automated posting; the EOB is the human-readable version." },
+      { q: "How does the 835 help denials?", a: "It carries the CARC and RARC codes that explain each adjustment or denial, which is the starting point for triaging and working denials and for detecting underpayments." },
+    ],
+  },
+
+  {
+    slug: "hl7-vs-fhir-healthcare-data",
+    title: "HL7 vs FHIR: What They Mean for Healthcare Data",
+    description: "HL7 and FHIR are healthcare data standards, but they work very differently. Here is what each is, how they compare, and why FHIR is driving newer interoperability.",
+    date: "2026-08-17", category: "Technical / Interoperability", readMins: 6,
+    keywords: ["HL7 vs FHIR", "FHIR healthcare", "HL7 v2", "healthcare interoperability", "FHIR API"],
+    related: { label: "See AI Agents for RCM", href: "/ai-agents-rcm" },
+    snippet: "HL7 v2 is a long-standing messaging standard for exchanging clinical and administrative data between healthcare systems; FHIR is HL7's modern, web-API-based standard using REST and JSON. FHIR is easier to build on and is driving newer interoperability, including prior authorization.",
+    intro: "If you work near healthcare integrations, you hear HL7 and FHIR constantly. They are related but very different, and the shift toward FHIR is changing how systems (including RCM automation) connect to EHRs and payers.",
+    sections: [
+      { h: "HL7 v2: the workhorse", p: ["HL7 version 2 is a decades-old messaging standard that most hospitals still run for things like admissions, orders, and results. It uses pipe-and-hat delimited messages that are efficient but not easy for modern developers to work with, and implementations vary between systems."] },
+      { h: "FHIR: the modern API standard", p: ["FHIR (Fast Healthcare Interoperability Resources) is HL7's newer standard, built on modern web technology: RESTful APIs, JSON, and discrete resources like Patient, Coverage, and Claim. It is far easier to build on, which is why regulators and vendors are pushing it."] },
+      { h: "How they compare", p: ["HL7 v2 is messaging (a system pushes a message when an event happens); FHIR is API-based (a system requests exactly the resource it needs). FHIR is more granular, developer-friendly, and web-native, while HL7 v2 remains deeply embedded in existing hospital workflows."] },
+      { h: "Why it matters for RCM", p: ["FHIR is enabling newer revenue-cycle interoperability, including electronic prior authorization (the Da Vinci PAS work). As payers and EHRs expose FHIR APIs, RCM automation can read coverage, submit authorizations, and check status through standard interfaces rather than portal scraping."] },
+    ],
+    faq: [
+      { q: "Is FHIR replacing HL7 v2?", a: "Not entirely, and not quickly. FHIR is the direction for new interoperability, but HL7 v2 is deeply embedded in existing hospital systems and will run alongside FHIR for years." },
+      { q: "Why does FHIR matter for the revenue cycle?", a: "FHIR APIs let systems exchange coverage, claims and authorization data in a standard, developer-friendly way, which underpins newer electronic prior authorization and eligibility interoperability." },
+    ],
+  },
+
+  {
+    slug: "ncci-edits-explained",
+    title: "NCCI Edits Explained: Why Claims Get Bundled",
+    description: "NCCI edits are CMS rules that cause bundling and unit denials. Here is what PTP edits and MUEs are, why they exist, and how to handle them correctly.",
+    date: "2026-08-18", category: "Technical / Coding", readMins: 5,
+    keywords: ["NCCI edits", "PTP edits", "MUE", "bundling denials", "correct coding initiative"],
+    related: { label: "See Charge Capture & Coding", href: "/products/charge-capture-coding" },
+    snippet: "NCCI (National Correct Coding Initiative) edits are CMS rules that prevent improper code pairings and excessive units. PTP (procedure-to-procedure) edits stop two codes that should not be billed together, and MUEs cap the units allowed per code. They are a common source of bundling denials.",
+    intro: "When a line comes back denied as not separately payable or bundled, an NCCI edit is often the reason. These are CMS coding rules, and knowing how they work tells you whether a modifier is appropriate or whether the denial should stand.",
+    sections: [
+      { h: "What are NCCI edits?", p: ["The National Correct Coding Initiative is a set of CMS rules that promote correct coding and prevent improper payment. Payers apply them (and their own edits) during adjudication, which is why some code combinations get bundled or reduced."] },
+      { h: "PTP edits", p: ["Procedure-to-procedure (PTP) edits identify pairs of codes that should not normally be billed together for the same patient on the same day. When both are billed, the secondary code is denied unless an appropriate modifier indicates the services were genuinely separate and distinct."] },
+      { h: "MUEs", p: ["Medically Unlikely Edits (MUEs) cap the number of units of a code that are payable for one patient on one day. Billing above the MUE causes a units denial, which is why frequency and units must match documentation."] },
+      { h: "Modifiers and appeals", p: ["Some PTP edits allow a modifier (such as 59 or an X modifier) when the services really were distinct and the documentation supports it. Using these modifiers without support is a compliance risk, so the fix is either a supported modifier or accepting the edit."] },
+    ],
+    faq: [
+      { q: "What is a PTP edit?", a: "A procedure-to-procedure edit flags two codes that should not normally be billed together for the same patient on the same day. The secondary code denies unless a supported modifier shows the services were distinct." },
+      { q: "What is an MUE?", a: "A Medically Unlikely Edit caps the units of a code payable for one patient per day. Billing more units than the MUE allows causes a denial, so units must match documentation." },
+    ],
+  },
+
+  {
+    slug: "how-ai-agents-work-healthcare-rcm-technical",
+    title: "How AI Agents Work in Healthcare RCM (Under the Hood)",
+    description: "A technical look at how AI agents actually run revenue-cycle tasks: the model, the tools, the control loop, and where human review fits.",
+    date: "2026-08-18", category: "Technical / AI", readMins: 6,
+    keywords: ["how AI agents work", "AI agent architecture", "AI agents RCM technical", "LLM agents healthcare"],
+    related: { label: "See AI Agents for RCM", href: "/ai-agents-rcm" },
+    snippet: "An AI agent in RCM combines a language model that reasons about a task, tools that let it act (read documents, call payer systems, query your PMS/EHR), and a control loop that plans, executes, checks results, and escalates exceptions to staff. It is goal-driven, not script-driven.",
+    intro: "AI agent is used loosely, so here is a concrete, technical picture of what one actually is and how it runs a revenue-cycle task, versus older rule-based automation.",
+    sections: [
+      { h: "The three parts of an agent", p: ["An AI agent has three parts: a reasoning model (a language model that interprets the task and decides the next step), a set of tools (functions that let it act, such as reading a document, submitting to a payer portal or API, or querying your PMS/EHR), and a control loop that plans, calls tools, checks the results, and decides what to do next."] },
+      { h: "Goal-driven, not script-driven", p: ["Where RPA follows a fixed recorded script, an agent works from a goal. Given verify this patient's eligibility, it decides which lookups to run, reads the response, validates it, and handles variation. That is why it survives payer portal changes that break brittle scripts."] },
+      { h: "Grounding and validation", p: ["A well-built RCM agent is grounded in your rules and payer data, and it validates its own outputs (for example, checking that a diagnosis supports a procedure before submitting). Actions are logged so every step is auditable."] },
+      { h: "Human-in-the-loop", p: ["Agents are designed to escalate. When confidence is low or a case is unusual (a complex denial, an ambiguous document), the agent routes it to a staff member rather than guessing. Humans handle the exceptions; the agent handles the repetitive volume."] },
+      { h: "Why this fits RCM", p: ["The revenue cycle is full of well-defined, high-volume, rules-based tasks that also vary by payer, which is exactly where goal-driven agents outperform both manual work and rigid scripts."] },
+    ],
+    faq: [
+      { q: "How is an AI agent different from RPA?", a: "RPA follows a fixed recorded script and breaks when a screen changes. An AI agent works from a goal, reasons about each step, adapts to variation, and escalates exceptions, so it handles the messy reality of payer workflows." },
+      { q: "Do AI agents make decisions on their own?", a: "They handle routine, rules-based work and validate their outputs, but they escalate low-confidence or unusual cases to staff. Every action is logged and auditable, and humans stay in control of exceptions." },
+    ],
+  },
+
+  {
+    slug: "276-277-claim-status-explained",
+    title: "The 276/277 Claim Status Transaction Explained",
+    description: "The 276/277 is how you check claim status electronically without payer portals. Here is what the 276 request and 277 response contain and why it powers AR follow-up.",
+    date: "2026-08-18", category: "Technical / EDI", readMins: 5,
+    keywords: ["276 277 transaction", "claim status EDI", "claim status inquiry", "automated claim status", "AR follow-up EDI"],
+    related: { label: "See MedXFlow Denial Management", href: "/products/denial-management" },
+    snippet: "The 276 is an EDI claim status request sent to a payer to ask where a claim stands; the 277 is the payer's response. Automating 276/277 lets you track claim status without logging into payer portals, which is central to efficient AR follow-up.",
+    intro: "Chasing claim status by logging into payer portals is one of the biggest time sinks in AR follow-up. The 276/277 transaction is the electronic alternative, and automating it is how follow-up stops falling behind.",
+    sections: [
+      { h: "The 276 request", p: ["The 276 is an inquiry sent to a payer asking for the status of one or more claims. It identifies the provider, payer, patient, and the specific claim(s) in question."] },
+      { h: "The 277 response", p: ["The 277 returns the claim's status: received, pending, paid, denied, or in review, along with relevant dates and identifiers. It is the electronic equivalent of checking the payer portal, but returned as structured data."] },
+      { h: "Why automate it", p: ["Because 276/277 is a standard exchange, software can poll claim status automatically instead of staff logging into portals one claim at a time. That keeps follow-up current and catches problems (like a claim that stalled) before they cross timely-filing windows."] },
+      { h: "How it fits AR follow-up", p: ["Automated 276/277 is the backbone of scalable AR follow-up: it surfaces which claims need action, so staff and AI agents can focus on working denials and appeals rather than hunting for status."] },
+    ],
+    faq: [
+      { q: "What is the 277 response?", a: "The 277 is the payer's answer to a 276 claim status request. It reports whether a claim is received, pending, paid, denied, or in review, with dates and identifiers, as structured data." },
+      { q: "How does 276/277 help AR?", a: "It lets you check claim status electronically instead of logging into payer portals, so follow-up can be automated and kept current, catching stalled claims before they cross filing windows." },
+    ],
+  },
+
 ];
 
 export const post = (slug) => POSTS.find((p) => p.slug === slug);
