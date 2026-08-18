@@ -173,7 +173,7 @@ function BulkZip({ pw, onDone }) {
 
   return (
     <div className="ad-card sc-card">
-      <div className="sc-cardh">📦 Bulk upload — schedule a whole ZIP</div>
+      <div className="sc-cardh">📦 Bulk upload - schedule a whole ZIP</div>
       <div className="sc-form">
         {!posts ? (
           <>
@@ -182,7 +182,7 @@ function BulkZip({ pw, onDone }) {
           </>
         ) : (
           <>
-            <div className="sc-zip-loaded">✅ <b>{zipName}</b> — {posts.length} posts found</div>
+            <div className="sc-zip-loaded">✅ <b>{zipName}</b> - {posts.length} posts found</div>
 
             <label className="sc-lbl">Post to</label>
             <div className="sc-channels">
@@ -348,14 +348,14 @@ export default function Scheduler({ pw }) {
 
           {needsWa && (
             <>
-              <label className="sc-lbl">WhatsApp recipients <span>— numbers, one per line (must be opted-in / within 24h)</span></label>
+              <label className="sc-lbl">WhatsApp recipients <span> - numbers, one per line (must be opted-in / within 24h)</span></label>
               <textarea className="sc-wa" rows={2} value={waRecipients} onChange={(e) => setWaRecipients(e.target.value)} placeholder={"+14695551234\n+919876543210"} />
             </>
           )}
 
           {needsVideo && (
             <>
-              <label className="sc-lbl">Video URL <span>— YouTube uploads a video; paste a public .mp4 link. Caption becomes the title + description.</span></label>
+              <label className="sc-lbl">Video URL <span> - YouTube uploads a video; paste a public .mp4 link. Caption becomes the title + description.</span></label>
               <input className="sc-when" style={{ maxWidth: "100%" }} value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="https://…/video.mp4" />
             </>
           )}

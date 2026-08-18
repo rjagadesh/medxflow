@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-MedXFlow outreach mailer — sends personalized listicle/directory outreach emails,
+MedXFlow outreach mailer - sends personalized listicle/directory outreach emails,
 one recipient at a time with a delay (good deliverability, not a blast).
 
 Two transports, chosen automatically by the FROM address:
@@ -31,11 +31,11 @@ SUBJECT   = "A newer AI RCM vendor for your \"{article_title}\" roundup"
 SUBJECT_FALLBACK = "A newer AI RCM vendor worth a look"
 BODY = """Hi {first_name},
 
-I came across your article on AI revenue cycle management / RCM software{article_ref} — genuinely one of the clearer overviews out there.
+I came across your article on AI revenue cycle management / RCM software{article_ref} - genuinely one of the clearer overviews out there.
 
 I wanted to flag MedXFlow as a newer entrant worth a look if you ever refresh the list. We're an AI-agent platform for revenue cycle management: our agents automate eligibility, prior authorization, coding, claims and denials end to end, with a human-in-the-loop model so staff only handle the exceptions. It works alongside Epic and athenahealth rather than replacing them.
 
-If it's a fit, I'm happy to send a 2-line blurb, logo, and a couple of screenshots so it's zero work on your end. Either way — thanks for putting the resource together.
+If it's a fit, I'm happy to send a 2-line blurb, logo, and a couple of screenshots so it's zero work on your end. Either way - thanks for putting the resource together.
 
 Best,
 {sender_name}
@@ -163,7 +163,7 @@ def main():
     if args.test:
         subject, body = render({"first_name": "there", "article_title": "Best AI RCM Software 2026"},
                                args.sender_name, args.sender_phone)
-        print(f"— TEST —  To: {args.test}\n  Subject: {subject}\n\n{body}")
+        print(f" - TEST - To: {args.test}\n  Subject: {subject}\n\n{body}")
         if args.dry_run:
             print("(dry-run: not sent)"); return
         server = None if use_graph else smtp_connect()
@@ -172,7 +172,7 @@ def main():
             if server: server.quit()
         print(f"\n✓ Test accepted for delivery to {args.test}")
         if use_graph:
-            print("  NOTE: Graph returns 'accepted' immediately — CHECK the inbox to confirm it wasn't bounced\n  by the tenant's external-mail block.")
+            print("  NOTE: Graph returns 'accepted' immediately - CHECK the inbox to confirm it wasn't bounced\n  by the tenant's external-mail block.")
         return
 
     recips = read_recipients()
@@ -196,7 +196,7 @@ def main():
                 if i < len(todo) - 1: time.sleep(args.delay)
     finally:
         if server: server.quit()
-    print(f"\n✓ Done — {sent} sent." if not args.dry_run else "\n(dry-run complete)")
+    print(f"\n✓ Done - {sent} sent." if not args.dry_run else "\n(dry-run complete)")
 
 if __name__ == "__main__":
     main()

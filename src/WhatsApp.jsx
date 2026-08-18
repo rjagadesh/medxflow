@@ -76,7 +76,7 @@ export default function WhatsApp({ pw }) {
           ) : (
             <>
               <b>{n.verified_name || "WhatsApp Business"}</b>
-              <span className="wa-num">{n.display_phone_number || "—"}</span>
+              <span className="wa-num">{n.display_phone_number || " - "}</span>
               {n.quality_rating && <span className={"wa-q wa-q-" + (n.quality_rating || "").toLowerCase()}>{n.quality_rating}</span>}
             </>
           )}
@@ -90,7 +90,7 @@ export default function WhatsApp({ pw }) {
           <button className={mode === "text" ? "on" : ""} onClick={() => setMode("text")}>💬 Text</button>
         </div>
 
-        <label className="wa-lbl">Recipients <span>— one per line, full international format (e.g. +14695551234)</span></label>
+        <label className="wa-lbl">Recipients <span> - one per line, full international format (e.g. +14695551234)</span></label>
         <textarea className="wa-recip" rows={2} value={recipients} onChange={(e) => setRecipients(e.target.value)} placeholder={"+14695551234\n+919876543210"} />
         {recipList.length > 0 && <div className="wa-count">{recipList.length} recipient{recipList.length === 1 ? "" : "s"}</div>}
 
@@ -125,7 +125,7 @@ export default function WhatsApp({ pw }) {
           <div className="wa-results">
             {results.map((r, i) => (
               <div key={i} className={"wa-res " + (r.ok ? "ok" : "bad")}>
-                <b>{r.to}</b> — {r.ok ? "sent ✓" : r.msg}
+                <b>{r.to}</b> - {r.ok ? "sent ✓" : r.msg}
               </div>
             ))}
           </div>

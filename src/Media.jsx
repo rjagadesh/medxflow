@@ -30,7 +30,7 @@ export default function Media({ pw }) {
     const arr = [...list];
     setUploading(arr.length); setErr("");
     for (const file of arr) {
-      if (file.size > 15 * 1024 * 1024) { setErr(`${file.name} is over 15 MB — skipped.`); setUploading((n) => n - 1); continue; }
+      if (file.size > 15 * 1024 * 1024) { setErr(`${file.name} is over 15 MB - skipped.`); setUploading((n) => n - 1); continue; }
       await new Promise((resolve) => {
         const reader = new FileReader();
         reader.onload = async () => {

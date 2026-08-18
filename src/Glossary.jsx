@@ -30,7 +30,7 @@ export function GlossaryIndex() {
         <header className="gl-head">
           <p className="eyebrow">Glossary</p>
           <h1>Revenue Cycle Management glossary</h1>
-          <p className="gl-lede">Plain-English definitions of the RCM, coding and billing terms that run your revenue cycle — from DNFB to CARC codes to days in A/R.</p>
+          <p className="gl-lede">Plain-English definitions of the RCM, coding and billing terms that run your revenue cycle - from DNFB to CARC codes to days in A/R.</p>
         </header>
         <div className="gl-grid">
           {sorted.map((t) => (
@@ -47,7 +47,7 @@ export function GlossaryIndex() {
 
 export function GlossaryTerm({ slug }) {
   const t = findTerm(slug);
-  useEffect(() => { if (t) { document.title = `${t.term} — RCM Glossary · MedXFlow`; window.scrollTo(0, 0); } }, [t]);
+  useEffect(() => { if (t) { document.title = `${t.term} - RCM Glossary · MedXFlow`; window.scrollTo(0, 0); } }, [t]);
   if (!t) {
     return <Shell><main className="wrap gl-article"><p className="eyebrow">Not found</p><h1>Term not found</h1><p><a href="/glossary">← Back to the glossary</a></p></main></Shell>;
   }

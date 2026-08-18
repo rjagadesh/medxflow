@@ -31,7 +31,7 @@ export default function AiAgentsRcm() {
           <div className="pl-video-frame">
             <iframe
               src="https://www.youtube.com/embed/5FWau1ZzAgA"
-              title="MedXFlow — AI Revenue Cycle Management & Medical Billing"
+              title="MedXFlow - AI Revenue Cycle Management & Medical Billing"
               loading="lazy"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowFullScreen
@@ -41,7 +41,7 @@ export default function AiAgentsRcm() {
 
         <section className="pl-sec">
           <h2>What is an AI agent for healthcare RCM?</h2>
-          <p>An <strong>AI agent for healthcare revenue cycle management</strong> is software that carries out an RCM task from start to finish — navigating your systems and payer portals, extracting and validating information, applying your business rules, and routing exceptions to staff. Where older automation handled a single step, an agent owns the whole workflow and works continuously, without adding another task to your team.</p>
+          <p>An <strong>AI agent for healthcare revenue cycle management</strong> is software that carries out an RCM task from start to finish - navigating your systems and payer portals, extracting and validating information, applying your business rules, and routing exceptions to staff. Where older automation handled a single step, an agent owns the whole workflow and works continuously, without adding another task to your team.</p>
           <p>MedXFlow deploys a connected set of these agents across the revenue cycle, so cash moves from the first appointment to the final payment with far less manual work.</p>
         </section>
 
@@ -66,16 +66,16 @@ export default function AiAgentsRcm() {
               <span key={s} className="pl-flow-step">{i + 1}. {s}</span>
             ))}
           </div>
-          <p className="pl-note">Every action is documented, assigned and auditable — AI backed by humans, never left unattended.</p>
+          <p className="pl-note">Every action is documented, assigned and auditable - AI backed by humans, never left unattended.</p>
         </section>
 
         <section className="pl-sec">
           <h2>Why practices use AI agents for RCM</h2>
           <ul className="pl-benefits">
-            <li><strong>Fewer denials</strong> — issues are caught at eligibility and coding, before the claim goes out.</li>
-            <li><strong>Faster cash</strong> — claims go out clean and follow-up never stalls, so A/R and DNFB days drop.</li>
-            <li><strong>Less manual work</strong> — staff stop moving information between screens and focus on judgment calls.</li>
-            <li><strong>Works with your stack</strong> — Epic, athenahealth, eClinicalWorks and more, no rip-and-replace.</li>
+            <li><strong>Fewer denials</strong> - issues are caught at eligibility and coding, before the claim goes out.</li>
+            <li><strong>Faster cash</strong> - claims go out clean and follow-up never stalls, so A/R and DNFB days drop.</li>
+            <li><strong>Less manual work</strong> - staff stop moving information between screens and focus on judgment calls.</li>
+            <li><strong>Works with your stack</strong> - Epic, athenahealth, eClinicalWorks and more, no rip-and-replace.</li>
           </ul>
         </section>
 

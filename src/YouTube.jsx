@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-// YouTube portal — channel stats, upload a video (title/description/tags/
+// YouTube portal - channel stats, upload a video (title/description/tags/
 // privacy from a video URL), and the list of uploaded videos.
 
 async function call(pw, path, action, extra = {}) {
@@ -10,7 +10,7 @@ async function call(pw, path, action, extra = {}) {
   });
   return res.json();
 }
-const num = (n) => (n == null ? "—" : Number(n).toLocaleString());
+const num = (n) => (n == null ? " - " : Number(n).toLocaleString());
 const fmt = (iso) => (iso ? new Date(iso).toLocaleDateString() : "");
 
 export default function YouTube({ pw }) {
@@ -79,10 +79,10 @@ export default function YouTube({ pw }) {
         <div className="yt-h">Upload a video</div>
         <div className="yt-form">
           <label>Title</label>
-          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="MedXFlow — AI Revenue Cycle Management" />
+          <input value={title} onChange={(e) => setTitle(e.target.value)} placeholder="MedXFlow - AI Revenue Cycle Management" />
           <label>Description</label>
           <textarea rows={4} value={description} onChange={(e) => setDescription(e.target.value)} placeholder="What's the video about? Links and keywords help discovery." />
-          <label>Tags <span>— comma-separated keywords</span></label>
+          <label>Tags <span> - comma-separated keywords</span></label>
           <input value={tags} onChange={(e) => setTags(e.target.value)} />
           <div className="yt-row">
             <div><label>Privacy</label>
@@ -92,7 +92,7 @@ export default function YouTube({ pw }) {
                 <option value="private">Private</option>
               </select>
             </div>
-            <div className="yt-grow"><label>Video URL <span>— a public .mp4 (e.g. from Media)</span></label>
+            <div className="yt-grow"><label>Video URL <span> - a public .mp4 (e.g. from Media)</span></label>
               <input value={videoUrl} onChange={(e) => setVideoUrl(e.target.value)} placeholder="https://medxflow.ai/rcm-process.mp4" />
             </div>
           </div>
@@ -109,7 +109,7 @@ export default function YouTube({ pw }) {
       <div className="ad-card yt-card">
         <div className="yt-h">Uploaded videos {videos ? `(${videos.length})` : ""}</div>
         {!videos ? <div className="ad-empty">Loading…</div>
-          : videos.length === 0 ? <div className="ad-empty">No videos yet — upload one above.</div>
+          : videos.length === 0 ? <div className="ad-empty">No videos yet - upload one above.</div>
           : (
             <div className="yt-grid">
               {videos.map((v) => (

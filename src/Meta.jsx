@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
 
-// Meta Business Suite tab — Facebook Page + Instagram, via the Graph API
+// Meta Business Suite tab - Facebook Page + Instagram, via the Graph API
 // (server function netlify/functions/meta.mjs). Four sub-panels: Insights,
 // Inbox (read/reply to DMs), Publish, Ads. Shows setup guidance until the
 // Page tokens are configured.
@@ -22,7 +22,7 @@ async function call(pw, action, extra = {}) {
   return res.json();
 }
 
-const num = (n) => (n == null ? "—" : Number(n).toLocaleString());
+const num = (n) => (n == null ? " - " : Number(n).toLocaleString());
 
 export default function Meta({ pw }) {
   const [sub, setSub] = useState("insights");
@@ -77,7 +77,7 @@ export function MetaSetup({ reason }) {
 }
 
 export function Insights({ ov }) {
-  // A stat tile that shows the value, or "—" plus the reason it's blank.
+  // A stat tile that shows the value, or " - " plus the reason it's blank.
   const Stat = ({ value, label, note }) => (
     <div className="ad-stat">
       <b>{num(value)}</b>
@@ -89,7 +89,7 @@ export function Insights({ ov }) {
     <div>
       {ov.page ? (
         <div className="ad-card seo-card">
-          <div className="seo-card-h">📘 Facebook Page — {ov.page.name}</div>
+          <div className="seo-card-h">📘 Facebook Page - {ov.page.name}</div>
           <div className="ad-stats mt-stats">
             <Stat value={ov.page.followers ?? ov.page.fans} label="Followers" />
             <Stat value={ov.page.engagements28} label="Engagements (28d)" note={ov.page.notes?.engagements28} />
@@ -104,7 +104,7 @@ export function Insights({ ov }) {
 
       {ov.instagram ? (
         <div className="ad-card seo-card">
-          <div className="seo-card-h">📷 Instagram — @{ov.instagram.username}</div>
+          <div className="seo-card-h">📷 Instagram - @{ov.instagram.username}</div>
           <div className="ad-stats mt-stats">
             <Stat value={ov.instagram.followers} label="Followers" />
             <Stat value={ov.instagram.posts} label="Posts" />
@@ -143,7 +143,7 @@ export function TrendChart({ title, ic, points, color = "#3DDCC9", fmtTotal, fmt
     <div className="tr-card">
       <div className="tr-head">
         <span className="tr-title">{ic} {title}</span>
-        <span className="tr-vals"><b>{fmtTotal ? fmtTotal(total) : total.toLocaleString()}</b> total · last {last == null ? "—" : (fmtLast ? fmtLast(last) : last)}</span>
+        <span className="tr-vals"><b>{fmtTotal ? fmtTotal(total) : total.toLocaleString()}</b> total · last {last == null ? " - " : (fmtLast ? fmtLast(last) : last)}</span>
       </div>
       {n === 0 ? (
         <div className="tr-empty">No daily data available.</div>
@@ -185,12 +185,12 @@ export function Trends({ pw }) {
   if (!hasAny) return null;
   return (
     <div className="ad-card seo-card" style={{ marginTop: 16 }}>
-      <div className="seo-card-h">📈 Daily trends — last 28 days</div>
+      <div className="seo-card-h">📈 Daily trends - last 28 days</div>
       <div className="tr-grid">
-        {p && <TrendChart title="Facebook — Page views" ic="📘" points={p.views?.points} color="#5AA9F5" />}
-        {p && <TrendChart title="Facebook — Engagements" ic="📘" points={p.engagements?.points} color="#5AA9F5" />}
-        {p && <TrendChart title="Facebook — New follows" ic="📘" points={p.follows?.points} color="#5AA9F5" />}
-        {ig && <TrendChart title="Instagram — Reach" ic="📷" points={ig.reach?.points} color="#3DDCC9" />}
+        {p && <TrendChart title="Facebook - Page views" ic="📘" points={p.views?.points} color="#5AA9F5" />}
+        {p && <TrendChart title="Facebook - Engagements" ic="📘" points={p.engagements?.points} color="#5AA9F5" />}
+        {p && <TrendChart title="Facebook - New follows" ic="📘" points={p.follows?.points} color="#5AA9F5" />}
+        {ig && <TrendChart title="Instagram - Reach" ic="📷" points={ig.reach?.points} color="#3DDCC9" />}
       </div>
       <div className="tr-note">Instagram profile views are totals-only in Meta's API, so they're shown as a stat above, not a daily chart.</div>
     </div>
@@ -206,7 +206,7 @@ export function Feed({ pw, ov }) {
   if (!data) return <div className="ad-empty">Loading feed…</div>;
   if (data.error) return <div className="ad-err">{data.error}</div>;
 
-  const num = (n) => (n == null ? "—" : Number(n).toLocaleString());
+  const num = (n) => (n == null ? " - " : Number(n).toLocaleString());
   const fmt = (iso) => (iso ? new Date(iso).toLocaleDateString() : "");
   const igList = data.instagram || [];
   const fbList = data.facebook || [];
@@ -235,7 +235,7 @@ export function Feed({ pw, ov }) {
             <div className="mt-fbembed">
               <iframe title="Facebook Page" src={fbSrc} width="500" height="800" scrolling="no" frameBorder="0"
                 allowFullScreen allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share" />
-              <p className="mt-embed-note">Live embed of your Facebook page timeline. If it appears blank, the browser is blocking third-party content — use “Cards”, or open the page directly.</p>
+              <p className="mt-embed-note">Live embed of your Facebook page timeline. If it appears blank, the browser is blocking third-party content - use “Cards”, or open the page directly.</p>
             </div>
           ) : (
             <FeedCards list={fbList} num={num} fmt={fmt} empty="No posts on this Page yet." />
@@ -464,12 +464,12 @@ export function Publish({ pw, hasIg }) {
         <button className="mt-post" onClick={post} disabled={busy || uploading || !message.trim() || igNeedsImage}>
           {busy ? "Publishing…" : "Publish"}
         </button>
-        {igNeedsImage && <div className="mt-hint">Instagram posts need an image — attach one above.</div>}
+        {igNeedsImage && <div className="mt-hint">Instagram posts need an image - attach one above.</div>}
         {result && (
           <div className={"mt-result " + (result.ok ? "ok" : "bad")}>
             {result.ok
               ? Object.entries(result.results || {}).map(([k, v]) => (
-                  <div key={k}>{k}: {v.ok ? "published ✓" : `failed — ${v.error}`}</div>
+                  <div key={k}>{k}: {v.ok ? "published ✓" : `failed - ${v.error}`}</div>
                 ))
               : (result.error || "Failed")}
           </div>
@@ -489,13 +489,13 @@ export function Ads({ pw }) {
   return (
     <div>
       <div className="ad-card seo-card">
-        <div className="seo-card-h">Ad account — last 30 days</div>
+        <div className="seo-card-h">Ad account - last 30 days</div>
         {data.totalsError ? <div className="mt-carderr">{data.totalsError}</div> : (
           <div className="ad-stats mt-stats">
             <div className="ad-stat"><b>${num(t.spend)}</b><span>Spend</span></div>
             <div className="ad-stat"><b>{num(t.impressions)}</b><span>Impressions</span></div>
             <div className="ad-stat"><b>{num(t.clicks)}</b><span>Clicks</span></div>
-            <div className="ad-stat"><b>{t.ctr ? Number(t.ctr).toFixed(2) + "%" : "—"}</b><span>CTR</span></div>
+            <div className="ad-stat"><b>{t.ctr ? Number(t.ctr).toFixed(2) + "%" : " - "}</b><span>CTR</span></div>
           </div>
         )}
       </div>
@@ -511,10 +511,10 @@ export function Ads({ pw }) {
                   <tr key={i}>
                     <td><b>{c.name}</b></td>
                     <td>{c.status}</td>
-                    <td>{c.spend ? "$" + num(c.spend) : "—"}</td>
+                    <td>{c.spend ? "$" + num(c.spend) : " - "}</td>
                     <td>{num(c.impressions)}</td>
                     <td>{num(c.clicks)}</td>
-                    <td>{c.ctr ? Number(c.ctr).toFixed(2) + "%" : "—"}</td>
+                    <td>{c.ctr ? Number(c.ctr).toFixed(2) + "%" : " - "}</td>
                   </tr>
                 ))}
               </tbody>

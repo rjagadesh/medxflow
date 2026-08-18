@@ -4,7 +4,7 @@
 // the generated files:  npm run translate
 //
 // Key comes from ANTHROPIC_API_KEY env var, or creds.json (gitignored).
-// NOTE: AI drafts — especially Gaeilge — should be reviewed by a fluent
+// NOTE: AI drafts - especially Gaeilge - should be reviewed by a fluent
 // speaker before going live.
 
 import fs from "node:fs";
@@ -43,10 +43,10 @@ async function translate(target) {
   const sys =
     `You are a professional localisation translator for a healthcare software product. ` +
     `Translate the VALUES of the given JSON object from English into ${target.name}. ` +
-    `Return ONLY a valid JSON object with the exact same keys and translated values — no commentary, no code fences. ` +
+    `Return ONLY a valid JSON object with the exact same keys and translated values - no commentary, no code fences. ` +
     `Rules: keep it natural and marketing-appropriate; preserve the tone; ` +
     `keep these terms unchanged: ${DO_NOT_TRANSLATE}; ` +
-    `keep numbers, prices ($250 etc.), symbols (· — % /), and placeholders intact; ` +
+    `keep numbers, prices ($250 etc.), symbols (· - % /), and placeholders intact; ` +
     `do not add or remove keys.`;
 
   const res = await fetch("https://api.anthropic.com/v1/messages", {

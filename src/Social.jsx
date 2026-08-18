@@ -7,7 +7,7 @@ import YouTube from "./YouTube.jsx";
 import Media from "./Media.jsx";
 import AICreate from "./AICreate.jsx";
 
-const num = (n) => (n == null ? "—" : Number(n).toLocaleString());
+const num = (n) => (n == null ? " - " : Number(n).toLocaleString());
 
 function YouTubeDash({ pw }) {
   const [c, setC] = useState(null);
@@ -18,7 +18,7 @@ function YouTubeDash({ pw }) {
   if (!c) return null;
   return (
     <div className="ad-card seo-card" style={{ marginTop: 16 }}>
-      <div className="seo-card-h">▶️ YouTube — {c.title || "channel"}</div>
+      <div className="seo-card-h">▶️ YouTube - {c.title || "channel"}</div>
       <div className="ad-stats mt-stats">
         <div className="ad-stat"><b>{num(c.subscribers)}</b><span>Subscribers</span></div>
         <div className="ad-stat"><b>{num(c.videos)}</b><span>Videos</span></div>
@@ -39,13 +39,13 @@ function GoogleAdsDash({ pw }) {
   if (d.configured === false) {
     return (
       <div className="ad-card seo-card" style={{ marginTop: 16 }}>
-        <div className="seo-card-h">🟡 Google Ads — not connected</div>
+        <div className="seo-card-h">🟡 Google Ads - not connected</div>
         <div className="gads-setup">
           <p>Connect Google Ads to track ad spend, clicks and conversions here. You'll need:</p>
           <ul>
-            <li><b>Developer token</b> — Google Ads → Tools → API Center (apply for access).</li>
-            <li><b>OAuth</b> — a refresh token with the <code>adwords</code> scope (can reuse your Google app).</li>
-            <li><b>Customer ID</b> — the 10-digit account id (and manager id if applicable).</li>
+            <li><b>Developer token</b> - Google Ads → Tools → API Center (apply for access).</li>
+            <li><b>OAuth</b> - a refresh token with the <code>adwords</code> scope (can reuse your Google app).</li>
+            <li><b>Customer ID</b> - the 10-digit account id (and manager id if applicable).</li>
           </ul>
           <p className="gads-vars">Env vars: <code>GOOGLE_ADS_DEVELOPER_TOKEN</code> · <code>GOOGLE_ADS_CLIENT_ID</code> · <code>GOOGLE_ADS_CLIENT_SECRET</code> · <code>GOOGLE_ADS_REFRESH_TOKEN</code> · <code>GOOGLE_ADS_CUSTOMER_ID</code> · <code>GOOGLE_ADS_LOGIN_CUSTOMER_ID</code> (optional)</p>
         </div>
@@ -54,9 +54,9 @@ function GoogleAdsDash({ pw }) {
   }
   if (d.pendingApproval) return (
     <div className="ad-card seo-card" style={{ marginTop: 16 }}>
-      <div className="seo-card-h">📣 Google Ads — connecting</div>
+      <div className="seo-card-h">📣 Google Ads - connecting</div>
       <div className="gads-setup">
-        <p>✅ Google Ads is connected (OAuth + account IDs verified). Metrics will appear automatically once Google approves your <b>developer token</b> for Basic Access — the test-level token only works against test accounts.</p>
+        <p>✅ Google Ads is connected (OAuth + account IDs verified). Metrics will appear automatically once Google approves your <b>developer token</b> for Basic Access - the test-level token only works against test accounts.</p>
         <p className="gads-vars">Status: developer-token Basic Access application pending (~5 business days). No further setup needed on this end.</p>
       </div>
     </div>
@@ -70,7 +70,7 @@ function GoogleAdsDash({ pw }) {
   const sCost = P.map((p) => ({ d: p.d, v: Number(p.cost || 0) }));
   return (
     <div className="ad-card seo-card" style={{ marginTop: 16 }}>
-      <div className="seo-card-h">📣 Google Ads — last 28 days</div>
+      <div className="seo-card-h">📣 Google Ads - last 28 days</div>
       <div className="ad-stats mt-stats">
         <div className="ad-stat"><b>{num(Math.round(t.impressions))}</b><span>Impressions</span></div>
         <div className="ad-stat"><b>{num(Math.round(t.clicks))}</b><span>Clicks</span></div>
@@ -80,8 +80,8 @@ function GoogleAdsDash({ pw }) {
       <div className="ad-stats mt-stats" style={{ marginTop: 0 }}>
         <div className="ad-stat"><b>{(t.ctr || 0).toFixed(2)}%</b><span>CTR</span></div>
         <div className="ad-stat"><b>{cur(t.avgCpc)}</b><span>Avg. CPC</span></div>
-        <div className="ad-stat"><b>{t.conversions ? cur(t.costPerConv) : "—"}</b><span>Cost / conv.</span></div>
-        <div className="ad-stat"><b>{t.clicks ? ((t.conversions / t.clicks) * 100).toFixed(1) + "%" : "—"}</b><span>Conv. rate</span></div>
+        <div className="ad-stat"><b>{t.conversions ? cur(t.costPerConv) : " - "}</b><span>Cost / conv.</span></div>
+        <div className="ad-stat"><b>{t.clicks ? ((t.conversions / t.clicks) * 100).toFixed(1) + "%" : " - "}</b><span>Conv. rate</span></div>
       </div>
       <div className="tr-grid">
         <TrendChart title="Impressions" ic="👁" points={s("impressions")} color="#5AA9F5" />
@@ -111,7 +111,7 @@ function Connections({ pw }) {
   if (!conns) return <div className="ad-empty">Loading connections…</div>;
   return (
     <div>
-      <div className="soc-conn-head">Platform connections — set each platform's env vars to enable it in the Scheduler.</div>
+      <div className="soc-conn-head">Platform connections - set each platform's env vars to enable it in the Scheduler.</div>
       <div className="soc-conns">
         {conns.map((c) => (
           <div key={c.key} className={"soc-conn" + (c.ok ? " ok" : "")}>
@@ -167,7 +167,7 @@ export default function Social({ pw }) {
   useEffect(() => { loadOv(); }, [pw]);
 
   // In-place refresh: re-fetch the Meta overview and remount the active section
-  // (bumping refreshKey re-runs every child's data fetch) — no full page reload,
+  // (bumping refreshKey re-runs every child's data fetch) - no full page reload,
   // so the admin session stays intact.
   const refresh = async () => {
     setRefreshing(true);

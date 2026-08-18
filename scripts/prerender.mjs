@@ -1,7 +1,7 @@
 // Post-build prerender (no dependencies).
 //
 // A Vite SPA serves one index.html for every route, so deep pages inherit the
-// homepage's <title>/description/OG/JSON-LD — bad for social sharing and non-JS
+// homepage's <title>/description/OG/JSON-LD - bad for social sharing and non-JS
 // crawlers. This clones the built dist/index.html for each known route and
 // rewrites its <head> with that page's own meta + a per-page WebPage JSON-LD.
 // Netlify serves these static files to scrapers; the React app still hydrates
@@ -79,8 +79,8 @@ function aiAgentsBody() {
 // The MedXFlow RCM overview video (YouTube), embedded on the AI-agents pillar.
 const RCM_VIDEO = {
   id: "5FWau1ZzAgA",
-  name: "MedXFlow — AI Revenue Cycle Management & Medical Billing",
-  description: "MedXFlow runs your entire revenue cycle with AI agents — eligibility, prior authorization, coding, claims, denials, payment posting and patient collections.",
+  name: "MedXFlow - AI Revenue Cycle Management & Medical Billing",
+  description: "MedXFlow runs your entire revenue cycle with AI agents - eligibility, prior authorization, coding, claims, denials, payment posting and patient collections.",
   thumbnailUrl: "https://i.ytimg.com/vi/5FWau1ZzAgA/hqdefault.jpg",
   uploadDate: "2026-08-10", duration: "PT11S",
   embedUrl: "https://www.youtube.com/embed/5FWau1ZzAgA",
@@ -126,7 +126,7 @@ const routes = [
   { path: "/glossary", title: "RCM Glossary · Revenue cycle terms explained · MedXFlow", desc: "Plain-English definitions of revenue cycle management, medical coding and billing terms - DNFB, CARC codes, days in A/R, prior authorization and more.", body: glossaryIndexBody() },
   ...TERMS.map((t) => ({
     path: `/glossary/${t.slug}`,
-    title: `${t.term} — RCM Glossary | MedXFlow`,
+    title: `${t.term} - RCM Glossary | MedXFlow`,
     desc: t.def,
     body: glossaryTermBody(t),
     jsonld: JSON.stringify({

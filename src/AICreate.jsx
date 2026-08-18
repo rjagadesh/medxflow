@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 
-// AI Create — image + prompt → Veo video → YouTube, and the image → FB/IG.
+// AI Create - image + prompt → Veo video → YouTube, and the image → FB/IG.
 // Starts a background job and polls its status.
 
 async function call(pw, path, action, extra = {}) {
@@ -110,12 +110,12 @@ export default function AICreate({ pw }) {
             {job.results && (
               <div className="aic-results">
                 {job.results.videoUrl && <div>🎬 Video generated</div>}
-                {job.results.youtube && <div>YouTube: {job.results.youtube.ok ? <a href={job.results.youtube.url} target="_blank" rel="noreferrer">{job.results.youtube.url}</a> : `failed — ${job.results.youtube.error}`}</div>}
-                {job.results.facebook && <div>Facebook: {job.results.facebook.ok ? "posted ✓" : `failed — ${job.results.facebook.error}`}</div>}
-                {job.results.instagram && <div>Instagram: {job.results.instagram.ok ? "posted ✓" : `failed — ${job.results.instagram.error}`}</div>}
+                {job.results.youtube && <div>YouTube: {job.results.youtube.ok ? <a href={job.results.youtube.url} target="_blank" rel="noreferrer">{job.results.youtube.url}</a> : `failed - ${job.results.youtube.error}`}</div>}
+                {job.results.facebook && <div>Facebook: {job.results.facebook.ok ? "posted ✓" : `failed - ${job.results.facebook.error}`}</div>}
+                {job.results.instagram && <div>Instagram: {job.results.instagram.ok ? "posted ✓" : `failed - ${job.results.instagram.error}`}</div>}
               </div>
             )}
-            <div className="aic-note">Video generation runs in the background and can take a few minutes — you can leave this tab; the status keeps updating.</div>
+            <div className="aic-note">Video generation runs in the background and can take a few minutes - you can leave this tab; the status keeps updating.</div>
           </div>
         </div>
       )}

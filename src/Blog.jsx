@@ -35,8 +35,8 @@ export function BlogIndex() {
         <header className="blog-head">
           <p className="eyebrow">Resources</p>
           <h1>RCM insights for medical practices</h1>
-          <p className="blog-lede">Practical guides on denials, prior authorization, coding and the revenue cycle — written for the people who run billing, not just read about it.</p>
-          <p style={{ marginTop: 10 }}><a href="/glossary" style={{ color: "var(--spruce)", fontWeight: 700, textDecoration: "none" }}>📖 Browse the RCM Glossary — every revenue-cycle term explained →</a></p>
+          <p className="blog-lede">Practical guides on denials, prior authorization, coding and the revenue cycle - written for the people who run billing, not just read about it.</p>
+          <p style={{ marginTop: 10 }}><a href="/glossary" style={{ color: "var(--spruce)", fontWeight: 700, textDecoration: "none" }}>📖 Browse the RCM Glossary - every revenue-cycle term explained →</a></p>
         </header>
         <div className="blog-grid">
           {[...POSTS].sort((a, b) => b.date.localeCompare(a.date)).map((p) => (

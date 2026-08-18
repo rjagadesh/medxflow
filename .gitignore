@@ -21,3 +21,7 @@ creds.json
 # outreach mailer — never commit the real recipient list or send log
 outreach/recipients.csv
 outreach/sent.log
+
+# python bytecode
+__pycache__/
+*.pyc

@@ -428,7 +428,7 @@ function NewCampaign({ pw, senders = [], leads, visitors, onCancel, onCreated, c
             ) : sheetBusy && !sheet ? (
               <div className="nc-select" style={{ display: "flex", alignItems: "center", color: "#64748B" }}>Loading tabs…</div>
             ) : sheet && sheet.configured === false ? (
-              <div className="nc-sheet-setup">📄 Not connected — {sheet.reason || "share the workbook with the service account."}</div>
+              <div className="nc-sheet-setup">📄 Not connected - {sheet.reason || "share the workbook with the service account."}</div>
             ) : (
               <select className="nc-select" value={sheetTab} onChange={(e) => applySheetTab(e.target.value)}>
                 <option value="">Select a campaign tab…{sheet?.workbook ? ` (${sheet.workbook})` : ""}</option>
@@ -481,13 +481,13 @@ function NewCampaign({ pw, senders = [], leads, visitors, onCancel, onCreated, c
             </div>
             <Toggle on={senderList.length > 1 && rotateSenders} onClick={() => senderList.length > 1 && setRotateSenders((v) => !v)} />
           </div>
-          <label className="nc-pop-lbl">Sender mailboxes — one per line</label>
+          <label className="nc-pop-lbl">Sender mailboxes - one per line</label>
           <textarea className="nc-sender-edit" rows={4} value={senderText} onChange={(e) => setSenderText(e.target.value)} placeholder={"raj@medxflow.ai\njay@medxflow.ai"} />
           <div className="nc-sender-actions">
             <button type="button" className="nc-save-sm" disabled={savingSenders} onClick={doSaveSenders}>{savingSenders ? "Saving…" : "💾 Save senders"}</button>
             {senderMsg && <span className="nc-sender-msg">{senderMsg}</span>}
           </div>
-          <div className="nc-pop-hint">Saved to Netlify Blobs — used for all campaigns.</div>
+          <div className="nc-pop-hint">Saved to Netlify Blobs - used for all campaigns.</div>
         </BarPopover>
 
         <BarPopover icon="✨" label="Insights" open={openPop === "ai"} onToggle={() => togglePop("ai")}>
@@ -558,7 +558,7 @@ function Detail({ c, busy, onBack, act, onSync }) {
       <div className="cmp-sub">{c.subject}</div>
       <div className="cmp-sched">📅 Sends on {dayNames} · min {c.minGapDays || 2} days apart · {(c.followups || []).length} follow-up(s) · stops on reply{c.sendIntervalMinutes ? ` · ⏱ ${c.sendBatch || 1} email(s) / ${c.sendIntervalMinutes} min` : ""}</div>
       {c.sendIntervalMinutes > 0 && c.dripActive && s.pending > 0 && (
-        <div className="cmp-drip">⏱ Dripping — sending {c.sendBatch || 1} email(s) every {c.sendIntervalMinutes} min. {s.pending} remaining; next batch goes out automatically.</div>
+        <div className="cmp-drip">⏱ Dripping - sending {c.sendBatch || 1} email(s) every {c.sendIntervalMinutes} min. {s.pending} remaining; next batch goes out automatically.</div>
       )}
 
       <div className="cmp-stats">
