@@ -6,6 +6,7 @@
 export const POSTS = [
   {
     slug: "reduce-claim-denials-small-practice",
+    snippet: "To reduce claim denials in a small practice, measure your denial rate by reason code, verify eligibility and prior authorization before the visit, scrub coding for medical-necessity mismatches, and work denials fast while tracking root cause. Most denials come from a few fixable sources.",
     title: "How to Reduce Claim Denials in a Small Medical Practice",
     description:
       "A practical, step-by-step guide to lowering your claim denial rate - the top denial reasons, how to fix them at the source, and where automation helps.",
@@ -65,6 +66,7 @@ export const POSTS = [
 
   {
     slug: "prior-authorization-automation-guide",
+    snippet: "Prior authorization automation uses software to detect which services need auth, gather documentation, submit the request, track its status, and attach the approval to the claim. It removes the manual portal work while the payer still makes the decision, cutting turnaround time and auth-related denials.",
     title: "Prior Authorization Automation: A Practical Guide for Clinics",
     description:
       "What prior authorization automation actually does, where it fits in your workflow, and how to cut turnaround time and denials without adding staff.",
@@ -122,6 +124,7 @@ export const POSTS = [
 
   {
     slug: "what-is-dnfb-clear-coding-backlog",
+    snippet: "DNFB (discharged not final billed) is the value of completed encounters that have not been coded and billed yet. To clear the backlog, measure DNFB days, automate straightforward charts so coders focus on complex cases, and keep a daily coding cadence so it does not rebuild.",
     title: "What Is DNFB - and How to Clear a Coding Backlog",
     description:
       "DNFB explained in plain terms: what 'discharged not final billed' means, why the backlog grows, and how to clear it and keep it low with automation.",
@@ -173,6 +176,7 @@ export const POSTS = [
   },
   {
     slug: "ai-agents-vs-rpa-healthcare-rcm",
+    snippet: "RPA follows a fixed script and breaks when a payer portal changes; an AI agent works from the goal, adapts to what it sees, and escalates exceptions to staff. For the constantly changing payer workflows in RCM, AI agents survive change that breaks RPA.",
     title: "AI Agents vs. RPA in Healthcare RCM: What's the Difference?",
     description:
       "AI agents and RPA both automate revenue-cycle work, but they fail - and scale - very differently. Here's how they compare for healthcare RCM, in plain terms.",
@@ -217,6 +221,7 @@ export const POSTS = [
 
   {
     slug: "how-ai-automates-eligibility-verification",
+    snippet: "AI automates eligibility verification by taking patient and insurance details, looking up the payer, requesting eligibility, reading back active coverage, co-pays and deductibles, validating it against the visit, and writing the result into your system, flagging only ambiguous cases for staff.",
     title: "How AI Automates Insurance Eligibility Verification",
     description:
       "A step-by-step look at how AI automates insurance eligibility verification - from patient data to a verified benefits result written back to your system.",
@@ -255,6 +260,7 @@ export const POSTS = [
 
   {
     slug: "ai-ar-follow-up-healthcare",
+    snippet: "AI-powered AR follow-up automates payer follow-up, denial triage and patient balance outreach: it checks claim status instead of staff logging into portals, drafts appeals, and runs balance reminders, so claims get worked inside payer windows and AR days fall.",
     title: "AI-Powered AR Follow-Up in Healthcare",
     description:
       "How AI keeps accounts receivable moving - automating payer follow-up, denial triage and patient balance outreach so cash doesn't stall in aging AR.",
@@ -293,6 +299,7 @@ export const POSTS = [
 
   {
     slug: "how-ai-automates-claims-management",
+    snippet: "AI automates claims management by scrubbing claims against payer rules before submission, submitting compliant claims, tracking status automatically, and routing denials for correction and appeal, which raises first-pass acceptance and speeds up payment.",
     title: "How AI Automates Healthcare Claims Management",
     description:
       "From clean claim creation to submission and status follow-up - how AI automates healthcare claims management to reduce rejections and speed up payment.",
@@ -330,6 +337,7 @@ export const POSTS = [
   },
   {
     slug: "ai-denial-management-classification-to-appeal",
+    snippet: "AI works a denial end to end: it classifies the denial by reason and priority, identifies the root cause, corrects or appeals it within the payer window, and feeds the pattern back upstream so the same denial stops recurring.",
     title: "AI Denial Management: From Classification to Appeal",
     description:
       "How AI works a denial end to end - classifying it, finding the root cause, correcting and appealing, and feeding the pattern back upstream to prevent the next one.",
@@ -374,6 +382,7 @@ export const POSTS = [
 
   {
     slug: "healthcare-revenue-cycle-management-with-ai",
+    snippet: "AI in the revenue cycle automates the repetitive, rules-based work across eligibility, prior authorization, coding, claims, payment posting, denials and collections, while staff handle exceptions. The main change is capacity: the same team handles more volume with more consistent quality.",
     title: "Healthcare Revenue Cycle Management with AI: A Practical Overview",
     description:
       "A practical overview of using AI across healthcare revenue cycle management - which stages it automates, where humans stay in the loop, and what changes for your team.",
@@ -423,6 +432,7 @@ export const POSTS = [
   },
   {
     slug: "medical-coding-automation-how-ai-assists-coders",
+    snippet: "Medical coding automation uses AI to draft CPT and ICD codes from documentation, flag medical-necessity mismatches before the claim goes out, and clear routine charts, so certified coders focus on complex cases. Coders still review and own the final coding.",
     title: "Medical Coding Automation: How AI Assists Coders",
     description:
       "How AI assists medical coders - drafting codes from documentation, flagging medical-necessity mismatches, and clearing routine charts so coders focus on complex cases.",
@@ -461,6 +471,7 @@ export const POSTS = [
 
   {
     slug: "automate-patient-billing-and-collections",
+    snippet: "Automating patient billing and collections means clear automated statements, easy digital payment, and gentle automated follow-up. It collects more of the growing patient balance without adding staff, and escalates only the accounts that need a personal conversation.",
     title: "How to Automate Patient Billing and Collections",
     description:
       "How AI automates patient billing and collections - clear statements, digital payment options and gentle automated follow-up that collects more without straining staff.",
@@ -498,6 +509,7 @@ export const POSTS = [
   },
   {
     slug: "ai-agents-revenue-cycle-management-buyers-guide",
+    snippet: "When buying AI agents for RCM, evaluate which workflows an agent completes end to end (not just assists with), how it handles exceptions, whether it writes back into your EHR, its auditability and security, and time to go live. Automate eligibility, prior auth, claims and denials first.",
     title: "AI Agents for Revenue Cycle Management: A Buyer's Guide",
     description:
       "A practical buyer's guide to AI agents for revenue cycle management - what they automate, how to evaluate vendors, the questions to ask, and how to decide build vs. buy.",
@@ -566,6 +578,7 @@ export const POSTS = [
 
   {
     slug: "ai-agents-vs-traditional-rcm-software",
+    snippet: "Traditional RCM software organizes the work and surfaces worklists, but a person does each step. AI agents do the step: they run the task, read the result, and escalate exceptions. The test in a demo is whether a task runs with no human clicking through it.",
     title: "AI Agents vs. Traditional RCM Software: What's Different?",
     description:
       "Traditional RCM software helps your team work faster; AI agents complete the work. Here's how they differ, where each fits, and how to tell them apart in a demo.",
@@ -613,6 +626,7 @@ export const POSTS = [
 
   {
     slug: "in-house-vs-outsourced-vs-ai-rcm",
+    snippet: "In-house RCM gives control but carries staffing cost; outsourcing removes the staffing burden but trades visibility; AI agents keep work in-house while automating the repetitive volume. Many practices blend them: agents handle volume, staff handle judgment, a managed team covers overflow.",
     title: "In-House vs. Outsourced vs. AI-Agent RCM: How to Decide",
     description:
       "Three ways to run your revenue cycle - an in-house team, an outsourced billing company, or AI agents. Here's the trade-off in cost, control and scale, and how to choose.",

@@ -35,6 +35,7 @@ function blogPostBody(post) {
   return `<article>` +
     `<p>${esc(post.category)}</p>` +
     `<h1>${esc(post.title)}</h1>` +
+    (post.snippet ? `<p>${esc(post.snippet)}</p>` : "") +
     p(post.intro) +
     post.sections.map((s) => h2(s.h) + (s.p || []).map(p).join("")).join("") +
     faqHtml(post.faq) +

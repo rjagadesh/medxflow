@@ -75,6 +75,7 @@ export function BlogPost({ slug }) {
         <span className="blog-cat">{p.category}</span>
         <h1>{p.title}</h1>
         <p className="blog-meta">{fmtDate(p.date)} · {p.readMins} min read</p>
+        {p.snippet && <p className="blog-snippet">{p.snippet}</p>}
         <p className="blog-intro">{p.intro}</p>
 
         {p.sections.map((s, i) => (
@@ -134,6 +135,7 @@ const BLOG_CSS = `
 .blog-meta{font-size:12.5px; color:#8494A6; font-weight:600}
 .blog-back{display:inline-block; margin:0 0 18px; color:var(--spruce); text-decoration:none; font-weight:700; font-size:14px}
 .blog-article .blog-cat{margin-bottom:12px}
+.blog-snippet{font-size:17px; line-height:1.55; color:var(--ink); background:var(--mist); border-left:4px solid var(--spruce); border-radius:0 10px 10px 0; padding:14px 18px; margin:18px 0 6px; font-weight:500}
 .blog-intro{font-size:19px; line-height:1.6; color:#2B3D50; margin:18px 0 8px; font-weight:500}
 .blog-sec{margin-top:30px}
 .blog-sec h2{font-size:23px; letter-spacing:-.01em; margin:0 0 12px; font-weight:800; text-wrap:balance; color:var(--ink)}
