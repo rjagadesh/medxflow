@@ -27,6 +27,18 @@ export default function AiAgentsRcm() {
       </header>
 
       <main className="wrap pl-main">
+        <section className="pl-sec pl-video">
+          <div className="pl-video-frame">
+            <iframe
+              src="https://www.youtube.com/embed/5FWau1ZzAgA"
+              title="MedXFlow — AI Revenue Cycle Management & Medical Billing"
+              loading="lazy"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
+        </section>
+
         <section className="pl-sec">
           <h2>What is an AI agent for healthcare RCM?</h2>
           <p>An <strong>AI agent for healthcare revenue cycle management</strong> is software that carries out an RCM task from start to finish — navigating your systems and payer portals, extracting and validating information, applying your business rules, and routing exceptions to staff. Where older automation handled a single step, an agent owns the whole workflow and works continuously, without adding another task to your team.</p>
@@ -120,6 +132,9 @@ const CSS = `
 .pillar .btn:hover{background:var(--spruce)}
 .pillar .btn-ghost{background:#fff; color:var(--ink); border:1px solid var(--seaglass)}
 .pl-main{padding:12px 24px 40px}
+.pl-video{margin-top:24px}
+.pl-video-frame{position:relative; width:100%; max-width:720px; margin:0 auto; aspect-ratio:16/9; border-radius:14px; overflow:hidden; border:1px solid var(--seaglass); box-shadow:0 10px 30px rgba(16,40,80,.12)}
+.pl-video-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0}
 .pl-sec{margin-top:44px}
 .pl-sec h2{font-size:26px; letter-spacing:-.01em; margin:0 0 14px; font-weight:800; text-wrap:balance}
 .pl-sec p{font-size:16.5px; color:#33455A; margin:0 0 14px; max-width:70ch}

@@ -76,6 +76,17 @@ function aiAgentsBody() {
     `</article>`;
 }
 
+// The MedXFlow RCM overview video (YouTube), embedded on the AI-agents pillar.
+const RCM_VIDEO = {
+  id: "5FWau1ZzAgA",
+  name: "MedXFlow — AI Revenue Cycle Management & Medical Billing",
+  description: "MedXFlow runs your entire revenue cycle with AI agents — eligibility, prior authorization, coding, claims, denials, payment posting and patient collections.",
+  thumbnailUrl: "https://i.ytimg.com/vi/5FWau1ZzAgA/hqdefault.jpg",
+  uploadDate: "2026-08-10", duration: "PT11S",
+  embedUrl: "https://www.youtube.com/embed/5FWau1ZzAgA",
+  contentUrl: "https://youtu.be/5FWau1ZzAgA",
+};
+
 // Every route to prerender (homepage keeps its own index.html untouched).
 const routes = [
   { path: "/telehealth", title: "Telehealth · MedXFlow", desc: en.telehealth.hero_lead },
@@ -109,6 +120,7 @@ const routes = [
       description: "AI agents that automate the healthcare revenue cycle - eligibility verification, prior authorization, medical coding, claims submission and follow-up, denial management, payment posting and patient collections.",
       faq: AI_AGENTS_FAQ,
       crumbs: [["Home", "/"], ["AI Agents for Healthcare RCM", "/ai-agents-rcm/"]],
+      video: RCM_VIDEO,
     }),
   },
   { path: "/glossary", title: "RCM Glossary · Revenue cycle terms explained · MedXFlow", desc: "Plain-English definitions of revenue cycle management, medical coding and billing terms - DNFB, CARC codes, days in A/R, prior authorization and more.", body: glossaryIndexBody() },
@@ -141,8 +153,8 @@ const routes = [
   })),
 ];
 
-// Service + FAQPage + BreadcrumbList JSON-LD for a commercial landing page.
-function serviceLd({ name, serviceType, url, description, faq, crumbs }) {
+// Service + FAQPage + BreadcrumbList (+ optional VideoObject) JSON-LD.
+function serviceLd({ name, serviceType, url, description, faq, crumbs, video }) {
   const graph = [
     {
       "@type": "Service", name, serviceType, url, description,
@@ -154,6 +166,13 @@ function serviceLd({ name, serviceType, url, description, faq, crumbs }) {
       itemListElement: crumbs.map(([n, u], i) => ({ "@type": "ListItem", position: i + 1, name: n, item: `${ORIGIN}${u}` })),
     },
   ];
+  if (video) {
+    graph.push({
+      "@type": "VideoObject", name: video.name, description: video.description,
+      thumbnailUrl: video.thumbnailUrl, uploadDate: video.uploadDate, duration: video.duration,
+      embedUrl: video.embedUrl, contentUrl: video.contentUrl, publisher: { "@id": `${ORIGIN}/#organization` },
+    });
+  }
   if (faq?.length) {
     graph.push({ "@type": "FAQPage", mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) });
   }
