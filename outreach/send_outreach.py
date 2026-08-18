@@ -1,35 +1,34 @@
 #!/usr/bin/env python3
 """
-MedXFlow outreach mailer — sends personalized listicle/directory outreach emails
-over SMTP, one recipient at a time with a delay (good deliverability, not a blast).
+MedXFlow outreach mailer — sends personalized listicle/directory outreach emails,
+one recipient at a time with a delay (good deliverability, not a blast).
 
-Credentials come from the project's creds.json (SMTP_HOST/PORT/USER/PASS) by
-default, or from env vars of the same name. Nothing is hardcoded.
+Two transports, chosen automatically by the FROM address:
+  * @medxflow.ai  -> Microsoft Graph (uses MS_TENANT_ID / MS_CLIENT_ID /
+                     MS_CLIENT_SECRET from creds.json; the app's Mail.Send perm)
+  * anything else -> SMTP (SMTP_HOST/PORT/USER/PASS from creds.json)
+
+Credentials come from creds.json or env vars. Nothing is hardcoded. No pip deps.
 
 Usage:
-  python3 send_outreach.py --test you@example.com        # send ONE test to yourself
-  python3 send_outreach.py --dry-run                     # print, don't send
-  python3 send_outreach.py                                # send to everyone in recipients.csv
-  python3 send_outreach.py --limit 5 --delay 90          # first 5, 90s apart
+  python3 send_outreach.py --from jay@medxflow.ai --test you@example.com   # one test
+  python3 send_outreach.py --from jay@medxflow.ai --dry-run                # print only
+  python3 send_outreach.py --from jay@medxflow.ai                          # send recipients.csv
+  python3 send_outreach.py --from jay@medxflow.ai --limit 5 --delay 90
 
-Recipients CSV (recipients.csv, next to this file) columns:
-  email,first_name,article_title,site
-Only `email` is required; the rest personalize the template (blank is fine).
-
-A log of who was emailed is kept in sent.log so re-runs never double-send.
+recipients.csv columns:  email,first_name,article_title,site   (only email required)
+A sent.log prevents double-sending across runs.
 """
-import argparse, csv, json, os, smtplib, ssl, sys, time
+import argparse, csv, json, os, smtplib, ssl, sys, time, urllib.request, urllib.parse, urllib.error
 from email.message import EmailMessage
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
 
-# ---- editable content -------------------------------------------------------
-FROM_NAME = "MedXFlow"                 # display name on the From header
+FROM_NAME = "MedXFlow"
 SUBJECT   = "A newer AI RCM vendor for your \"{article_title}\" roundup"
 SUBJECT_FALLBACK = "A newer AI RCM vendor worth a look"
-
 BODY = """Hi {first_name},
 
 I came across your article on AI revenue cycle management / RCM software{article_ref} — genuinely one of the clearer overviews out there.
@@ -42,28 +41,76 @@ Best,
 {sender_name}
 MedXFlow · https://medxflow.ai{sender_phone}
 """
-# ----------------------------------------------------------------------------
 
-def load_smtp():
-    cfg = {}
-    creds_path = ROOT / "creds.json"
-    if creds_path.exists():
-        try:
-            cfg = json.loads(creds_path.read_text())
-        except Exception:
-            cfg = {}
-    g = lambda k: os.environ.get(k) or cfg.get(k)
-    smtp = {
-        "host": g("SMTP_HOST") or "smtp.gmail.com",
-        "port": int(g("SMTP_PORT") or 465),
-        "user": g("SMTP_USER"),
-        "password": g("SMTP_PASS"),
-        "from_email": (g("OUTREACH_FROM_EMAIL") or g("SMTP_USER")),
-    }
-    if not smtp["user"] or not smtp["password"]:
-        sys.exit("No SMTP credentials found. Set SMTP_USER and SMTP_PASS (env or creds.json).")
-    return smtp
+def cfg():
+    c = {}
+    p = ROOT / "creds.json"
+    if p.exists():
+        try: c = json.loads(p.read_text())
+        except Exception: c = {}
+    return lambda k: os.environ.get(k) or c.get(k)
 
+G = cfg()
+
+# ---------- Microsoft Graph transport ----------
+_tok = {"v": None, "exp": 0}
+def graph_token():
+    if _tok["v"] and time.time() < _tok["exp"]:
+        return _tok["v"]
+    tenant, cid, secret = G("MS_TENANT_ID"), G("MS_CLIENT_ID"), G("MS_CLIENT_SECRET")
+    if not (tenant and cid and secret):
+        sys.exit("Graph transport needs MS_TENANT_ID / MS_CLIENT_ID / MS_CLIENT_SECRET (creds.json).")
+    data = urllib.parse.urlencode({
+        "client_id": cid, "client_secret": secret,
+        "scope": "https://graph.microsoft.com/.default", "grant_type": "client_credentials",
+    }).encode()
+    req = urllib.request.Request(f"https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token", data=data)
+    try:
+        d = json.loads(urllib.request.urlopen(req, timeout=30).read())
+    except urllib.error.HTTPError as e:
+        sys.exit(f"Graph token failed: {e.read().decode()[:200]}")
+    _tok["v"], _tok["exp"] = d["access_token"], time.time() + int(d.get("expires_in", 3600)) - 60
+    return _tok["v"]
+
+def send_graph(sender, to, subject, body):
+    token = graph_token()
+    payload = json.dumps({
+        "message": {
+            "subject": subject,
+            "body": {"contentType": "Text", "content": body},
+            "toRecipients": [{"emailAddress": {"address": to}}],
+            "from": {"emailAddress": {"address": sender}},
+        },
+        "saveToSentItems": True,
+    }).encode()
+    url = f"https://graph.microsoft.com/v1.0/users/{urllib.parse.quote(sender)}/sendMail"
+    req = urllib.request.Request(url, data=payload, method="POST",
+        headers={"Authorization": f"Bearer {token}", "Content-Type": "application/json"})
+    try:
+        urllib.request.urlopen(req, timeout=30)  # 202 Accepted, no body
+    except urllib.error.HTTPError as e:
+        raise RuntimeError(f"Graph sendMail {e.code}: {e.read().decode()[:300]}")
+
+# ---------- SMTP transport ----------
+def send_smtp(server, sender, to, subject, body):
+    msg = EmailMessage()
+    msg["From"] = f"{FROM_NAME} <{sender}>"
+    msg["To"] = to
+    msg["Subject"] = subject
+    msg["Reply-To"] = sender
+    msg.set_content(body)
+    server.send_message(msg)
+
+def smtp_connect():
+    host, port = G("SMTP_HOST") or "smtp.gmail.com", int(G("SMTP_PORT") or 465)
+    user, pw = G("SMTP_USER"), G("SMTP_PASS")
+    if not (user and pw):
+        sys.exit("SMTP transport needs SMTP_USER / SMTP_PASS (creds.json).")
+    s = smtplib.SMTP_SSL(host, port, context=ssl.create_default_context())
+    s.login(user, pw)
+    return s
+
+# ---------- recipients + log ----------
 def read_recipients():
     path = HERE / "recipients.csv"
     if not path.exists():
@@ -71,100 +118,85 @@ def read_recipients():
     rows = []
     with path.open(newline="", encoding="utf-8") as f:
         for r in csv.DictReader(f):
-            email = (r.get("email") or "").strip()
-            if email and "@" in email:
-                rows.append({
-                    "email": email,
+            e = (r.get("email") or "").strip()
+            if e and "@" in e:
+                rows.append({"email": e,
                     "first_name": (r.get("first_name") or "there").strip() or "there",
-                    "article_title": (r.get("article_title") or "").strip(),
-                    "site": (r.get("site") or "").strip(),
-                })
+                    "article_title": (r.get("article_title") or "").strip()})
     return rows
 
 def already_sent():
     log = HERE / "sent.log"
-    if not log.exists():
-        return set()
-    return {l.split("\t")[0].strip().lower() for l in log.read_text().splitlines() if l.strip()}
+    return {l.split("\t")[0].strip().lower() for l in log.read_text().splitlines()} if log.exists() else set()
 
 def mark_sent(email):
     with (HERE / "sent.log").open("a", encoding="utf-8") as f:
         f.write(f"{email.lower()}\t{time.strftime('%Y-%m-%d %H:%M:%S')}\n")
 
-def build_message(smtp, to_email, r, sender_name, sender_phone):
+def render(r, sender_name, sender_phone):
     subject = SUBJECT.format(article_title=r["article_title"]) if r["article_title"] else SUBJECT_FALLBACK
-    article_ref = f' ("{r["article_title"]}")' if r["article_title"] else ""
-    body = BODY.format(
-        first_name=r["first_name"], article_ref=article_ref,
-        sender_name=sender_name,
-        sender_phone=(f" · {sender_phone}" if sender_phone else ""),
-    )
-    msg = EmailMessage()
-    msg["From"] = f"{FROM_NAME} <{smtp['from_email']}>"
-    msg["To"] = to_email
-    msg["Subject"] = subject
-    msg["Reply-To"] = smtp["from_email"]
-    msg.set_content(body)
-    return msg
+    ref = f' ("{r["article_title"]}")' if r["article_title"] else ""
+    body = BODY.format(first_name=r["first_name"], article_ref=ref,
+        sender_name=sender_name, sender_phone=(f" · {sender_phone}" if sender_phone else ""))
+    return subject, body
 
 def main():
     ap = argparse.ArgumentParser()
+    ap.add_argument("--from", dest="sender", default=os.environ.get("OUTREACH_FROM_EMAIL", "jay@medxflow.ai"),
+        help="From address (medxflow.ai -> Graph, else SMTP)")
     ap.add_argument("--test", metavar="EMAIL", help="send one test email to this address and exit")
-    ap.add_argument("--dry-run", action="store_true", help="print emails, do not send")
-    ap.add_argument("--limit", type=int, default=0, help="max emails to send this run (0 = all)")
-    ap.add_argument("--delay", type=int, default=75, help="seconds between sends (default 75)")
-    ap.add_argument("--sender-name", default=os.environ.get("OUTREACH_SENDER_NAME", "Jagadesh"))
+    ap.add_argument("--dry-run", action="store_true")
+    ap.add_argument("--limit", type=int, default=0)
+    ap.add_argument("--delay", type=int, default=75)
+    ap.add_argument("--sender-name", default=os.environ.get("OUTREACH_SENDER_NAME", "Jay"))
     ap.add_argument("--sender-phone", default=os.environ.get("OUTREACH_SENDER_PHONE", ""))
     args = ap.parse_args()
 
-    smtp = load_smtp()
-    ctx = ssl.create_default_context()
+    use_graph = args.sender.lower().endswith("@medxflow.ai")
+    transport = "Microsoft Graph" if use_graph else "SMTP"
+    print(f"From: {FROM_NAME} <{args.sender}>  ·  transport: {transport}\n")
 
-    def connect():
-        s = smtplib.SMTP_SSL(smtp["host"], smtp["port"], context=ctx)
-        s.login(smtp["user"], smtp["password"])
-        return s
+    def deliver(server, to, subject, body):
+        if use_graph: send_graph(args.sender, to, subject, body)
+        else: send_smtp(server, args.sender, to, subject, body)
 
-    # Test mode: one email to yourself, then stop.
     if args.test:
-        r = {"email": args.test, "first_name": "there", "article_title": "Best AI RCM Software 2026", "site": ""}
-        msg = build_message(smtp, args.test, r, args.sender_name, args.sender_phone)
-        print(f"— TEST — From: {msg['From']}\n  To: {args.test}\n  Subject: {msg['Subject']}\n")
-        print(msg.get_content())
+        subject, body = render({"first_name": "there", "article_title": "Best AI RCM Software 2026"},
+                               args.sender_name, args.sender_phone)
+        print(f"— TEST —  To: {args.test}\n  Subject: {subject}\n\n{body}")
         if args.dry_run:
             print("(dry-run: not sent)"); return
-        with connect() as s:
-            s.send_message(msg)
-        print(f"\n✓ Test sent to {args.test}")
+        server = None if use_graph else smtp_connect()
+        try: deliver(server, args.test, subject, body)
+        finally:
+            if server: server.quit()
+        print(f"\n✓ Test accepted for delivery to {args.test}")
+        if use_graph:
+            print("  NOTE: Graph returns 'accepted' immediately — CHECK the inbox to confirm it wasn't bounced\n  by the tenant's external-mail block.")
         return
 
-    recipients = read_recipients()
+    recips = read_recipients()
     done = already_sent()
-    todo = [r for r in recipients if r["email"].lower() not in done]
-    if args.limit:
-        todo = todo[:args.limit]
-    print(f"{len(recipients)} in list · {len(recipients)-len(todo)} already emailed · sending {len(todo)} now\n")
-    if not todo:
-        return
+    todo = [r for r in recips if r["email"].lower() not in done]
+    if args.limit: todo = todo[:args.limit]
+    print(f"{len(recips)} in list · {len(recips)-len(todo)} already emailed · sending {len(todo)} now\n")
+    if not todo: return
 
+    server = None if (use_graph or args.dry_run) else smtp_connect()
     sent = 0
-    server = None if args.dry_run else connect()
     try:
         for i, r in enumerate(todo):
-            msg = build_message(smtp, r["email"], r, args.sender_name, args.sender_phone)
+            subject, body = render(r, args.sender_name, args.sender_phone)
             if args.dry_run:
-                print(f"[{i+1}/{len(todo)}] DRY  → {r['email']}  ({msg['Subject']})")
+                print(f"[{i+1}/{len(todo)}] DRY  → {r['email']}  ({subject})")
             else:
-                server.send_message(msg)
-                mark_sent(r["email"])
-                sent += 1
+                deliver(server, r["email"], subject, body)
+                mark_sent(r["email"]); sent += 1
                 print(f"[{i+1}/{len(todo)}] sent → {r['email']}")
-                if i < len(todo) - 1:
-                    time.sleep(args.delay)
+                if i < len(todo) - 1: time.sleep(args.delay)
     finally:
-        if server:
-            server.quit()
-    print(f"\n✓ Done — {sent} emails sent." if not args.dry_run else "\n(dry-run complete)")
+        if server: server.quit()
+    print(f"\n✓ Done — {sent} sent." if not args.dry_run else "\n(dry-run complete)")
 
 if __name__ == "__main__":
     main()
