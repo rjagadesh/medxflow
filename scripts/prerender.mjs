@@ -15,6 +15,7 @@ import { SPECIALTIES } from "../src/specialties.data.js";
 import { POSTS } from "../src/blog.data.js";
 import { AI_AGENTS, AI_AGENTS_INTRO, AI_AGENTS_FAQ } from "../src/ai-agents-rcm.data.js";
 import { SEO_PAGES } from "../src/seo-pages.data.js";
+import { TERMS } from "../src/glossary.data.js";
 import { en } from "../src/i18n.strings.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -49,6 +50,19 @@ function seoPageBody(pg) {
     pg.sections.map((s) => h2(s.h) + (s.p || []).map(p).join("") + (s.list ? `<ul>${s.list.map((li) => `<li>${esc(li)}</li>`).join("")}</ul>` : "")).join("") +
     (pg.related ? `<nav><h2>Related</h2>${pg.related.map((r) => `<a href="${r.href}">${esc(r.label)}</a>`).join("")}</nav>` : "") +
     faqHtml(pg.faq) +
+    `</article>`;
+}
+function glossaryIndexBody() {
+  return `<section><h1>Revenue Cycle Management glossary</h1>` +
+    p("Plain-English definitions of the RCM, coding and billing terms that run your revenue cycle.") +
+    [...TERMS].sort((a, b) => a.term.localeCompare(b.term)).map((t) => `<article><h2><a href="/glossary/${t.slug}">${esc(t.term)}</a></h2>${p(t.def)}</article>`).join("") +
+    `</section>`;
+}
+function glossaryTermBody(t) {
+  return `<article><h1>${esc(t.term)}</h1>${p(t.def)}` +
+    t.body.map(p).join("") +
+    (t.related ? `<p><a href="${t.related.href}">${esc(t.related.label)}</a></p>` : "") +
+    (t.see?.length ? `<nav><h2>Related terms</h2>${t.see.map((s) => `<a href="/glossary/${s}">${esc(s.replace(/-/g, " "))}</a>`).join("")}</nav>` : "") +
     `</article>`;
 }
 function aiAgentsBody() {
@@ -97,6 +111,20 @@ const routes = [
       crumbs: [["Home", "/"], ["AI Agents for Healthcare RCM", "/ai-agents-rcm/"]],
     }),
   },
+  { path: "/glossary", title: "RCM Glossary · Revenue cycle terms explained · MedXFlow", desc: "Plain-English definitions of revenue cycle management, medical coding and billing terms - DNFB, CARC codes, days in A/R, prior authorization and more.", body: glossaryIndexBody() },
+  ...TERMS.map((t) => ({
+    path: `/glossary/${t.slug}`,
+    title: `${t.term} — RCM Glossary | MedXFlow`,
+    desc: t.def,
+    body: glossaryTermBody(t),
+    jsonld: JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        { "@type": "DefinedTerm", name: t.term, description: t.def, inDefinedTermSet: `${ORIGIN}/glossary`, url: `${ORIGIN}/glossary/${t.slug}/` },
+        { "@type": "BreadcrumbList", itemListElement: [["Home", "/"], ["Glossary", "/glossary/"], [t.term, `/glossary/${t.slug}/`]].map(([n, u], i) => ({ "@type": "ListItem", position: i + 1, name: n, item: `${ORIGIN}${u}` })) },
+      ],
+    }),
+  })),
   ...SEO_PAGES.map((p) => ({
     path: `/${p.slug}`,
     title: p.title,
