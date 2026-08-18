@@ -16,6 +16,7 @@ import { POSTS } from "../src/blog.data.js";
 import { AI_AGENTS, AI_AGENTS_INTRO, AI_AGENTS_FAQ } from "../src/ai-agents-rcm.data.js";
 import { SEO_PAGES } from "../src/seo-pages.data.js";
 import { TERMS } from "../src/glossary.data.js";
+import { CODES } from "../src/denial-codes.data.js";
 import { en } from "../src/i18n.strings.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -64,6 +65,21 @@ function glossaryTermBody(t) {
     t.body.map(p).join("") +
     (t.related ? `<p><a href="${t.related.href}">${esc(t.related.label)}</a></p>` : "") +
     (t.see?.length ? `<nav><h2>Related terms</h2>${t.see.map((s) => `<a href="/glossary/${s}">${esc(s.replace(/-/g, " "))}</a>`).join("")}</nav>` : "") +
+    `</article>`;
+}
+function denialIndexBody() {
+  return `<section><h1>Medical claim denial codes, explained</h1>` +
+    p("Look up a CARC or RARC denial code to see what it means, why it happens, and how to fix it.") +
+    CODES.map((c) => `<article><h2><a href="/denial-codes/${c.slug}">${esc(c.code)}</a></h2>${p(c.meaning)}</article>`).join("") +
+    `</section>`;
+}
+function denialCodeBody(c) {
+  return `<article><h1>Denial Code ${esc(c.code)}: What It Means and How to Fix It</h1>` +
+    p(c.meaning) +
+    h2("Official description") + p(c.official) +
+    h2("Common cause") + p(c.cause) +
+    h2("How to fix it") + p(c.fix) +
+    `<p><a href="/products/denial-management">See MedXFlow Denial Management</a></p>` +
     `</article>`;
 }
 function aiAgentsBody() {
@@ -135,6 +151,23 @@ const routes = [
       "@graph": [
         { "@type": "DefinedTerm", name: t.term, description: t.def, inDefinedTermSet: `${ORIGIN}/glossary`, url: `${ORIGIN}/glossary/${t.slug}/` },
         { "@type": "BreadcrumbList", itemListElement: [["Home", "/"], ["Glossary", "/glossary/"], [t.term, `/glossary/${t.slug}/`]].map(([n, u], i) => ({ "@type": "ListItem", position: i + 1, name: n, item: `${ORIGIN}${u}` })) },
+      ],
+    }),
+  })),
+  { path: "/denial-codes", title: "Denial Code Lookup · CARC & RARC Codes Explained · MedXFlow", desc: "Look up medical claim denial codes (CARC and RARC): what each code means, why it happens, and how to fix it - CO-45, CO-197, PR-1 and more.", body: denialIndexBody() },
+  ...CODES.map((c) => ({
+    path: `/denial-codes/${c.slug}`,
+    title: `Denial Code ${c.code} - What It Means & How to Fix It | MedXFlow`,
+    desc: `${c.code}: ${c.meaning}`.slice(0, 155),
+    body: denialCodeBody(c),
+    jsonld: JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        { "@type": "BreadcrumbList", itemListElement: [["Home", "/"], ["Denial Codes", "/denial-codes/"], [c.code, `/denial-codes/${c.slug}/`]].map(([n, u], i) => ({ "@type": "ListItem", position: i + 1, name: n, item: `${ORIGIN}${u}` })) },
+        { "@type": "FAQPage", mainEntity: [
+          { "@type": "Question", name: `What is denial code ${c.code}?`, acceptedAnswer: { "@type": "Answer", text: `${c.meaning} Official description: ${c.official}` } },
+          { "@type": "Question", name: `How do I fix denial code ${c.code}?`, acceptedAnswer: { "@type": "Answer", text: c.fix } },
+        ] },
       ],
     }),
   })),

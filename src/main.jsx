@@ -11,6 +11,7 @@ import AiAgentsRcm from "./AiAgentsRcm.jsx";
 import SeoPage from "./SeoPage.jsx";
 import { SEO_PAGES } from "./seo-pages.data.js";
 import { GlossaryIndex, GlossaryTerm } from "./Glossary.jsx";
+import { DenialCodesIndex, DenialCodePage } from "./DenialCodes.jsx";
 import { track } from "./track.js";
 
 const path = window.location.pathname.replace(/\/+$/, "");
@@ -26,6 +27,8 @@ const isAiAgentsRcm = path === "/ai-agents-rcm";
 const seoSlug = SEO_PAGES.some((p) => `/${p.slug}` === path) ? path.slice(1) : null;
 const isGlossaryIndex = path === "/glossary";
 const glossaryMatch = path.match(/^\/glossary\/([a-z0-9-]+)$/);
+const isDenialIndex = path === "/denial-codes";
+const denialMatch = path.match(/^\/denial-codes\/([a-z0-9-]+)$/);
 
 // Self-referencing canonical per route. Navigation is via full page loads, so
 // setting this once per load from the current path covers every page.
@@ -126,6 +129,22 @@ function App() {
     return (
       <>
         <GlossaryTerm slug={glossaryMatch[1]} />
+        <Chatbot />
+      </>
+    );
+  }
+  if (isDenialIndex) {
+    return (
+      <>
+        <DenialCodesIndex />
+        <Chatbot />
+      </>
+    );
+  }
+  if (denialMatch) {
+    return (
+      <>
+        <DenialCodePage slug={denialMatch[1]} />
         <Chatbot />
       </>
     );
