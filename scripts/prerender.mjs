@@ -155,6 +155,28 @@ const routes = [
     }),
   })),
   { path: "/denial-codes", title: "Denial Code Lookup · CARC & RARC Codes Explained · MedXFlow", desc: "Look up medical claim denial codes (CARC and RARC): what each code means, why it happens, and how to fix it - CO-45, CO-197, PR-1 and more.", body: denialIndexBody() },
+  {
+    path: "/denial-rate-calculator",
+    title: "Denial Rate Calculator · Free RCM Tool · MedXFlow",
+    desc: "Free denial rate calculator. Enter claims submitted and denied to calculate your claim denial rate and compare it to industry benchmarks (under 5% is healthy).",
+    body: `<article><h1>Denial Rate Calculator</h1>` +
+      p("Your claim denial rate is the number of claims denied divided by the number submitted in a period, shown as a percentage.") +
+      h2("What is a good denial rate?") + p("Under 5% is generally considered healthy, and best-in-class practices run 2 to 4%. Above 10% usually points to a concentrated, fixable root cause.") +
+      h2("How to calculate denial rate") + p("Denial rate = (claims denied divided by claims submitted) times 100, measured over a period such as a month.") +
+      h2("How to reduce your denial rate") + p("Verify eligibility before the visit, secure prior authorizations, scrub coding for medical-necessity mismatches, and work denials fast while tracking root cause.") +
+      `</article>`,
+    jsonld: JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        { "@type": "WebApplication", name: "Denial Rate Calculator", applicationCategory: "BusinessApplication", operatingSystem: "Web", url: `${ORIGIN}/denial-rate-calculator/`, description: "Free calculator for a medical practice's claim denial rate.", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, publisher: { "@id": `${ORIGIN}/#organization` } },
+        { "@type": "BreadcrumbList", itemListElement: [["Home", "/"], ["Denial Rate Calculator", "/denial-rate-calculator/"]].map(([n, u], i) => ({ "@type": "ListItem", position: i + 1, name: n, item: `${ORIGIN}${u}` })) },
+        { "@type": "FAQPage", mainEntity: [
+          { "@type": "Question", name: "What is a good denial rate?", acceptedAnswer: { "@type": "Answer", text: "Under 5% is generally healthy; best-in-class practices run 2 to 4%. Above 10% usually indicates a fixable root cause, most often eligibility or prior authorization." } },
+          { "@type": "Question", name: "How do you calculate denial rate?", acceptedAnswer: { "@type": "Answer", text: "Denial rate equals claims denied divided by claims submitted, times 100, over a period such as a month." } },
+        ] },
+      ],
+    }),
+  },
   ...CODES.map((c) => ({
     path: `/denial-codes/${c.slug}`,
     title: `Denial Code ${c.code} - What It Means & How to Fix It | MedXFlow`,

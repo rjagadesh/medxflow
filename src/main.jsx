@@ -12,6 +12,7 @@ import SeoPage from "./SeoPage.jsx";
 import { SEO_PAGES } from "./seo-pages.data.js";
 import { GlossaryIndex, GlossaryTerm } from "./Glossary.jsx";
 import { DenialCodesIndex, DenialCodePage } from "./DenialCodes.jsx";
+import DenialRateCalculator from "./DenialRateCalculator.jsx";
 import { track } from "./track.js";
 
 const path = window.location.pathname.replace(/\/+$/, "");
@@ -29,6 +30,7 @@ const isGlossaryIndex = path === "/glossary";
 const glossaryMatch = path.match(/^\/glossary\/([a-z0-9-]+)$/);
 const isDenialIndex = path === "/denial-codes";
 const denialMatch = path.match(/^\/denial-codes\/([a-z0-9-]+)$/);
+const isDenialCalc = path === "/denial-rate-calculator";
 
 // Self-referencing canonical per route. Navigation is via full page loads, so
 // setting this once per load from the current path covers every page.
@@ -145,6 +147,14 @@ function App() {
     return (
       <>
         <DenialCodePage slug={denialMatch[1]} />
+        <Chatbot />
+      </>
+    );
+  }
+  if (isDenialCalc) {
+    return (
+      <>
+        <DenialRateCalculator />
         <Chatbot />
       </>
     );
