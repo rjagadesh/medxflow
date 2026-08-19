@@ -77,7 +77,7 @@ export function BlogPost({ slug }) {
         <a href="/blog" className="blog-back">← All resources</a>
         <span className="blog-cat">{p.category}</span>
         <h1>{p.title}</h1>
-        <p className="blog-meta">{fmtDate(p.date)} · {p.readMins} min read</p>
+        <p className="blog-meta">By the <a href="/about">MedXFlow RCM team</a> · {fmtDate(p.date)} · {p.readMins} min read</p>
         {p.snippet && <p className="blog-snippet">{p.snippet}</p>}
         <p className="blog-intro">{p.intro}</p>
 
@@ -106,6 +106,14 @@ export function BlogPost({ slug }) {
             ))}
           </section>
         ) : null}
+
+        <div className="blog-author">
+          <div className="blog-author-mark"><b>Med<span>X</span>Flow</b></div>
+          <div>
+            <b>Written by the MedXFlow RCM team</b>
+            <p>RCM specialists building AI agents for the healthcare revenue cycle. <a href="/about">About MedXFlow</a>.</p>
+          </div>
+        </div>
 
         <div className="blog-more">
           <p className="eyebrow">Keep reading</p>
@@ -151,6 +159,12 @@ const BLOG_CSS = `
 .blog-faq-item{margin-bottom:18px}
 .blog-faq-item h3{font-size:17px; margin:0 0 6px; font-weight:800; color:var(--ink)}
 .blog-faq-item p{font-size:16px; color:#33455A; margin:0}
+.blog-author{display:flex; gap:14px; align-items:center; margin-top:40px; padding:18px 20px; background:var(--mist); border:1px solid var(--seaglass); border-radius:14px}
+.blog-author-mark{flex:none; width:52px; height:52px; border-radius:12px; background:var(--ink); color:#fff; display:grid; place-items:center; font-weight:800; font-size:12px}
+.blog-author-mark span{color:var(--gorse)}
+.blog-author b{font-size:15px; color:var(--ink)}
+.blog-author p{font-size:14px; color:#5A6B7E; margin:3px 0 0}
+.blog-author a{color:var(--spruce); text-decoration:none; font-weight:600}
 .blog-more{margin-top:46px; padding-top:26px; border-top:1px solid var(--seaglass)}
 .blog-more-links{display:flex; flex-direction:column; gap:10px}
 .blog-more-links a{color:var(--spruce); text-decoration:none; font-weight:600; font-size:15.5px}

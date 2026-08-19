@@ -107,6 +107,24 @@ const RCM_VIDEO = {
 // Every route to prerender (homepage keeps its own index.html untouched).
 const routes = [
   { path: "/telehealth", title: "Telehealth · MedXFlow", desc: en.telehealth.hero_lead },
+  {
+    path: "/about",
+    title: "About MedXFlow · AI Revenue Cycle Management",
+    desc: "MedXFlow is an AI-powered revenue cycle management platform whose AI agents automate eligibility, prior authorization, coding, claims and denials for medical practices, billing companies and RCM teams in the US. HIPAA-compliant, BAA available.",
+    body: `<article><h1>About MedXFlow</h1>` +
+      p("MedXFlow is an AI-powered revenue cycle management platform. Our AI agents automate the repetitive work across the healthcare revenue cycle so medical practices, billing companies and RCM teams get paid faster with less manual effort.") +
+      h2("What we do") + p("MedXFlow runs the revenue cycle with AI agents that carry out each task end to end: eligibility and benefits verification, prior authorization, charge capture and medical coding, claims submission and follow-up, denial management, payment posting, and patient collections. Agents escalate exceptions to staff, and a human-led Managed Billing team is available to run the whole cycle.") +
+      h2("Security and compliance") + p("PHI is handled to HIPAA standards with a Business Associate Agreement available, security controls aligned to SOC 2 Type II, US data centers, encryption in transit and at rest, and least-privilege access with audit logging. MedXFlow works with Epic, athenahealth, eClinicalWorks and more.") +
+      h2("Who we serve") + p("Medical practices, billing companies, MSOs and revenue cycle teams across the United States.") +
+      `</article>`,
+    jsonld: JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        { "@type": "AboutPage", name: "About MedXFlow", url: `${ORIGIN}/about/`, mainEntity: { "@id": `${ORIGIN}/#organization` } },
+        { "@type": "BreadcrumbList", itemListElement: [["Home", "/"], ["About", "/about/"]].map(([n, u], i) => ({ "@type": "ListItem", position: i + 1, name: n, item: `${ORIGIN}${u}` })) },
+      ],
+    }),
+  },
   { path: "/products", title: "Products · MedXFlow", desc: "The connected stages of Revenue Cycle Management, plus VoIP, telehealth and a human-led managed billing team - one platform for the whole practice." },
   ...PRODUCTS.map((p) => ({
     path: `/products/${p.slug}`, title: `${p.name} · MedXFlow`, desc: p.tagline,
