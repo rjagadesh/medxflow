@@ -344,7 +344,7 @@ function Hero() {
     >
       <div className="hero-glow" aria-hidden="true" />
       {/* Slide 1 - Kiosk */}
-      <div className={"slide" + (idx === 0 ? " slide-on" : "")} aria-hidden={idx !== 0}>
+      <div className={"slide" + (idx === 0 ? " slide-on" : "")} aria-hidden={idx !== 0} inert={idx !== 0 ? "" : undefined}>
         <div className="wrap hero-grid">
           <div className="hero-copy">
             <Eyebrow light>{t("hero.s1_eyebrow")}</Eyebrow>
@@ -371,7 +371,7 @@ function Hero() {
         </div>
       </div>
       {/* Slide 2 - RCM Billing */}
-      <div className={"slide" + (idx === 1 ? " slide-on" : "")} aria-hidden={idx !== 1}>
+      <div className={"slide" + (idx === 1 ? " slide-on" : "")} aria-hidden={idx !== 1} inert={idx !== 1 ? "" : undefined}>
         <div className="wrap hero-grid">
           <div className="hero-copy">
             <Eyebrow light>{t("hero.s4_eyebrow")}</Eyebrow>
@@ -398,7 +398,7 @@ function Hero() {
         </div>
       </div>
       {/* Slide 3 - Voice */}
-      <div className={"slide" + (idx === 2 ? " slide-on" : "")} aria-hidden={idx !== 2}>
+      <div className={"slide" + (idx === 2 ? " slide-on" : "")} aria-hidden={idx !== 2} inert={idx !== 2 ? "" : undefined}>
         <div className="wrap hero-grid">
           <div className="hero-copy">
             <Eyebrow light>{t("hero.s2_eyebrow")}</Eyebrow>
@@ -425,7 +425,7 @@ function Hero() {
         </div>
       </div>
       {/* Slide 4 - Telehealth */}
-      <div className={"slide" + (idx === 3 ? " slide-on" : "")} aria-hidden={idx !== 3}>
+      <div className={"slide" + (idx === 3 ? " slide-on" : "")} aria-hidden={idx !== 3} inert={idx !== 3 ? "" : undefined}>
         <div className="wrap hero-grid">
           <div className="hero-copy">
             <Eyebrow light>{t("hero.s3_eyebrow")}</Eyebrow>

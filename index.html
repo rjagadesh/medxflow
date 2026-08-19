@@ -9,13 +9,24 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/icon_180.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Faster web-font loading (removes render-blocking hop) -->
+    <!-- Web fonts loaded async so they never block first paint. The stylesheet
+         is fetched as a preload, then flipped to a stylesheet on load; text
+         paints immediately in the fallback face (display=swap) and upgrades
+         when the web font arrives. <noscript> keeps it working without JS. -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      rel="stylesheet"
+      rel="preload"
+      as="style"
       href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;600&display=swap"
+      onload="this.onload=null;this.rel='stylesheet'"
     />
+    <noscript>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Figtree:wght@400;500;600;700&family=Spline+Sans+Mono:wght@400;500;600&display=swap"
+      />
+    </noscript>
 
     <title>MedXFlow - AI Revenue Cycle Management &amp; Medical Billing</title>
     <meta
