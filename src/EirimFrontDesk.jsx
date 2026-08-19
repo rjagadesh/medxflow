@@ -837,6 +837,7 @@ export function Footer() {
         <div className="brand brand-foot"><ShamrockMark size={24} variant="light" /><span>MedXFlow <b>Health</b></span></div>
         <div className="foot-links">
           <a href="/about">About</a>
+          <a href="/trust">Trust &amp; Security</a>
           <a href="tel:+12103969718">📞 (210) 396-9718</a>
           <a href="https://wa.me/14693128805?text=Hi%20MedXFlow%2C%20I%27d%20like%20to%20know%20more%20about%20your%20AI%20RCM%20platform." target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
           <a href="mailto:sales@medxflow.ai">sales@medxflow.ai</a>

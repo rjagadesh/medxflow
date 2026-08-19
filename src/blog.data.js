@@ -816,6 +816,110 @@ export const POSTS = [
     ],
   },
 
+  {
+    slug: "is-ai-rcm-hipaa-compliant",
+    title: "Is AI in Healthcare RCM HIPAA Compliant?",
+    description: "Can AI handle revenue cycle work under HIPAA? Here is what HIPAA requires of RCM automation, the role of the BAA, and what to check before trusting a vendor.",
+    date: "2026-08-19", category: "Compliance & Security", readMins: 6,
+    keywords: ["AI RCM HIPAA compliant", "HIPAA AI healthcare", "is AI HIPAA compliant", "RCM automation HIPAA"],
+    related: { label: "See MedXFlow Trust & Security", href: "/trust" },
+    snippet: "AI in healthcare RCM can be HIPAA compliant, but the compliance depends on the vendor, not the technology. The vendor must handle PHI to HIPAA standards, sign a Business Associate Agreement (BAA), encrypt data, restrict access, and log every action. Always confirm these before sharing PHI.",
+    intro: "AI agents that run the revenue cycle necessarily touch protected health information, so HIPAA applies. The question is not whether AI can be compliant, but whether a given vendor operates compliantly. Here is what to verify.",
+    sections: [
+      { h: "HIPAA applies to the vendor, not the technology", p: ["HIPAA compliance is about how PHI is handled, stored and accessed, not about whether the tool uses AI. Any vendor that processes PHI on your behalf is a business associate and must meet HIPAA's requirements. AI does not change that obligation; it just means the vendor is doing more of the work."] },
+      { h: "The BAA is non-negotiable", p: ["Before any PHI is exchanged, the vendor must sign a Business Associate Agreement (BAA). The BAA legally binds them to protect PHI and defines what they can and cannot do with it. No BAA means you should not share PHI, full stop."] },
+      { h: "What compliant AI RCM looks like", p: ["Data encrypted in transit and at rest, least-privilege access so people and agents only reach what they need, US data residency where required, complete audit logging of every action, and a clear policy that PHI is never sold or used to train public models."] },
+      { h: "Questions to ask any AI RCM vendor", p: ["Will you sign a BAA? Where is PHI stored and is it encrypted? Who and what can access it? Is every AI action logged and auditable? Do you use our data to train shared models? Honest vendors answer these clearly."] },
+    ],
+    faq: [
+      { q: "Can AI be HIPAA compliant?", a: "Yes, when the vendor handling PHI meets HIPAA requirements: a signed BAA, encryption, least-privilege access, audit logging, and a policy against selling or training public models on PHI. Compliance depends on the vendor's practices, not on the use of AI." },
+      { q: "Does an AI RCM vendor need a BAA?", a: "Yes. Any vendor that processes PHI on your behalf is a business associate and must sign a Business Associate Agreement before PHI is exchanged." },
+    ],
+  },
+
+  {
+    slug: "what-is-a-baa-business-associate-agreement",
+    title: "What Is a BAA (Business Associate Agreement)?",
+    description: "A BAA is the HIPAA contract every healthcare vendor that touches PHI must sign. Here is what it is, what it covers, and why it matters for RCM software.",
+    date: "2026-08-19", category: "Compliance & Security", readMins: 5,
+    keywords: ["what is a BAA", "business associate agreement", "HIPAA BAA", "BAA RCM vendor"],
+    related: { label: "See MedXFlow Trust & Security", href: "/trust" },
+    snippet: "A Business Associate Agreement (BAA) is a HIPAA-required contract between a healthcare provider and a vendor that handles protected health information (PHI) on its behalf. It legally binds the vendor to safeguard PHI, defines permitted uses, and sets breach-notification duties.",
+    intro: "If a vendor touches your patients' data, HIPAA requires a BAA before any PHI changes hands. It is one of the first things to confirm when evaluating any RCM or healthcare software.",
+    sections: [
+      { h: "What a BAA is", p: ["A Business Associate Agreement is a contract that HIPAA requires between a covered entity (like a practice) and a business associate (a vendor that handles PHI on its behalf). It makes the vendor legally responsible for protecting that PHI."] },
+      { h: "What it covers", p: ["A BAA defines the permitted uses and disclosures of PHI, requires appropriate safeguards, obligates the vendor to report security incidents and breaches, and addresses what happens to PHI when the relationship ends. It turns HIPAA obligations into an enforceable agreement."] },
+      { h: "Why it matters for RCM software", p: ["RCM vendors process eligibility, claims, remittances and patient data, all of which contain PHI. Without a signed BAA, sharing that data is a HIPAA violation. A vendor that readily offers a BAA is signaling that it takes compliance seriously."] },
+    ],
+    faq: [
+      { q: "Who needs a BAA?", a: "Any vendor (business associate) that creates, receives, maintains or transmits PHI on behalf of a covered entity needs a signed BAA before PHI is exchanged." },
+      { q: "What happens without a BAA?", a: "Sharing PHI with a vendor that has not signed a BAA is a HIPAA violation for both parties. Always secure the BAA first." },
+    ],
+  },
+
+  {
+    slug: "soc-2-for-healthcare-vendors",
+    title: "SOC 2 for Healthcare Vendors: What It Means",
+    description: "SOC 2 is a security standard you will see from healthcare software vendors. Here is what SOC 2 Type II covers, how it differs from HIPAA, and why both matter.",
+    date: "2026-08-19", category: "Compliance & Security", readMins: 5,
+    keywords: ["SOC 2 healthcare", "SOC 2 Type II", "SOC 2 vs HIPAA", "SOC 2 vendor"],
+    related: { label: "See MedXFlow Trust & Security", href: "/trust" },
+    snippet: "SOC 2 is an independent audit standard that evaluates how a vendor manages data security. SOC 2 Type II tests whether controls operate effectively over a period of time, across trust criteria like security, availability and confidentiality. It complements HIPAA rather than replacing it.",
+    intro: "SOC 2 and HIPAA both come up when vetting healthcare software, and they are related but different. Understanding each tells you what a vendor's security claims actually mean.",
+    sections: [
+      { h: "What SOC 2 is", p: ["SOC 2 is a security and controls framework from the AICPA. A SOC 2 report evaluates a vendor against trust services criteria: security, availability, processing integrity, confidentiality and privacy. It is a widely recognized signal that a vendor has real security controls."] },
+      { h: "Type I vs Type II", p: ["A SOC 2 Type I report describes controls at a point in time. A Type II report tests whether those controls actually operated effectively over a period (often several months to a year), which is a stronger assurance."] },
+      { h: "SOC 2 vs HIPAA", p: ["HIPAA is a healthcare-specific legal requirement for protecting PHI; SOC 2 is a broader, voluntary security standard. A vendor can be aligned to SOC 2 and HIPAA-compliant at the same time, and healthcare buyers often expect both."] },
+      { h: "What to ask", p: ["Ask whether a vendor is SOC 2 aligned or has a completed SOC 2 Type II report, and which trust criteria it covers. Combined with a HIPAA BAA, it gives a fuller picture of the vendor's security posture."] },
+    ],
+    faq: [
+      { q: "Is SOC 2 the same as HIPAA?", a: "No. HIPAA is a healthcare-specific legal requirement for protecting PHI; SOC 2 is a broader voluntary security audit standard. Healthcare vendors often address both." },
+      { q: "What is SOC 2 Type II?", a: "A SOC 2 Type II report tests whether a vendor's security controls operated effectively over a period of time, which is a stronger assurance than a point-in-time Type I report." },
+    ],
+  },
+
+  {
+    slug: "how-phi-is-protected-in-rcm-automation",
+    title: "How PHI Is Protected in RCM Automation",
+    description: "When automation and AI agents handle claims and eligibility, they handle PHI. Here are the safeguards that keep protected health information secure in RCM automation.",
+    date: "2026-08-19", category: "Compliance & Security", readMins: 5,
+    keywords: ["PHI protection", "PHI security RCM", "protected health information automation", "healthcare data security"],
+    related: { label: "See MedXFlow Trust & Security", href: "/trust" },
+    snippet: "PHI in RCM automation is protected through encryption in transit and at rest, least-privilege access controls, US data residency where required, complete audit logging of every action, and policies that prevent selling PHI or using it to train public models.",
+    intro: "Automating the revenue cycle means software and AI agents work with protected health information. The safeguards below are what keep that data secure, and what to expect from any vendor that processes it.",
+    sections: [
+      { h: "Encryption in transit and at rest", p: ["PHI should be encrypted whenever it moves across a network and whenever it is stored, using industry-standard encryption. This protects data even if it is intercepted or a storage system is compromised."] },
+      { h: "Least-privilege access", p: ["People and automated agents should only be able to access the specific data they need for a task, and nothing more. Least-privilege access limits exposure and reduces the impact if any single account or agent is compromised."] },
+      { h: "Audit logging", p: ["Every action, whether taken by a person or an AI agent, should be logged with who or what did it, when, and to which record. A complete audit trail is essential both for security and for accountability over automated actions."] },
+      { h: "Data residency and use limits", p: ["Storing data in US data centers meets residency expectations for US healthcare, and a clear policy that PHI is never sold or used to train public models ensures the data is used only to run your revenue cycle."] },
+    ],
+    faq: [
+      { q: "How is PHI kept secure in AI RCM?", a: "Through encryption in transit and at rest, least-privilege access, US data residency where required, complete audit logging of every action, and policies that prevent selling PHI or using it to train shared models." },
+      { q: "Are AI agent actions on PHI logged?", a: "They should be. Every action an agent takes on PHI should be documented and attributable, giving a complete, reviewable audit trail." },
+    ],
+  },
+
+  {
+    slug: "security-questions-to-ask-rcm-vendor",
+    title: "Data Security Questions to Ask Any RCM Vendor",
+    description: "A practical checklist of the security and compliance questions to ask before trusting a revenue cycle vendor with your patients' data.",
+    date: "2026-08-19", category: "Compliance & Security", readMins: 5,
+    keywords: ["RCM vendor security questions", "healthcare vendor security checklist", "vendor due diligence PHI", "RCM security"],
+    related: { label: "See MedXFlow Trust & Security", href: "/trust" },
+    snippet: "Before trusting an RCM vendor with PHI, confirm: they will sign a BAA, data is encrypted in transit and at rest, access is least-privilege, every action is logged, data is stored in the US, they do not sell or train public models on your data, and they can describe their breach-notification process.",
+    intro: "Choosing an RCM vendor means handing over patient data, so security due diligence matters. Here is a practical checklist to run through with any vendor before you sign.",
+    sections: [
+      { h: "Compliance basics", p: ["Will you sign a Business Associate Agreement (BAA)? Are you HIPAA compliant, and are your controls aligned to SOC 2 Type II? These are table stakes for handling PHI."] },
+      { h: "Data handling", p: ["Where is PHI stored, and is it in the US? Is it encrypted in transit and at rest? Who and what can access it, and is access least-privilege? Do you sell data or use it to train public models (the answer should be no)?"] },
+      { h: "Accountability and incidents", p: ["Is every action, including AI agent actions, logged and auditable? What is your breach-notification process and timeline? How do you handle our data if we stop working together?"] },
+      { h: "For AI vendors specifically", p: ["How do AI agents access PHI, and are their actions supervised and escalated to humans on exceptions? A good AI RCM vendor can explain exactly how the agents stay within HIPAA-standard handling."] },
+    ],
+    faq: [
+      { q: "What security questions should I ask an RCM vendor?", a: "Ask whether they will sign a BAA, whether data is encrypted and stored in the US, who can access PHI, whether every action is logged, whether they sell or train models on your data, and what their breach-notification process is." },
+      { q: "What is the most important security question?", a: "Whether the vendor will sign a Business Associate Agreement (BAA). Without one, sharing PHI is a HIPAA violation, regardless of their other assurances." },
+    ],
+  },
+
 ];
 
 export const post = (slug) => POSTS.find((p) => p.slug === slug);

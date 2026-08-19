@@ -14,6 +14,7 @@ import { GlossaryIndex, GlossaryTerm } from "./Glossary.jsx";
 import { DenialCodesIndex, DenialCodePage } from "./DenialCodes.jsx";
 import DenialRateCalculator from "./DenialRateCalculator.jsx";
 import About from "./About.jsx";
+import Trust from "./Trust.jsx";
 import { track } from "./track.js";
 
 const path = window.location.pathname.replace(/\/+$/, "");
@@ -33,6 +34,7 @@ const isDenialIndex = path === "/denial-codes";
 const denialMatch = path.match(/^\/denial-codes\/([a-z0-9-]+)$/);
 const isDenialCalc = path === "/denial-rate-calculator";
 const isAbout = path === "/about";
+const isTrust = path === "/trust";
 
 // Self-referencing canonical per route. Navigation is via full page loads, so
 // setting this once per load from the current path covers every page.
@@ -165,6 +167,14 @@ function App() {
     return (
       <>
         <About />
+        <Chatbot />
+      </>
+    );
+  }
+  if (isTrust) {
+    return (
+      <>
+        <Trust />
         <Chatbot />
       </>
     );

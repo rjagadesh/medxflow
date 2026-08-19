@@ -108,6 +108,30 @@ const RCM_VIDEO = {
 const routes = [
   { path: "/telehealth", title: "Telehealth · MedXFlow", desc: en.telehealth.hero_lead },
   {
+    path: "/trust",
+    title: "Trust & Security · HIPAA, SOC 2, BAA · MedXFlow",
+    desc: "MedXFlow security and compliance: HIPAA-compliant with a BAA available, controls aligned to SOC 2 Type II, US data centers, encryption in transit and at rest, least-privilege access and full audit logging.",
+    body: `<article><h1>Security and compliance at MedXFlow</h1>` +
+      p("MedXFlow handles protected health information for medical practices, billing companies and RCM teams. Security and compliance are built into how the platform and its AI agents work.") +
+      h2("HIPAA") + p("PHI is handled to HIPAA standards, and a Business Associate Agreement (BAA) is available for every customer.") +
+      h2("SOC 2-aligned controls") + p("Security controls are aligned to SOC 2 Type II across availability, confidentiality and processing integrity.") +
+      h2("Data protection") + p("Data is stored in US data centers, encrypted in transit and at rest, with least-privilege access and full audit logging. We never sell patient data or use PHI to train public models.") +
+      h2("How AI agents handle PHI safely") + p("Agents work inside HIPAA-standard handling with encryption, least-privilege access and a complete audit trail, and they escalate uncertain cases to staff rather than acting unsupervised.") +
+      `</article>`,
+    jsonld: JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        { "@type": "WebPage", name: "Trust & Security at MedXFlow", url: `${ORIGIN}/trust/`, about: { "@id": `${ORIGIN}/#organization` }, description: "MedXFlow security and compliance: HIPAA, BAA, SOC 2-aligned controls, US data centers, encryption." },
+        { "@type": "BreadcrumbList", itemListElement: [["Home", "/"], ["Trust & Security", "/trust/"]].map(([n, u], i) => ({ "@type": "ListItem", position: i + 1, name: n, item: `${ORIGIN}${u}` })) },
+        { "@type": "FAQPage", mainEntity: [
+          { "@type": "Question", name: "Is MedXFlow HIPAA compliant?", acceptedAnswer: { "@type": "Answer", text: "Yes. MedXFlow handles PHI to HIPAA standards and offers a Business Associate Agreement (BAA) to every customer." } },
+          { "@type": "Question", name: "Is MedXFlow SOC 2 certified?", acceptedAnswer: { "@type": "Answer", text: "MedXFlow's security controls are aligned to SOC 2 Type II across availability, confidentiality and processing integrity." } },
+          { "@type": "Question", name: "Do you use patient data to train AI?", acceptedAnswer: { "@type": "Answer", text: "No. We never sell patient data or use PHI to train public models." } },
+        ] },
+      ],
+    }),
+  },
+  {
     path: "/about",
     title: "About MedXFlow · AI Revenue Cycle Management",
     desc: "MedXFlow is an AI-powered revenue cycle management platform whose AI agents automate eligibility, prior authorization, coding, claims and denials for medical practices, billing companies and RCM teams in the US. HIPAA-compliant, BAA available.",
