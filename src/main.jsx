@@ -3,7 +3,9 @@ import ReactDOM from "react-dom/client";
 import EirimFrontDesk from "./EirimFrontDesk.jsx";
 import Telehealth from "./Telehealth.jsx";
 import Chatbot from "./Chatbot.jsx";
-import Admin from "./Admin.jsx";
+// Admin (and its heavy social/campaign sub-tree) is code-split so public
+// visitors never download it - it loads only on /admin.
+const Admin = React.lazy(() => import("./Admin.jsx"));
 import ProductPage, { ProductsIndex } from "./ProductPage.jsx";
 import SpecialtyPage, { SpecialtiesIndex } from "./SpecialtyPage.jsx";
 import { BlogIndex, BlogPost } from "./Blog.jsx";
@@ -50,7 +52,11 @@ const isTrust = path === "/trust";
 if (!isAdmin) track();
 
 function App() {
-  if (isAdmin) return <Admin />;
+  if (isAdmin) return (
+    <React.Suspense fallback={<div style={{ minHeight: "100vh", display: "grid", placeItems: "center", color: "#8aa" }}>Loading…</div>}>
+      <Admin />
+    </React.Suspense>
+  );
   if (isTelehealth) {
     return (
       <>
