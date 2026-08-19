@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { LanguageProvider } from "./i18n.jsx";
 import { Nav, Footer, Reveal, Eyebrow, BookDemo, CSS } from "./EirimFrontDesk.jsx";
+import AnswerBox from "./AnswerBox.jsx";
 import { SPECIALTIES, bySpecialtySlug } from "./specialties.data.js";
 
 const openDemo = () => window.dispatchEvent(new Event("eirim:book-demo"));
@@ -176,6 +177,12 @@ export function SpecialtiesIndex() {
               <Eyebrow light>Specialties</Eyebrow>
               <h1 className="h-light pp-h1">AI agents, tuned to<br />your specialty.</h1>
               <p className="lead-light pp-tagline">Every practice type leaks revenue in different places. Pick your specialty to see exactly which processes MedXFlow's AI agents automate - and what you get back.</p>
+              <AnswerBox>
+                MedXFlow provides AI revenue cycle management tuned to each specialty - including medical spas, dental,
+                mental and behavioral health, dermatology, physical therapy, cardiology, orthopedics and primary care.
+                The AI agents automate eligibility, prior authorization, coding and denials around the billing rules and
+                payer mix specific to your practice type.
+              </AnswerBox>
             </Reveal>
           </div>
         </header>

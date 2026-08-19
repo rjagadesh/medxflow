@@ -4,6 +4,7 @@
 
 import { LanguageProvider } from "./i18n.jsx";
 import { Nav, Footer, BookDemo, CSS as SITE_CSS } from "./EirimFrontDesk.jsx";
+import AnswerBox from "./AnswerBox.jsx";
 import { AI_AGENTS as AGENTS, AI_AGENTS_INTRO, AI_AGENTS_FAQ as FAQ } from "./ai-agents-rcm.data.js";
 
 export default function AiAgentsRcm() {
@@ -19,6 +20,13 @@ export default function AiAgentsRcm() {
           <p className="eyebrow">AI Agents · Revenue Cycle Management</p>
           <h1>AI Agents for Healthcare Revenue Cycle Management</h1>
           <p className="pl-lede">{AI_AGENTS_INTRO}</p>
+          <AnswerBox>
+            AI agents for revenue cycle management are software workers that carry out an RCM task from start to
+            finish - navigating your EHR and payer portals, validating data, applying your business rules, and
+            escalating exceptions to staff. MedXFlow runs a connected set of these agents across eligibility, prior
+            authorization, coding, claims, denials, payment posting and patient collections, so cash moves from the
+            first appointment to the final payment with far less manual work.
+          </AnswerBox>
           <div className="pl-cta-row">
             <a className="btn" href="/#cta">Book a free demo</a>
             <a className="btn btn-ghost" href="/products">See all products</a>
@@ -85,6 +93,7 @@ export default function AiAgentsRcm() {
             <a href="/blog/reduce-claim-denials-small-practice">How to reduce claim denials in a small practice →</a>
             <a href="/blog/prior-authorization-automation-guide">Prior authorization automation: a practical guide →</a>
             <a href="/blog/what-is-dnfb-clear-coding-backlog">What is DNFB, and how to clear a coding backlog →</a>
+            <a href="/rcm-denial-benchmarks">RCM denial benchmarks: claim denial rates and statistics →</a>
           </div>
         </section>
 

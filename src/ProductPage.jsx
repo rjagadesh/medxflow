@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { LanguageProvider } from "./i18n.jsx";
 import { Nav, Footer, Reveal, Eyebrow, BookDemo, CSS } from "./EirimFrontDesk.jsx";
+import AnswerBox from "./AnswerBox.jsx";
 import { PRODUCTS, rcmProducts, engagementProducts, serviceProducts, bySlug } from "./products.data.js";
 
 const openDemo = () => window.dispatchEvent(new Event("eirim:book-demo"));
@@ -255,6 +256,12 @@ export function ProductsIndex() {
               <Eyebrow light>Products</Eyebrow>
               <h1 className="h-light pp-h1">The whole revenue cycle,<br />one connected platform.</h1>
               <p className="lead-light pp-tagline">From the first appointment to the final payment - the connected stages of Revenue Cycle Management, plus a human-led managed billing team when you'd rather hand it over.</p>
+              <AnswerBox>
+                MedXFlow's platform covers the entire revenue cycle in one place: scheduling, eligibility and benefits
+                verification, prior authorization, patient check-in, charge capture and coding, claims submission and
+                follow-up, payment posting, denial management, and patient collections - plus a human-led managed
+                billing team when you would rather hand it over.
+              </AnswerBox>
             </Reveal>
           </div>
           <div className="wrap pp-life-wrap">

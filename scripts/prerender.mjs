@@ -17,6 +17,7 @@ import { AI_AGENTS, AI_AGENTS_INTRO, AI_AGENTS_FAQ } from "../src/ai-agents-rcm.
 import { SEO_PAGES } from "../src/seo-pages.data.js";
 import { TERMS } from "../src/glossary.data.js";
 import { CODES } from "../src/denial-codes.data.js";
+import { DENIAL_ANSWER, DENIAL_STATS, DENIAL_CAUSES, DENIAL_BENCHMARKS, DENIAL_FAQ } from "../src/rcm-denial-benchmarks.data.js";
 import { en } from "../src/i18n.strings.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -85,11 +86,39 @@ function denialCodeBody(c) {
 function aiAgentsBody() {
   return `<article><h1>AI Agents for Healthcare Revenue Cycle Management</h1>` +
     p(AI_AGENTS_INTRO) +
+    p("AI agents for revenue cycle management are software workers that carry out an RCM task from start to finish - navigating your EHR and payer portals, validating data, applying your business rules, and escalating exceptions to staff. MedXFlow runs a connected set of these agents across eligibility, prior authorization, coding, claims, denials, payment posting and patient collections, so cash moves from the first appointment to the final payment with far less manual work.") +
     h2("The RCM agents MedXFlow runs") +
     AI_AGENTS.map((a) => `<h3><a href="${a.href}">${esc(a.h)}</a></h3>${p(a.p)}`).join("") +
     h2("How the agents work") +
     p("Every MedXFlow RCM agent follows the same loop: Receive, Understand, Process, Validate, Escalate, Track - with your staff handling the exceptions.") +
     faqHtml(AI_AGENTS_FAQ) +
+    `</article>`;
+}
+
+function productsIndexBody() {
+  return `<section><h1>MedXFlow products: the whole revenue cycle, one platform</h1>` +
+    p("MedXFlow's platform covers the entire revenue cycle in one place: scheduling, eligibility and benefits verification, prior authorization, patient check-in, charge capture and coding, claims submission and follow-up, payment posting, denial management, and patient collections - plus a human-led managed billing team when you would rather hand it over.") +
+    PRODUCTS.map((x) => `<article><h2><a href="/products/${x.slug}">${esc(x.name)}</a></h2>${p(x.tagline)}</article>`).join("") +
+    `</section>`;
+}
+function specialtiesIndexBody() {
+  return `<section><h1>AI agents for the revenue cycle, tuned to your specialty</h1>` +
+    p("MedXFlow provides AI revenue cycle management tuned to each specialty - including medical spas, dental, mental and behavioral health, dermatology, physical therapy, cardiology, orthopedics and primary care. The AI agents automate eligibility, prior authorization, coding and denials around the billing rules and payer mix specific to your practice type.") +
+    SPECIALTIES.map((s) => `<article><h2><a href="/specialties/${s.slug}">${esc(s.name)}</a></h2>${p(s.tagline)}</article>`).join("") +
+    `</section>`;
+}
+function denialBenchmarksBody() {
+  return `<article><h1>RCM denial benchmarks: claim denial rates and statistics</h1>` +
+    p(DENIAL_ANSWER) +
+    h2("Claim denials by the numbers") +
+    `<ul>${DENIAL_STATS.map((s) => `<li>${esc(s.n)} - ${esc(s.label)} (${esc(s.source)}, ${esc(s.year)})</li>`).join("")}</ul>` +
+    h2("Denial rate benchmarks: healthy vs at-risk") +
+    `<table><thead><tr><th>Metric</th><th>Healthy</th><th>Needs attention</th></tr></thead><tbody>` +
+    DENIAL_BENCHMARKS.map((r) => `<tr><td>${esc(r.metric)}</td><td>${esc(r.healthy)}</td><td>${esc(r.attention)}</td></tr>`).join("") +
+    `</tbody></table>` +
+    h2("The most common reasons claims are denied") +
+    `<ul>${DENIAL_CAUSES.map((c) => `<li><strong>${esc(c.cause)}</strong> - ${esc(c.note)}</li>`).join("")}</ul>` +
+    faqHtml(DENIAL_FAQ) +
     `</article>`;
 }
 
@@ -149,7 +178,7 @@ const routes = [
       ],
     }),
   },
-  { path: "/products", title: "Products · MedXFlow", desc: "The connected stages of Revenue Cycle Management, plus VoIP, telehealth and a human-led managed billing team - one platform for the whole practice." },
+  { path: "/products", title: "Products · MedXFlow", desc: "The connected stages of Revenue Cycle Management, plus VoIP, telehealth and a human-led managed billing team - one platform for the whole practice.", body: productsIndexBody() },
   ...PRODUCTS.map((p) => ({
     path: `/products/${p.slug}`, title: `${p.name} · MedXFlow`, desc: p.tagline,
     jsonld: serviceLd({
@@ -157,7 +186,7 @@ const routes = [
       description: p.tagline, crumbs: [["Home", "/"], ["Products", "/products/"], [p.name, `/products/${p.slug}/`]],
     }),
   })),
-  { path: "/specialties", title: "Specialties · AI agents by practice type · MedXFlow", desc: "AI revenue-cycle agents tuned to your specialty - MedSpa, dental, mental health, dermatology, physical therapy, cardiology, orthopedics and primary care." },
+  { path: "/specialties", title: "Specialties · AI agents by practice type · MedXFlow", desc: "AI revenue-cycle agents tuned to your specialty - MedSpa, dental, mental health, dermatology, physical therapy, cardiology, orthopedics and primary care.", body: specialtiesIndexBody() },
   ...SPECIALTIES.map((s) => ({
     path: `/specialties/${s.slug}`, title: `${s.name} · AI agents for the revenue cycle · MedXFlow`, desc: s.tagline,
     jsonld: serviceLd({
@@ -216,6 +245,39 @@ const routes = [
           { "@type": "Question", name: "What is a good denial rate?", acceptedAnswer: { "@type": "Answer", text: "Under 5% is generally healthy; best-in-class practices run 2 to 4%. Above 10% usually indicates a fixable root cause, most often eligibility or prior authorization." } },
           { "@type": "Question", name: "How do you calculate denial rate?", acceptedAnswer: { "@type": "Answer", text: "Denial rate equals claims denied divided by claims submitted, times 100, over a period such as a month." } },
         ] },
+      ],
+    }),
+  },
+  {
+    path: "/rcm-denial-benchmarks",
+    title: "RCM Denial Benchmarks: Claim Denial Rates & Statistics | MedXFlow",
+    desc: "Medical claim denial statistics and benchmarks: average denial rates (around 11%), the share that are avoidable (around 85%), cost per denial, top root causes, and healthy-vs-at-risk KPI benchmarks - compiled from published industry sources.",
+    body: denialBenchmarksBody(),
+    jsonld: JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Dataset",
+          name: "RCM denial benchmarks: claim denial rates and statistics",
+          description: "Compiled statistics on US medical claim denials: average initial denial rate, share of avoidable denials, cost per reworked claim, top root causes, and healthy-vs-at-risk revenue-cycle KPI benchmarks, aggregated from published industry reports.",
+          url: `${ORIGIN}/rcm-denial-benchmarks/`,
+          keywords: ["claim denial rate", "medical claim denials", "revenue cycle benchmarks", "denial management", "RCM statistics"],
+          creator: { "@id": `${ORIGIN}/#organization` },
+          isAccessibleForFree: true,
+          variableMeasured: ["Initial claim denial rate", "Share of avoidable denials", "Cost to rework a denied claim", "Clean claim rate", "Denial overturn rate", "Days in A/R"],
+        },
+        {
+          "@type": "Article",
+          headline: "RCM denial benchmarks: claim denial rates and statistics",
+          description: "A reference guide to medical claim denial rates, costs, root causes and the KPI benchmarks that define a healthy revenue cycle, compiled from published industry sources.",
+          url: `${ORIGIN}/rcm-denial-benchmarks/`,
+          author: { "@id": `${ORIGIN}/#organization` },
+          publisher: { "@id": `${ORIGIN}/#organization` },
+          mainEntityOfPage: `${ORIGIN}/rcm-denial-benchmarks/`,
+          articleSection: "RCM data",
+        },
+        { "@type": "BreadcrumbList", itemListElement: [["Home", "/"], ["RCM Denial Benchmarks", "/rcm-denial-benchmarks/"]].map(([n, u], i) => ({ "@type": "ListItem", position: i + 1, name: n, item: `${ORIGIN}${u}` })) },
+        { "@type": "FAQPage", mainEntity: DENIAL_FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) },
       ],
     }),
   },
