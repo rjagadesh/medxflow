@@ -13,13 +13,13 @@ const WEEKS_PER_MONTH = 4.333;
 
 // MedXFlow plans (fixed monthly, included MXU) from the pricing sheet.
 const PLANS = [
-  { key: "core", name: "Core", fixed: 1299, mxu: 10000, built: "1 to 3 providers" },
-  { key: "professional", name: "Professional", fixed: 4499, mxu: 45000, built: "6 to 15 providers" },
-  { key: "advanced", name: "Advanced", fixed: 9299, mxu: 100000, built: "20 to 30 providers" },
-  { key: "enterprise", name: "Enterprise", fixed: 16999, mxu: 200000, built: "25 to 80 providers" },
-  { key: "partner", name: "Partner", fixed: 23999, mxu: 500000, built: "Billing companies and BPOs" },
+  { key: "core", name: "Core", fixed: 1299, mxu: 10000, built: "1 to 2 providers" },
+  { key: "professional", name: "Professional", fixed: 4499, mxu: 45000, built: "3 to 6 providers" },
+  { key: "advanced", name: "Advanced", fixed: 9299, mxu: 100000, built: "7 to 12 providers" },
+  { key: "enterprise", name: "Enterprise", fixed: 16999, mxu: 200000, built: "13 to 18 providers" },
+  { key: "partner", name: "Partner", fixed: 23999, mxu: 500000, built: "19 to 25 providers, or billing companies" },
 ];
-const planForProviders = (n) => n <= 3 ? PLANS[0] : n <= 15 ? PLANS[1] : n <= 30 ? PLANS[2] : PLANS[3];
+const planForProviders = (n) => n <= 2 ? PLANS[0] : n <= 6 ? PLANS[1] : n <= 12 ? PLANS[2] : n <= 18 ? PLANS[3] : PLANS[4];
 
 // Voice AI add-on: $500/client + $0.12 per minute over 5,000 included.
 const voiceMonthly = (calls, avgMin) => 500 + Math.max(0, calls * avgMin - 5000) * 0.12;
@@ -114,7 +114,7 @@ export default function RoiCalculator() {
 
               <div className="roi-h roi-h2">Your scale</div>
               <Field label="Providers in your group" value={providers} suffix={providers === 1 ? "provider" : "providers"} disabled={isBpo}>
-                <input type="range" min="1" max="80" value={providers} onChange={(e) => setProviders(+e.target.value)} disabled={isBpo} />
+                <input type="range" min="1" max="25" value={providers} onChange={(e) => setProviders(+e.target.value)} disabled={isBpo} />
               </Field>
               <label className="roi-check">
                 <input type="checkbox" checked={isBpo} onChange={(e) => {
