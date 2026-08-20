@@ -48,24 +48,32 @@ export default function RoiCalculator() {
   const [isBpo, setIsBpo] = useState(false);
   const [voiceOn, setVoiceOn] = useState(false);
   const [calls, setCalls] = useState(1500);
+  const [voiceFte, setVoiceFte] = useState(1);
   const [eobOn, setEobOn] = useState(false);
   const [claims, setClaims] = useState(6000);
+  const [eobFte, setEobFte] = useState(2);
 
   const r = useMemo(() => {
-    const currentMonthly = fte * hours * WEEKS_PER_MONTH * rate;
+    // Monthly loaded cost of one FTE, shared across the core work and add-ons.
+    const perFte = hours * WEEKS_PER_MONTH * rate;
     const plan = isBpo ? PLANS[4] : planForProviders(providers);
-    const voice = voiceOn ? voiceMonthly(calls, 6.5) : 0;
-    const eob = eobOn ? eobMonthly(claims) : 0;
-    const medxMonthly = plan.fixed + voice + eob;
+    const lines = [
+      { key: "core", label: "Core RCM workflows", current: fte * perFte, medx: plan.fixed },
+    ];
+    if (voiceOn) lines.push({ key: "voice", label: "Voice AI (payer calls)", current: voiceFte * perFte, medx: voiceMonthly(calls, 6.5) });
+    if (eobOn) lines.push({ key: "eob", label: "EOB to ERA conversion", current: eobFte * perFte, medx: eobMonthly(claims) });
+
+    const currentMonthly = lines.reduce((s, l) => s + l.current, 0);
+    const medxMonthly = lines.reduce((s, l) => s + l.medx, 0);
     const saveMonthly = currentMonthly - medxMonthly;
     const pct = currentMonthly > 0 ? (saveMonthly / currentMonthly) * 100 : 0;
     return {
-      currentMonthly, medxMonthly, plan, voice, eob,
+      lines, plan, currentMonthly, medxMonthly,
       saveMonthly, saveAnnual: saveMonthly * 12,
       currentAnnual: currentMonthly * 12, medxAnnual: medxMonthly * 12,
       pct, positive: saveMonthly > 0,
     };
-  }, [fte, hours, rate, providers, isBpo, voiceOn, calls, eobOn, claims]);
+  }, [fte, hours, rate, providers, isBpo, voiceOn, calls, voiceFte, eobOn, claims, eobFte]);
 
   return (
     <LanguageProvider>
@@ -124,20 +132,30 @@ export default function RoiCalculator() {
                 Voice AI agents <span className="roi-check-note">$500/mo + 5,000 min included</span>
               </label>
               {voiceOn && (
-                <Field label="Outbound payer calls / month" value={calls.toLocaleString()} suffix="calls" small>
-                  <input type="range" min="100" max="10000" step="100" value={calls} onChange={(e) => setCalls(+e.target.value)} />
-                  <div className="roi-sub">~6.5 min/call = {(calls * 6.5).toLocaleString()} min · add-on {usd(voiceMonthly(calls, 6.5))}/mo</div>
-                </Field>
+                <>
+                  <Field label="Staff on payer calls today (FTEs)" value={voiceFte} suffix={voiceFte === 1 ? "person" : "people"} small>
+                    <input type="range" min="0" max="20" value={voiceFte} onChange={(e) => setVoiceFte(+e.target.value)} />
+                  </Field>
+                  <Field label="Outbound payer calls / month" value={calls.toLocaleString()} suffix="calls" small>
+                    <input type="range" min="100" max="10000" step="100" value={calls} onChange={(e) => setCalls(+e.target.value)} />
+                    <div className="roi-sub">~6.5 min/call = {(calls * 6.5).toLocaleString()} min · MedXFlow {usd(voiceMonthly(calls, 6.5))}/mo</div>
+                  </Field>
+                </>
               )}
               <label className="roi-check">
                 <input type="checkbox" checked={eobOn} onChange={(e) => setEobOn(e.target.checked)} />
                 EOB to ERA conversion <span className="roi-check-note">per claim, no platform fee</span>
               </label>
               {eobOn && (
-                <Field label="Paper/PDF EOB claims / month" value={claims.toLocaleString()} suffix="claims" small>
-                  <input type="range" min="500" max="120000" step="500" value={claims} onChange={(e) => setClaims(+e.target.value)} />
-                  <div className="roi-sub">add-on {usd(eobMonthly(claims))}/mo</div>
-                </Field>
+                <>
+                  <Field label="Staff posting paper EOBs today (FTEs)" value={eobFte} suffix={eobFte === 1 ? "person" : "people"} small>
+                    <input type="range" min="0" max="20" value={eobFte} onChange={(e) => setEobFte(+e.target.value)} />
+                  </Field>
+                  <Field label="Paper/PDF EOB claims / month" value={claims.toLocaleString()} suffix="claims" small>
+                    <input type="range" min="500" max="120000" step="500" value={claims} onChange={(e) => setClaims(+e.target.value)} />
+                    <div className="roi-sub">MedXFlow {usd(eobMonthly(claims))}/mo</div>
+                  </Field>
+                </>
               )}
             </div>
 
@@ -166,6 +184,25 @@ export default function RoiCalculator() {
                   <span>{usd(Math.abs(r.saveAnnual))}</span> saved per year
                 </div>
               </div>
+
+              {r.lines.length > 1 && (
+                <div className="roi-breakdown">
+                  <div className="roi-brk-head">
+                    <span>Where it comes from</span><span>Today</span><span>MedXFlow</span><span>Save/mo</span>
+                  </div>
+                  {r.lines.map((l) => {
+                    const s = l.current - l.medx;
+                    return (
+                      <div className="roi-brk-row" key={l.key}>
+                        <span className="roi-brk-l">{l.label}</span>
+                        <span className="roi-brk-v">{usd(l.current)}</span>
+                        <span className="roi-brk-v">{usd(l.medx)}</span>
+                        <span className={"roi-brk-s" + (s >= 0 ? "" : " neg")}>{s >= 0 ? "" : "+"}{usd(Math.abs(s))}</span>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
 
               <div className="roi-chart-block">
                 <h3 className="roi-chart-h">Today vs MedXFlow, per month</h3>
@@ -388,6 +425,15 @@ const ROI_CSS = `
 .roi-donut-n{font-size:26px; font-weight:800; fill:var(--ink)}
 .roi-donut-l{font-size:11px; font-weight:700; fill:#7A8A9A; letter-spacing:.04em; text-transform:uppercase}
 
+.roi-breakdown{margin-top:12px; border:1px solid var(--seaglass); border-radius:12px; overflow:hidden}
+.roi-brk-head, .roi-brk-row{display:grid; grid-template-columns:1.7fr 1fr 1fr 1fr; gap:8px; align-items:center; padding:8px 13px}
+.roi-brk-head{background:var(--mist); font-size:10.5px; font-weight:800; letter-spacing:.03em; text-transform:uppercase; color:#7A8A9A}
+.roi-brk-head span:not(:first-child){text-align:right}
+.roi-brk-row{border-top:1px solid var(--mist); font-size:13.5px}
+.roi-brk-l{font-weight:700; color:var(--ink)}
+.roi-brk-v{color:#5A6B7E; font-weight:600; text-align:right; font-variant-numeric:tabular-nums}
+.roi-brk-s{color:#0E8A7D; font-weight:800; text-align:right; font-variant-numeric:tabular-nums}
+.roi-brk-s.neg{color:#C2410C}
 .roi-chart-block{margin-top:12px}
 .roi-chart-h{font-size:12.5px; font-weight:800; color:var(--ink); margin:0 0 8px}
 .roi-bars{display:grid; gap:9px}
