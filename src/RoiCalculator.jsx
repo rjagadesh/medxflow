@@ -87,7 +87,7 @@ export default function RoiCalculator() {
           <section className="roi-grid">
             {/* Inputs */}
             <div className="roi-inputs">
-              <h2 className="roi-h">What the work costs you today</h2>
+              <div className="roi-h">What the work costs you today</div>
 
               <Field label="RCM staff (FTEs)" value={fte} suffix={fte === 1 ? "person" : "people"}>
                 <input type="range" min="1" max="50" value={fte} onChange={(e) => setFte(+e.target.value)} />
@@ -104,7 +104,7 @@ export default function RoiCalculator() {
                 </div>
               </Field>
 
-              <h2 className="roi-h roi-h2">Your scale</h2>
+              <div className="roi-h roi-h2">Your scale</div>
               <Field label="Providers in your group" value={providers} suffix={providers === 1 ? "provider" : "providers"} disabled={isBpo}>
                 <input type="range" min="1" max="80" value={providers} onChange={(e) => setProviders(+e.target.value)} disabled={isBpo} />
               </Field>
@@ -118,7 +118,7 @@ export default function RoiCalculator() {
                 <span className="roi-plan-built">Built for {r.plan.built}</span>
               </div>
 
-              <h2 className="roi-h roi-h2">Add-ons (optional)</h2>
+              <div className="roi-h roi-h2">Add-ons (optional)</div>
               <label className="roi-check">
                 <input type="checkbox" checked={voiceOn} onChange={(e) => setVoiceOn(e.target.checked)} />
                 Voice AI agents <span className="roi-check-note">$500/mo + 5,000 min included</span>
@@ -311,7 +311,7 @@ const FAQ = [
 const CSS = `
 .pillar{--ink:#0D2B52;--spruce:#1A5DAD;--gorse:#17C3B2;--mist:#F2F6FB;--paper:#FFFFFF;--seaglass:#CFE0F2;
   background:var(--paper); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; line-height:1.65}
-.pillar .wrap:not(.nav-in):not(.foot-in){max-width:1000px; margin:0 auto; padding:0 24px}
+.pillar .wrap:not(.nav-in):not(.foot-in){max-width:1400px; margin:0 auto; padding:0 40px}
 .pillar .eyebrow{font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--spruce); margin:0 0 12px}
 .pillar h1{font-size:clamp(23px,3.2vw,33px); line-height:1.08; letter-spacing:-.02em; margin:0 0 8px; font-weight:800; text-wrap:balance}
 .pl-hero{background:linear-gradient(180deg,var(--mist),#fff); border-bottom:1px solid var(--seaglass); padding:22px 0 16px}
