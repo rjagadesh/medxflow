@@ -190,7 +190,6 @@ export function Nav({ resources = false } = {}) {
             </div>
           </div>
           <a href="/roi-calculator/">ROI Calculator</a>
-          {resources && <a href="/blog/">Resources</a>}
           <a href="https://platform.medxflow.ai/login" className="nav-platform">Platform</a>
           <a href="#cta">{t("nav.contact")}</a>
           <a href="/#faq">{t("nav.faq")}</a>
@@ -206,7 +205,6 @@ export function Nav({ resources = false } = {}) {
         <a href="/products/" onClick={closeMenu}>{t("nav.products")}</a>
         <a href="/specialties/" onClick={closeMenu}>Specialties</a>
         <a href="/roi-calculator/" onClick={closeMenu}>ROI Calculator</a>
-        {resources && <a href="/blog/" onClick={closeMenu}>Resources</a>}
         <a href="https://platform.medxflow.ai/login" onClick={closeMenu}>Platform</a>
         <a href="#cta" onClick={closeMenu}>{t("nav.contact")}</a>
         <a href="/#faq" onClick={closeMenu}>{t("nav.faq")}</a>
