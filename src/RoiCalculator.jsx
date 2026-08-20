@@ -98,7 +98,7 @@ export default function RoiCalculator() {
               <div className="roi-h">What the work costs you today</div>
 
               <Field label="RCM staff (FTEs)" value={fte} suffix={fte === 1 ? "person" : "people"}>
-                <input type="range" min="1" max="50" value={fte} onChange={(e) => setFte(+e.target.value)} />
+                <input type="range" min="1" max={isBpo ? 500 : 50} value={fte} onChange={(e) => setFte(+e.target.value)} />
               </Field>
               <Field label="Hours per week each" value={hours} suffix="hrs">
                 <input type="range" min="10" max="60" value={hours} onChange={(e) => setHours(+e.target.value)} />
@@ -117,7 +117,13 @@ export default function RoiCalculator() {
                 <input type="range" min="1" max="80" value={providers} onChange={(e) => setProviders(+e.target.value)} disabled={isBpo} />
               </Field>
               <label className="roi-check">
-                <input type="checkbox" checked={isBpo} onChange={(e) => setIsBpo(e.target.checked)} />
+                <input type="checkbox" checked={isBpo} onChange={(e) => {
+                  const on = e.target.checked;
+                  setIsBpo(on);
+                  // BPOs run larger teams: default to a minimum of 50 FTEs.
+                  if (on) { if (fte < 50) setFte(50); }
+                  else if (fte > 50) setFte(50);
+                }} />
                 We are a billing company / BPO (Partner plan)
               </label>
 
