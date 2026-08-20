@@ -18,6 +18,9 @@ const PLANS = [
   { key: "partner", name: "Partner", fixed: 23999, mxu: 500000, built: "19 to 25 providers, or billing companies" },
 ];
 const planForProviders = (n) => n <= 2 ? PLANS[0] : n <= 6 ? PLANS[1] : n <= 12 ? PLANS[2] : n <= 18 ? PLANS[3] : PLANS[4];
+// Typical RCM headcount per package, so the FTE default tracks the plan/scale.
+const FTE_FOR_PLAN = { core: 2, professional: 4, advanced: 8, enterprise: 12, partner: 50 };
+const fteForPlan = (providers) => FTE_FOR_PLAN[planForProviders(providers).key];
 const voiceMonthly = (calls, avgMin) => 500 + Math.max(0, calls * avgMin - 5000) * 0.12;
 function eobMonthly(claims) {
   let cost = 0, rem = claims;
@@ -38,7 +41,7 @@ const COST_PRESETS = [
 export default function RoiCalculator() {
   const [providers, setProviders] = useState(10);
   const [isBpo, setIsBpo] = useState(false);
-  const [fte, setFte] = useState(4);
+  const [fte, setFte] = useState(fteForPlan(10));
   const [hours, setHours] = useState(40);
   const [rate, setRate] = useState(32);
   const [voiceOn, setVoiceOn] = useState(false);
@@ -72,7 +75,6 @@ export default function RoiCalculator() {
         <div className="r2-page">
           <div className="r2-topbar">
             <div className="r2-topbar-in">
-              <div className="r2-brand"><span className="r2-mark">◈</span> MedXFlow <span className="r2-sep">|</span> <span className="r2-tool">ROI Calculator</span></div>
               <div className="r2-live"><span className="r2-dot" /> Live pricing <span className="r2-live-dot">·</span> Real-time comparison <span className="r2-ic-i">ⓘ</span></div>
             </div>
           </div>
@@ -90,7 +92,7 @@ export default function RoiCalculator() {
                   <div className="r2-card-t">1. How Big Is Your Practice?</div>
                   <SliderRow icon="👤" label="Number of Providers" hint="Total providers / clinicians in your group"
                     value={providers} unit="providers" min={1} max={25} minLabel="1" maxLabel="25"
-                    onChange={setProviders} disabled={isBpo} />
+                    onChange={(n) => { setProviders(n); if (!isBpo) setFte(fteForPlan(n)); }} disabled={isBpo} />
                   <div className="r2-plan">
                     <span className="r2-plan-star">★</span>
                     <div>
@@ -101,7 +103,7 @@ export default function RoiCalculator() {
                   <label className="r2-check">
                     <input type="checkbox" checked={isBpo} onChange={(e) => {
                       const on = e.target.checked; setIsBpo(on);
-                      if (on) { if (fte < 50) setFte(50); } else setFte(4);
+                      if (on) setFte(50); else setFte(fteForPlan(providers));
                     }} />
                     <span>We are a billing company / BPO (Partner plan)</span>
                   </label>
