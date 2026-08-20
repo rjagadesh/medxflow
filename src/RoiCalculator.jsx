@@ -121,8 +121,9 @@ export default function RoiCalculator() {
                   const on = e.target.checked;
                   setIsBpo(on);
                   // BPOs run larger teams: default to a minimum of 50 FTEs.
+                  // Turning it off returns to the standard 4-FTE default.
                   if (on) { if (fte < 50) setFte(50); }
-                  else if (fte > 50) setFte(50);
+                  else setFte(4);
                 }} />
                 We are a billing company / BPO (Partner plan)
               </label>
@@ -210,18 +211,20 @@ export default function RoiCalculator() {
                 </div>
               )}
 
-              <div className="roi-charts">
-                <div className="roi-chart-block">
-                  <h3 className="roi-chart-h">Today vs MedXFlow, per month</h3>
-                  <Bars current={r.currentMonthly} medx={r.medxMonthly} />
-                </div>
-                {r.positive && (
-                  <div className="roi-chart-block">
-                    <h3 className="roi-chart-h">Cumulative savings over 12 months</h3>
-                    <AreaChart monthly={r.saveMonthly} />
-                  </div>
-                )}
+            </div>
+
+            {/* Graphics */}
+            <div className="roi-viz">
+              <div className="roi-chart-block">
+                <h3 className="roi-chart-h">Today vs MedXFlow, per month</h3>
+                <Bars current={r.currentMonthly} medx={r.medxMonthly} />
               </div>
+              {r.positive && (
+                <div className="roi-chart-block">
+                  <h3 className="roi-chart-h">Cumulative savings over 12 months</h3>
+                  <AreaChart monthly={r.saveMonthly} />
+                </div>
+              )}
 
               {!r.positive && (
                 <p className="roi-note-neg">At this volume the plan costs more than your current labor. That usually means a smaller plan or a partial rollout fits better - <a href="/#cta">talk to us</a> and we will right-size it.</p>
@@ -382,9 +385,9 @@ const CSS = `
 `;
 
 const ROI_CSS = `
-.roi-grid{display:grid; grid-template-columns:1fr 1.05fr; gap:14px; margin-top:14px; align-items:start}
-.roi-inputs, .roi-out{background:var(--paper); border:1px solid var(--seaglass); border-radius:16px; padding:15px 16px}
-.roi-out{background:linear-gradient(180deg,#fff,#FAFCFE)}
+.roi-grid{display:grid; grid-template-columns:1.05fr .92fr 1.06fr; gap:13px; margin-top:12px; align-items:start}
+.roi-inputs, .roi-out, .roi-viz{background:var(--paper); border:1px solid var(--seaglass); border-radius:16px; padding:14px 15px}
+.roi-out, .roi-viz{background:linear-gradient(180deg,#fff,#FAFCFE)}
 .roi-h{font-size:12px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:var(--spruce); margin:0 0 9px}
 .roi-h2{margin-top:12px; padding-top:11px; border-top:1px solid var(--mist)}
 .roi-field{margin:0 0 9px}
@@ -442,9 +445,8 @@ const ROI_CSS = `
 .roi-brk-v{color:#5A6B7E; font-weight:600; text-align:right; font-variant-numeric:tabular-nums}
 .roi-brk-s{color:#0E8A7D; font-weight:800; text-align:right; font-variant-numeric:tabular-nums}
 .roi-brk-s.neg{color:#C2410C}
-.roi-charts{display:grid; grid-template-columns:.82fr 1.18fr; gap:16px; align-items:start; margin-top:12px}
-.roi-charts .roi-chart-block{margin-top:0}
-.roi-chart-block{margin-top:12px}
+.roi-chart-block{margin-top:14px}
+.roi-viz .roi-chart-block:first-child{margin-top:0}
 .roi-chart-h{font-size:12.5px; font-weight:800; color:var(--ink); margin:0 0 8px}
 .roi-bars{display:grid; gap:9px}
 .roi-bar-row{display:grid; grid-template-columns:104px 1fr auto; align-items:center; gap:10px}
@@ -461,6 +463,6 @@ const ROI_CSS = `
 .roi-note-neg{font-size:13.5px; color:#C2410C; margin-top:11px; font-weight:500}
 .roi-note-neg a{color:#C2410C; font-weight:700}
 .roi-disclaimer{font-size:11.5px; color:#7A8A9A; margin-top:10px; line-height:1.45}
-@media(max-width:1024px){.roi-charts{grid-template-columns:1fr}}
-@media(max-width:860px){.roi-grid{grid-template-columns:1fr}}
+@media(max-width:1180px){.roi-grid{grid-template-columns:1fr 1fr}.roi-viz{grid-column:1 / -1}}
+@media(max-width:760px){.roi-grid{grid-template-columns:1fr}.roi-viz{grid-column:auto}}
 `;
