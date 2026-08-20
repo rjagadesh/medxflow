@@ -363,7 +363,7 @@ const CSS = `
 .pillar .wrap:not(.nav-in):not(.foot-in){max-width:1400px; margin:0 auto; padding:0 40px}
 .pillar .eyebrow{font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--spruce); margin:0 0 12px}
 .pillar h1{font-size:clamp(23px,3.2vw,33px); line-height:1.08; letter-spacing:-.02em; margin:0 0 8px; font-weight:800; text-wrap:balance}
-.pl-hero{background:linear-gradient(180deg,var(--mist),#fff); border-bottom:1px solid var(--seaglass); padding:12px 0 10px}
+.pl-hero{background:linear-gradient(180deg,var(--mist),#fff); border-bottom:1px solid var(--seaglass); padding:72px 0 10px}
 .pl-lede{font-size:15px; color:#33455A; max-width:760px; margin:0}
 .pillar .eyebrow{margin-bottom:5px}
 .pl-main{padding-top:10px}
