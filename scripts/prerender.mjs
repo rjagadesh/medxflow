@@ -107,6 +107,21 @@ function specialtiesIndexBody() {
     SPECIALTIES.map((s) => `<article><h2><a href="/specialties/${s.slug}/">${esc(s.name)}</a></h2>${p(s.tagline)}</article>`).join("") +
     `</section>`;
 }
+const ROI_FAQ = [
+  { q: "How is MedXFlow priced?", a: "MedXFlow prices finished work, not seats or a percentage of collections. Each workflow has a published weight in MedXFlow Units (MXU, listed at $0.10 each), and each plan includes a monthly MXU allowance with a lower effective rate as volume grows. Voice AI and EOB-to-ERA are optional add-ons." },
+  { q: "How does the ROI calculator estimate savings?", a: "It compares your current loaded RCM labor cost (FTEs times hours times fully-loaded cost per hour) against MedXFlow's list price for the plan that fits your scale, plus any add-ons you enable. The difference is your estimated monthly and annual saving." },
+  { q: "Is this an exact quote?", a: "No. It is a list-price estimate. Because plans are priced per completed workflow outcome, your exact cost depends on your real workflow volumes. Send three months of volumes and MedXFlow will price it precisely." },
+  { q: "Does MedXFlow charge a percentage of collections?", a: "No. There are no seat fees and no percentage of collections. You pay for finished work at a rate benchmarked to sit below the loaded cost of doing the same work in-house or offshore." },
+];
+function roiBody() {
+  return `<article><h1>MedXFlow ROI calculator</h1>` +
+    p("Every MedXFlow rate is benchmarked against the loaded cost of doing the same RCM work in-house or offshore, then set below it. Enter what the work costs you today - the staff, hours and fully-loaded hourly cost - and compare it against MedXFlow's list pricing to see your monthly and annual savings.") +
+    h2("How MedXFlow pricing works") + p("MedXFlow prices finished work, not seats and not a percentage of collections. Each workflow carries a published weight in MedXFlow Units (MXU), listed at $0.10 each, and every plan includes a monthly MXU allowance with a lower effective rate as you scale. Plans range from Core ($1,299/month, 10,000 MXU) to Enterprise ($16,999/month, 200,000 MXU), with a Partner plan for billing companies.") +
+    h2("What the calculator compares") + p("On one side is your current loaded cost: the FTEs, hours and fully-loaded hourly cost of the staff doing the RCM work you would automate. On the other is MedXFlow's list price: the plan that fits your scale, plus optional Voice AI and EOB-to-ERA add-ons. The gap is your saving.") +
+    faqHtml(ROI_FAQ) +
+    `</article>`;
+}
+
 function npiLookupBody() {
   return `<article><h1>NPI lookup</h1>` +
     p("An NPI (National Provider Identifier) is a unique 10-digit number CMS assigns to every US healthcare provider and organization. This tool looks up NPIs in the official NPPES registry so you can verify a provider's number, taxonomy and enrollment status before you bill or credential.") +
@@ -264,6 +279,20 @@ const routes = [
           { "@type": "Question", name: "What is a good denial rate?", acceptedAnswer: { "@type": "Answer", text: "Under 5% is generally healthy; best-in-class practices run 2 to 4%. Above 10% usually indicates a fixable root cause, most often eligibility or prior authorization." } },
           { "@type": "Question", name: "How do you calculate denial rate?", acceptedAnswer: { "@type": "Answer", text: "Denial rate equals claims denied divided by claims submitted, times 100, over a period such as a month." } },
         ] },
+      ],
+    }),
+  },
+  {
+    path: "/roi-calculator",
+    title: "RCM ROI Calculator · What MedXFlow Saves You · MedXFlow",
+    desc: "Free RCM ROI calculator. Enter your staff, hours and cost per hour and compare your current revenue-cycle labor cost against MedXFlow's pricing to see your monthly and annual savings.",
+    body: roiBody(),
+    jsonld: JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        { "@type": "WebApplication", name: "MedXFlow ROI Calculator", applicationCategory: "BusinessApplication", operatingSystem: "Web", url: `${ORIGIN}/roi-calculator/`, description: "Interactive calculator comparing current RCM labor cost against MedXFlow pricing to estimate savings.", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, publisher: { "@id": `${ORIGIN}/#organization` } },
+        { "@type": "BreadcrumbList", itemListElement: [["Home", "/"], ["ROI Calculator", "/roi-calculator/"]].map(([n, u], i) => ({ "@type": "ListItem", position: i + 1, name: n, item: `${ORIGIN}${u}` })) },
+        { "@type": "FAQPage", mainEntity: ROI_FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) },
       ],
     }),
   },
