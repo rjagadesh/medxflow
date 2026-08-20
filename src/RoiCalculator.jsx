@@ -8,7 +8,6 @@
 import { useState, useMemo } from "react";
 import { LanguageProvider } from "./i18n.jsx";
 import { Nav, Footer, BookDemo, CSS as SITE_CSS } from "./EirimFrontDesk.jsx";
-import AnswerBox from "./AnswerBox.jsx";
 
 const WEEKS_PER_MONTH = 4.333;
 
@@ -80,12 +79,7 @@ export default function RoiCalculator() {
           <div className="wrap">
             <p className="eyebrow">Free RCM Tool · ROI Calculator</p>
             <h1>MedXFlow ROI calculator</h1>
-            <p className="pl-lede">Every MedXFlow rate is benchmarked against the loaded cost of doing the same work in-house or offshore, then set below it. Put in what the work costs you today and see the difference.</p>
-            <AnswerBox label="How this works">
-              Enter the staff, hours and hourly cost you spend on the RCM work you would automate, choose your scale, and
-              this compares your current loaded labor cost against MedXFlow's list pricing - showing your monthly and
-              annual savings. Figures are estimates; exact pricing depends on your real workflow volumes.
-            </AnswerBox>
+            <p className="pl-lede">Enter what the RCM work costs you today and see how it compares to MedXFlow's pricing - live.</p>
           </div>
         </header>
 
@@ -261,7 +255,7 @@ function Donut({ pct, positive }) {
   const R = 52, C = 2 * Math.PI * R;
   const off = C * (1 - pct / 100);
   return (
-    <svg className="roi-donut" viewBox="0 0 140 140" width="120" height="120" aria-hidden="true">
+    <svg className="roi-donut" viewBox="0 0 140 140" width="96" height="96" aria-hidden="true">
       <circle cx="70" cy="70" r={R} fill="none" stroke="#E3ECF6" strokeWidth="14" />
       <circle cx="70" cy="70" r={R} fill="none" stroke={positive ? "#17C3B2" : "#C2410C"} strokeWidth="14"
         strokeLinecap="round" strokeDasharray={C} strokeDashoffset={off}
@@ -274,7 +268,7 @@ function Donut({ pct, positive }) {
 
 // 12-month cumulative savings area chart (linear accrual).
 function AreaChart({ monthly }) {
-  const W = 520, H = 190, pad = 34;
+  const W = 520, H = 148, pad = 30;
   const maxY = Math.max(monthly * 12, 1);
   const x = (m) => pad + (m / 12) * (W - pad - 14);
   const y = (v) => H - pad - (v / maxY) * (H - pad - 16);
@@ -319,9 +313,10 @@ const CSS = `
   background:var(--paper); color:var(--ink); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif; line-height:1.65}
 .pillar .wrap:not(.nav-in):not(.foot-in){max-width:1000px; margin:0 auto; padding:0 24px}
 .pillar .eyebrow{font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--spruce); margin:0 0 12px}
-.pillar h1{font-size:clamp(30px,5vw,46px); line-height:1.08; letter-spacing:-.02em; margin:0 0 16px; font-weight:800; text-wrap:balance}
-.pl-hero{background:linear-gradient(180deg,var(--mist),#fff); border-bottom:1px solid var(--seaglass); padding:52px 0 40px}
-.pl-lede{font-size:19px; color:#33455A; max-width:680px; margin:0 0 6px}
+.pillar h1{font-size:clamp(23px,3.2vw,33px); line-height:1.08; letter-spacing:-.02em; margin:0 0 8px; font-weight:800; text-wrap:balance}
+.pl-hero{background:linear-gradient(180deg,var(--mist),#fff); border-bottom:1px solid var(--seaglass); padding:22px 0 16px}
+.pl-lede{font-size:15.5px; color:#33455A; max-width:680px; margin:0}
+.pillar .eyebrow{margin-bottom:8px}
 .pillar .btn{display:inline-block; background:var(--ink); color:#fff; padding:12px 22px; border-radius:10px; font-weight:700; text-decoration:none; font-size:15px; cursor:pointer; border:0}
 .pillar .btn:hover{background:var(--spruce)}
 .pl-main{padding:12px 24px 40px}
@@ -340,73 +335,73 @@ const CSS = `
 `;
 
 const ROI_CSS = `
-.roi-grid{display:grid; grid-template-columns:1fr 1.05fr; gap:22px; margin-top:26px; align-items:start}
-.roi-inputs, .roi-out{background:var(--paper); border:1px solid var(--seaglass); border-radius:18px; padding:22px}
+.roi-grid{display:grid; grid-template-columns:1fr 1.05fr; gap:14px; margin-top:14px; align-items:start}
+.roi-inputs, .roi-out{background:var(--paper); border:1px solid var(--seaglass); border-radius:16px; padding:15px 16px}
 .roi-out{background:linear-gradient(180deg,#fff,#FAFCFE)}
-.roi-h{font-size:14px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; color:var(--spruce); margin:0 0 14px}
-.roi-h2{margin-top:24px; padding-top:18px; border-top:1px solid var(--mist)}
-.roi-field{margin:0 0 16px}
+.roi-h{font-size:12px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:var(--spruce); margin:0 0 9px}
+.roi-h2{margin-top:12px; padding-top:11px; border-top:1px solid var(--mist)}
+.roi-field{margin:0 0 9px}
 .roi-field.off{opacity:.45}
-.roi-field.sm{margin:8px 0 12px; padding-left:14px; border-left:2px solid var(--seaglass)}
-.roi-field-top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px}
-.roi-field-l{font-size:14.5px; font-weight:600; color:#33455A}
-.roi-field-v{font-size:18px; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums}
-.roi-field-v i{font-size:12.5px; font-weight:600; color:#7A8A9A; font-style:normal}
-.roi-field input[type=range]{width:100%; accent-color:var(--gorse); height:22px}
-.roi-presets{display:flex; gap:6px; margin-top:8px}
-.roi-preset{border:1px solid var(--seaglass); background:#fff; color:#5A6B7E; font-size:12.5px; font-weight:700; padding:6px 11px; border-radius:8px; cursor:pointer}
+.roi-field.sm{margin:6px 0 8px; padding-left:12px; border-left:2px solid var(--seaglass)}
+.roi-field-top{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:2px}
+.roi-field-l{font-size:13.5px; font-weight:600; color:#33455A}
+.roi-field-v{font-size:16px; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums}
+.roi-field-v i{font-size:12px; font-weight:600; color:#7A8A9A; font-style:normal}
+.roi-field input[type=range]{width:100%; accent-color:var(--gorse); height:16px; margin:2px 0}
+.roi-presets{display:flex; gap:6px; margin-top:6px}
+.roi-preset{border:1px solid var(--seaglass); background:#fff; color:#5A6B7E; font-size:12px; font-weight:700; padding:5px 10px; border-radius:8px; cursor:pointer}
 .roi-preset.on{background:var(--ink); color:#fff; border-color:var(--ink)}
-.roi-sub{font-size:12.5px; color:#7A8A9A; margin-top:5px}
-.roi-check{display:flex; align-items:center; gap:9px; font-size:14.5px; font-weight:600; color:#33455A; margin:10px 0; cursor:pointer}
-.roi-check input{width:17px; height:17px; accent-color:var(--gorse)}
-.roi-check-note{font-size:12.5px; font-weight:600; color:#7A8A9A}
-.roi-plan-pick{margin-top:14px; background:var(--mist); border:1px solid var(--seaglass); border-radius:12px; padding:13px 15px; font-size:14px; color:#33455A}
+.roi-sub{font-size:12px; color:#7A8A9A; margin-top:4px}
+.roi-check{display:flex; align-items:center; gap:8px; font-size:13.5px; font-weight:600; color:#33455A; margin:7px 0; cursor:pointer}
+.roi-check input{width:16px; height:16px; accent-color:var(--gorse)}
+.roi-check-note{font-size:12px; font-weight:600; color:#7A8A9A}
+.roi-plan-pick{margin-top:10px; background:var(--mist); border:1px solid var(--seaglass); border-radius:10px; padding:10px 12px; font-size:13px; color:#33455A}
 .roi-plan-pick strong{color:var(--ink)}
-.roi-plan-built{display:block; font-size:12.5px; color:#7A8A9A; margin-top:3px}
+.roi-plan-built{display:block; font-size:12px; color:#7A8A9A; margin-top:2px}
 
-.roi-cards{display:grid; grid-template-columns:1fr 1fr; gap:12px}
-.roi-card{border-radius:14px; padding:16px 18px; border:1px solid var(--seaglass)}
+.roi-cards{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+.roi-card{border-radius:12px; padding:12px 14px; border:1px solid var(--seaglass)}
 .roi-card-today{background:#FBFDFE}
 .roi-card-mx{background:var(--ink); border-color:var(--ink)}
-.roi-card-l{font-size:12.5px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:#7A8A9A}
+.roi-card-l{font-size:11.5px; font-weight:700; letter-spacing:.03em; text-transform:uppercase; color:#7A8A9A}
 .roi-card-mx .roi-card-l{color:#9FC3E8}
-.roi-card-n{display:block; font-size:30px; font-weight:800; color:var(--ink); letter-spacing:-.02em; margin-top:6px; font-variant-numeric:tabular-nums}
+.roi-card-n{display:block; font-size:24px; font-weight:800; color:var(--ink); letter-spacing:-.02em; margin-top:3px; font-variant-numeric:tabular-nums}
 .roi-card-mx .roi-card-n{color:#fff}
-.roi-card-n i{font-size:14px; font-weight:600; font-style:normal; color:#7A8A9A}
+.roi-card-n i{font-size:13px; font-weight:600; font-style:normal; color:#7A8A9A}
 .roi-card-mx .roi-card-n i{color:#9FC3E8}
-.roi-card-sub{font-size:13px; color:#7A8A9A; margin-top:2px}
+.roi-card-sub{font-size:12px; color:#7A8A9A; margin-top:1px}
 .roi-card-mx .roi-card-sub{color:#9FC3E8}
 
-.roi-save{display:grid; grid-template-columns:1fr auto; align-items:center; gap:10px; margin-top:14px; padding:18px 20px; border-radius:16px;
+.roi-save{display:grid; grid-template-columns:1fr auto; align-items:center; gap:8px; margin-top:10px; padding:12px 15px; border-radius:14px;
   background:linear-gradient(120deg,#E7F6F2,#F2FBF9); border:1px solid #B7E5DB}
 .roi-save.neg{background:linear-gradient(120deg,#FDECE3,#FEF6F1); border-color:#F6C9AF}
-.roi-save-l{font-size:13px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:#0E8A7D}
+.roi-save-l{font-size:12px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:#0E8A7D}
 .roi-save.neg .roi-save-l{color:#C2410C}
-.roi-save-n{display:block; font-size:38px; font-weight:800; color:var(--ink); letter-spacing:-.02em; font-variant-numeric:tabular-nums}
-.roi-save-n i{font-size:16px; font-weight:600; font-style:normal; color:#5A6B7E}
-.roi-save-annual{grid-column:1 / -1; font-size:14.5px; color:#33455A; padding-top:10px; margin-top:4px; border-top:1px solid rgba(14,138,125,.18)}
+.roi-save-n{display:block; font-size:30px; font-weight:800; color:var(--ink); letter-spacing:-.02em; font-variant-numeric:tabular-nums}
+.roi-save-n i{font-size:15px; font-weight:600; font-style:normal; color:#5A6B7E}
+.roi-save-annual{grid-column:1 / -1; font-size:13.5px; color:#33455A; padding-top:8px; margin-top:2px; border-top:1px solid rgba(14,138,125,.18)}
 .roi-save-annual span{font-weight:800; color:#0E8A7D}
 .roi-save.neg .roi-save-annual span{color:#C2410C}
 .roi-donut{flex:none}
 .roi-donut-n{font-size:26px; font-weight:800; fill:var(--ink)}
 .roi-donut-l{font-size:11px; font-weight:700; fill:#7A8A9A; letter-spacing:.04em; text-transform:uppercase}
 
-.roi-chart-block{margin-top:20px}
-.roi-chart-h{font-size:14px; font-weight:800; color:var(--ink); margin:0 0 12px}
-.roi-bars{display:grid; gap:12px}
-.roi-bar-row{display:grid; grid-template-columns:118px 1fr auto; align-items:center; gap:12px}
-.roi-bar-label{font-size:13px; font-weight:600; color:#5A6B7E}
-.roi-bar-track{height:22px; background:var(--mist); border-radius:7px; overflow:hidden}
-.roi-bar-fill{height:100%; border-radius:7px; transition:width .5s cubic-bezier(.4,0,.2,1)}
+.roi-chart-block{margin-top:12px}
+.roi-chart-h{font-size:12.5px; font-weight:800; color:var(--ink); margin:0 0 8px}
+.roi-bars{display:grid; gap:9px}
+.roi-bar-row{display:grid; grid-template-columns:104px 1fr auto; align-items:center; gap:10px}
+.roi-bar-label{font-size:12.5px; font-weight:600; color:#5A6B7E}
+.roi-bar-track{height:18px; background:var(--mist); border-radius:6px; overflow:hidden}
+.roi-bar-fill{height:100%; border-radius:6px; transition:width .5s cubic-bezier(.4,0,.2,1)}
 .roi-bar-fill.today{background:linear-gradient(90deg,#94A9BF,#6E869F)}
 .roi-bar-fill.mx{background:linear-gradient(90deg,var(--gorse),#0E8A7D)}
-.roi-bar-val{font-size:14px; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums}
-.roi-area{display:block; background:#fff; border:1px solid var(--mist); border-radius:12px}
+.roi-bar-val{font-size:13px; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums}
+.roi-area{display:block; background:#fff; border:1px solid var(--mist); border-radius:10px}
 .roi-area-tick{font-size:10px; fill:#9BA9B8}
 .roi-area-mtick{font-size:11px; fill:#7A8A9A; font-weight:600}
 .roi-area-end{font-size:13px; fill:#0E8A7D; font-weight:800}
-.roi-note-neg{font-size:14.5px; color:#C2410C; margin-top:16px; font-weight:500}
+.roi-note-neg{font-size:13.5px; color:#C2410C; margin-top:11px; font-weight:500}
 .roi-note-neg a{color:#C2410C; font-weight:700}
-.roi-disclaimer{font-size:12.5px; color:#7A8A9A; margin-top:16px; line-height:1.5}
+.roi-disclaimer{font-size:11.5px; color:#7A8A9A; margin-top:10px; line-height:1.45}
 @media(max-width:860px){.roi-grid{grid-template-columns:1fr}}
 `;
