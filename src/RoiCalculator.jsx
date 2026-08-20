@@ -204,17 +204,18 @@ export default function RoiCalculator() {
                 </div>
               )}
 
-              <div className="roi-chart-block">
-                <h3 className="roi-chart-h">Today vs MedXFlow, per month</h3>
-                <Bars current={r.currentMonthly} medx={r.medxMonthly} />
-              </div>
-
-              {r.positive && (
+              <div className="roi-charts">
                 <div className="roi-chart-block">
-                  <h3 className="roi-chart-h">Cumulative savings over 12 months</h3>
-                  <AreaChart monthly={r.saveMonthly} />
+                  <h3 className="roi-chart-h">Today vs MedXFlow, per month</h3>
+                  <Bars current={r.currentMonthly} medx={r.medxMonthly} />
                 </div>
-              )}
+                {r.positive && (
+                  <div className="roi-chart-block">
+                    <h3 className="roi-chart-h">Cumulative savings over 12 months</h3>
+                    <AreaChart monthly={r.saveMonthly} />
+                  </div>
+                )}
+              </div>
 
               {!r.positive && (
                 <p className="roi-note-neg">At this volume the plan costs more than your current labor. That usually means a smaller plan or a partial rollout fits better - <a href="/#cta">talk to us</a> and we will right-size it.</p>
@@ -353,9 +354,10 @@ const CSS = `
 .pillar .wrap:not(.nav-in):not(.foot-in){max-width:1400px; margin:0 auto; padding:0 40px}
 .pillar .eyebrow{font-size:12px; font-weight:800; letter-spacing:.14em; text-transform:uppercase; color:var(--spruce); margin:0 0 12px}
 .pillar h1{font-size:clamp(23px,3.2vw,33px); line-height:1.08; letter-spacing:-.02em; margin:0 0 8px; font-weight:800; text-wrap:balance}
-.pl-hero{background:linear-gradient(180deg,var(--mist),#fff); border-bottom:1px solid var(--seaglass); padding:22px 0 16px}
-.pl-lede{font-size:15.5px; color:#33455A; max-width:680px; margin:0}
-.pillar .eyebrow{margin-bottom:8px}
+.pl-hero{background:linear-gradient(180deg,var(--mist),#fff); border-bottom:1px solid var(--seaglass); padding:12px 0 10px}
+.pl-lede{font-size:15px; color:#33455A; max-width:760px; margin:0}
+.pillar .eyebrow{margin-bottom:5px}
+.pl-main{padding-top:10px}
 .pillar .btn{display:inline-block; background:var(--ink); color:#fff; padding:12px 22px; border-radius:10px; font-weight:700; text-decoration:none; font-size:15px; cursor:pointer; border:0}
 .pillar .btn:hover{background:var(--spruce)}
 .pl-main{padding:12px 24px 40px}
@@ -434,6 +436,8 @@ const ROI_CSS = `
 .roi-brk-v{color:#5A6B7E; font-weight:600; text-align:right; font-variant-numeric:tabular-nums}
 .roi-brk-s{color:#0E8A7D; font-weight:800; text-align:right; font-variant-numeric:tabular-nums}
 .roi-brk-s.neg{color:#C2410C}
+.roi-charts{display:grid; grid-template-columns:.82fr 1.18fr; gap:16px; align-items:start; margin-top:12px}
+.roi-charts .roi-chart-block{margin-top:0}
 .roi-chart-block{margin-top:12px}
 .roi-chart-h{font-size:12.5px; font-weight:800; color:var(--ink); margin:0 0 8px}
 .roi-bars{display:grid; gap:9px}
@@ -451,5 +455,6 @@ const ROI_CSS = `
 .roi-note-neg{font-size:13.5px; color:#C2410C; margin-top:11px; font-weight:500}
 .roi-note-neg a{color:#C2410C; font-weight:700}
 .roi-disclaimer{font-size:11.5px; color:#7A8A9A; margin-top:10px; line-height:1.45}
+@media(max-width:1024px){.roi-charts{grid-template-columns:1fr}}
 @media(max-width:860px){.roi-grid{grid-template-columns:1fr}}
 `;
