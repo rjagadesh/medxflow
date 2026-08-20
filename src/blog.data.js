@@ -814,6 +814,113 @@ export const POSTS = [
   },
 
   {
+    slug: "eob-to-era-conversion",
+    title: "EOB to ERA Conversion: Turning Paper Remittances into Auto-Postable 835 Files",
+    description:
+      "How paper and PDF EOBs are converted into an X12 835 ERA so payments post automatically - the conversion pipeline, how adjustments and CARC/RARC codes are mapped, the edge cases that break it, and how it is validated.",
+    date: "2026-08-19", category: "Technical / EDI", readMins: 8,
+    keywords: ["EOB to ERA conversion", "EOB to 835", "paper EOB conversion", "electronic remittance advice", "ERA conversion", "auto posting"],
+    related: { label: "See MedXFlow Payment Posting", href: "/products/payment-posting/" },
+    snippet: "EOB to ERA conversion turns a paper or PDF explanation of benefits into an X12 835 electronic remittance advice so payments can post automatically. The workflow captures the EOB, extracts each claim, service line, payment, adjustment and CARC/RARC code, maps them into the 835 structure, validates that the file balances, and hands it to the posting engine.",
+    intro:
+      "Electronic remittance is widespread, but paper is not gone. A meaningful share of remittance dollars still arrives as paper EOBs or PDFs, from smaller commercial payers, secondary and tertiary payers, workers' compensation, auto and liability carriers, and correspondence. Those cannot auto-post, so someone keys them by hand. EOB to ERA conversion closes that gap by turning the paper remittance into a valid 835 that posts like any other ERA. Here is how that conversion actually works, segment for segment.",
+    sections: [
+      {
+        h: "Why paper EOBs still exist",
+        p: [
+          "Most large commercial and government payers send electronic remittance (the 835), but not all do, and not for every situation. Secondary payers after coordination of benefits, workers' compensation and auto/liability carriers, small self-administered plans, and one-off correspondence and refund requests frequently still arrive as paper or a PDF image.",
+          "The result is a split posting process: most dollars auto-post from 835s, and a stubborn remainder gets manually keyed from paper, which is slow, error-prone and the first thing to fall behind when staff are stretched. Conversion removes that manual island.",
+        ],
+      },
+      {
+        h: "What conversion produces: a valid, balanced 835",
+        p: [
+          "The goal of conversion is not a spreadsheet or a scanned image in a folder. It is a syntactically valid X12 835 file that the posting engine treats exactly like a payer-sent ERA: same loops, same segments, same reconciliation. If the output is a real 835, everything downstream - auto-posting, denial routing, underpayment detection - works unchanged.",
+          "That sets a high bar. A converted 835 has to carry the same structured data an electronic one does, and it has to balance to the penny, or the posting engine will reject it or mis-post.",
+        ],
+      },
+      {
+        h: "The conversion pipeline, step by step",
+        p: [
+          "Capture: the paper EOB is scanned, or the PDF/image is ingested directly. Mailed remittances are digitized first.",
+          "Extraction: optical character recognition and data extraction pull the structured fields off the document - payer and payee, check or EFT number and date, each patient and claim, each service line, billed and allowed and paid amounts, patient responsibility, and every adjustment with its reason.",
+          "Mapping: the extracted fields are mapped into the 835's structure - the financial header (BPR), the reassociation trace (TRN), payer and payee loops (N1), the claim payment loop (CLP), service lines (SVC), and the adjustment segments (CAS) carrying the CARC and RARC codes.",
+          "Validation and balancing: the assembled 835 is checked for X12 syntax and, critically, for arithmetic - each claim's charges must equal payments plus adjustments, and the file total (BPR) must equal the sum of claim payments net of provider-level adjustments.",
+          "Delivery: the validated 835 is handed to the posting engine, and the payment posts and reconciles like any other ERA.",
+        ],
+      },
+      {
+        h: "Mapping the hard part: adjustments and codes",
+        p: [
+          "The payment amount is the easy field. The difficulty is the money that was not paid, because that is what drives posting and denials. Every reduction on the EOB has to become a CAS segment with the correct adjustment group code - CO for contractual obligations, PR for patient responsibility, OA for other adjustments, PI for payer-initiated reductions - plus the specific CARC that explains it, and any RARC remark codes.",
+          "A paper EOB rarely prints these codes as cleanly as an 835 encodes them. A column labeled 'not covered' or 'plan discount' has to be translated into the right group code and CARC, or the posted adjustment will be wrong and the denial will route incorrectly. This mapping is where conversion accuracy is won or lost.",
+        ],
+      },
+      {
+        h: "Edge cases that break naive conversion",
+        p: [
+          "Multiple claims on one check: a single remittance often pays many claims, so the converter has to split them into separate CLP loops that each balance on their own.",
+          "Secondary and COB remittances: when a secondary payer remits, the prior payer's payment and adjustments have to be represented correctly, or the balance will not tie out.",
+          "Offsets and recoupments: takebacks, prior overpayment recovery, interest, and capitation are provider-level adjustments (PLB) that are not tied to a single claim - miss them and the file will not balance.",
+          "Non-standard layouts: every payer's paper EOB looks different, so a converter built on rigid templates breaks the moment a payer changes its format or a new payer appears.",
+        ],
+      },
+      {
+        h: "Balancing is the proof it is correct",
+        p: [
+          "An 835 has to balance at three levels: each service line, each claim (billed equals paid plus all adjustments plus patient responsibility), and the whole transaction (the BPR payment amount equals the sum of claim payments minus provider-level adjustments). Balancing is not a nice-to-have - it is how you know the conversion did not silently drop or misread a number.",
+          "A converted file that does not balance should never be posted blindly. It should be held and flagged, because posting an unbalanced remittance corrupts your A/R.",
+        ],
+      },
+      {
+        h: "Where AI agents change the economics",
+        p: [
+          "Template-based OCR struggles with the variety of paper EOB layouts. An AI approach combines OCR with a model that understands remittance semantics: it reads varied layouts, maps amounts to the correct adjustment group and CARC/RARC codes, assembles a valid 835, and checks that it balances - escalating any page it is not confident about to a human rather than guessing.",
+          "That turns conversion from a manual keying task into an exception-only workflow: the agent converts and balances the routine remittances, and staff only touch the ones that genuinely need judgment. It is the same pattern MedXFlow uses across the revenue cycle, applied to the paper that would otherwise never auto-post. For the electronic side of this, our 835 ERA explainer covers what a native remittance contains, and payment posting is where the reconciled 835 lands.",
+        ],
+      },
+    ],
+    faq: [
+      { q: "What is EOB to ERA conversion?", a: "It is the process of turning a paper or PDF explanation of benefits (EOB) into an X12 835 electronic remittance advice (ERA), so the payment can post automatically instead of being keyed by hand. The output is a valid, balanced 835 that the posting engine treats like any payer-sent ERA." },
+      { q: "Why not just post from the paper EOB manually?", a: "You can, but it is slow, error-prone and the first thing to fall behind when staff are busy. Manual EOB posting also means underpayments and denials surface later than they would from an auto-posted 835. Conversion removes that manual bottleneck." },
+      { q: "Does a converted 835 post like a real ERA?", a: "Yes, if it is done correctly. A properly converted 835 carries the same loops, segments and CARC/RARC codes as a payer-sent ERA and balances arithmetically, so auto-posting, denial routing and underpayment detection all work unchanged." },
+      { q: "What makes EOB to ERA conversion error-prone?", a: "The hardest parts are mapping each reduction to the correct adjustment group code (CO, PR, OA, PI) and CARC, handling multiple claims per check, secondary/COB remittances, and provider-level offsets (PLB), and getting the file to balance to the penny. Rigid template-based tools also break when a payer's layout changes." },
+      { q: "Can EOB to ERA conversion be automated accurately?", a: "The routine volume can. Combining OCR with a model that understands remittance semantics can read varied layouts, map codes correctly, build a valid 835 and confirm it balances, while low-confidence pages are escalated to a person. That makes it an exception-only workflow rather than full manual keying." },
+    ],
+  },
+
+  {
+    slug: "how-to-read-an-835-file",
+    title: "How to Read an 835 File: Segments, Loops and Balancing",
+    description:
+      "A segment-level walkthrough of the X12 835 remittance file - ISA/GS/ST envelope, BPR and TRN, N1 payer/payee loops, the CLP claim loop, CAS adjustments and group codes, SVC lines, CARC/RARC, PLB, and how the file balances.",
+    date: "2026-08-20", category: "Technical / EDI", readMins: 9,
+    keywords: ["how to read an 835", "835 segments", "835 CLP CAS SVC", "835 loops", "PLB segment", "835 balancing"],
+    related: { label: "See MedXFlow Payment Posting", href: "/products/payment-posting/" },
+    snippet: "An 835 is an X12 file organized as an envelope (ISA/GS/ST), a financial header (BPR) and reassociation trace (TRN), payer and payee loops (N1), then a claim payment loop (CLP) with service lines (SVC) and adjustments (CAS) carrying CARC/RARC codes, and finally provider-level adjustments (PLB). Reading it means following that hierarchy and confirming it balances.",
+    intro:
+      "If you have ever opened a raw 835 and seen a wall of segments separated by tildes, this is the map. The 835 is hierarchical: an envelope wraps a financial header, which wraps payer and payee identification, which wraps a loop per claim, which wraps a loop per service line. Knowing the key segments tells you exactly how each claim was paid and why, and lets you verify the file balances before it posts.",
+    sections: [
+      { h: "The envelope: ISA, GS, ST", p: ["Every X12 file opens with an interchange header (ISA) and functional group header (GS), and each transaction set inside starts with ST (with ST01 = 835). These carry sender and receiver IDs, control numbers and dates. You rarely need them for posting, but they are how the file is routed and acknowledged."] },
+      { h: "BPR and TRN: the money and the trace", p: ["BPR is the financial information segment: the total payment amount, the payment method (ACH, check, or non-payment for a zero-dollar remit), and the EFT effective date and banking details. TRN is the reassociation trace number - the value that ties this remittance to the actual EFT deposit or check, so you can match the 835 to the money that landed in the bank. Reassociation failures are a common posting headache, and TRN is how you solve them."] },
+      { h: "N1 loops: payer and payee", p: ["Two N1 loops identify the parties: the payer (loop 1000A) and the payee (loop 1000B), each with names and identifiers such as the payer ID and the provider's NPI or TIN. This is how the posting engine knows which payer's remittance it is working and which provider it belongs to."] },
+      { h: "CLP: the claim payment loop", p: ["The CLP segment opens the loop for one claim. Its key elements are the patient control number (CLP01, which matches the claim number you sent on your 837), the claim status code (CLP02), the total submitted charge (CLP03), the amount paid (CLP04), the patient responsibility (CLP05), and the payer's own claim control number (CLP07). That payer claim control number is what you cite on a corrected claim or an appeal, so it matters."] },
+      { h: "CAS: adjustments and group codes", p: ["CAS is where the money that was not paid is explained. Each CAS carries an adjustment group code, then up to six triplets of reason code, amount and quantity. The group codes are the first thing to read: CO (contractual obligations, the write-off you accept), PR (patient responsibility, what moves to the patient), OA (other adjustment), and PI (payer-initiated reductions). The reason code in each triplet is the CARC that says specifically why."] },
+      { h: "SVC: the service line loop", p: ["Under each claim, SVC segments carry the line-level detail: the procedure code, the line charge and the line paid amount, and units. Service lines can have their own CAS adjustments, so a claim can be partly paid and partly denied at the line level. Matching SVC lines back to the service lines on your original claim is what makes line-level posting accurate."] },
+      { h: "CARC and RARC: reason and remark", p: ["The CARC (claim adjustment reason code) in the CAS triplets tells you why an amount was adjusted or denied. RARC (remittance advice remark codes), carried in LQ segments and the MOA/MIA segments, add supplementary explanation. Together they are the starting point for denial management and for spotting underpayments against your fee schedule."] },
+      { h: "PLB: provider-level adjustments", p: ["PLB is the segment that trips people up. It carries adjustments that are not tied to a single claim: prior-period overpayment recoupments and offsets, interest, capitation payments, and forwarding balances. Because a PLB can move money independently of the claims listed, you cannot balance an 835 to the bank deposit without accounting for it."] },
+      { h: "Balancing an 835", p: ["A correct 835 balances at three levels. Each service line: line charge equals line paid plus line adjustments. Each claim: CLP charge equals paid plus all CAS adjustments plus patient responsibility. And the whole transaction: the BPR payment amount equals the sum of claim payments minus (or plus) the PLB provider-level adjustments. If any level does not tie out, the file has a problem and should be held rather than posted."] },
+    ],
+    faq: [
+      { q: "What are the main segments in an 835?", a: "The envelope (ISA/GS/ST), the financial header (BPR) and reassociation trace (TRN), payer and payee loops (N1), a claim payment loop (CLP) per claim, service lines (SVC) with adjustments (CAS) carrying CARC/RARC codes, and provider-level adjustments (PLB)." },
+      { q: "What is the TRN segment used for?", a: "TRN carries the reassociation trace number that links the 835 remittance to the actual EFT deposit or check. It is how you match the remittance to the money that arrived in the bank, which is essential for reconciliation." },
+      { q: "What is the difference between CARC and RARC?", a: "CARC (claim adjustment reason codes) explain why an amount was adjusted or denied and appear in the CAS segments. RARC (remittance advice remark codes) add supplementary explanation and appear in LQ and MOA/MIA segments. CARC drives the adjustment; RARC clarifies it." },
+      { q: "What do the CAS group codes CO, PR, OA and PI mean?", a: "CO is contractual obligations (the write-off you accept), PR is patient responsibility (what moves to the patient), OA is other adjustment, and PI is payer-initiated reductions. The group code tells you where the unpaid amount goes; the CARC says why." },
+      { q: "What is a PLB adjustment on an 835?", a: "PLB (provider-level balance) carries adjustments not tied to a single claim, such as overpayment recoupments, offsets, interest and capitation. You have to account for PLB to reconcile the 835 total to the actual deposit." },
+    ],
+  },
+
+  {
     slug: "hl7-vs-fhir-healthcare-data",
     title: "HL7 vs FHIR: What They Mean for Healthcare Data",
     description: "HL7 and FHIR are healthcare data standards, but they work very differently. Here is what each is, how they compare, and why FHIR is driving newer interoperability.",
