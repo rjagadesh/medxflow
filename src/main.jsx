@@ -25,6 +25,7 @@ const DenialCodesIndex = React.lazy(() => import("./DenialCodes.jsx").then((m) =
 const DenialCodePage = React.lazy(() => import("./DenialCodes.jsx").then((m) => ({ default: m.DenialCodePage })));
 const DenialRateCalculator = React.lazy(() => import("./DenialRateCalculator.jsx"));
 const RcmDenialBenchmarks = React.lazy(() => import("./RcmDenialBenchmarks.jsx"));
+const NpiLookup = React.lazy(() => import("./NpiLookup.jsx"));
 const About = React.lazy(() => import("./About.jsx"));
 const Trust = React.lazy(() => import("./Trust.jsx"));
 
@@ -45,6 +46,7 @@ const isDenialIndex = path === "/denial-codes";
 const denialMatch = path.match(/^\/denial-codes\/([a-z0-9-]+)$/);
 const isDenialCalc = path === "/denial-rate-calculator";
 const isDenialBenchmarks = path === "/rcm-denial-benchmarks";
+const isNpiLookup = path === "/npi-lookup";
 const isAbout = path === "/about";
 const isTrust = path === "/trust";
 
@@ -103,6 +105,7 @@ function App() {
   if (denialMatch) return <Page><DenialCodePage slug={denialMatch[1]} /></Page>;
   if (isDenialCalc) return <Page><DenialRateCalculator /></Page>;
   if (isDenialBenchmarks) return <Page><RcmDenialBenchmarks /></Page>;
+  if (isNpiLookup) return <Page><NpiLookup /></Page>;
   if (isAbout) return <Page><About /></Page>;
   if (isTrust) return <Page><Trust /></Page>;
   return (

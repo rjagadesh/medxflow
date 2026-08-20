@@ -107,6 +107,25 @@ function specialtiesIndexBody() {
     SPECIALTIES.map((s) => `<article><h2><a href="/specialties/${s.slug}/">${esc(s.name)}</a></h2>${p(s.tagline)}</article>`).join("") +
     `</section>`;
 }
+function npiLookupBody() {
+  return `<article><h1>NPI lookup</h1>` +
+    p("An NPI (National Provider Identifier) is a unique 10-digit number CMS assigns to every US healthcare provider and organization. This tool looks up NPIs in the official NPPES registry so you can verify a provider's number, taxonomy and enrollment status before you bill or credential.") +
+    h2("What is an NPI number?") + p("An NPI is a unique 10-digit identifier that CMS, through NPPES, assigns to healthcare providers in the United States. It is required on HIPAA-standard transactions - claims, eligibility and remittance - and stays with the provider for life.") +
+    h2("NPI-1 vs NPI-2: individuals and organizations") + p("An NPI-1 (Type 1) belongs to an individual provider such as a physician or therapist. An NPI-2 (Type 2) belongs to an organization such as a group practice, hospital or laboratory. Billing the wrong type is a common, avoidable denial.") +
+    h2("What the taxonomy code tells you") + p("Each NPI carries taxonomy codes that classify the provider's specialty and type. A mismatch between the taxonomy on file and the service billed is a frequent source of medical-necessity and enrollment denials.") +
+    h2("Why verifying the NPI matters") + p("An accurate, active NPI whose type and taxonomy match the enrollment is the anchor of a clean claim. Primary-source verification against NPPES is part of what MedXFlow's credentialing agent runs automatically during provider enrollment.") +
+    faqHtml(NPI_FAQ) +
+    `</article>`;
+}
+
+const NPI_FAQ = [
+  { q: "How do I look up an NPI number?", a: "Enter the provider's last name (and optionally first name and state), the organization name, or a known 10-digit NPI, then search. Results come from the official CMS NPPES registry and show the NPI, provider type, primary taxonomy, location and status." },
+  { q: "Is NPI lookup free?", a: "Yes. NPI data is public and maintained by CMS in the NPPES registry. This tool queries that registry at no cost." },
+  { q: "What is the difference between a Type 1 and Type 2 NPI?", a: "A Type 1 (NPI-1) is for an individual provider such as a physician or nurse practitioner. A Type 2 (NPI-2) is for an organization such as a group practice, hospital or laboratory. A provider who owns a practice can have both." },
+  { q: "Why would a claim be denied over an NPI?", a: "Common causes are billing under a deactivated NPI, using the wrong NPI type, or a mismatch between the provider's taxonomy or enrollment and the service billed. Verifying the NPI and taxonomy before billing prevents these denials." },
+  { q: "How often is NPPES data updated?", a: "CMS refreshes the NPPES registry regularly, and providers can update their own records at any time. Always confirm active enrollment with the specific payer before billing." },
+];
+
 function denialBenchmarksBody() {
   return `<article><h1>RCM denial benchmarks: claim denial rates and statistics</h1>` +
     p(DENIAL_ANSWER) +
@@ -245,6 +264,20 @@ const routes = [
           { "@type": "Question", name: "What is a good denial rate?", acceptedAnswer: { "@type": "Answer", text: "Under 5% is generally healthy; best-in-class practices run 2 to 4%. Above 10% usually indicates a fixable root cause, most often eligibility or prior authorization." } },
           { "@type": "Question", name: "How do you calculate denial rate?", acceptedAnswer: { "@type": "Answer", text: "Denial rate equals claims denied divided by claims submitted, times 100, over a period such as a month." } },
         ] },
+      ],
+    }),
+  },
+  {
+    path: "/npi-lookup",
+    title: "NPI Lookup · Free NPI Number Registry Search · MedXFlow",
+    desc: "Free NPI lookup. Search the official CMS NPPES registry for any US provider or organization by name or NPI number - the NPI, taxonomy, location and status, for billing and credentialing.",
+    body: npiLookupBody(),
+    jsonld: JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        { "@type": "WebApplication", name: "NPI Lookup", applicationCategory: "BusinessApplication", operatingSystem: "Web", url: `${ORIGIN}/npi-lookup/`, description: "Free tool to look up a provider's National Provider Identifier (NPI) in the CMS NPPES registry.", offers: { "@type": "Offer", price: "0", priceCurrency: "USD" }, publisher: { "@id": `${ORIGIN}/#organization` } },
+        { "@type": "BreadcrumbList", itemListElement: [["Home", "/"], ["NPI Lookup", "/npi-lookup/"]].map(([n, u], i) => ({ "@type": "ListItem", position: i + 1, name: n, item: `${ORIGIN}${u}` })) },
+        { "@type": "FAQPage", mainEntity: NPI_FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) },
       ],
     }),
   },

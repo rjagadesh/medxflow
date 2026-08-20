@@ -25,7 +25,7 @@ export const PRODUCTS = [
     tagline:
       "Enroll and credential your providers with every payer, track each application to approval, and stay ahead of re-credentialing and expirables - so nothing bills under a lapsed number.",
     overview:
-      "You cannot collect for a provider a payer has not enrolled. MedXFlow credentialing manages the whole lifecycle: initial payer enrollment, CAQH and PECOS profile upkeep, primary-source verification, and the re-credentialing and expirable deadlines that quietly stop payments when they are missed. The AI agent prepares and submits applications, chases payers for status, and flags anything at risk - so providers go live faster and stay billable.",
+      "You cannot collect for a provider a payer has not enrolled. MedXFlow credentialing manages the whole lifecycle: initial payer enrollment, CAQH and PECOS profile upkeep, primary-source verification - including validating each provider's NPI against the CMS NPPES registry - and the re-credentialing and expirable deadlines that quietly stop payments when they are missed. The AI agent prepares and submits applications, chases payers for status, and flags anything at risk - so providers go live faster and stay billable.",
     features: [
       ["📇", "Payer enrollment", "Prepare and submit enrollment applications across your full payer mix - commercial, Medicare and Medicaid - from one place."],
       ["🗂", "CAQH & profile upkeep", "Keep CAQH, PECOS and payer profiles complete and attested, so applications aren't held up by stale or missing data."],

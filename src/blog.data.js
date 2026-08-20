@@ -36,7 +36,7 @@ export const POSTS = [
         h: "How AI agents support credentialing",
         p: [
           "An AI credentialing agent carries the repetitive, deadline-driven work end to end, and hands the judgment calls to your team. In practice that means five things:",
-          "Intake and profile building: the agent collects a provider's licenses, education, work history and identifiers once, into a single reusable profile, and flags anything missing before it becomes a rejection.",
+          "Intake and profile building: the agent collects a provider's licenses, education, work history and identifiers once, into a single reusable profile, validates the provider's NPI against the CMS NPPES registry as a primary source, and flags anything missing before it becomes a rejection.",
           "Application preparation and submission: it prepares and submits enrollment and credentialing applications across your full payer mix - commercial, Medicare and Medicaid - reusing the profile rather than re-keying the same data into every form.",
           "Status tracking and follow-up: every application is tracked to approval, with the agent checking payer portals and chasing status instead of a coordinator sitting on hold.",
           "CAQH and PECOS upkeep: it keeps CAQH, PECOS and payer profiles complete and attested, so applications are not held up by stale data or a missed re-attestation.",
