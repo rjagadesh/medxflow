@@ -268,14 +268,16 @@ function Donut({ pct, positive }) {
 
 // 12-month cumulative savings area chart (linear accrual).
 function AreaChart({ monthly }) {
-  const W = 520, H = 148, pad = 30;
-  const maxY = Math.max(monthly * 12, 1);
-  const x = (m) => pad + (m / 12) * (W - pad - 14);
-  const y = (v) => H - pad - (v / maxY) * (H - pad - 16);
+  // Generous left padding so the dollar tick labels never clip, and top padding
+  // (via maxY headroom) so the endpoint value sits clear of the top edge.
+  const W = 580, H = 200, padL = 84, padR = 22, padT = 30, padB = 34;
+  const annual = monthly * 12;
+  const maxY = Math.max(annual * 1.12, 1);
+  const x = (m) => padL + (m / 12) * (W - padL - padR);
+  const y = (v) => H - padB - (v / maxY) * (H - padT - padB);
   const months = Array.from({ length: 13 }, (_, i) => i);
   const line = months.map((m) => `${x(m)},${y(monthly * m)}`).join(" ");
   const area = `M ${x(0)},${y(0)} L ${months.map((m) => `${x(m)},${y(monthly * m)}`).join(" L ")} L ${x(12)},${y(0)} Z`;
-  const grid = [0.25, 0.5, 0.75, 1].map((f) => f);
   return (
     <svg className="roi-area" viewBox={`0 0 ${W} ${H}`} width="100%" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Cumulative savings over 12 months">
       <defs>
@@ -284,16 +286,16 @@ function AreaChart({ monthly }) {
           <stop offset="1" stopColor="#17C3B2" stopOpacity="0.02" />
         </linearGradient>
       </defs>
-      {grid.map((f) => (
+      {[0.25, 0.5, 0.75, 1].map((f) => (
         <g key={f}>
-          <line x1={pad} y1={y(maxY * f)} x2={W - 14} y2={y(maxY * f)} stroke="#EAF1F8" strokeWidth="1" />
-          <text x={pad - 6} y={y(maxY * f) + 4} textAnchor="end" className="roi-area-tick">{usd(maxY * f)}</text>
+          <line x1={padL} y1={y(annual * f)} x2={W - padR} y2={y(annual * f)} stroke="#EAF1F8" strokeWidth="1" />
+          <text x={padL - 10} y={y(annual * f) + 4} textAnchor="end" className="roi-area-tick">{usd(annual * f)}</text>
         </g>
       ))}
       <path d={area} fill="url(#roiFill)" />
       <polyline points={line} fill="none" stroke="#0E8A7D" strokeWidth="2.5" strokeLinejoin="round" />
-      <circle cx={x(12)} cy={y(monthly * 12)} r="5" fill="#0E8A7D" stroke="#fff" strokeWidth="2" />
-      <text x={x(12)} y={y(monthly * 12) - 12} textAnchor="end" className="roi-area-end">{usd(monthly * 12)}</text>
+      <circle cx={x(12)} cy={y(annual)} r="5" fill="#0E8A7D" stroke="#fff" strokeWidth="2" />
+      <text x={W - padR} y={y(annual) - 12} textAnchor="end" className="roi-area-end">{usd(annual)} / yr</text>
       {[0, 3, 6, 9, 12].map((m) => (
         <text key={m} x={x(m)} y={H - 12} textAnchor="middle" className="roi-area-mtick">{m === 0 ? "now" : "m" + m}</text>
       ))}
@@ -397,9 +399,9 @@ const ROI_CSS = `
 .roi-bar-fill.mx{background:linear-gradient(90deg,var(--gorse),#0E8A7D)}
 .roi-bar-val{font-size:13px; font-weight:800; color:var(--ink); font-variant-numeric:tabular-nums}
 .roi-area{display:block; background:#fff; border:1px solid var(--mist); border-radius:10px}
-.roi-area-tick{font-size:10px; fill:#9BA9B8}
-.roi-area-mtick{font-size:11px; fill:#7A8A9A; font-weight:600}
-.roi-area-end{font-size:13px; fill:#0E8A7D; font-weight:800}
+.roi-area-tick{font-size:11.5px; fill:#5A6B7E; font-weight:600; font-variant-numeric:tabular-nums}
+.roi-area-mtick{font-size:12px; fill:#5A6B7E; font-weight:700}
+.roi-area-end{font-size:14px; fill:#0E8A7D; font-weight:800}
 .roi-note-neg{font-size:13.5px; color:#C2410C; margin-top:11px; font-weight:500}
 .roi-note-neg a{color:#C2410C; font-weight:700}
 .roi-disclaimer{font-size:11.5px; color:#7A8A9A; margin-top:10px; line-height:1.45}
