@@ -37,7 +37,7 @@ export function DenialCodesIndex() {
             <h2>{cat}</h2>
             <div className="dc-grid">
               {CODES.filter((c) => c.cat === cat).map((c) => (
-                <a key={c.slug} className="dc-card" href={`/denial-codes/${c.slug}`}>
+                <a key={c.slug} className="dc-card" href={`/denial-codes/${c.slug}/`}>
                   <b>{c.code}</b>
                   <span>{c.meaning}</span>
                 </a>
@@ -54,12 +54,12 @@ export function DenialCodePage({ slug }) {
   const c = denialCode(slug);
   useEffect(() => { if (c) { document.title = `Denial Code ${c.code} - What It Means & How to Fix It · MedXFlow`; window.scrollTo(0, 0); } }, [c]);
   if (!c) {
-    return <Shell><main className="wrap dc-article"><p className="eyebrow">Not found</p><h1>Code not found</h1><p><a href="/denial-codes">Back to the denial code lookup</a></p></main></Shell>;
+    return <Shell><main className="wrap dc-article"><p className="eyebrow">Not found</p><h1>Code not found</h1><p><a href="/denial-codes/">Back to the denial code lookup</a></p></main></Shell>;
   }
   return (
     <Shell>
       <main className="wrap dc-article">
-        <nav className="dc-crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>›</span><a href="/denial-codes">Denial Codes</a><span>›</span><span>{c.code}</span></nav>
+        <nav className="dc-crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>›</span><a href="/denial-codes/">Denial Codes</a><span>›</span><span>{c.code}</span></nav>
         <p className="eyebrow">Denial Code · {c.cat}</p>
         <h1>Denial Code {c.code}: What It Means and How to Fix It</h1>
         <p className="dc-answer">{c.meaning}</p>
@@ -70,10 +70,10 @@ export function DenialCodePage({ slug }) {
 
         <div className="dc-cta">
           <p>Working denials by hand? MedXFlow AI agents triage denials by reason code, draft appeals, and surface the root cause.</p>
-          <a className="btn" href="/products/denial-management">See MedXFlow Denial Management →</a>
+          <a className="btn" href="/products/denial-management/">See MedXFlow Denial Management →</a>
         </div>
 
-        <p className="dc-back"><a href="/denial-codes">Back to all denial codes</a></p>
+        <p className="dc-back"><a href="/denial-codes/">Back to all denial codes</a></p>
       </main>
     </Shell>
   );

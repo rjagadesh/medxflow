@@ -37,14 +37,14 @@ export default function SpecialtyPage({ slug }) {
         <header className="pp-hero">
           <div className="wrap pp-hero-in">
             <Reveal>
-              <a href="/specialties" className="pp-back">← All specialties</a>
+              <a href="/specialties/" className="pp-back">← All specialties</a>
               <div className="pp-hero-ic">{s.icon}</div>
               <Eyebrow light>{s.eyebrow}</Eyebrow>
               <h1 className="h-light pp-h1">{s.h1a}<br />{s.h1b}</h1>
               <p className="lead-light pp-tagline">{s.tagline}</p>
               <div className="pp-hero-cta">
                 <a href="#cta" className="btn btn-gorse" onClick={(e) => { e.preventDefault(); openDemo(); }}>Book a demo</a>
-                <a href="/specialties" className="btn btn-ghost">All specialties</a>
+                <a href="/specialties/" className="btn btn-ghost">All specialties</a>
               </div>
             </Reveal>
           </div>
@@ -124,7 +124,7 @@ export default function SpecialtyPage({ slug }) {
             </Reveal>
             <div className="sp-index-grid">
               {others.map((o) => (
-                <a key={o.slug} className="sp-index-card" href={`/specialties/${o.slug}`}>
+                <a key={o.slug} className="sp-index-card" href={`/specialties/${o.slug}/`}>
                   <span className="sp-index-ic">{o.icon}</span>
                   <span className="sp-index-body">
                     <b>{o.name}</b>
@@ -192,7 +192,7 @@ export function SpecialtiesIndex() {
             <div className="sp-index-grid sp-index-grid-lg">
               {SPECIALTIES.map((s, i) => (
                 <Reveal key={s.slug} delay={(i % 3) * 80}>
-                  <a className="sp-index-card sp-index-card-lg" href={`/specialties/${s.slug}`}>
+                  <a className="sp-index-card sp-index-card-lg" href={`/specialties/${s.slug}/`}>
                     <span className="sp-index-ic sp-index-ic-lg">{s.icon}</span>
                     <span className="sp-index-body">
                       <b>{s.name}</b>

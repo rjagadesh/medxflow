@@ -17,7 +17,7 @@ function buildRoutes(homeTitle, homeDesc) {
     { path: "/products", title: "Products · MedXFlow", desc: "From the first appointment to the final payment - nine connected stages of Revenue Cycle Management, plus a human-led managed billing team." },
   ];
   for (const p of PRODUCTS) {
-    routes.push({ path: `/products/${p.slug}`, title: `${p.name} · MedXFlow`, desc: p.tagline });
+    routes.push({ path: `/products/${p.slug}/`, title: `${p.name} · MedXFlow`, desc: p.tagline });
   }
   return routes;
 }

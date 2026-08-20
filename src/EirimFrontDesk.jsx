@@ -110,23 +110,23 @@ export function Nav({ resources = false } = {}) {
               <div className="nav-dd-mega-inner wrap">
                 <div className="nav-dd-col">
                   <div className="nav-dd-head">Platforms</div>
-                  <a href="/ai-agents-rcm" role="menuitem"><span className="nav-dd-em">🤖</span>AI Agents for RCM</a>
+                  <a href="/ai-agents-rcm/" role="menuitem"><span className="nav-dd-em">🤖</span>AI Agents for RCM</a>
                   <a href="/healthcare-rcm-automation" role="menuitem"><span className="nav-dd-em">⚙️</span>RCM Automation</a>
                   <a href="/#checkin" role="menuitem"><span className="nav-dd-em">🏥</span>{t("nav.p_kiosk")}</a>
                   <a href="/#voice" role="menuitem"><span className="nav-dd-em">📞</span>{t("nav.p_voice")}</a>
-                  <a href="/telehealth" role="menuitem"><span className="nav-dd-em">💻</span>{t("nav.p_telehealth")}</a>
-                  <a href="/products/voip" role="menuitem"><span className="nav-dd-em">📞</span>VoIP Services</a>
-                  <a href="/products/eligibility-verification" role="menuitem"><span className="nav-dd-em">🛡️</span>Eligibility Verification</a>
-                  <a href="/products/charge-capture-coding" role="menuitem"><span className="nav-dd-em">🏷️</span>Medical Coding</a>
+                  <a href="/telehealth/" role="menuitem"><span className="nav-dd-em">💻</span>{t("nav.p_telehealth")}</a>
+                  <a href="/products/voip/" role="menuitem"><span className="nav-dd-em">📞</span>VoIP Services</a>
+                  <a href="/products/eligibility-verification/" role="menuitem"><span className="nav-dd-em">🛡️</span>Eligibility Verification</a>
+                  <a href="/products/charge-capture-coding/" role="menuitem"><span className="nav-dd-em">🏷️</span>Medical Coding</a>
                   <a href="#cta" role="menuitem" onClick={(e) => { e.preventDefault(); openDemo(); }}><span className="nav-dd-em">↪️</span>Referral Workflow</a>
-                  <a href="/products" role="menuitem" className="nav-dd-all">◆ All products</a>
+                  <a href="/products/" role="menuitem" className="nav-dd-all">◆ All products</a>
                 </div>
 
                 <div className="nav-dd-col nav-dd-col-span2">
                   <div className="nav-dd-head">RCM AI Agents</div>
                   <div className="nav-dd-subgrid">
                     {rcmProducts.map((p) => (
-                      <a key={p.slug} href={`/products/${p.slug}`} role="menuitem">
+                      <a key={p.slug} href={`/products/${p.slug}/`} role="menuitem">
                         <span className="nav-dd-step" style={{ animationDelay: `${(p.step - 1) * 0.4}s` }}>{p.step}</span>{p.name}
                       </a>
                     ))}
@@ -136,7 +136,7 @@ export function Nav({ resources = false } = {}) {
                 <div className="nav-dd-col">
                   <div className="nav-dd-head">Patient Engagement</div>
                   {engagementProducts.map((p) => (
-                    <a key={p.slug} href={`/products/${p.slug}`} role="menuitem">
+                    <a key={p.slug} href={`/products/${p.slug}/`} role="menuitem">
                       <span className="nav-dd-em">{p.icon}</span>{p.name}
                     </a>
                   ))}
@@ -145,7 +145,7 @@ export function Nav({ resources = false } = {}) {
                 <div className="nav-dd-col">
                   <div className="nav-dd-head">Managed Billing Services</div>
                   {serviceProducts.map((p) => (
-                    <a key={p.slug} href={`/products/${p.slug}`} role="menuitem">
+                    <a key={p.slug} href={`/products/${p.slug}/`} role="menuitem">
                       <span className="nav-dd-em">👥</span>{p.name}
                     </a>
                   ))}
@@ -174,7 +174,7 @@ export function Nav({ resources = false } = {}) {
                     {slugs.map((sl) => {
                       const s = specBySlug[sl];
                       return s ? (
-                        <a key={sl} href={`/specialties/${sl}`} role="menuitem">
+                        <a key={sl} href={`/specialties/${sl}/`} role="menuitem">
                           <span className="nav-dd-em">{s.icon}</span>{s.name}
                         </a>
                       ) : null;
@@ -183,13 +183,13 @@ export function Nav({ resources = false } = {}) {
                 ))}
                 <div className="nav-dd-col">
                   <div className="nav-dd-head">Explore</div>
-                  <a href="/specialties" role="menuitem" className="nav-dd-all">◆ All specialties</a>
+                  <a href="/specialties/" role="menuitem" className="nav-dd-all">◆ All specialties</a>
                   <p className="nav-dd-note">AI revenue-cycle agents tuned to your practice type - we banner the biggest revenue leak we automate for each.</p>
                 </div>
               </div>
             </div>
           </div>
-          {resources && <a href="/blog">Resources</a>}
+          {resources && <a href="/blog/">Resources</a>}
           <a href="https://platform.medxflow.ai/login" className="nav-platform">Platform</a>
           <a href="#cta">{t("nav.contact")}</a>
           <a href="/#faq">{t("nav.faq")}</a>
@@ -202,9 +202,9 @@ export function Nav({ resources = false } = {}) {
 
       {/* Mobile menu */}
       <div className="nav-mobile">
-        <a href="/products" onClick={closeMenu}>{t("nav.products")}</a>
-        <a href="/specialties" onClick={closeMenu}>Specialties</a>
-        {resources && <a href="/blog" onClick={closeMenu}>Resources</a>}
+        <a href="/products/" onClick={closeMenu}>{t("nav.products")}</a>
+        <a href="/specialties/" onClick={closeMenu}>Specialties</a>
+        {resources && <a href="/blog/" onClick={closeMenu}>Resources</a>}
         <a href="https://platform.medxflow.ai/login" onClick={closeMenu}>Platform</a>
         <a href="#cta" onClick={closeMenu}>{t("nav.contact")}</a>
         <a href="/#faq" onClick={closeMenu}>{t("nav.faq")}</a>
@@ -378,7 +378,7 @@ function Hero() {
             <h2 className="hero-alt-h">{t("hero.s4_h2a")}<br /><em>{t("hero.s4_h2b")}</em></h2>
             <p className="lead">{t("hero.s4_lead")}</p>
             <div className="btn-row">
-              <a className="btn btn-gorse" href="/products">{t("hero.s4_cta1")}</a>
+              <a className="btn btn-gorse" href="/products/">{t("hero.s4_cta1")}</a>
               <a className="btn btn-ghost" href="#cta">{t("hero.s4_cta2")}</a>
             </div>
             <div className="hero-note">{t("hero.s4_note")}</div>
@@ -432,7 +432,7 @@ function Hero() {
             <h2 className="hero-alt-h">{t("hero.s3_h2a")}<br /><em>{t("hero.s3_h2b")}</em></h2>
             <p className="lead">{t("hero.s3_lead")}</p>
             <div className="btn-row">
-              <a className="btn btn-gorse" href="/telehealth">{t("hero.s3_cta1")}</a>
+              <a className="btn btn-gorse" href="/telehealth/">{t("hero.s3_cta1")}</a>
               <a className="btn btn-ghost" href="#cta">{t("hero.s3_cta2")}</a>
             </div>
             <div className="hero-note">{t("hero.s3_note")}</div>
@@ -835,8 +835,8 @@ export function Footer() {
       <div className="wrap foot-in">
         <div className="brand brand-foot"><ShamrockMark size={24} variant="light" /><span>MedXFlow <b>Health</b></span></div>
         <div className="foot-links">
-          <a href="/about">About</a>
-          <a href="/trust">Trust &amp; Security</a>
+          <a href="/about/">About</a>
+          <a href="/trust/">Trust &amp; Security</a>
           <a href="tel:+12103969718">📞 (210) 396-9718</a>
           <a href="https://wa.me/14693128805?text=Hi%20MedXFlow%2C%20I%27d%20like%20to%20know%20more%20about%20your%20AI%20RCM%20platform." target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
           <a href="mailto:sales@medxflow.ai">sales@medxflow.ai</a>

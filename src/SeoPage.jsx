@@ -16,7 +16,7 @@ export default function SeoPage({ slug }) {
         <Nav resources />
 
       <nav className="pl-crumbs" aria-label="Breadcrumb">
-        <a href="/">Home</a><span>›</span><a href="/products">Products</a><span>›</span><span>{p.h1}</span>
+        <a href="/">Home</a><span>›</span><a href="/products/">Products</a><span>›</span><span>{p.h1}</span>
       </nav>
 
       <header className="pl-hero">
@@ -26,7 +26,7 @@ export default function SeoPage({ slug }) {
           <p className="pl-lede">{p.intro}</p>
           <div className="pl-cta-row">
             <a className="btn" href="/#cta">Request a demo</a>
-            <a className="btn btn-ghost" href="/ai-agents-rcm">Explore AI agents</a>
+            <a className="btn btn-ghost" href="/ai-agents-rcm/">Explore AI agents</a>
           </div>
         </div>
       </header>

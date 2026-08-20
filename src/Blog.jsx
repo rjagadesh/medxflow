@@ -37,13 +37,13 @@ export function BlogIndex() {
           <h1>RCM insights for medical practices</h1>
           <p className="blog-lede">Practical guides on denials, prior authorization, coding and the revenue cycle - written for the people who run billing, not just read about it.</p>
           <p style={{ marginTop: 10, display: "flex", gap: 18, flexWrap: "wrap" }}>
-            <a href="/glossary" style={{ color: "var(--spruce)", fontWeight: 700, textDecoration: "none" }}>📖 RCM Glossary - every term explained →</a>
-            <a href="/denial-codes" style={{ color: "var(--spruce)", fontWeight: 700, textDecoration: "none" }}>🔎 Denial Code Lookup - CARC &amp; RARC codes →</a>
+            <a href="/glossary/" style={{ color: "var(--spruce)", fontWeight: 700, textDecoration: "none" }}>📖 RCM Glossary - every term explained →</a>
+            <a href="/denial-codes/" style={{ color: "var(--spruce)", fontWeight: 700, textDecoration: "none" }}>🔎 Denial Code Lookup - CARC &amp; RARC codes →</a>
           </p>
         </header>
         <div className="blog-grid">
           {[...POSTS].sort((a, b) => b.date.localeCompare(a.date)).map((p) => (
-            <a key={p.slug} className="blog-card" href={`/blog/${p.slug}`}>
+            <a key={p.slug} className="blog-card" href={`/blog/${p.slug}/`}>
               <span className="blog-cat">{p.category}</span>
               <h2>{p.title}</h2>
               <p>{p.description}</p>
@@ -67,17 +67,17 @@ export function BlogPost({ slug }) {
   if (!p) {
     return (
       <Shell>
-        <main className="wrap blog-wrap"><p className="eyebrow">Not found</p><h1>That article doesn't exist</h1><p className="blog-lede"><a href="/blog">← Back to all resources</a></p></main>
+        <main className="wrap blog-wrap"><p className="eyebrow">Not found</p><h1>That article doesn't exist</h1><p className="blog-lede"><a href="/blog/">← Back to all resources</a></p></main>
       </Shell>
     );
   }
   return (
     <Shell>
       <main className="wrap blog-article">
-        <a href="/blog" className="blog-back">← All resources</a>
+        <a href="/blog/" className="blog-back">← All resources</a>
         <span className="blog-cat">{p.category}</span>
         <h1>{p.title}</h1>
-        <p className="blog-meta">By the <a href="/about">MedXFlow RCM team</a> · {fmtDate(p.date)} · {p.readMins} min read</p>
+        <p className="blog-meta">By the <a href="/about/">MedXFlow RCM team</a> · {fmtDate(p.date)} · {p.readMins} min read</p>
         {p.snippet && <p className="blog-snippet">{p.snippet}</p>}
         <p className="blog-intro">{p.intro}</p>
 
@@ -111,7 +111,7 @@ export function BlogPost({ slug }) {
           <div className="blog-author-mark"><b>Med<span>X</span>Flow</b></div>
           <div>
             <b>Written by the MedXFlow RCM team</b>
-            <p>RCM specialists building AI agents for the healthcare revenue cycle. <a href="/about">About MedXFlow</a>.</p>
+            <p>RCM specialists building AI agents for the healthcare revenue cycle. <a href="/about/">About MedXFlow</a>.</p>
           </div>
         </div>
 
@@ -119,7 +119,7 @@ export function BlogPost({ slug }) {
           <p className="eyebrow">Keep reading</p>
           <div className="blog-more-links">
             {POSTS.filter((o) => o.slug !== p.slug).slice(0, 6).map((o) => (
-              <a key={o.slug} href={`/blog/${o.slug}`}>{o.title} →</a>
+              <a key={o.slug} href={`/blog/${o.slug}/`}>{o.title} →</a>
             ))}
           </div>
         </div>

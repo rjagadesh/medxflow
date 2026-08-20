@@ -44,7 +44,7 @@ export default function ProductPage({ slug }) {
         <header className="pp-hero">
           <div className="wrap pp-hero-in">
             <Reveal>
-              <a href="/products" className="pp-back">← All products</a>
+              <a href="/products/" className="pp-back">← All products</a>
               <div className="pp-hero-ic">{p.icon}</div>
               <Eyebrow light>{p.eyebrow}</Eyebrow>
               <h1 className="h-light pp-h1">
@@ -55,7 +55,7 @@ export default function ProductPage({ slug }) {
               <p className="lead-light pp-tagline">{p.tagline}</p>
               <div className="pp-hero-cta">
                 <a href="#cta" className="btn btn-gorse" onClick={(e) => { e.preventDefault(); openDemo(); }}>Book a demo</a>
-                <a href="/products" className="btn btn-ghost">Explore the suite</a>
+                <a href="/products/" className="btn btn-ghost">Explore the suite</a>
               </div>
             </Reveal>
           </div>
@@ -151,7 +151,7 @@ export default function ProductPage({ slug }) {
             </Reveal>
             <div className="pp-related">
               {related.map((r) => (
-                <a key={r.slug} className="pp-rel-card" href={`/products/${r.slug}`}>
+                <a key={r.slug} className="pp-rel-card" href={`/products/${r.slug}/`}>
                   <span className="pp-rel-ic">{r.icon}</span>
                   <span className="pp-rel-body">
                     <b>{r.name}</b>
@@ -278,7 +278,7 @@ export function ProductsIndex() {
             <div className="pp-index-grid">
               {rcmProducts.map((r, i) => (
                 <Reveal key={r.slug} delay={(i % 3) * 90}>
-                  <a className="pp-index-card" href={`/products/${r.slug}`}>
+                  <a className="pp-index-card" href={`/products/${r.slug}/`}>
                     <div className="pp-index-top">
                       <span className="pp-index-ic">{r.icon}</span>
                       <span className="pp-index-step">Step {r.step}</span>
@@ -302,7 +302,7 @@ export function ProductsIndex() {
             <div className="pp-index-grid">
               {engagementProducts.map((r) => (
                 <Reveal key={r.slug}>
-                  <a className="pp-index-card" href={`/products/${r.slug}`}>
+                  <a className="pp-index-card" href={`/products/${r.slug}/`}>
                     <div className="pp-index-top">
                       <span className="pp-index-ic">{r.icon}</span>
                       <span className="pp-index-step">Engagement</span>
@@ -326,7 +326,7 @@ export function ProductsIndex() {
             <div className="pp-index-grid">
               {serviceProducts.map((r) => (
                 <Reveal key={r.slug}>
-                  <a className="pp-index-card pp-index-card-svc" href={`/products/${r.slug}`}>
+                  <a className="pp-index-card pp-index-card-svc" href={`/products/${r.slug}/`}>
                     <div className="pp-index-top">
                       <span className="pp-index-ic">{r.icon}</span>
                       <span className="pp-index-step">Human-led</span>

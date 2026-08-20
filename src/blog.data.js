@@ -14,7 +14,7 @@ export const POSTS = [
     category: "Denial Management",
     readMins: 7,
     keywords: ["reduce claim denials", "claim denial management", "denial rate", "medical billing denials"],
-    related: { label: "See MedXFlow Denial Management", href: "/products/denial-management" },
+    related: { label: "See MedXFlow Denial Management", href: "/products/denial-management/" },
     intro:
       "Claim denials are one of the biggest silent drains on a practice's revenue. Industry benchmarks put the average denial rate between 5% and 10%, and roughly two-thirds of denied claims are never reworked. For a small practice, that lost revenue is often the difference between a good month and a bad one. The good news: most denials are preventable, and you don't need a big team to fix them.",
     sections: [
@@ -74,7 +74,7 @@ export const POSTS = [
     category: "Prior Authorization",
     readMins: 6,
     keywords: ["prior authorization automation", "prior auth software", "automate prior authorization", "prior auth turnaround"],
-    related: { label: "See MedXFlow Eligibility & Prior Auth", href: "/products/eligibility-verification" },
+    related: { label: "See MedXFlow Eligibility & Prior Auth", href: "/products/eligibility-verification/" },
     intro:
       "Prior authorization is one of the most manual, time-consuming tasks in the revenue cycle - and one of the most expensive to get wrong. Staff spend hours on payer portals and phone calls, patients wait for care, and a missed auth almost always becomes a denial. Automation doesn't remove the payer requirement, but it removes most of the manual work around it.",
     sections: [
@@ -132,7 +132,7 @@ export const POSTS = [
     category: "Coding & Charge Capture",
     readMins: 6,
     keywords: ["what is DNFB", "DNFB backlog", "discharged not final billed", "coding backlog"],
-    related: { label: "See MedXFlow Medical Coding", href: "/products/charge-capture-coding" },
+    related: { label: "See MedXFlow Medical Coding", href: "/products/charge-capture-coding/" },
     intro:
       "DNFB - 'discharged not final billed' - is one of the clearest signals of trapped cash in a revenue cycle. When charts pile up waiting to be coded, the care has been delivered but the bill hasn't gone out, so revenue sits idle. A rising DNFB number almost always points to a coding bottleneck. Here's what it means and how to bring it down.",
     sections: [
@@ -184,7 +184,7 @@ export const POSTS = [
     category: "AI & Automation",
     readMins: 6,
     keywords: ["AI agents vs RPA", "RPA healthcare RCM", "AI agents revenue cycle", "RCM automation"],
-    related: { label: "See MedXFlow AI Agents for RCM", href: "/ai-agents-rcm" },
+    related: { label: "See MedXFlow AI Agents for RCM", href: "/ai-agents-rcm/" },
     intro:
       "\"Automation\" in healthcare RCM usually means one of two things: traditional RPA (robotic process automation) or newer AI agents. They sound similar and often get lumped together, but they behave very differently when a payer portal changes or a claim doesn't fit the script. Understanding the difference helps you pick the right tool - and set the right expectations.",
     sections: [
@@ -229,7 +229,7 @@ export const POSTS = [
     category: "Eligibility",
     readMins: 6,
     keywords: ["AI eligibility verification", "automated eligibility verification", "AI insurance verification", "eligibility automation"],
-    related: { label: "See MedXFlow Eligibility Verification", href: "/products/eligibility-verification" },
+    related: { label: "See MedXFlow Eligibility Verification", href: "/products/eligibility-verification/" },
     intro:
       "Eligibility is the first place claims go wrong - and the cheapest place to fix them. Verifying coverage before the visit stops denials that would otherwise surface weeks later. AI automates that check so it happens for every appointment, not just the ones staff have time for.",
     sections: [
@@ -268,7 +268,7 @@ export const POSTS = [
     category: "Accounts Receivable",
     readMins: 6,
     keywords: ["AI AR follow-up", "accounts receivable automation healthcare", "AI payer follow-up", "reduce AR days"],
-    related: { label: "See MedXFlow Denial Management", href: "/products/denial-management" },
+    related: { label: "See MedXFlow Denial Management", href: "/products/denial-management/" },
     intro:
       "Accounts receivable is where revenue goes to wait. Claims that aren't followed up on age, and aging claims get paid slower - or not at all. AR follow-up is high-volume, repetitive, and easy to fall behind on, which makes it a natural fit for automation.",
     sections: [
@@ -307,7 +307,7 @@ export const POSTS = [
     category: "Claims",
     readMins: 6,
     keywords: ["AI claims management", "healthcare claims automation", "claims processing automation", "clean claims"],
-    related: { label: "See MedXFlow Claims Submission", href: "/products/claims-submission" },
+    related: { label: "See MedXFlow Claims Submission", href: "/products/claims-submission/" },
     intro:
       "A clean claim gets paid the first time; a dirty one comes back as a denial or rejection and has to be reworked. Claims management is really about getting more claims right before they leave - and following up on the rest so nothing stalls. AI automates both sides.",
     sections: [
@@ -345,7 +345,7 @@ export const POSTS = [
     category: "Denial Management",
     readMins: 6,
     keywords: ["AI denial management", "denial classification", "automated denial appeals", "healthcare denial workflow"],
-    related: { label: "See MedXFlow Denial Management", href: "/products/denial-management" },
+    related: { label: "See MedXFlow Denial Management", href: "/products/denial-management/" },
     intro:
       "A denial isn't the end of a claim - it's a workflow. The practices that recover the most revenue treat every denial as two jobs: work this one, and prevent the next one. AI makes both practical at volume, where manual teams usually only manage the first.",
     sections: [
@@ -390,7 +390,7 @@ export const POSTS = [
     category: "Healthcare RCM",
     readMins: 7,
     keywords: ["healthcare revenue cycle management with AI", "AI in RCM", "AI revenue cycle management", "RCM AI"],
-    related: { label: "See MedXFlow AI Agents for RCM", href: "/ai-agents-rcm" },
+    related: { label: "See MedXFlow AI Agents for RCM", href: "/ai-agents-rcm/" },
     intro:
       "AI in the revenue cycle isn't one feature - it's automation applied across a chain of tasks that were previously manual. This overview walks through where AI fits, stage by stage, and what actually changes for the people doing the work.",
     sections: [
@@ -440,7 +440,7 @@ export const POSTS = [
     category: "Coding & Charge Capture",
     readMins: 6,
     keywords: ["medical coding automation", "AI medical coding", "computer-assisted coding", "coding automation"],
-    related: { label: "See MedXFlow Charge Capture & Coding", href: "/products/charge-capture-coding" },
+    related: { label: "See MedXFlow Charge Capture & Coding", href: "/products/charge-capture-coding/" },
     intro:
       "Coding is where clinical work becomes a billable claim - and where a surprising amount of revenue leaks. Automation doesn't replace certified coders; it removes the repetitive volume and catches errors early, so coders spend their expertise where it counts.",
     sections: [
@@ -479,7 +479,7 @@ export const POSTS = [
     category: "Patient Collections",
     readMins: 5,
     keywords: ["patient billing automation", "automated patient collections", "patient statements", "healthcare patient payments"],
-    related: { label: "See MedXFlow Patient Statements & Collections", href: "/products/patient-collections" },
+    related: { label: "See MedXFlow Patient Statements & Collections", href: "/products/patient-collections/" },
     intro:
       "As patients cover more of the bill, patient collections have become a bigger slice of practice revenue - and one of the hardest to chase. Automation makes patient billing consistent and less awkward, so you collect more without adding collections staff.",
     sections: [
@@ -517,7 +517,7 @@ export const POSTS = [
     category: "Buyer's Guide",
     readMins: 9,
     keywords: ["AI agents for revenue cycle management", "AI RCM vendor", "choose AI RCM software", "AI revenue cycle buyer's guide"],
-    related: { label: "See MedXFlow AI Agents for RCM", href: "/ai-agents-rcm" },
+    related: { label: "See MedXFlow AI Agents for RCM", href: "/ai-agents-rcm/" },
     intro:
       "\"AI agents for revenue cycle management\" is a crowded, fast-moving category, and the marketing sounds identical from vendor to vendor. This guide cuts through it: what these systems actually do, which workflows to automate first, how to evaluate a vendor honestly, and the specific questions that separate real capability from a demo. It's written to help you choose well - including whether MedXFlow is the right fit or not.",
     sections: [
@@ -586,7 +586,7 @@ export const POSTS = [
     category: "AI & Automation",
     readMins: 6,
     keywords: ["AI agents vs RCM software", "traditional RCM software", "AI revenue cycle software", "RCM automation software"],
-    related: { label: "See MedXFlow AI Agents for RCM", href: "/ai-agents-rcm" },
+    related: { label: "See MedXFlow AI Agents for RCM", href: "/ai-agents-rcm/" },
     intro:
       "Traditional RCM software and AI agents get marketed with the same words, but they do fundamentally different jobs. Understanding the difference tells you what you're actually buying - and what to look for in a demo.",
     sections: [
@@ -634,7 +634,7 @@ export const POSTS = [
     category: "Healthcare RCM",
     readMins: 7,
     keywords: ["in-house vs outsourced billing", "outsourced medical billing", "AI RCM vs outsourcing", "revenue cycle staffing"],
-    related: { label: "See MedXFlow Managed Billing", href: "/products/managed-billing" },
+    related: { label: "See MedXFlow Managed Billing", href: "/products/managed-billing/" },
     intro:
       "Every practice runs its revenue cycle one of three ways: an in-house team, an outsourced billing company, or automation - and increasingly, a mix. Each trades cost, control and scalability differently. Here's how to think about which fits you.",
     sections: [
@@ -674,7 +674,7 @@ export const POSTS = [
     description: "The 837 is the standard EDI file used to submit healthcare claims. Here is what it contains, how 837P, 837I and 837D differ, and how it travels to payers.",
     date: "2026-08-16", category: "Technical / EDI", readMins: 6,
     keywords: ["837 claim file", "EDI 837", "837P vs 837I", "healthcare claim format", "X12 837"],
-    related: { label: "See MedXFlow Claims Submission", href: "/products/claims-submission" },
+    related: { label: "See MedXFlow Claims Submission", href: "/products/claims-submission/" },
     snippet: "An 837 is the standard EDI (X12) electronic file format used to submit healthcare claims to payers. The 837P is for professional (physician) claims, the 837I for institutional (hospital) claims, and the 837D for dental. It carries patient, provider, diagnosis, procedure and charge data.",
     intro: "Behind every electronic claim is an 837 file. It is the format that carries a claim from your billing system, through a clearinghouse, to the payer. Understanding what is in it (and which variant you are sending) makes claim rejections much easier to diagnose.",
     sections: [
@@ -695,7 +695,7 @@ export const POSTS = [
     description: "The 270/271 is how electronic eligibility verification works. Here is what the 270 inquiry and 271 response contain and how real-time eligibility checks run.",
     date: "2026-08-16", category: "Technical / EDI", readMins: 5,
     keywords: ["270 271 transaction", "eligibility EDI", "real-time eligibility", "270 eligibility inquiry", "271 response"],
-    related: { label: "See MedXFlow Eligibility Verification", href: "/products/eligibility-verification" },
+    related: { label: "See MedXFlow Eligibility Verification", href: "/products/eligibility-verification/" },
     snippet: "The 270 is an EDI eligibility and benefit inquiry sent to a payer; the 271 is the payer's response confirming coverage, plan details, co-pays, deductibles and benefits. Together they are how eligibility verification happens electronically, often in real time.",
     intro: "When software verifies a patient's insurance in seconds, it is usually running a 270/271 transaction. It is the EDI standard behind real-time eligibility, and knowing what it returns explains why some benefit details are precise and others are not.",
     sections: [
@@ -716,7 +716,7 @@ export const POSTS = [
     description: "The 835 (ERA) is how payers tell you electronically how a claim was paid. Here is what it contains, how it differs from an EOB, and how auto-posting works.",
     date: "2026-08-17", category: "Technical / EDI", readMins: 5,
     keywords: ["835 ERA", "electronic remittance advice", "835 file", "ERA vs EOB", "auto posting"],
-    related: { label: "See MedXFlow Payment Posting", href: "/products/payment-posting" },
+    related: { label: "See MedXFlow Payment Posting", href: "/products/payment-posting/" },
     snippet: "The 835 is the EDI electronic remittance advice (ERA) a payer sends to explain how a claim was adjudicated: payments, adjustments, and denial codes (CARC/RARC). It lets payments post automatically with line-level reconciliation, far faster than manual EOB entry.",
     intro: "The 835 is the payment side of EDI. Where the 837 sends a claim out, the 835 comes back telling you exactly how each claim and line was paid, adjusted, or denied, and it is what makes automated payment posting possible.",
     sections: [
@@ -737,7 +737,7 @@ export const POSTS = [
     description: "HL7 and FHIR are healthcare data standards, but they work very differently. Here is what each is, how they compare, and why FHIR is driving newer interoperability.",
     date: "2026-08-17", category: "Technical / Interoperability", readMins: 6,
     keywords: ["HL7 vs FHIR", "FHIR healthcare", "HL7 v2", "healthcare interoperability", "FHIR API"],
-    related: { label: "See AI Agents for RCM", href: "/ai-agents-rcm" },
+    related: { label: "See AI Agents for RCM", href: "/ai-agents-rcm/" },
     snippet: "HL7 v2 is a long-standing messaging standard for exchanging clinical and administrative data between healthcare systems; FHIR is HL7's modern, web-API-based standard using REST and JSON. FHIR is easier to build on and is driving newer interoperability, including prior authorization.",
     intro: "If you work near healthcare integrations, you hear HL7 and FHIR constantly. They are related but very different, and the shift toward FHIR is changing how systems (including RCM automation) connect to EHRs and payers.",
     sections: [
@@ -758,7 +758,7 @@ export const POSTS = [
     description: "NCCI edits are CMS rules that cause bundling and unit denials. Here is what PTP edits and MUEs are, why they exist, and how to handle them correctly.",
     date: "2026-08-18", category: "Technical / Coding", readMins: 5,
     keywords: ["NCCI edits", "PTP edits", "MUE", "bundling denials", "correct coding initiative"],
-    related: { label: "See Charge Capture & Coding", href: "/products/charge-capture-coding" },
+    related: { label: "See Charge Capture & Coding", href: "/products/charge-capture-coding/" },
     snippet: "NCCI (National Correct Coding Initiative) edits are CMS rules that prevent improper code pairings and excessive units. PTP (procedure-to-procedure) edits stop two codes that should not be billed together, and MUEs cap the units allowed per code. They are a common source of bundling denials.",
     intro: "When a line comes back denied as not separately payable or bundled, an NCCI edit is often the reason. These are CMS coding rules, and knowing how they work tells you whether a modifier is appropriate or whether the denial should stand.",
     sections: [
@@ -779,7 +779,7 @@ export const POSTS = [
     description: "A technical look at how AI agents actually run revenue-cycle tasks: the model, the tools, the control loop, and where human review fits.",
     date: "2026-08-18", category: "Technical / AI", readMins: 6,
     keywords: ["how AI agents work", "AI agent architecture", "AI agents RCM technical", "LLM agents healthcare"],
-    related: { label: "See AI Agents for RCM", href: "/ai-agents-rcm" },
+    related: { label: "See AI Agents for RCM", href: "/ai-agents-rcm/" },
     snippet: "An AI agent in RCM combines a language model that reasons about a task, tools that let it act (read documents, call payer systems, query your PMS/EHR), and a control loop that plans, executes, checks results, and escalates exceptions to staff. It is goal-driven, not script-driven.",
     intro: "AI agent is used loosely, so here is a concrete, technical picture of what one actually is and how it runs a revenue-cycle task, versus older rule-based automation.",
     sections: [
@@ -801,7 +801,7 @@ export const POSTS = [
     description: "The 276/277 is how you check claim status electronically without payer portals. Here is what the 276 request and 277 response contain and why it powers AR follow-up.",
     date: "2026-08-18", category: "Technical / EDI", readMins: 5,
     keywords: ["276 277 transaction", "claim status EDI", "claim status inquiry", "automated claim status", "AR follow-up EDI"],
-    related: { label: "See MedXFlow Denial Management", href: "/products/denial-management" },
+    related: { label: "See MedXFlow Denial Management", href: "/products/denial-management/" },
     snippet: "The 276 is an EDI claim status request sent to a payer to ask where a claim stands; the 277 is the payer's response. Automating 276/277 lets you track claim status without logging into payer portals, which is central to efficient AR follow-up.",
     intro: "Chasing claim status by logging into payer portals is one of the biggest time sinks in AR follow-up. The 276/277 transaction is the electronic alternative, and automating it is how follow-up stops falling behind.",
     sections: [
@@ -822,7 +822,7 @@ export const POSTS = [
     description: "Can AI handle revenue cycle work under HIPAA? Here is what HIPAA requires of RCM automation, the role of the BAA, and what to check before trusting a vendor.",
     date: "2026-08-19", category: "Compliance & Security", readMins: 6,
     keywords: ["AI RCM HIPAA compliant", "HIPAA AI healthcare", "is AI HIPAA compliant", "RCM automation HIPAA"],
-    related: { label: "See MedXFlow Trust & Security", href: "/trust" },
+    related: { label: "See MedXFlow Trust & Security", href: "/trust/" },
     snippet: "AI in healthcare RCM can be HIPAA compliant, but the compliance depends on the vendor, not the technology. The vendor must handle PHI to HIPAA standards, sign a Business Associate Agreement (BAA), encrypt data, restrict access, and log every action. Always confirm these before sharing PHI.",
     intro: "AI agents that run the revenue cycle necessarily touch protected health information, so HIPAA applies. The question is not whether AI can be compliant, but whether a given vendor operates compliantly. Here is what to verify.",
     sections: [
@@ -843,7 +843,7 @@ export const POSTS = [
     description: "A BAA is the HIPAA contract every healthcare vendor that touches PHI must sign. Here is what it is, what it covers, and why it matters for RCM software.",
     date: "2026-08-19", category: "Compliance & Security", readMins: 5,
     keywords: ["what is a BAA", "business associate agreement", "HIPAA BAA", "BAA RCM vendor"],
-    related: { label: "See MedXFlow Trust & Security", href: "/trust" },
+    related: { label: "See MedXFlow Trust & Security", href: "/trust/" },
     snippet: "A Business Associate Agreement (BAA) is a HIPAA-required contract between a healthcare provider and a vendor that handles protected health information (PHI) on its behalf. It legally binds the vendor to safeguard PHI, defines permitted uses, and sets breach-notification duties.",
     intro: "If a vendor touches your patients' data, HIPAA requires a BAA before any PHI changes hands. It is one of the first things to confirm when evaluating any RCM or healthcare software.",
     sections: [
@@ -863,7 +863,7 @@ export const POSTS = [
     description: "SOC 2 is a security standard you will see from healthcare software vendors. Here is what SOC 2 Type II covers, how it differs from HIPAA, and why both matter.",
     date: "2026-08-19", category: "Compliance & Security", readMins: 5,
     keywords: ["SOC 2 healthcare", "SOC 2 Type II", "SOC 2 vs HIPAA", "SOC 2 vendor"],
-    related: { label: "See MedXFlow Trust & Security", href: "/trust" },
+    related: { label: "See MedXFlow Trust & Security", href: "/trust/" },
     snippet: "SOC 2 is an independent audit standard that evaluates how a vendor manages data security. SOC 2 Type II tests whether controls operate effectively over a period of time, across trust criteria like security, availability and confidentiality. It complements HIPAA rather than replacing it.",
     intro: "SOC 2 and HIPAA both come up when vetting healthcare software, and they are related but different. Understanding each tells you what a vendor's security claims actually mean.",
     sections: [
@@ -884,7 +884,7 @@ export const POSTS = [
     description: "When automation and AI agents handle claims and eligibility, they handle PHI. Here are the safeguards that keep protected health information secure in RCM automation.",
     date: "2026-08-19", category: "Compliance & Security", readMins: 5,
     keywords: ["PHI protection", "PHI security RCM", "protected health information automation", "healthcare data security"],
-    related: { label: "See MedXFlow Trust & Security", href: "/trust" },
+    related: { label: "See MedXFlow Trust & Security", href: "/trust/" },
     snippet: "PHI in RCM automation is protected through encryption in transit and at rest, least-privilege access controls, US data residency where required, complete audit logging of every action, and policies that prevent selling PHI or using it to train public models.",
     intro: "Automating the revenue cycle means software and AI agents work with protected health information. The safeguards below are what keep that data secure, and what to expect from any vendor that processes it.",
     sections: [
@@ -905,7 +905,7 @@ export const POSTS = [
     description: "A practical checklist of the security and compliance questions to ask before trusting a revenue cycle vendor with your patients' data.",
     date: "2026-08-19", category: "Compliance & Security", readMins: 5,
     keywords: ["RCM vendor security questions", "healthcare vendor security checklist", "vendor due diligence PHI", "RCM security"],
-    related: { label: "See MedXFlow Trust & Security", href: "/trust" },
+    related: { label: "See MedXFlow Trust & Security", href: "/trust/" },
     snippet: "Before trusting an RCM vendor with PHI, confirm: they will sign a BAA, data is encrypted in transit and at rest, access is least-privilege, every action is logged, data is stored in the US, they do not sell or train public models on your data, and they can describe their breach-notification process.",
     intro: "Choosing an RCM vendor means handing over patient data, so security due diligence matters. Here is a practical checklist to run through with any vendor before you sign.",
     sections: [

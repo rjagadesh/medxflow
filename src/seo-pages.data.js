@@ -49,11 +49,11 @@ export const SEO_PAGES = [
       },
     ],
     related: [
-      { label: "AI Agents for Healthcare RCM", href: "/ai-agents-rcm" },
-      { label: "Eligibility Verification", href: "/products/eligibility-verification" },
-      { label: "Prior Authorization", href: "/products/pre-authorization" },
-      { label: "Denial Management", href: "/products/denial-management" },
-      { label: "Claims Submission", href: "/products/claims-submission" },
+      { label: "AI Agents for Healthcare RCM", href: "/ai-agents-rcm/" },
+      { label: "Eligibility Verification", href: "/products/eligibility-verification/" },
+      { label: "Prior Authorization", href: "/products/pre-authorization/" },
+      { label: "Denial Management", href: "/products/denial-management/" },
+      { label: "Claims Submission", href: "/products/claims-submission/" },
     ],
     faq: [
       { q: "What does healthcare RCM automation include?", a: "It spans the whole revenue cycle: eligibility and benefits verification, prior authorization, charge capture and coding, claims submission, payment posting, denial management, and patient statements and collections. MedXFlow automates these stages and connects them into one flow." },
@@ -93,10 +93,10 @@ export const SEO_PAGES = [
       },
     ],
     related: [
-      { label: "AI Agents for Healthcare RCM", href: "/ai-agents-rcm" },
+      { label: "AI Agents for Healthcare RCM", href: "/ai-agents-rcm/" },
       { label: "Healthcare RCM Automation", href: "/healthcare-rcm-automation" },
-      { label: "Denial Management", href: "/products/denial-management" },
-      { label: "Managed Billing Services", href: "/products/managed-billing" },
+      { label: "Denial Management", href: "/products/denial-management/" },
+      { label: "Managed Billing Services", href: "/products/managed-billing/" },
     ],
     faq: [
       { q: "Can MedXFlow work across multiple clients?", a: "Yes - the agents apply each client's rules and payers, so a billing company can automate the same workflows consistently across many accounts." },
@@ -135,10 +135,10 @@ export const SEO_PAGES = [
       },
     ],
     related: [
-      { label: "AI Agents for Healthcare RCM", href: "/ai-agents-rcm" },
+      { label: "AI Agents for Healthcare RCM", href: "/ai-agents-rcm/" },
       { label: "Healthcare RCM Automation", href: "/healthcare-rcm-automation" },
-      { label: "Reporting & Analytics", href: "/products/reporting-analytics" },
-      { label: "Denial Management", href: "/products/denial-management" },
+      { label: "Reporting & Analytics", href: "/products/reporting-analytics/" },
+      { label: "Denial Management", href: "/products/denial-management/" },
     ],
     faq: [
       { q: "How does MedXFlow help an RCM company or MSO?", a: "It provides one AI automation layer across every practice you manage - automating eligibility, authorization, coding, claims and denials, with consistent quality and audit trails, so you scale throughput without scaling headcount." },
@@ -177,10 +177,10 @@ export const SEO_PAGES = [
       },
     ],
     related: [
-      { label: "AI Agents for Healthcare RCM", href: "/ai-agents-rcm" },
+      { label: "AI Agents for Healthcare RCM", href: "/ai-agents-rcm/" },
       { label: "Healthcare RCM Automation", href: "/healthcare-rcm-automation" },
-      { label: "Eligibility Verification", href: "/products/eligibility-verification" },
-      { label: "Managed Billing Services", href: "/products/managed-billing" },
+      { label: "Eligibility Verification", href: "/products/eligibility-verification/" },
+      { label: "Managed Billing Services", href: "/products/managed-billing/" },
     ],
     faq: [
       { q: "Is MedXFlow only for large groups?", a: "No - it's designed to help lean billing teams at small and mid-size physician practices keep the revenue cycle current without adding headcount." },

@@ -65,14 +65,14 @@ export default function DenialRateCalculator() {
             <h2>How to reduce your denial rate</h2>
             <p>Fix the top causes at the source: verify eligibility before the visit, secure prior authorizations, scrub coding for medical-necessity mismatches, and work denials fast while tracking root cause. Most denials come from a few repeatable, preventable issues.</p>
             <div className="calc-links">
-              <a href="/blog/reduce-claim-denials-small-practice">How to reduce claim denials →</a>
-              <a href="/denial-codes">Denial code lookup →</a>
+              <a href="/blog/reduce-claim-denials-small-practice/">How to reduce claim denials →</a>
+              <a href="/denial-codes/">Denial code lookup →</a>
             </div>
           </section>
 
           <div className="calc-cta">
             <p>MedXFlow AI agents catch denials at the source and work the rest by reason code.</p>
-            <a className="btn" href="/products/denial-management">See MedXFlow Denial Management →</a>
+            <a className="btn" href="/products/denial-management/">See MedXFlow Denial Management →</a>
           </div>
         </main>
         <Footer />

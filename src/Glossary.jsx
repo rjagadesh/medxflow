@@ -34,7 +34,7 @@ export function GlossaryIndex() {
         </header>
         <div className="gl-grid">
           {sorted.map((t) => (
-            <a key={t.slug} className="gl-card" href={`/glossary/${t.slug}`}>
+            <a key={t.slug} className="gl-card" href={`/glossary/${t.slug}/`}>
               <b>{t.term}</b>
               <span>{t.def}</span>
             </a>
@@ -49,13 +49,13 @@ export function GlossaryTerm({ slug }) {
   const t = findTerm(slug);
   useEffect(() => { if (t) { document.title = `${t.term} - RCM Glossary · MedXFlow`; window.scrollTo(0, 0); } }, [t]);
   if (!t) {
-    return <Shell><main className="wrap gl-article"><p className="eyebrow">Not found</p><h1>Term not found</h1><p><a href="/glossary">← Back to the glossary</a></p></main></Shell>;
+    return <Shell><main className="wrap gl-article"><p className="eyebrow">Not found</p><h1>Term not found</h1><p><a href="/glossary/">← Back to the glossary</a></p></main></Shell>;
   }
   const seeTerms = (t.see || []).map(findTerm).filter(Boolean);
   return (
     <Shell>
       <main className="wrap gl-article">
-        <nav className="gl-crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>›</span><a href="/glossary">Glossary</a><span>›</span><span>{t.term}</span></nav>
+        <nav className="gl-crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>›</span><a href="/glossary/">Glossary</a><span>›</span><span>{t.term}</span></nav>
         <p className="eyebrow">RCM Glossary</p>
         <h1>{t.term}</h1>
         <p className="gl-def">{t.def}</p>
@@ -71,12 +71,12 @@ export function GlossaryTerm({ slug }) {
           <div className="gl-see">
             <p className="eyebrow">Related terms</p>
             <div className="gl-see-links">
-              {seeTerms.map((s) => <a key={s.slug} href={`/glossary/${s.slug}`}>{s.term} →</a>)}
+              {seeTerms.map((s) => <a key={s.slug} href={`/glossary/${s.slug}/`}>{s.term} →</a>)}
             </div>
           </div>
         )}
 
-        <p className="gl-back"><a href="/glossary">← All RCM terms</a></p>
+        <p className="gl-back"><a href="/glossary/">← All RCM terms</a></p>
       </main>
     </Shell>
   );

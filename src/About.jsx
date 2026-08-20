@@ -30,7 +30,7 @@ export default function About() {
           <section className="ab-sec">
             <h2>Our approach and expertise</h2>
             <p>MedXFlow is built around how the revenue cycle actually works. Each agent maps to a real RCM stage, applies payer-specific rules, and is designed for the constant change in payer requirements that breaks brittle, script-based automation. It is AI backed by humans: agents handle the repetitive volume, and staff own the judgment calls, with every action documented, assigned and auditable.</p>
-            <p>We publish practical <a href="/blog">RCM guides</a>, a plain-English <a href="/glossary">revenue cycle glossary</a>, and a <a href="/denial-codes">denial code lookup</a> because we believe the people who run billing should be able to understand and trust the tools that support them.</p>
+            <p>We publish practical <a href="/blog/">RCM guides</a>, a plain-English <a href="/glossary/">revenue cycle glossary</a>, and a <a href="/denial-codes/">denial code lookup</a> because we believe the people who run billing should be able to understand and trust the tools that support them.</p>
           </section>
 
           <section className="ab-sec">

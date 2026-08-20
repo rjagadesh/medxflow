@@ -45,7 +45,7 @@ function blogPostBody(post) {
 }
 function blogIndexBody() {
   return `<section><h1>RCM insights for medical practices</h1>` +
-    POSTS.map((post) => `<article><h2><a href="/blog/${post.slug}">${esc(post.title)}</a></h2>${p(post.description)}</article>`).join("") +
+    POSTS.map((post) => `<article><h2><a href="/blog/${post.slug}/">${esc(post.title)}</a></h2>${p(post.description)}</article>`).join("") +
     `</section>`;
 }
 function seoPageBody(pg) {
@@ -58,20 +58,20 @@ function seoPageBody(pg) {
 function glossaryIndexBody() {
   return `<section><h1>Revenue Cycle Management glossary</h1>` +
     p("Plain-English definitions of the RCM, coding and billing terms that run your revenue cycle.") +
-    [...TERMS].sort((a, b) => a.term.localeCompare(b.term)).map((t) => `<article><h2><a href="/glossary/${t.slug}">${esc(t.term)}</a></h2>${p(t.def)}</article>`).join("") +
+    [...TERMS].sort((a, b) => a.term.localeCompare(b.term)).map((t) => `<article><h2><a href="/glossary/${t.slug}/">${esc(t.term)}</a></h2>${p(t.def)}</article>`).join("") +
     `</section>`;
 }
 function glossaryTermBody(t) {
   return `<article><h1>${esc(t.term)}</h1>${p(t.def)}` +
     t.body.map(p).join("") +
     (t.related ? `<p><a href="${t.related.href}">${esc(t.related.label)}</a></p>` : "") +
-    (t.see?.length ? `<nav><h2>Related terms</h2>${t.see.map((s) => `<a href="/glossary/${s}">${esc(s.replace(/-/g, " "))}</a>`).join("")}</nav>` : "") +
+    (t.see?.length ? `<nav><h2>Related terms</h2>${t.see.map((s) => `<a href="/glossary/${s}/">${esc(s.replace(/-/g, " "))}</a>`).join("")}</nav>` : "") +
     `</article>`;
 }
 function denialIndexBody() {
   return `<section><h1>Medical claim denial codes, explained</h1>` +
     p("Look up a CARC or RARC denial code to see what it means, why it happens, and how to fix it.") +
-    CODES.map((c) => `<article><h2><a href="/denial-codes/${c.slug}">${esc(c.code)}</a></h2>${p(c.meaning)}</article>`).join("") +
+    CODES.map((c) => `<article><h2><a href="/denial-codes/${c.slug}/">${esc(c.code)}</a></h2>${p(c.meaning)}</article>`).join("") +
     `</section>`;
 }
 function denialCodeBody(c) {
@@ -80,7 +80,7 @@ function denialCodeBody(c) {
     h2("Official description") + p(c.official) +
     h2("Common cause") + p(c.cause) +
     h2("How to fix it") + p(c.fix) +
-    `<p><a href="/products/denial-management">See MedXFlow Denial Management</a></p>` +
+    `<p><a href="/products/denial-management/">See MedXFlow Denial Management</a></p>` +
     `</article>`;
 }
 function aiAgentsBody() {
@@ -98,13 +98,13 @@ function aiAgentsBody() {
 function productsIndexBody() {
   return `<section><h1>MedXFlow products: the whole revenue cycle, one platform</h1>` +
     p("MedXFlow's platform covers the entire revenue cycle in one place: scheduling, eligibility and benefits verification, prior authorization, patient check-in, charge capture and coding, claims submission and follow-up, payment posting, denial management, and patient collections - plus a human-led managed billing team when you would rather hand it over.") +
-    PRODUCTS.map((x) => `<article><h2><a href="/products/${x.slug}">${esc(x.name)}</a></h2>${p(x.tagline)}</article>`).join("") +
+    PRODUCTS.map((x) => `<article><h2><a href="/products/${x.slug}/">${esc(x.name)}</a></h2>${p(x.tagline)}</article>`).join("") +
     `</section>`;
 }
 function specialtiesIndexBody() {
   return `<section><h1>AI agents for the revenue cycle, tuned to your specialty</h1>` +
     p("MedXFlow provides AI revenue cycle management tuned to each specialty - including medical spas, dental, mental and behavioral health, dermatology, physical therapy, cardiology, orthopedics and primary care. The AI agents automate eligibility, prior authorization, coding and denials around the billing rules and payer mix specific to your practice type.") +
-    SPECIALTIES.map((s) => `<article><h2><a href="/specialties/${s.slug}">${esc(s.name)}</a></h2>${p(s.tagline)}</article>`).join("") +
+    SPECIALTIES.map((s) => `<article><h2><a href="/specialties/${s.slug}/">${esc(s.name)}</a></h2>${p(s.tagline)}</article>`).join("") +
     `</section>`;
 }
 function denialBenchmarksBody() {
@@ -180,7 +180,7 @@ const routes = [
   },
   { path: "/products", title: "Products · MedXFlow", desc: "The connected stages of Revenue Cycle Management, plus VoIP, telehealth and a human-led managed billing team - one platform for the whole practice.", body: productsIndexBody() },
   ...PRODUCTS.map((p) => ({
-    path: `/products/${p.slug}`, title: `${p.name} · MedXFlow`, desc: p.tagline,
+    path: `/products/${p.slug}/`, title: `${p.name} · MedXFlow`, desc: p.tagline,
     jsonld: serviceLd({
       name: p.name, serviceType: "Healthcare revenue cycle management", url: `${ORIGIN}/products/${p.slug}/`,
       description: p.tagline, crumbs: [["Home", "/"], ["Products", "/products/"], [p.name, `/products/${p.slug}/`]],
@@ -188,14 +188,14 @@ const routes = [
   })),
   { path: "/specialties", title: "Specialties · AI agents by practice type · MedXFlow", desc: "AI revenue-cycle agents tuned to your specialty - MedSpa, dental, mental health, dermatology, physical therapy, cardiology, orthopedics and primary care.", body: specialtiesIndexBody() },
   ...SPECIALTIES.map((s) => ({
-    path: `/specialties/${s.slug}`, title: `${s.name} · AI agents for the revenue cycle · MedXFlow`, desc: s.tagline,
+    path: `/specialties/${s.slug}/`, title: `${s.name} · AI agents for the revenue cycle · MedXFlow`, desc: s.tagline,
     jsonld: serviceLd({
       name: `${s.name} revenue cycle management`, serviceType: "Healthcare revenue cycle management", url: `${ORIGIN}/specialties/${s.slug}/`,
       description: s.tagline, crumbs: [["Home", "/"], ["Specialties", "/specialties/"], [s.name, `/specialties/${s.slug}/`]],
     }),
   })),
   { path: "/blog", title: "Resources · RCM insights for medical practices · MedXFlow", desc: "Practical guides on claim denials, prior authorization, coding and the healthcare revenue cycle - for the people who run medical billing.", body: blogIndexBody() },
-  ...POSTS.map((p) => ({ path: `/blog/${p.slug}`, title: `${p.title} · MedXFlow`, desc: p.description, article: p, body: blogPostBody(p) })),
+  ...POSTS.map((p) => ({ path: `/blog/${p.slug}/`, title: `${p.title} · MedXFlow`, desc: p.description, article: p, body: blogPostBody(p) })),
   {
     path: "/ai-agents-rcm",
     title: "AI Agents for Healthcare RCM | MedXFlow",
@@ -213,7 +213,7 @@ const routes = [
   },
   { path: "/glossary", title: "RCM Glossary · Revenue cycle terms explained · MedXFlow", desc: "Plain-English definitions of revenue cycle management, medical coding and billing terms - DNFB, CARC codes, days in A/R, prior authorization and more.", body: glossaryIndexBody() },
   ...TERMS.map((t) => ({
-    path: `/glossary/${t.slug}`,
+    path: `/glossary/${t.slug}/`,
     title: `${t.term} - RCM Glossary | MedXFlow`,
     desc: t.def,
     body: glossaryTermBody(t),
@@ -282,7 +282,7 @@ const routes = [
     }),
   },
   ...CODES.map((c) => ({
-    path: `/denial-codes/${c.slug}`,
+    path: `/denial-codes/${c.slug}/`,
     title: `Denial Code ${c.code} - What It Means & How to Fix It | MedXFlow`,
     desc: `${c.code}: ${c.meaning}`.slice(0, 155),
     body: denialCodeBody(c),

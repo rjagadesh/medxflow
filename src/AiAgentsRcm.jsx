@@ -29,7 +29,7 @@ export default function AiAgentsRcm() {
           </AnswerBox>
           <div className="pl-cta-row">
             <a className="btn" href="/#cta">Book a free demo</a>
-            <a className="btn btn-ghost" href="/products">See all products</a>
+            <a className="btn btn-ghost" href="/products/">See all products</a>
           </div>
         </div>
       </header>
@@ -90,10 +90,10 @@ export default function AiAgentsRcm() {
         <section className="pl-sec pl-read">
           <h2>Go deeper</h2>
           <div className="pl-read-links">
-            <a href="/blog/reduce-claim-denials-small-practice">How to reduce claim denials in a small practice →</a>
-            <a href="/blog/prior-authorization-automation-guide">Prior authorization automation: a practical guide →</a>
-            <a href="/blog/what-is-dnfb-clear-coding-backlog">What is DNFB, and how to clear a coding backlog →</a>
-            <a href="/rcm-denial-benchmarks">RCM denial benchmarks: claim denial rates and statistics →</a>
+            <a href="/blog/reduce-claim-denials-small-practice/">How to reduce claim denials in a small practice →</a>
+            <a href="/blog/prior-authorization-automation-guide/">Prior authorization automation: a practical guide →</a>
+            <a href="/blog/what-is-dnfb-clear-coding-backlog/">What is DNFB, and how to clear a coding backlog →</a>
+            <a href="/rcm-denial-benchmarks/">RCM denial benchmarks: claim denial rates and statistics →</a>
           </div>
         </section>
 

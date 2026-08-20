@@ -96,11 +96,11 @@ export default function RcmDenialBenchmarks() {
             <h2>How AI agents reduce denials</h2>
             <p>
               Because most denials are avoidable and front-loaded, the highest-leverage fix is catching issues
-              before the claim goes out. MedXFlow runs <a href="/ai-agents-rcm">AI agents for the revenue cycle</a> that
+              before the claim goes out. MedXFlow runs <a href="/ai-agents-rcm/">AI agents for the revenue cycle</a> that
               verify eligibility, secure prior authorization, and scrub coding for medical-necessity mismatches at the
               point of service, then work any denials that do occur while tracking root cause. See the
-              interactive <a href="/denial-rate-calculator">denial rate calculator</a> to estimate your own exposure,
-              or the <a href="/denial-codes">denial code lookup</a> to decode a specific CARC or RARC code.
+              interactive <a href="/denial-rate-calculator/">denial rate calculator</a> to estimate your own exposure,
+              or the <a href="/denial-codes/">denial code lookup</a> to decode a specific CARC or RARC code.
             </p>
           </section>
 
