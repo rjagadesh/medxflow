@@ -14,6 +14,38 @@ export const CATEGORIES = {
 
 export const PRODUCTS = [
   {
+    slug: "credentialing",
+    category: "rcm",
+    step: 0,
+    icon: "🪪",
+    eyebrow: "RCM · Foundation · Provider credentialing & enrollment",
+    name: "Credentialing & Provider Enrollment",
+    h1a: "Get providers enrolled,",
+    h1b: "so every claim can be paid.",
+    tagline:
+      "Enroll and credential your providers with every payer, track each application to approval, and stay ahead of re-credentialing and expirables - so nothing bills under a lapsed number.",
+    overview:
+      "You cannot collect for a provider a payer has not enrolled. MedXFlow credentialing manages the whole lifecycle: initial payer enrollment, CAQH and PECOS profile upkeep, primary-source verification, and the re-credentialing and expirable deadlines that quietly stop payments when they are missed. The AI agent prepares and submits applications, chases payers for status, and flags anything at risk - so providers go live faster and stay billable.",
+    features: [
+      ["📇", "Payer enrollment", "Prepare and submit enrollment applications across your full payer mix - commercial, Medicare and Medicaid - from one place."],
+      ["🗂", "CAQH & profile upkeep", "Keep CAQH, PECOS and payer profiles complete and attested, so applications aren't held up by stale or missing data."],
+      ["📡", "Status tracking & follow-up", "Every application is tracked to approval, with the agent chasing payers for status instead of your staff sitting on hold."],
+      ["⏰", "Re-credentialing & expirables", "Licenses, DEA, board certifications and re-credentialing dates are monitored and surfaced well before they lapse."],
+    ],
+    steps: [
+      ["Provider & documents intake", "Collect each provider's licenses, education, work history and identifiers once, into a single reusable profile."],
+      ["Applications submitted & tracked", "Enrollment and credentialing applications go to each payer and are tracked all the way to approval."],
+      ["Live and monitored", "Approved enrollments post to the record, and re-credentialing and expirable dates are watched from then on."],
+    ],
+    benefits: [
+      "New providers start billing sooner, with less revenue lost at onboarding",
+      "No claims denied or delayed for enrollment or a lapsed credential",
+      "CAQH, PECOS and payer profiles kept current automatically",
+      "Every license, certification and re-credentialing date tracked and auditable",
+    ],
+    stat: { n: 90, suffix: " days", label: "typical wait for a new provider to be payer-ready - cut down by automated submission and follow-up" },
+  },
+  {
     slug: "pre-registration-scheduling",
     category: "rcm",
     step: 1,

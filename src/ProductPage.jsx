@@ -189,7 +189,10 @@ const RLC_SHORT = {
   6: "Claims", 7: "Payment Posting", 8: "Denials", 9: "Collections", 10: "Analytics",
 };
 function RcmLifecycle() {
-  const nodes = rcmProducts;
+  // The animated timeline shows the numbered patient-encounter cycle (steps
+  // 1-10). Credentialing (step 0) is a foundational prerequisite, shown as a
+  // card in the grid rather than a node on the lifecycle.
+  const nodes = rcmProducts.filter((p) => p.step > 0);
   const N = nodes.length;
   const Li = (i) => +(4 + i * (92 / (N - 1))).toFixed(2); // left %  → 4..96
   const Ai = (i) => 6 + i * 9;                             // arrival % → 6..78
@@ -273,7 +276,7 @@ export function ProductsIndex() {
           <div className="wrap">
             <Reveal>
               <Eyebrow>Revenue Cycle Management</Eyebrow>
-              <h2>{rcmProducts.length} stages, end to end</h2>
+              <h2>The revenue cycle, from credentialing to cash</h2>
             </Reveal>
             <div className="pp-index-grid">
               {rcmProducts.map((r, i) => (
@@ -281,7 +284,7 @@ export function ProductsIndex() {
                   <a className="pp-index-card" href={`/products/${r.slug}/`}>
                     <div className="pp-index-top">
                       <span className="pp-index-ic">{r.icon}</span>
-                      <span className="pp-index-step">Step {r.step}</span>
+                      <span className="pp-index-step">{r.step ? `Step ${r.step}` : "Foundation"}</span>
                     </div>
                     <h3>{r.name}</h3>
                     <p>{r.tagline}</p>

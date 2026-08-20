@@ -5,6 +5,88 @@
 
 export const POSTS = [
   {
+    slug: "ai-agents-provider-credentialing",
+    snippet: "AI agents support provider credentialing by preparing and submitting payer enrollment and credentialing applications, keeping CAQH and PECOS profiles current, tracking each application to approval, and monitoring re-credentialing and expirable dates - so new providers become billable faster and no claim is filed under a lapsed credential.",
+    title: "How AI Agents Support Provider Credentialing and Payer Enrollment",
+    description:
+      "How AI agents speed up provider credentialing and payer enrollment - preparing applications, tracking status, keeping CAQH current, and monitoring re-credentialing so providers stay billable.",
+    date: "2026-08-20",
+    category: "Credentialing",
+    readMins: 8,
+    keywords: ["provider credentialing", "credentialing automation", "payer enrollment", "AI agents credentialing", "medical credentialing software"],
+    related: { label: "See MedXFlow Credentialing & Provider Enrollment", href: "/products/credentialing/" },
+    intro:
+      "Credentialing is the least visible part of the revenue cycle and one of the most expensive to get wrong. Until a payer has enrolled and credentialed a provider, every claim for that provider can be delayed, denied or paid out of network, and the clock on that lost revenue starts the day the provider is ready to see patients. Credentialing is also slow, paperwork-heavy and easy to let slip, which makes it a natural fit for AI agents. Here is what the work actually involves and where an agent takes the load off your team.",
+    sections: [
+      {
+        h: "What provider credentialing actually involves",
+        p: [
+          "Credentialing is the process of verifying a provider's qualifications - education, training, licensure, board certification, work history and malpractice history - and enrolling them with each payer so their claims can be paid. It is not one task but a sequence: gathering and verifying documents, completing a CAQH profile, submitting an application to every payer, and then following that application until the payer issues an effective date.",
+          "It also does not end at approval. Licenses, DEA registrations, board certifications and the payer credential itself all expire, and each payer requires re-credentialing on its own cycle, typically every two to three years. Miss one of those dates and a provider who was billing yesterday can be non-par today.",
+        ],
+      },
+      {
+        h: "Where the delays and revenue leaks come from",
+        p: [
+          "Credentialing a new provider commonly takes 90 to 120 days, and most of that time is spent waiting on and chasing payers, not doing anything a person needs to think about. Every week of delay is a week the provider is seeing patients whose claims cannot be cleanly billed.",
+          "The leaks are predictable: applications held up by an incomplete or out-of-date CAQH profile, a single missing document, a payer that never responded and was never followed up, or an expirable that lapsed because no one was watching the calendar. None of these are hard problems. They are attention problems, which is exactly what an agent is good at.",
+        ],
+      },
+      {
+        h: "How AI agents support credentialing",
+        p: [
+          "An AI credentialing agent carries the repetitive, deadline-driven work end to end, and hands the judgment calls to your team. In practice that means five things:",
+          "Intake and profile building: the agent collects a provider's licenses, education, work history and identifiers once, into a single reusable profile, and flags anything missing before it becomes a rejection.",
+          "Application preparation and submission: it prepares and submits enrollment and credentialing applications across your full payer mix - commercial, Medicare and Medicaid - reusing the profile rather than re-keying the same data into every form.",
+          "Status tracking and follow-up: every application is tracked to approval, with the agent checking payer portals and chasing status instead of a coordinator sitting on hold.",
+          "CAQH and PECOS upkeep: it keeps CAQH, PECOS and payer profiles complete and attested, so applications are not held up by stale data or a missed re-attestation.",
+          "Re-credentialing and expirables: it monitors licenses, DEA, board certifications and each payer's re-credentialing cycle, and surfaces anything approaching its deadline well before it lapses.",
+        ],
+      },
+      {
+        h: "Credentialing and payer enrollment are not the same thing",
+        p: [
+          "The two terms are often used interchangeably, but they are distinct steps. Credentialing is the verification of the provider's qualifications. Payer enrollment (sometimes called provider enrollment) is registering that verified provider with a specific payer so claims can be submitted and paid. A provider can be credentialed and still not be enrolled with a given plan, which is a common reason claims are unexpectedly denied or paid out of network. An agent tracks both, per payer, so there are no gaps.",
+        ],
+      },
+      {
+        h: "What stays with your team",
+        p: [
+          "Credentialing carries real compliance weight, so the agent does not act unsupervised. It prepares, submits, tracks and alerts, while your credentialing specialists review exceptions, make judgment calls on unusual histories, and own the relationship with difficult payers. Every action the agent takes is documented and auditable, which also makes payer audits and delegated-credentialing reviews far less painful.",
+        ],
+      },
+      {
+        h: "Why credentialing belongs in the revenue cycle",
+        p: [
+          "Credentialing sits at the very front of the revenue cycle, before scheduling, eligibility or claims. If it is slow or lapses, everything downstream inherits the problem: clean claims get denied, cash slips, and a provider's ramp-up is wasted. Automating credentialing is how a practice makes sure the rest of its revenue cycle work is not undermined at the source.",
+          "This is the same model MedXFlow uses across the revenue cycle: AI agents handle the repetitive, high-volume work - from credentialing through eligibility, coding, claims and denials - and your team stays in control of the exceptions.",
+        ],
+      },
+    ],
+    faq: [
+      {
+        q: "How long does provider credentialing take?",
+        a: "Credentialing a new provider with a payer commonly takes 90 to 120 days, most of which is spent waiting on and following up with payers. Automating application submission and status follow-up shortens the wait by removing the delays that come from incomplete profiles and un-chased applications.",
+      },
+      {
+        q: "Can provider credentialing be automated?",
+        a: "The repetitive parts can. AI agents prepare and submit applications, keep CAQH and PECOS profiles current, track each application to approval, and monitor re-credentialing and expirable dates. Compliance judgment and unusual cases stay with credentialing specialists, with every automated action documented and auditable.",
+      },
+      {
+        q: "What is the difference between credentialing and payer enrollment?",
+        a: "Credentialing verifies a provider's qualifications - licensure, education, board certification and history. Payer enrollment registers that verified provider with a specific payer so their claims can be paid. A provider can be credentialed but not yet enrolled with a given plan, which is a common reason claims are denied or paid out of network.",
+      },
+      {
+        q: "What is CAQH and why does it matter for credentialing?",
+        a: "CAQH is a widely used database where providers maintain a single credentialing profile that payers draw from. If the CAQH profile is incomplete or the periodic re-attestation is missed, payer applications stall. Keeping it current is one of the highest-leverage things a credentialing agent does.",
+      },
+      {
+        q: "Does AI replace credentialing specialists?",
+        a: "No. It removes the repetitive submission, follow-up and deadline-tracking work so specialists can focus on exceptions, judgment calls and payer relationships. The agent works continuously and never forgets a re-credentialing date; the specialist stays accountable for the outcome.",
+      },
+    ],
+  },
+  {
     slug: "reduce-claim-denials-small-practice",
     snippet: "To reduce claim denials in a small practice, measure your denial rate by reason code, verify eligibility and prior authorization before the visit, scrub coding for medical-necessity mismatches, and work denials fast while tracking root cause. Most denials come from a few fixable sources.",
     title: "How to Reduce Claim Denials in a Small Medical Practice",
