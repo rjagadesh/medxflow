@@ -93,13 +93,6 @@ export default function RoiCalculator() {
                   <SliderRow icon="👤" label="Number of Providers" hint="Total providers / clinicians in your group"
                     value={providers} unit="providers" min={1} max={25} minLabel="1" maxLabel="25"
                     onChange={(n) => { setProviders(n); if (!isBpo) setFte(fteForPlan(n)); }} disabled={isBpo} />
-                  <div className="r2-plan">
-                    <span className="r2-plan-star">★</span>
-                    <div>
-                      <div className="r2-plan-l"><b>Suggested plan: {r.plan.name}</b> · {usd(r.plan.fixed)}/mo · {r.plan.mxu.toLocaleString()} MXU included</div>
-                      <div className="r2-plan-b">Built for {r.plan.built}</div>
-                    </div>
-                  </div>
                   <label className="r2-check">
                     <input type="checkbox" checked={isBpo} onChange={(e) => {
                       const on = e.target.checked; setIsBpo(on);
@@ -162,6 +155,14 @@ export default function RoiCalculator() {
               {/* RIGHT: summary */}
               <div className="r2-summary">
                 <div className="r2-sum-t">Your ROI Summary</div>
+
+                <div className="r2-plan">
+                  <span className="r2-plan-star">★</span>
+                  <div>
+                    <div className="r2-plan-l"><b>Suggested plan: {r.plan.name}</b> · {usd(r.plan.fixed)}/mo · {r.plan.mxu.toLocaleString()} MXU included</div>
+                    <div className="r2-plan-b">Built for {r.plan.built}</div>
+                  </div>
+                </div>
 
                 <div className="r2-costs">
                   <div className="r2-cost">
