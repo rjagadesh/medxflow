@@ -18,6 +18,7 @@ import { SEO_PAGES } from "../src/seo-pages.data.js";
 import { TERMS } from "../src/glossary.data.js";
 import { CODES } from "../src/denial-codes.data.js";
 import { DENIAL_ANSWER, DENIAL_STATS, DENIAL_CAUSES, DENIAL_BENCHMARKS, DENIAL_FAQ } from "../src/rcm-denial-benchmarks.data.js";
+import { ROLES, CAREERS_INTRO, DATE_POSTED, VALID_THROUGH } from "../src/careers.data.js";
 import { en } from "../src/i18n.strings.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -122,6 +123,44 @@ function roiBody() {
     `</article>`;
 }
 
+function careersBody() {
+  return `<section><h1>Careers at MedXFlow</h1>` +
+    p(CAREERS_INTRO) +
+    h2(`${ROLES.length} open roles`) +
+    ROLES.map((r) =>
+      `<article><h3>${esc(r.title)}</h3>` +
+      p(`${esc(r.team)} · ${esc(r.type)} · ${esc(r.location)} · ${esc(r.experience)}`) +
+      p(r.summary) +
+      `<h4>What you will do</h4><ul>${r.responsibilities.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` +
+      `<h4>What we are looking for</h4><ul>${r.requirements.map((x) => `<li>${esc(x)}</li>`).join("")}</ul>` +
+      `</article>`
+    ).join("") +
+    `</section>`;
+}
+function careersLd() {
+  const jobs = ROLES.map((r) => ({
+    "@type": "JobPosting",
+    title: r.title,
+    description: `${r.summary} Responsibilities: ${r.responsibilities.join(" ")} Requirements: ${r.requirements.join(" ")}`,
+    datePosted: DATE_POSTED,
+    validThrough: VALID_THROUGH,
+    employmentType: "FULL_TIME",
+    hiringOrganization: { "@id": `${ORIGIN}/#organization` },
+    jobLocationType: "TELECOMMUTE",
+    applicantLocationRequirements: { "@type": "Country", name: "United States" },
+    jobLocation: { "@type": "Place", address: { "@type": "PostalAddress", addressCountry: "US" } },
+    directApply: false,
+    url: `${ORIGIN}/careers/#${r.slug}`,
+  }));
+  return JSON.stringify({
+    "@context": "https://schema.org",
+    "@graph": [
+      { "@type": "BreadcrumbList", itemListElement: [["Home", "/"], ["Careers", "/careers/"]].map(([n, u], i) => ({ "@type": "ListItem", position: i + 1, name: n, item: `${ORIGIN}${u}` })) },
+      ...jobs,
+    ],
+  });
+}
+
 function npiLookupBody() {
   return `<article><h1>NPI lookup</h1>` +
     p("An NPI (National Provider Identifier) is a unique 10-digit number CMS assigns to every US healthcare provider and organization. This tool looks up NPIs in the official NPPES registry so you can verify a provider's number, taxonomy and enrollment status before you bill or credential.") +
@@ -211,6 +250,13 @@ const routes = [
         { "@type": "BreadcrumbList", itemListElement: [["Home", "/"], ["About", "/about/"]].map(([n, u], i) => ({ "@type": "ListItem", position: i + 1, name: n, item: `${ORIGIN}${u}` })) },
       ],
     }),
+  },
+  {
+    path: "/careers",
+    title: "Careers · Join MedXFlow · AI Revenue Cycle Management",
+    desc: "Careers at MedXFlow. Remote-first US roles across AI engineering and certified RCM: Generative AI Specialist, CPC and CBCS coders, denial management, prior authorization, credentialing and revenue cycle leadership.",
+    body: careersBody(),
+    jsonld: careersLd(),
   },
   { path: "/products", title: "Products · MedXFlow", desc: "The connected stages of Revenue Cycle Management, plus VoIP, telehealth and a human-led managed billing team - one platform for the whole practice.", body: productsIndexBody() },
   ...PRODUCTS.map((p) => ({

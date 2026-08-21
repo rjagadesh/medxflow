@@ -29,6 +29,7 @@ const NpiLookup = React.lazy(() => import("./NpiLookup.jsx"));
 const RoiCalculator = React.lazy(() => import("./RoiCalculator.jsx"));
 const About = React.lazy(() => import("./About.jsx"));
 const Trust = React.lazy(() => import("./Trust.jsx"));
+const Careers = React.lazy(() => import("./Careers.jsx"));
 
 const path = window.location.pathname.replace(/\/+$/, "");
 const isAdmin = path === "/admin";
@@ -51,6 +52,7 @@ const isNpiLookup = path === "/npi-lookup";
 const isRoi = path === "/roi-calculator";
 const isAbout = path === "/about";
 const isTrust = path === "/trust";
+const isCareers = path === "/careers";
 
 // Self-referencing canonical per route. Navigation is via full page loads, so
 // setting this once per load from the current path covers every page.
@@ -111,6 +113,7 @@ function App() {
   if (isRoi) return <Page><RoiCalculator /></Page>;
   if (isAbout) return <Page><About /></Page>;
   if (isTrust) return <Page><Trust /></Page>;
+  if (isCareers) return <Page><Careers /></Page>;
   return (
     <>
       <EirimFrontDesk />
