@@ -5,6 +5,25 @@ import { useState, useRef, useEffect } from "react";
 // transaction to Netlify Blobs. The browser never sees the API key.
 const CHAT_ENDPOINT = "/.netlify/functions/chat";
 
+// Proactive teaser message tailored to the page the visitor is on.
+function teaserFor(path) {
+  const p = path.replace(/\/+$/, "");
+  if (p === "/roi-calculator") return "Hey! Want to chat about your ROI numbers?";
+  if (p === "/npi-lookup") return "Looking up an NPI? I can help you find it.";
+  if (p === "/denial-rate-calculator") return "Want help bringing your denial rate down?";
+  if (p === "/rcm-denial-benchmarks") return "Questions about these denial benchmarks?";
+  if (p === "/ai-agents-rcm") return "Curious how AI agents work your revenue cycle?";
+  if (p === "/telehealth") return "Want to see MedXFlow telehealth in action?";
+  if (p === "/trust") return "Any questions about our HIPAA or security?";
+  if (p === "/about") return "Want to learn more about MedXFlow?";
+  if (p === "/glossary" || p.startsWith("/glossary/")) return "Need a billing or RCM term explained?";
+  if (p === "/denial-codes" || p.startsWith("/denial-codes/")) return "Need help decoding a denial? Ask me.";
+  if (p === "/products" || p.startsWith("/products/")) return "Want to see which MedXFlow product fits you?";
+  if (p === "/specialties" || p.startsWith("/specialties/")) return "Want MedXFlow tuned to your specialty?";
+  if (p === "/blog" || p.startsWith("/blog/")) return "Have a question about this guide?";
+  return "Hi 👋 Want to see how MedXFlow can help your practice?";
+}
+
 const isEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 const makeId = () =>
   (globalThis.crypto?.randomUUID?.() ||
@@ -79,11 +98,35 @@ export default function Chatbot() {
   const [busy, setBusy] = useState(false);
   const [messages, setMessages] = useState([]);
   const [sessionId, setSessionId] = useState(null);
+  const [teaser, setTeaser] = useState(null);
   const scrollRef = useRef(null);
 
   useEffect(() => {
     if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [messages, busy, started]);
+
+  // Pop a page-specific teaser a few seconds after load, unless the visitor has
+  // already engaged the chat this session or dismissed the teaser on this page.
+  useEffect(() => {
+    let engaged = false, dismissed = false;
+    try {
+      engaged = sessionStorage.getItem("cbt-engaged") === "1";
+      dismissed = sessionStorage.getItem("cbt-teaser:" + window.location.pathname) === "1";
+    } catch { /* storage unavailable */ }
+    if (engaged || dismissed) return;
+    const id = setTimeout(() => setTeaser(teaserFor(window.location.pathname)), 2500);
+    return () => clearTimeout(id);
+  }, []);
+
+  const openChat = () => {
+    setOpen(true);
+    setTeaser(null);
+    try { sessionStorage.setItem("cbt-engaged", "1"); } catch { /* ignore */ }
+  };
+  const dismissTeaser = () => {
+    setTeaser(null);
+    try { sessionStorage.setItem("cbt-teaser:" + window.location.pathname, "1"); } catch { /* ignore */ }
+  };
 
   const startChat = (e) => {
     e.preventDefault();
@@ -155,8 +198,15 @@ export default function Chatbot() {
     <>
       <style>{CSS}</style>
 
+      {!open && teaser && (
+        <div className="cbt-teaser">
+          <button className="cbt-teaser-x" onClick={dismissTeaser} aria-label="Dismiss">×</button>
+          <button type="button" className="cbt-teaser-body" onClick={openChat}>{teaser}</button>
+        </div>
+      )}
+
       {!open && (
-        <button className="cbt-launch" onClick={() => setOpen(true)} aria-label="Open chat">
+        <button className="cbt-launch" onClick={openChat} aria-label="Open chat">
           <img src="/agent-face.webp" alt="Ava, the MedXFlow Front Desk assistant" className="cbt-launch-photo" />
           <span className="cbt-launch-dot" />
         </button>
@@ -248,6 +298,18 @@ const CSS = `
 @keyframes cbtpulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}70%,100%{box-shadow:0 0 0 8px rgba(34,197,94,0)}}
 @keyframes cbtbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
 @media(prefers-reduced-motion:reduce){.cbt-launch{animation:none}}
+
+.cbt-teaser{position:fixed; right:24px; bottom:112px; z-index:9998; max-width:250px;
+  background:#fff; border:1px solid rgba(13,43,82,.1); border-radius:16px; box-shadow:0 16px 38px rgba(13,43,82,.24);
+  font-family:'Figtree',system-ui,sans-serif; animation:cbtin .28s ease}
+.cbt-teaser::after{content:""; position:absolute; bottom:-7px; right:30px; width:14px; height:14px; background:#fff;
+  border-right:1px solid rgba(13,43,82,.1); border-bottom:1px solid rgba(13,43,82,.1); transform:rotate(45deg)}
+.cbt-teaser-body{display:block; width:100%; background:transparent; border:none; text-align:left; font-family:inherit;
+  font-size:14px; font-weight:600; line-height:1.45; color:#0D2B52; padding:14px 16px; cursor:pointer; border-radius:16px}
+.cbt-teaser-body:hover{background:#F2F6FB}
+.cbt-teaser-x{position:absolute; top:-9px; right:-9px; width:23px; height:23px; border-radius:50%; background:#0D2B52; color:#fff;
+  border:2px solid #fff; font-size:14px; line-height:1; cursor:pointer; display:grid; place-items:center; z-index:1; padding:0}
+@media(prefers-reduced-motion:reduce){.cbt-teaser{animation:none}}
 
 .cbt-panel{position:fixed; right:24px; bottom:24px; z-index:9999; width:min(380px,calc(100vw - 32px)); height:min(560px,calc(100vh - 48px));
   background:#fff; border-radius:20px; box-shadow:0 30px 80px rgba(13,43,82,.32); display:flex; flex-direction:column; overflow:hidden;
