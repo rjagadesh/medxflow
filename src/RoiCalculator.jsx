@@ -1,6 +1,6 @@
 // Interactive ROI calculator. Compares a practice's current loaded RCM labor
-// cost against MedXFlow list pricing (plan by scale + optional Voice AI and
-// EOB-to-ERA add-ons), with live SVG graphics. Pricing mirrors the MedXFlow
+// cost against MedXFlow list pricing (plan by scale), with live SVG graphics.
+// Pricing mirrors the MedXFlow
 // pricing sheet. Explanatory content + schema is prerendered for SEO.
 
 import { useState, useMemo } from "react";
@@ -21,14 +21,6 @@ const planForProviders = (n) => n <= 2 ? PLANS[0] : n <= 6 ? PLANS[1] : n <= 12 
 // Typical RCM headcount per package, so the FTE default tracks the plan/scale.
 const FTE_FOR_PLAN = { core: 2, professional: 4, advanced: 8, enterprise: 12, partner: 50 };
 const fteForPlan = (providers) => FTE_FOR_PLAN[planForProviders(providers).key];
-const voiceMonthly = (calls, avgMin) => 500 + Math.max(0, calls * avgMin - 5000) * 0.12;
-function eobMonthly(claims) {
-  let cost = 0, rem = claims;
-  const b1 = Math.min(rem, 100000); cost += b1 * 0.25; rem -= b1;
-  const b2 = Math.min(rem, 100000); cost += b2 * 0.20; rem -= b2;
-  cost += Math.max(rem, 0) * 0.15;
-  return cost;
-}
 const usd = (n) => "$" + Math.round(n).toLocaleString("en-US");
 const usdK = (n) => n >= 1000 ? "$" + Math.round(n / 1000) + "K" : "$" + Math.round(n);
 
@@ -44,26 +36,17 @@ export default function RoiCalculator() {
   const [fte, setFte] = useState(fteForPlan(10));
   const [hours, setHours] = useState(40);
   const [rate, setRate] = useState(32);
-  const [voiceOn, setVoiceOn] = useState(false);
-  const [calls, setCalls] = useState(1500);
-  const [voiceFte, setVoiceFte] = useState(1);
-  const [eobOn, setEobOn] = useState(false);
-  const [claims, setClaims] = useState(6000);
-  const [eobFte, setEobFte] = useState(2);
 
   const r = useMemo(() => {
     const perFte = hours * WEEKS_PER_MONTH * rate;
     const plan = isBpo ? PLANS[4] : planForProviders(providers);
-    const lines = [{ key: "core", label: "Core RCM workflows", current: fte * perFte, medx: plan.fixed }];
-    if (voiceOn) lines.push({ key: "voice", label: "Voice AI (payer calls)", current: voiceFte * perFte, medx: voiceMonthly(calls, 6.5) });
-    if (eobOn) lines.push({ key: "eob", label: "EOB to ERA conversion", current: eobFte * perFte, medx: eobMonthly(claims) });
-    const currentMonthly = lines.reduce((s, l) => s + l.current, 0);
-    const medxMonthly = lines.reduce((s, l) => s + l.medx, 0);
+    const currentMonthly = fte * perFte;
+    const medxMonthly = plan.fixed;
     const saveMonthly = currentMonthly - medxMonthly;
     const pct = currentMonthly > 0 ? (saveMonthly / currentMonthly) * 100 : 0;
-    return { lines, plan, currentMonthly, medxMonthly, saveMonthly, saveAnnual: saveMonthly * 12,
+    return { plan, currentMonthly, medxMonthly, saveMonthly, saveAnnual: saveMonthly * 12,
       currentAnnual: currentMonthly * 12, medxAnnual: medxMonthly * 12, pct, positive: saveMonthly > 0 };
-  }, [fte, hours, rate, providers, isBpo, voiceOn, calls, voiceFte, eobOn, claims, eobFte]);
+  }, [fte, hours, rate, providers, isBpo]);
 
   return (
     <LanguageProvider>
@@ -122,34 +105,6 @@ export default function RoiCalculator() {
                     </div>
                   </div>
                 </div>
-
-                <div className="r2-card">
-                  <div className="r2-card-t">3. Add-ons (Optional)</div>
-                  <label className="r2-check r2-check-lg">
-                    <input type="checkbox" checked={voiceOn} onChange={(e) => setVoiceOn(e.target.checked)} />
-                    <span className="r2-check-main">Voice AI agents</span>
-                    <span className="r2-check-note">$500/mo + 5,000 min included</span>
-                  </label>
-                  {voiceOn && (
-                    <div className="r2-addon">
-                      <SliderRow icon="📞" label="Staff on payer calls today" value={voiceFte} unit={voiceFte === 1 ? "person" : "people"} min={0} max={20} minLabel="0" maxLabel="20" onChange={setVoiceFte} compact />
-                      <SliderRow icon="☎️" label="Outbound payer calls / month" value={calls.toLocaleString()} unit="calls" min={100} max={10000} step={100} minLabel="100" maxLabel="10k" onChange={setCalls} rawValue={calls} compact />
-                      <div className="r2-addon-note">~6.5 min/call · MedXFlow {usd(voiceMonthly(calls, 6.5))}/mo</div>
-                    </div>
-                  )}
-                  <label className="r2-check r2-check-lg">
-                    <input type="checkbox" checked={eobOn} onChange={(e) => setEobOn(e.target.checked)} />
-                    <span className="r2-check-main">EOB to ERA conversion</span>
-                    <span className="r2-check-note">Per claim, no platform fee</span>
-                  </label>
-                  {eobOn && (
-                    <div className="r2-addon">
-                      <SliderRow icon="🧾" label="Staff posting paper EOBs today" value={eobFte} unit={eobFte === 1 ? "person" : "people"} min={0} max={20} minLabel="0" maxLabel="20" onChange={setEobFte} compact />
-                      <SliderRow icon="📄" label="Paper/PDF EOB claims / month" value={claims.toLocaleString()} unit="claims" min={500} max={120000} step={500} minLabel="500" maxLabel="120k" onChange={setClaims} rawValue={claims} compact />
-                      <div className="r2-addon-note">MedXFlow {usd(eobMonthly(claims))}/mo</div>
-                    </div>
-                  )}
-                </div>
               </div>
 
               {/* RIGHT: summary */}
@@ -186,21 +141,6 @@ export default function RoiCalculator() {
                     </div>
                   </div>
                 </div>
-
-                {r.lines.length > 1 && (
-                  <div className="r2-breakdown">
-                    {r.lines.map((l) => {
-                      const s = l.current - l.medx;
-                      return (
-                        <div className="r2-brk-row" key={l.key}>
-                          <span className="r2-brk-l">{l.label}</span>
-                          <span className="r2-brk-v">{usd(l.current)} → {usd(l.medx)}</span>
-                          <span className={"r2-brk-s" + (s >= 0 ? "" : " neg")}>{s >= 0 ? "" : "+"}{usd(Math.abs(s))}/mo</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                )}
 
                 <div className="r2-viz-row">
                   <div className="r2-panel">
@@ -254,7 +194,7 @@ export default function RoiCalculator() {
               <h2>How MedXFlow pricing works</h2>
               <p>MedXFlow prices finished work, not seats and not a percentage of collections. Each workflow carries a published weight in MedXFlow Units (MXU), listed at $0.10 each, and every plan includes a monthly MXU allowance with a lower effective rate as you scale. There is no per-seat fee and no cut of your revenue, so the savings from automating a workflow stay with you.</p>
               <h2>What the calculator compares</h2>
-              <p>On one side is your current loaded cost: the FTEs, hours and fully-loaded hourly cost of the staff doing the RCM work you would automate. On the other is MedXFlow's list price: the plan that fits your scale, plus any Voice AI or EOB-to-ERA add-ons. The gap is your saving.</p>
+              <p>On one side is your current loaded cost: the FTEs, hours and fully-loaded hourly cost of the staff doing the RCM work you would automate. On the other is MedXFlow's list price: the plan that fits your scale. The gap is your saving.</p>
               <div className="r2-faq">
                 {FAQ.map((f) => (<div className="r2-faq-item" key={f.q}><h3>{f.q}</h3><p>{f.a}</p></div>))}
               </div>
@@ -359,8 +299,8 @@ function AreaChart({ monthly }) {
 }
 
 const FAQ = [
-  { q: "How is MedXFlow priced?", a: "MedXFlow prices finished work, not seats or a percentage of collections. Each workflow has a published weight in MedXFlow Units (MXU, listed at $0.10 each), and each plan includes a monthly MXU allowance with a lower effective rate as volume grows. Voice AI and EOB-to-ERA are optional add-ons." },
-  { q: "How does the ROI calculator estimate savings?", a: "It compares your current loaded RCM labor cost (FTEs times hours times fully-loaded cost per hour) against MedXFlow's list price for the plan that fits your scale, plus any add-ons you enable. The difference is your estimated monthly and annual saving." },
+  { q: "How is MedXFlow priced?", a: "MedXFlow prices finished work, not seats or a percentage of collections. Each workflow has a published weight in MedXFlow Units (MXU, listed at $0.10 each), and each plan includes a monthly MXU allowance with a lower effective rate as volume grows." },
+  { q: "How does the ROI calculator estimate savings?", a: "It compares your current loaded RCM labor cost (FTEs times hours times fully-loaded cost per hour) against MedXFlow's list price for the plan that fits your scale. The difference is your estimated monthly and annual saving." },
   { q: "Is this an exact quote?", a: "No. It is a list-price estimate. Because plans are priced per completed workflow outcome, your exact cost depends on your real workflow volumes. Send three months of volumes and MedXFlow will price it precisely." },
   { q: "Does MedXFlow charge a percentage of collections?", a: "No. There are no seat fees and no percentage of collections. You pay for finished work at a rate benchmarked to sit below the loaded cost of doing the same work in-house or offshore." },
 ];

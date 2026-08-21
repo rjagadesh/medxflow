@@ -108,8 +108,8 @@ function specialtiesIndexBody() {
     `</section>`;
 }
 const ROI_FAQ = [
-  { q: "How is MedXFlow priced?", a: "MedXFlow prices finished work, not seats or a percentage of collections. Each workflow has a published weight in MedXFlow Units (MXU, listed at $0.10 each), and each plan includes a monthly MXU allowance with a lower effective rate as volume grows. Voice AI and EOB-to-ERA are optional add-ons." },
-  { q: "How does the ROI calculator estimate savings?", a: "It compares your current loaded RCM labor cost (FTEs times hours times fully-loaded cost per hour) against MedXFlow's list price for the plan that fits your scale, plus any add-ons you enable. The difference is your estimated monthly and annual saving." },
+  { q: "How is MedXFlow priced?", a: "MedXFlow prices finished work, not seats or a percentage of collections. Each workflow has a published weight in MedXFlow Units (MXU, listed at $0.10 each), and each plan includes a monthly MXU allowance with a lower effective rate as volume grows." },
+  { q: "How does the ROI calculator estimate savings?", a: "It compares your current loaded RCM labor cost (FTEs times hours times fully-loaded cost per hour) against MedXFlow's list price for the plan that fits your scale. The difference is your estimated monthly and annual saving." },
   { q: "Is this an exact quote?", a: "No. It is a list-price estimate. Because plans are priced per completed workflow outcome, your exact cost depends on your real workflow volumes. Send three months of volumes and MedXFlow will price it precisely." },
   { q: "Does MedXFlow charge a percentage of collections?", a: "No. There are no seat fees and no percentage of collections. You pay for finished work at a rate benchmarked to sit below the loaded cost of doing the same work in-house or offshore." },
 ];
@@ -117,7 +117,7 @@ function roiBody() {
   return `<article><h1>MedXFlow ROI calculator</h1>` +
     p("Every MedXFlow rate is benchmarked against the loaded cost of doing the same RCM work in-house or offshore, then set below it. Enter what the work costs you today - the staff, hours and fully-loaded hourly cost - and compare it against MedXFlow's list pricing to see your monthly and annual savings.") +
     h2("How MedXFlow pricing works") + p("MedXFlow prices finished work, not seats and not a percentage of collections. Each workflow carries a published weight in MedXFlow Units (MXU), listed at $0.10 each, and every plan includes a monthly MXU allowance with a lower effective rate as you scale. Plans range from Core ($1,299/month, 10,000 MXU) to Enterprise ($16,999/month, 200,000 MXU), with a Partner plan for billing companies.") +
-    h2("What the calculator compares") + p("On one side is your current loaded cost: the FTEs, hours and fully-loaded hourly cost of the staff doing the RCM work you would automate. On the other is MedXFlow's list price: the plan that fits your scale, plus optional Voice AI and EOB-to-ERA add-ons. The gap is your saving.") +
+    h2("What the calculator compares") + p("On one side is your current loaded cost: the FTEs, hours and fully-loaded hourly cost of the staff doing the RCM work you would automate. On the other is MedXFlow's list price: the plan that fits your scale. The gap is your saving.") +
     faqHtml(ROI_FAQ) +
     `</article>`;
 }
