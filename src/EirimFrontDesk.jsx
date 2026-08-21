@@ -1049,6 +1049,50 @@ function FAQ() {
 }
 
 /* ---------- App ---------- */
+// Internal-linking hub on the homepage. Passes homepage authority (with exact
+// anchor text) to the pages closest to page 1 - DNFB, prior authorization,
+// dermatology - plus the free tools, which double as link magnets.
+function Guides() {
+  const items = [
+    ["/blog/what-is-dnfb-clear-coding-backlog/", "What is DNFB? Clear the coding backlog", "Discharged Not Final Billed, DNFB days, and how to cut them."],
+    ["/blog/prior-authorization-automation-guide/", "Prior authorization automation", "A practical guide to automating prior auth for clinics."],
+    ["/specialties/dermatology/", "Dermatology revenue cycle management", "AI agents and telehealth tuned to dermatology practices."],
+    ["/products/denial-management/", "Denial management", "Turn denials into recovered revenue, worked by root cause."],
+    ["/roi-calculator/", "ROI calculator", "See what MedXFlow saves versus your current RCM cost."],
+    ["/rcm-denial-benchmarks/", "RCM denial benchmarks", "Claim denial rates, costs and KPI benchmarks."],
+    ["/denial-rate-calculator/", "Denial rate calculator", "Calculate and benchmark your claim denial rate."],
+    ["/npi-lookup/", "NPI lookup", "Search the CMS NPPES registry by name or NPI number."],
+  ];
+  return (
+    <section className="sec sec-tint" id="guides">
+      <style>{GUIDES_CSS}</style>
+      <div className="wrap">
+        <Reveal>
+          <Eyebrow>Guides &amp; tools</Eyebrow>
+          <h2>Popular RCM guides and free tools</h2>
+        </Reveal>
+        <div className="gd-grid">
+          {items.map(([href, title, desc], i) => (
+            <Reveal key={href} delay={(i % 4) * 70}>
+              <a className="gd-card" href={href}>
+                <b>{title}</b>
+                <span>{desc}</span>
+              </a>
+            </Reveal>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+const GUIDES_CSS = `
+#guides .gd-grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:14px; margin-top:30px}
+#guides .gd-card{display:flex; flex-direction:column; gap:5px; background:#fff; border:1px solid #E3ECF6; border-radius:14px; padding:18px 20px; text-decoration:none; height:100%; transition:transform .15s, box-shadow .15s, border-color .15s}
+#guides .gd-card:hover{transform:translateY(-2px); box-shadow:0 12px 30px rgba(13,43,82,.1); border-color:#B9D1EC}
+#guides .gd-card b{font-size:15.5px; color:#0D2B52; font-weight:800}
+#guides .gd-card span{font-size:13.5px; color:#5A6B7E; line-height:1.45}
+`;
+
 export default function EirimFrontDesk() {
   return (
     <LanguageProvider>
@@ -1063,6 +1107,7 @@ export default function EirimFrontDesk() {
       <Integrations />
       <Compliance />
       <About />
+        <Guides />
         <FAQ />
         <CTA />
         <Footer />
