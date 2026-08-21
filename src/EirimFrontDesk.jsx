@@ -836,6 +836,7 @@ export function Footer() {
         <div className="brand brand-foot"><ShamrockMark size={24} variant="light" /><span>MedXFlow <b>Health</b></span></div>
         <div className="foot-links">
           <a href="/about/">About</a>
+          <a href="/careers/">Careers</a>
           <a href="/trust/">Trust &amp; Security</a>
           <a href="/roi-calculator/">ROI Calculator</a>
           <a href="/npi-lookup/">NPI Lookup</a>
@@ -863,18 +864,25 @@ function startTour() {
   window.dispatchEvent(new Event("eirim:start-tour"));
 }
 
+const TIME_SLOTS = ["9:00 AM", "9:30 AM", "10:00 AM", "10:30 AM", "11:00 AM", "11:30 AM", "1:00 PM", "1:30 PM", "2:00 PM", "2:30 PM", "3:00 PM", "3:30 PM", "4:00 PM", "4:30 PM", "5:00 PM"];
+
 function LeadForm({ source = "cta", onDone, dark = false }) {
   const { t } = useI18n();
-  const [f, setF] = useState({ name: "", email: "", clinic: "", phone: "", preferredTime: "", message: "" });
+  const [f, setF] = useState({ name: "", email: "", clinic: "", phone: "", bookDate: "", bookTime: "", message: "" });
   const [busy, setBusy] = useState(false);
   const [done, setDone] = useState(false);
   const [err, setErr] = useState("");
   const set = (k) => (e) => setF((s) => ({ ...s, [k]: e.target.value }));
+  const today = new Date().toISOString().slice(0, 10);
 
   const submit = async (e) => {
     e.preventDefault();
     if (!f.name.trim() || !isLeadEmail(f.email)) {
       setErr(t("lead.invalid"));
+      return;
+    }
+    if (!f.bookDate || !f.bookTime) {
+      setErr("Please pick a date and time for your demo.");
       return;
     }
     setBusy(true);
@@ -885,6 +893,7 @@ function LeadForm({ source = "cta", onDone, dark = false }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...f,
+          preferredTime: `${f.bookDate} at ${f.bookTime}`,
           source,
           page: window.location.pathname,
           visitorId: (typeof localStorage !== "undefined" && localStorage.getItem("eirim_vid")) || null,
@@ -933,10 +942,19 @@ function LeadForm({ source = "cta", onDone, dark = false }) {
           <input value={f.phone} onChange={set("phone")} placeholder="(214) 555-0199" />
         </label>
       </div>
-      <label>
-        {t("lead.bestTime")}
-        <input value={f.preferredTime} onChange={set("preferredTime")} placeholder="e.g. Weekday mornings" />
-      </label>
+      <div className="lead-row">
+        <label>
+          Preferred date*
+          <input type="date" min={today} value={f.bookDate} onChange={set("bookDate")} required />
+        </label>
+        <label>
+          Preferred time*
+          <select value={f.bookTime} onChange={set("bookTime")} required>
+            <option value="">Select a time</option>
+            {TIME_SLOTS.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
+        </label>
+      </div>
       <label>
         {t("lead.message")}
         <textarea value={f.message} onChange={set("message")} rows={2} placeholder={t("lead.messagePlaceholder")} />
@@ -1450,8 +1468,8 @@ export const CSS = `
 .lead-form{display:flex; flex-direction:column; gap:13px}
 .lead-row{display:grid; grid-template-columns:1fr 1fr; gap:13px}
 .lead-form label{display:flex; flex-direction:column; gap:5px; font-size:13px; font-weight:600; color:var(--ink)}
-.lead-form input, .lead-form textarea{padding:11px 13px; border:1px solid var(--line); border-radius:10px; font-size:14.5px; font-family:inherit; color:var(--ink); background:#fff; outline:none; resize:vertical}
-.lead-form input:focus, .lead-form textarea:focus{border-color:var(--spruce); box-shadow:0 0 0 3px rgba(26,93,173,.12)}
+.lead-form input, .lead-form textarea, .lead-form select{padding:11px 13px; border:1px solid var(--line); border-radius:10px; font-size:14.5px; font-family:inherit; color:var(--ink); background:#fff; outline:none; resize:vertical}
+.lead-form input:focus, .lead-form textarea:focus, .lead-form select:focus{border-color:var(--spruce); box-shadow:0 0 0 3px rgba(26,93,173,.12)}
 .lead-submit{width:100%; text-align:center; margin-top:4px; cursor:pointer; border:none}
 .lead-submit:disabled{opacity:.6}
 .lead-fine{font-size:11.5px; color:rgba(13,43,82,.5); text-align:center; margin:0}
