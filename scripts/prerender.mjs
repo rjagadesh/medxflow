@@ -39,7 +39,7 @@ function blogPostBody(post) {
     `<h1>${esc(post.title)}</h1>` +
     (post.snippet ? `<p>${esc(post.snippet)}</p>` : "") +
     p(post.intro) +
-    post.sections.map((s) => h2(s.h) + (s.p || []).map(p).join("")).join("") +
+    post.sections.map((s) => h2(s.h) + (s.p || []).map(p).join("") + (s.list ? `<ul>${s.list.map((li) => `<li>${esc(li)}</li>`).join("")}</ul>` : "")).join("") +
     faqHtml(post.faq) +
     `</article>`;
 }

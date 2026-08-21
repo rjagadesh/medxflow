@@ -84,7 +84,8 @@ export function BlogPost({ slug }) {
         {p.sections.map((s, i) => (
           <section key={i} className="blog-sec">
             <h2>{s.h}</h2>
-            {s.p.map((para, j) => <p key={j}>{para}</p>)}
+            {(s.p || []).map((para, j) => <p key={j}>{para}</p>)}
+            {s.list && <ul className="blog-list">{s.list.map((li, j) => <li key={j}>{li}</li>)}</ul>}
           </section>
         ))}
 
@@ -151,6 +152,8 @@ const BLOG_CSS = `
 .blog-sec{margin-top:30px}
 .blog-sec h2{font-size:23px; letter-spacing:-.01em; margin:0 0 12px; font-weight:800; text-wrap:balance; color:var(--ink)}
 .blog-sec p{font-size:16.5px; color:#33455A; margin:0 0 14px; max-width:68ch}
+.blog-list{margin:0 0 14px; padding-left:22px; max-width:68ch}
+.blog-list li{font-size:16.5px; color:#33455A; margin:0 0 9px; line-height:1.55}
 .blog-cta{margin:38px 0; padding:26px; background:var(--mist); border:1px solid var(--seaglass); border-radius:16px; text-align:center}
 .blog-cta p{font-size:17px; font-weight:700; margin:0 0 14px; color:var(--ink)}
 .blog .btn{display:inline-block; background:var(--ink); color:#fff; padding:12px 22px; border-radius:10px; font-weight:700; text-decoration:none; font-size:15px}
