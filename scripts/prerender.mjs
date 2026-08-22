@@ -12,7 +12,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { PRODUCTS } from "../src/products.data.js";
 import { SPECIALTIES } from "../src/specialties.data.js";
-import { POSTS } from "../src/blog.data.js";
+import { POSTS, medxflowFor } from "../src/blog.data.js";
 import { AI_AGENTS, AI_AGENTS_INTRO, AI_AGENTS_FAQ } from "../src/ai-agents-rcm.data.js";
 import { SEO_PAGES } from "../src/seo-pages.data.js";
 import { TERMS } from "../src/glossary.data.js";
@@ -41,6 +41,7 @@ function blogPostBody(post) {
     (post.snippet ? `<p>${esc(post.snippet)}</p>` : "") +
     p(post.intro) +
     post.sections.map((s) => h2(s.h) + (s.p || []).map(p).join("") + (s.list ? `<ul>${s.list.map((li) => `<li>${esc(li)}</li>`).join("")}</ul>` : "")).join("") +
+    h2("How MedXFlow AI agents handle this") + p(medxflowFor(post)) +
     faqHtml(post.faq) +
     `</article>`;
 }
@@ -96,6 +97,18 @@ function aiAgentsBody() {
     `</article>`;
 }
 
+function productBody(prod) {
+  return `<article><h1>${esc(prod.name)}</h1>` +
+    p(prod.tagline) + p(prod.overview) +
+    h2(`What's inside ${prod.name}`) +
+    `<ul>${(prod.features || []).map(([ic, h, d]) => `<li><strong>${esc(h)}</strong> - ${esc(d)}</li>`).join("")}</ul>` +
+    h2("How it works") +
+    `<ol>${(prod.steps || []).map(([h, d]) => `<li><strong>${esc(h)}</strong> - ${esc(d)}</li>`).join("")}</ol>` +
+    h2("What you get") +
+    `<ul>${(prod.benefits || []).map((b) => `<li>${esc(b)}</li>`).join("")}</ul>` +
+    faqHtml(prod.faq) +
+    `</article>`;
+}
 function productsIndexBody() {
   return `<section><h1>MedXFlow products: the whole revenue cycle, one platform</h1>` +
     p("MedXFlow's platform covers the entire revenue cycle in one place: scheduling, eligibility and benefits verification, prior authorization, patient check-in, charge capture and coding, claims submission and follow-up, payment posting, denial management, and patient collections - plus a human-led managed billing team when you would rather hand it over.") +
@@ -261,9 +274,10 @@ const routes = [
   { path: "/products", title: "Products · MedXFlow", desc: "The connected stages of Revenue Cycle Management, plus VoIP, telehealth and a human-led managed billing team - one platform for the whole practice.", body: productsIndexBody() },
   ...PRODUCTS.map((p) => ({
     path: `/products/${p.slug}/`, title: `${p.name} · MedXFlow`, desc: p.tagline,
+    body: productBody(p),
     jsonld: serviceLd({
       name: p.name, serviceType: "Healthcare revenue cycle management", url: `${ORIGIN}/products/${p.slug}/`,
-      description: p.tagline, crumbs: [["Home", "/"], ["Products", "/products/"], [p.name, `/products/${p.slug}/`]],
+      description: p.tagline, faq: p.faq, crumbs: [["Home", "/"], ["Products", "/products/"], [p.name, `/products/${p.slug}/`]],
     }),
   })),
   { path: "/specialties", title: "Specialties · AI agents by practice type · MedXFlow", desc: "AI revenue-cycle agents tuned to your specialty - MedSpa, dental, mental health, dermatology, physical therapy, cardiology, orthopedics and primary care.", body: specialtiesIndexBody() },

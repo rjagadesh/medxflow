@@ -44,6 +44,13 @@ export const PRODUCTS = [
       "Every license, certification and re-credentialing date tracked and auditable",
     ],
     stat: { n: 90, suffix: " days", label: "typical wait for a new provider to be payer-ready - cut down by automated submission and follow-up" },
+    faq: [
+      { q: "What is provider credentialing?", a: "Credentialing verifies a provider's qualifications - licensure, education, board certification and history - and enrolls them with payers so their claims can be paid. Until it is done, claims for that provider can be delayed, denied or paid out of network." },
+      { q: "How long does provider credentialing take?", a: "Credentialing a new provider with a payer commonly takes 90 to 120 days, most of it spent waiting on and chasing payers. Automating submission and follow-up shortens the wait." },
+      { q: "What is the difference between credentialing and enrollment?", a: "Credentialing verifies the provider's qualifications; payer enrollment registers that verified provider with a specific payer so claims can be submitted. A provider can be credentialed but not yet enrolled with a given plan." },
+      { q: "What is CAQH and why does it matter?", a: "CAQH is a widely used database where providers maintain a single credentialing profile that payers draw from. If it is incomplete or the re-attestation is missed, payer applications stall, so keeping it current is high-leverage." },
+      { q: "Can credentialing be automated?", a: "The repetitive parts can. AI agents prepare and submit applications, validate NPIs against NPPES, keep CAQH and PECOS current, and track re-credentialing and expirables, while specialists handle judgment calls." },
+    ],
   },
   {
     slug: "pre-registration-scheduling",
@@ -76,6 +83,12 @@ export const PRODUCTS = [
       "A schedule that reflects real provider capacity",
     ],
     stat: { n: 40, suffix: "%", label: "of denials trace back to registration - caught here, before they happen" },
+    faq: [
+      { q: "What is patient access in the revenue cycle?", a: "Patient access is the front end of the revenue cycle: scheduling, pre-registration, insurance capture and check-in. Getting it right prevents most downstream denials, because so many denials start with bad registration or coverage data." },
+      { q: "What is pre-registration in medical billing?", a: "Pre-registration collects and validates a patient's demographics, guarantor and insurance before the visit, so eligibility can be verified and the claim has clean data from the start." },
+      { q: "How do you reduce patient no-shows?", a: "Automated text, email and voice reminders with easy confirm and reschedule, plus waitlist backfill for freed slots. Reminders on the channel each patient uses materially cut no-shows." },
+      { q: "Why do so many denials start at registration?", a: "Because the fields a claim depends on - member ID, name, date of birth, coverage - are captured at the front desk. An error there becomes a denial later, which is why validating data up front is the cheapest place to fix it." },
+    ],
   },
   {
     slug: "eligibility-verification",
@@ -108,6 +121,12 @@ export const PRODUCTS = [
       "Eliminate rework from coverage-related denials",
     ],
     stat: { n: 75, suffix: "%", label: "of eligibility-related denials are preventable with automated verification" },
+    faq: [
+      { q: "What is eligibility verification in medical billing?", a: "Eligibility verification confirms a patient's active insurance coverage and benefits before care, so you bill the right payer and know the patient's copay, deductible and any prior-auth requirement up front." },
+      { q: "How do you check patient insurance eligibility?", a: "Run an electronic 270/271 transaction against the payer, or check the payer portal. MedXFlow automates 270/271 checks the moment an appointment is booked and re-checks before the visit." },
+      { q: "How often should you verify insurance eligibility?", a: "For every visit, and again 24 to 48 hours before the appointment, because coverage changes at month boundaries. Verifying once at scheduling is not enough." },
+      { q: "What is a 270/271 transaction?", a: "The 270 is the EDI eligibility inquiry sent to a payer; the 271 is the response with coverage and benefits. It is how real-time eligibility verification works electronically." },
+    ],
   },
   {
     slug: "registration-check-in",
@@ -140,6 +159,11 @@ export const PRODUCTS = [
       "A shorter, calmer waiting room",
     ],
     stat: { n: 2, suffix: " min", label: "average check-in - most of it completed before the patient walks in" },
+    faq: [
+      { q: "What happens at patient check-in?", a: "Check-in confirms the patient's identity and coverage, captures consents and financial-responsibility forms, collects any copay or balance, and marks the patient arrived in the practice management system." },
+      { q: "How do you speed up patient check-in?", a: "Do most of it before arrival: pre-register demographics, insurance and consents, so check-in is a quick confirm-and-pay. MedXFlow gets it to about two minutes with most of the work done up front." },
+      { q: "What is point-of-service collection?", a: "Collecting the patient's copay or outstanding balance at check-in, before the visit, rather than billing and chasing it later. Amounts collected at the point of service are collected at a far higher rate." },
+    ],
   },
   {
     slug: "charge-capture-coding",
@@ -172,6 +196,12 @@ export const PRODUCTS = [
       "Faster coder throughput with assistive suggestions",
     ],
     stat: { n: 1, suffix: "%", label: "of net revenue is typically lost to charge capture leakage - closed here" },
+    faq: [
+      { q: "What is charge capture in medical billing?", a: "Charge capture is the process of recording every billable service a provider delivers so it makes it onto a claim. Services that are missed at the point of care are revenue that never gets billed." },
+      { q: "What is charge capture leakage?", a: "Charge capture leakage is revenue lost when rendered services are not captured or are under-coded. Reconciling the day's encounters against the schedule surfaces the missing charges before they are lost." },
+      { q: "What is the difference between upcoding and downcoding?", a: "Upcoding bills a higher-level code than the documentation supports (a compliance risk); downcoding bills a lower level than warranted (lost revenue). Accurate, documentation-supported coding avoids both." },
+      { q: "How does AI assist medical coding?", a: "AI drafts codes from documentation, flags NCCI/MUE and medical-necessity edits before submission, and clears routine charts so certified coders focus on complex cases. MedXFlow keeps a coder on the exceptions." },
+    ],
   },
   {
     slug: "claims-submission",
@@ -204,6 +234,12 @@ export const PRODUCTS = [
       "Rejections worked automatically, not weeks later",
     ],
     stat: { n: 98, suffix: "%", label: "first-pass acceptance is achievable with disciplined scrubbing and tracking" },
+    faq: [
+      { q: "How do you submit a claim to insurance?", a: "Generate a compliant electronic 837 claim from the coded encounter, scrub it against payer edits, and transmit it to the payer or clearinghouse, then reconcile the 999/277CA acknowledgement. MedXFlow does this automatically for every payer." },
+      { q: "What is claim scrubbing?", a: "Claim scrubbing runs format, payer-edit and clinical checks on a claim before submission to catch errors that would cause a rejection or denial, maximizing first-pass acceptance." },
+      { q: "What is the difference between a claim rejection and a denial?", a: "A rejection happens before adjudication (a data or formatting error at the clearinghouse or payer front end) and can be corrected and resubmitted. A denial happens after adjudication, when the payer declines to pay." },
+      { q: "What is a good clean claim rate?", a: "A clean claim rate of 95 percent or higher is healthy; disciplined scrubbing and acknowledgement tracking can push first-pass acceptance toward 98 percent." },
+    ],
   },
   {
     slug: "payment-posting",
@@ -236,6 +272,12 @@ export const PRODUCTS = [
       "Clear patient balances ready for statements",
     ],
     stat: { n: 7, suffix: "%", label: "of payer payments are underpaid on average - surfaced here for recovery" },
+    faq: [
+      { q: "What is payment posting in medical billing?", a: "Payment posting records payer and patient payments and adjustments against the original charges, reconciled at the line level, so cash is accurate and denials and underpayments are surfaced immediately." },
+      { q: "What is an ERA (835)?", a: "The 835 (electronic remittance advice, or ERA) is the payer's machine-readable explanation of how a claim was paid, adjusted or denied. It is what lets payments auto-post instead of being keyed from paper EOBs." },
+      { q: "What is the difference between the allowed amount and the billed amount?", a: "The billed amount is what the provider charges; the allowed amount is what the payer's contract permits. The difference is the contractual adjustment; anything paid below the allowed amount is an underpayment worth recovering." },
+      { q: "What is auto-posting?", a: "Auto-posting reads the 835/ERA and posts payments, adjustments and patient responsibility automatically at the line level, routing denials into the denial workflow. MedXFlow also flags underpayments against contracted rates." },
+    ],
   },
   {
     slug: "denial-management",
@@ -268,6 +310,12 @@ export const PRODUCTS = [
       "A clear, auditable trail on every appeal",
     ],
     stat: { n: 65, suffix: "%", label: "of denials are never reworked industry-wide - this workflow reclaims them" },
+    faq: [
+      { q: "What is denial management?", a: "Denial management is the process of capturing, categorizing, appealing and preventing denied claims. It means working denials by root cause and recoverable value, not just reworking them one by one, so revenue is recovered and the same denial stops recurring." },
+      { q: "How do you reduce claim denials?", a: "Measure denials by CARC/RARC reason code, fix the top causes at the front end (eligibility, prior authorization, coding), scrub claims before submission, and work denials fast while tracking root cause. Most denials are preventable." },
+      { q: "What is the difference between a denial and a rejection?", a: "A rejection happens at the clearinghouse or payer front end before adjudication, usually a data or formatting error you can correct and resubmit. A denial happens after adjudication, when the payer declines to pay, and generally needs an appeal." },
+      { q: "How do you write a claim appeal letter?", a: "State the claim details, the denial reason code, and the specific grounds for appeal with supporting documentation (medical necessity, authorization, corrected coding), submitted within the payer's deadline. MedXFlow's agents draft appeals with the right documentation attached." },
+    ],
   },
   {
     slug: "patient-collections",
@@ -300,6 +348,12 @@ export const PRODUCTS = [
       "Aged balances segmented for the right next step",
     ],
     stat: { n: 3, suffix: "×", label: "faster patient payment when digital and text-to-pay options are offered" },
+    faq: [
+      { q: "How do you improve patient collections?", a: "Give patients an accurate estimate up front, collect at or before the point of service, send clear itemized statements, and offer digital and text-to-pay options with payment plans. Amounts collected early are collected at a far higher rate than balances chased later." },
+      { q: "How do you collect patient balances?", a: "Send clear statements on the patient's preferred channel with easy payment links, keep a card on file where possible, offer instalment plans for larger balances, and run a respectful reminder cadence, with aged balances segmented for the right next step." },
+      { q: "What is the difference between gross and net collection rate?", a: "Gross collection rate is total payments divided by total charges; net collection rate is payments divided by the allowed amount (what you could actually collect). Net collection rate is the truer measure of how well you collect." },
+      { q: "How do you reduce A/R days on patient balances?", a: "Collect up front, deliver statements quickly, and automate follow-up so nothing stalls. Faster, clearer billing and digital payment options are what move patient A/R down." },
+    ],
   },
   {
     slug: "reporting-analytics",
@@ -332,6 +386,11 @@ export const PRODUCTS = [
       "Board-ready reporting without the spreadsheet night",
     ],
     stat: { n: 360, suffix: "°", label: "visibility across every stage - from scheduling to final payment" },
+    faq: [
+      { q: "What RCM KPIs should a practice track?", a: "The core ones are days in accounts receivable, clean-claim and first-pass rates, net collection rate, denial rate by cause and payer, and DNFB days. Track the trend monthly, not just the number." },
+      { q: "What is a good days in A/R?", a: "Under 40 days is generally healthy, and best-in-class practices run 30 to 35 days. Above 50 usually signals a follow-up or denial problem." },
+      { q: "What is net collection rate?", a: "Net collection rate is payments divided by the allowed amount - what you actually collected versus what you were contractually entitled to collect. It is the truest measure of collection performance." },
+    ],
   },
   {
     slug: "voip",
@@ -462,6 +521,13 @@ export const PRODUCTS = [
       "Every authorization tracked, documented and auditable",
     ],
     stat: { n: 25, suffix: "%", label: "of denials are auth-related industry-wide - prevented before the visit" },
+    faq: [
+      { q: "What is prior authorization?", a: "Prior authorization (also called pre-authorization or precertification) is a payer's approval that a service is covered before it is delivered. Without it, the claim is usually denied, and those denials are hard to appeal after the fact." },
+      { q: "How long does prior authorization take?", a: "It varies widely by payer and service, from same-day to one or two weeks. Automating detection, submission and follow-up shortens the wait by removing the delays that come from incomplete requests and un-chased status." },
+      { q: "What is the difference between prior authorization and precertification?", a: "The terms are largely used interchangeably. Both refer to getting a payer's approval before a service; some payers use precertification for inpatient or specific services and prior authorization more broadly." },
+      { q: "How do you speed up prior authorization?", a: "Detect what needs an auth the moment it is ordered, submit with the right clinical documentation, and track every request to a decision. MedXFlow's AI agents do this end to end, using the X12 278 where payers support it and payer portals where they do not." },
+      { q: "How do you appeal a prior authorization denial?", a: "Submit the payer's appeal with additional clinical documentation supporting medical necessity, within the payer's deadline. Tracking auth requirements up front prevents most of these denials in the first place." },
+    ],
   },
   {
     slug: "managed-billing",

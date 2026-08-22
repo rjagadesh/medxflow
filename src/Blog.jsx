@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { LanguageProvider } from "./i18n.jsx";
 import { Nav, Footer, BookDemo, CSS } from "./EirimFrontDesk.jsx";
-import { POSTS, post as findPost } from "./blog.data.js";
+import { POSTS, post as findPost, medxflowFor } from "./blog.data.js";
 
 // Resources / blog. Uses the shared site header (Nav) + footer so it matches
 // every other marketing page. Index lists all posts; BlogPost renders one
@@ -89,6 +89,11 @@ export function BlogPost({ slug }) {
           </section>
         ))}
 
+        <section className="blog-mx">
+          <h2>How MedXFlow AI agents handle this</h2>
+          <p>{medxflowFor(p)}</p>
+        </section>
+
         {p.related && (
           <div className="blog-cta">
             <p>Want to see how MedXFlow automates this?</p>
@@ -154,6 +159,9 @@ const BLOG_CSS = `
 .blog-sec p{font-size:16.5px; color:#33455A; margin:0 0 14px; max-width:68ch}
 .blog-list{margin:0 0 14px; padding-left:22px; max-width:68ch}
 .blog-list li{font-size:16.5px; color:#33455A; margin:0 0 9px; line-height:1.55}
+.blog-mx{margin-top:30px; background:var(--mist,#F2F6FB); border:1px solid var(--seaglass,#CFE0F2); border-left:4px solid var(--gorse,#17C3B2); border-radius:14px; padding:20px 22px}
+.blog-mx h2{font-size:19px; margin:0 0 8px; font-weight:800; color:var(--ink,#0D2B52)}
+.blog-mx p{font-size:16px; color:#22364B; margin:0; line-height:1.6; max-width:70ch}
 .blog-cta{margin:38px 0; padding:26px; background:var(--mist); border:1px solid var(--seaglass); border-radius:16px; text-align:center}
 .blog-cta p{font-size:17px; font-weight:700; margin:0 0 14px; color:var(--ink)}
 .blog .btn{display:inline-block; background:var(--ink); color:#fff; padding:12px 22px; border-radius:10px; font-weight:700; text-decoration:none; font-size:15px}

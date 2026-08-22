@@ -164,6 +164,26 @@ export default function ProductPage({ slug }) {
           </div>
         </section>
 
+        {/* FAQ (answer-first, for SEO/AEO) */}
+        {p.faq?.length ? (
+          <section className="sec">
+            <div className="wrap pp-faq">
+              <Reveal>
+                <Eyebrow>FAQ</Eyebrow>
+                <h2>{p.name}: frequently asked questions</h2>
+              </Reveal>
+              <div className="pp-faq-list">
+                {p.faq.map((f, i) => (
+                  <div className="pp-faq-item" key={i}>
+                    <h3>{f.q}</h3>
+                    <p>{f.a}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : null}
+
         {/* CTA */}
         <section className="sec sec-dark" id="cta">
           <div className="wrap pp-cta">
@@ -423,6 +443,11 @@ const PP_CSS = `
 
 .pp-cta{text-align:center; max-width:720px; margin:0 auto}
 .pp-cta .lead-light{margin:14px auto 26px}
+
+.pp-faq{max-width:760px}
+.pp-faq-list{margin-top:26px; display:flex; flex-direction:column; gap:18px}
+.pp-faq-item h3{font-size:17.5px; font-weight:800; color:var(--ink); margin:0 0 6px}
+.pp-faq-item p{font-size:16px; color:rgba(13,43,82,.78); line-height:1.6; margin:0; max-width:70ch}
 
 .pp-index-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:20px; margin-top:38px}
 .pp-index-card{display:flex; flex-direction:column; background:#fff; border:1px solid var(--line); border-radius:20px; padding:26px; height:100%; transition:transform .18s, box-shadow .18s}
