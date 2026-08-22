@@ -28,6 +28,17 @@ const ORIGIN = "https://medxflow.ai";
 const esc = (s) => String(s)
   .replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
+// Keep meta descriptions under Google's ~155-char snippet limit. Trims at a word
+// boundary and drops trailing punctuation so the snippet reads cleanly.
+const clipDesc = (s, n = 155) => {
+  s = String(s || "").trim();
+  if (s.length <= n) return s;
+  let cut = s.slice(0, n);
+  const sp = cut.lastIndexOf(" ");
+  if (sp > 60) cut = cut.slice(0, sp);
+  return cut.replace(/[\s,;:.\-]+$/, "");
+};
+
 // --- Static body content (so non-JS + AI crawlers get the real text, not just
 // the <head>). React replaces this on hydration; it's SEO fodder + fast paint.
 const p = (t) => `<p>${esc(t)}</p>`;
@@ -490,8 +501,12 @@ function headFor(r) {
   // the non-slash form to it, so the canonical + og:url must use the slash form
   // (otherwise the canonical points at a URL that redirects).
   const url = ORIGIN + r.path + "/";
-  const t = esc(r.title), d = esc(r.desc);
+  const t = esc(r.title), d = esc(clipDesc(r.desc));
   let out = template
+    // Strip the base template's homepage JSON-LD so each prerendered page carries
+    // only its own schema (otherwise the homepage Organization/Service/FAQPage
+    // rides onto every page and duplicates FAQPage blocks).
+    .replace(/<script type="application\/ld\+json">[\s\S]*?<\/script>\s*/, "")
     .replace(/<title>[\s\S]*?<\/title>/, `<title>${t}</title>`)
     .replace(/<meta[^>]*\bname="description"[^>]*>/, `<meta name="description" content="${d}" />`)
     .replace(/<link[^>]*\brel="canonical"[^>]*>/, `<link rel="canonical" href="${url}" />`)

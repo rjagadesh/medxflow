@@ -6,6 +6,16 @@ import { PRODUCTS, rcmProducts, engagementProducts, serviceProducts, bySlug } fr
 
 const openDemo = () => window.dispatchEvent(new Event("eirim:book-demo"));
 
+// Keep the meta description under Google's ~155-char snippet limit.
+const clip155 = (s, n = 155) => {
+  s = String(s || "").trim();
+  if (s.length <= n) return s;
+  let c = s.slice(0, n);
+  const sp = c.lastIndexOf(" ");
+  if (sp > 60) c = c.slice(0, sp);
+  return c.replace(/[\s,;:.\-]+$/, "");
+};
+
 // Full marketing page for a single product, driven by its config object.
 export default function ProductPage({ slug }) {
   const p = bySlug(slug);
@@ -22,7 +32,7 @@ export default function ProductPage({ slug }) {
       meta.name = "description";
       document.head.appendChild(meta);
     }
-    meta.setAttribute("content", p.tagline);
+    meta.setAttribute("content", clip155(p.tagline));
     window.scrollTo(0, 0);
     return () => prev && meta.setAttribute("content", prev);
   }, [p]);
@@ -48,7 +58,7 @@ export default function ProductPage({ slug }) {
               <div className="pp-hero-ic">{p.icon}</div>
               <Eyebrow light>{p.eyebrow}</Eyebrow>
               <h1 className="h-light pp-h1">
-                {p.h1a}
+                {p.h1a}{" "}
                 <br />
                 {p.h1b}
               </h1>

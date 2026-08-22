@@ -6,6 +6,16 @@ import { SPECIALTIES, bySpecialtySlug } from "./specialties.data.js";
 
 const openDemo = () => window.dispatchEvent(new Event("eirim:book-demo"));
 
+// Keep the meta description under Google's ~155-char snippet limit.
+const clip155 = (s, n = 155) => {
+  s = String(s || "").trim();
+  if (s.length <= n) return s;
+  let c = s.slice(0, n);
+  const sp = c.lastIndexOf(" ");
+  if (sp > 60) c = c.slice(0, sp);
+  return c.replace(/[\s,;:.\-]+$/, "");
+};
+
 // Full marketing page for one specialty, driven by its config object.
 export default function SpecialtyPage({ slug }) {
   const s = bySpecialtySlug(slug);
@@ -16,7 +26,7 @@ export default function SpecialtyPage({ slug }) {
     let meta = document.querySelector('meta[name="description"]');
     if (!meta) { meta = document.createElement("meta"); meta.name = "description"; document.head.appendChild(meta); }
     const prev = meta.getAttribute("content");
-    meta.setAttribute("content", s.tagline);
+    meta.setAttribute("content", clip155(s.tagline));
     window.scrollTo(0, 0);
     return () => prev && meta.setAttribute("content", prev);
   }, [s]);
@@ -40,7 +50,7 @@ export default function SpecialtyPage({ slug }) {
               <a href="/specialties/" className="pp-back">← All specialties</a>
               <div className="pp-hero-ic">{s.icon}</div>
               <Eyebrow light>{s.eyebrow}</Eyebrow>
-              <h1 className="h-light pp-h1">{s.h1a}<br />{s.h1b}</h1>
+              <h1 className="h-light pp-h1">{s.h1a}{" "}<br />{s.h1b}</h1>
               <p className="lead-light pp-tagline">{s.tagline}</p>
               <div className="pp-hero-cta">
                 <a href="#cta" className="btn btn-gorse" onClick={(e) => { e.preventDefault(); openDemo(); }}>Book a demo</a>
@@ -161,7 +171,7 @@ export function SpecialtiesIndex() {
     document.title = "Specialties · AI agents by practice type · MedXFlow";
     let meta = document.querySelector('meta[name="description"]');
     if (!meta) { meta = document.createElement("meta"); meta.name = "description"; document.head.appendChild(meta); }
-    meta.setAttribute("content", "AI revenue-cycle agents tuned to your specialty - MedSpa, dental, mental health, dermatology, physical therapy, cardiology, orthopedics and primary care.");
+    meta.setAttribute("content", clip155("AI revenue-cycle agents tuned to your specialty - MedSpa, dental, mental health, dermatology, physical therapy, cardiology, orthopedics and primary care."));
     window.scrollTo(0, 0);
   }, []);
   return (

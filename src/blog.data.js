@@ -76,7 +76,7 @@ export const POSTS = [
   {
     slug: "why-are-medical-claims-denied",
     snippet: "Medical claims are denied for a small set of recurring reasons: eligibility and registration errors, missing or invalid prior authorization, missing or incorrect information, medical-necessity and coding mismatches, duplicate claims, non-covered services, and untimely filing. Most are avoidable because they originate at the front of the revenue cycle, before the claim is submitted.",
-    title: "Why Are Medical Claims Denied? The 12 Most Common Reasons",
+    title: "Why Are Medical Claims Denied? 12 Common Reasons",
     description: "The 12 most common reasons medical claims are denied - eligibility, prior authorization, coding, medical necessity, timely filing and more - and how to prevent each one before submission.",
     date: "2026-08-21",
     category: "Denial Management",
