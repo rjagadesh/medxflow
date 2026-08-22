@@ -5,6 +5,156 @@
 
 export const POSTS = [
   {
+    slug: "how-much-does-rcm-automation-cost",
+    snippet: "RCM automation is usually priced one of four ways: per completed workflow outcome, per claim, a percentage of collections (commonly 4 to 9 percent), or a flat monthly platform fee. Per-outcome and per-claim pricing tend to be the most predictable, and the honest test is whether the rate sits below the loaded cost of doing the same work in-house or offshore.",
+    title: "How Much Does RCM Automation Cost? A Straight Answer",
+    description: "What RCM automation actually costs in 2026 - the four pricing models, what drives the price, and how to compare it against your current in-house or offshore cost.",
+    date: "2026-08-21",
+    category: "Pricing",
+    readMins: 7,
+    keywords: ["RCM automation cost", "how much does RCM automation cost", "RCM software pricing", "revenue cycle automation pricing"],
+    related: { label: "Estimate your savings with the ROI calculator", href: "/roi-calculator/" },
+    intro: "Pricing for revenue cycle automation is frustratingly opaque - most vendors will not publish a number until they have you on a call. The reality is simpler than it looks: there are only four common models, and once you know them you can compare any two vendors on the same footing. Here is how RCM automation is priced, what moves the number, and the one benchmark that actually tells you whether a price is fair.",
+    sections: [
+      { h: "The four ways RCM automation is priced", p: [
+        "Almost every vendor uses one of four models: per completed workflow outcome, per claim, a percentage of collections, or a flat monthly platform fee. Some blend them. The model matters more than the headline rate, because it determines whether your cost scales with value or just with volume.",
+      ] },
+      { h: "Per completed outcome (or per claim)", p: [
+        "You pay for finished work - an eligibility check completed, a claim submitted, a denial worked. This is the most transparent model: you can tie every dollar to an output, and the cost rises only as the work rises. Per-claim pricing (common for tasks like EOB-to-ERA conversion) works the same way, often in the range of a few cents to a couple of dollars per claim depending on complexity.",
+      ] },
+      { h: "Percentage of collections", p: [
+        "The traditional medical-billing model: the vendor takes a cut of what they collect, commonly 4 to 9 percent for small and mid-size practices (larger volumes negotiate lower). It aligns incentives, but it is the least predictable, and as your revenue grows you pay more for the same work. Watch for percentage pricing dressed up as automation - you are often still paying a services rate.",
+      ] },
+      { h: "Flat monthly platform fee", p: [
+        "A fixed subscription, sometimes tiered by provider count or volume, sometimes with per-seat add-ons. Predictable and easy to budget, but check what is actually included: seats, integrations, support and overage can turn a clean monthly number into a variable bill.",
+      ] },
+      { h: "The only benchmark that matters", p: [
+        "Ignore the sticker and ask one question: does this cost less than doing the same work yourself? Add up the fully-loaded cost of the staff doing that work today (salary plus benefits and overhead, in-house or offshore) and compare it to the vendor's price for automating it. If the automation does not sit clearly below your loaded labor cost, it is not saving you money, whatever the model.",
+      ] },
+      { h: "Pricing red flags to watch", list: [
+        "A percentage of collections marketed as AI automation - you may be paying services pricing for software work.",
+        "Per-seat fees on top of a platform fee, which punish you for adding staff.",
+        "Long lock-in with no clear go-live date or performance guarantee.",
+        "Opaque overage or integration charges that only appear after signing.",
+        "No willingness to price against your actual three-month volumes.",
+      ] },
+    ],
+    faq: [
+      { q: "How much does RCM automation cost per claim?", a: "It varies by task and complexity, but per-claim automation typically ranges from a few cents to a couple of dollars per claim. Simpler, high-volume tasks like remittance posting sit at the low end; complex work like denial appeals costs more." },
+      { q: "Is percentage-of-collections or flat-fee pricing better?", a: "Flat-fee and per-outcome pricing are more predictable and do not increase your cost as revenue grows. Percentage-of-collections aligns incentives but becomes expensive at scale. The best test is which one lands below your current loaded labor cost." },
+      { q: "How do I compare RCM automation vendors on price?", a: "Normalize them to the same model. Convert each quote to a cost per completed unit of work, then compare that against the fully-loaded cost of doing it in-house or offshore today. A free ROI calculator makes this quick." },
+    ],
+  },
+  {
+    slug: "why-are-medical-claims-denied",
+    snippet: "Medical claims are denied for a small set of recurring reasons: eligibility and registration errors, missing or invalid prior authorization, missing or incorrect information, medical-necessity and coding mismatches, duplicate claims, non-covered services, and untimely filing. Most are avoidable because they originate at the front of the revenue cycle, before the claim is submitted.",
+    title: "Why Are Medical Claims Denied? The 12 Most Common Reasons",
+    description: "The 12 most common reasons medical claims are denied - eligibility, prior authorization, coding, medical necessity, timely filing and more - and how to prevent each one before submission.",
+    date: "2026-08-21",
+    category: "Denial Management",
+    readMins: 8,
+    keywords: ["why are medical claims denied", "reasons claims are denied", "common claim denial reasons", "medical claim denials"],
+    related: { label: "See MedXFlow Denial Management", href: "/products/denial-management/" },
+    intro: "A denied claim is earned revenue stuck in limbo, and roughly two-thirds of denials are never reworked. The good news is that denials are not random - they cluster around a handful of causes, and most of them happen before the claim ever leaves your practice. Fix the top few and you fix the majority. Here are the twelve most common reasons claims get denied, and how to stop each one.",
+    sections: [
+      { h: "The 12 most common denial reasons", list: [
+        "Eligibility or coverage inactive - the patient's plan was not active on the date of service.",
+        "Registration or demographic errors - wrong member ID, name, date of birth or subscriber details.",
+        "Missing or invalid prior authorization - the service required an auth that was not obtained or had expired.",
+        "Missing or incorrect information - absent modifiers, invalid NPI, incomplete claim fields.",
+        "Medical necessity - the diagnosis does not support the procedure billed.",
+        "Coding errors - unbundling, mutually exclusive codes, or NCCI/MUE edits.",
+        "Non-covered service - the plan simply does not cover the service.",
+        "Duplicate claim - the same claim was submitted more than once.",
+        "Coordination of benefits - the wrong payer was billed first.",
+        "Untimely filing - the claim arrived after the payer's deadline.",
+        "Bundling - the service is considered part of another paid service.",
+        "Authorization or referral mismatch - the auth or referral does not match the code or provider billed.",
+      ] },
+      { h: "Why most denials are preventable", p: [
+        "Notice how many of these begin at the front desk: eligibility, registration, prior authorization and coordination of benefits are all decided before the visit. Industry analysis consistently finds that the large majority of denials are avoidable, because they stem from front-end data and process gaps rather than the clinical work itself.",
+      ] },
+      { h: "How to prevent them", p: [
+        "Verify eligibility at scheduling and again 24 to 48 hours before the visit. Keep a payer-specific list of what needs prior authorization and confirm the auth is on the claim. Scrub coding for medical-necessity and NCCI edits before submission. Then work the denials that do happen fast, and record the root cause so the same one does not recur.",
+        "This is exactly the work AI agents are suited to: catching eligibility, auth and coding issues at the point they are cheapest to fix, and triaging the denials that slip through by reason code.",
+      ] },
+    ],
+    faq: [
+      { q: "What is the most common reason claims are denied?", a: "Front-end issues lead: eligibility and registration errors, followed closely by missing prior authorization. These are also the most preventable, because they are decided before the claim is submitted." },
+      { q: "What percentage of denials are preventable?", a: "Industry analysis estimates that around 85 percent of denials are avoidable, since most originate from eligibility, registration, prior authorization and coding gaps at the front of the revenue cycle." },
+      { q: "What is the difference between a rejection and a denial?", a: "A rejection happens at the clearinghouse or payer front end before adjudication, usually for a formatting or data error, and can be corrected and resubmitted. A denial happens after adjudication, when the payer decides not to pay, and generally requires an appeal." },
+    ],
+  },
+  {
+    slug: "medical-billing-ar-days-benchmark",
+    snippet: "In medical billing, days in accounts receivable (A/R) measures how long it takes to collect. Under 40 days is generally healthy, best-in-class practices run 30 to 35, and over 50 days signals a problem. Aged A/R over 90 days should stay under about 15 to 20 percent of total A/R.",
+    title: "Medical Billing AR Days Benchmark: What Good Looks Like in 2026",
+    description: "Days in A/R benchmarks for medical billing in 2026 - what is healthy, what is at-risk, how it varies by specialty, and how to bring your A/R days down.",
+    date: "2026-08-22",
+    category: "AR Management",
+    readMins: 6,
+    keywords: ["AR days benchmark", "days in AR medical billing", "accounts receivable days healthcare", "good AR days"],
+    related: { label: "See MedXFlow Reporting & Analytics", href: "/products/reporting-analytics/" },
+    intro: "Days in accounts receivable is the single clearest read on how fast your practice turns care into cash. It is easy to calculate and easy to benchmark, and a rising number is usually the first sign that follow-up or denials are slipping. Here is what a healthy A/R days figure looks like, how it varies, and how to move it.",
+    sections: [
+      { h: "How A/R days is calculated", p: [
+        "Days in A/R equals your total accounts receivable divided by average daily charges (total charges over a period divided by the number of days in it). It tells you, on average, how many days of revenue are sitting uncollected. Track it monthly and watch the trend, not just the number.",
+      ] },
+      { h: "Healthy vs at-risk benchmarks", list: [
+        "Under 40 days: healthy for most practices.",
+        "30 to 35 days: best-in-class.",
+        "40 to 50 days: watch closely, follow-up may be slipping.",
+        "Over 50 days: a problem, usually denials or A/R follow-up falling behind.",
+        "A/R over 90 days: keep under roughly 15 to 20 percent of total A/R.",
+      ] },
+      { h: "How it varies by specialty", p: [
+        "Benchmarks shift with payer mix and claim complexity. Practices weighted toward government payers or surgical and specialty claims (with more prior authorization and higher dollar values) tend to run higher A/R days than high-volume, low-complexity primary care. Compare yourself to your own trend and to peers in your specialty, not to a single universal number.",
+      ] },
+      { h: "How to bring A/R days down", p: [
+        "The levers are front-loaded: verify eligibility and secure authorizations before the visit so claims go out clean, submit quickly, and work A/R by payer and dollar value the moment claims age. Catch underpayments against contracted rates, and route denials to resolution instead of letting them sit. Automating the follow-up is where practices claw back the most, because nothing stalls.",
+      ] },
+    ],
+    faq: [
+      { q: "What is a good days in A/R for medical billing?", a: "Under 40 days is generally healthy, and best-in-class practices run 30 to 35 days. Above 50 days usually points to a follow-up or denial problem." },
+      { q: "How do you calculate days in A/R?", a: "Divide total accounts receivable by average daily charges (total charges for a period divided by the number of days in that period). The result is the average number of days revenue sits uncollected." },
+      { q: "What percentage of A/R should be over 90 days?", a: "Aim to keep A/R aged over 90 days under roughly 15 to 20 percent of total A/R. A higher share signals that older claims are not being worked to resolution." },
+    ],
+  },
+  {
+    slug: "x12-278-prior-authorization-explained",
+    snippet: "The X12 278 is the EDI transaction for electronic prior authorization: the 278 request asks a payer to authorize a service, and the 278 response returns the decision. It can automate what is usually a manual portal-and-phone process, but payer adoption is uneven, which is why many authorizations still require portal or fax work.",
+    title: "X12 278 Explained: Automating Prior Authorization Service Reviews",
+    description: "What the X12 278 prior authorization transaction is, how the request and response work, why adoption lags, and how AI bridges the gap where payers do not support it.",
+    date: "2026-08-22",
+    category: "Technical / EDI",
+    readMins: 7,
+    keywords: ["X12 278", "278 prior authorization", "electronic prior authorization EDI", "278 transaction"],
+    related: { label: "See MedXFlow Pre-Authorization", href: "/products/pre-authorization/" },
+    intro: "Prior authorization is one of the most manual, painful steps in the revenue cycle, and the EDI standard meant to fix it - the X12 278 - is also the least consistently adopted. If you are automating prior auth, understanding the 278 (and its limits) tells you exactly where clean automation ends and where you still need portal or phone work.",
+    sections: [
+      { h: "What the 278 is", p: [
+        "The X12 278 is the standard EDI transaction for a health care services review - in practice, prior authorization and referrals. It is the authorization counterpart to the 270/271 (eligibility) and 837 (claims): a structured, machine-readable request and response instead of a portal form.",
+      ] },
+      { h: "Request and response", p: [
+        "The 278 request carries the patient, provider, service and diagnosis details the payer needs to make a decision. The 278 response returns the outcome: certified (approved), pended (needs more information), or not certified (denied), often with an authorization number when approved. Some payers support real-time 278; others process it in batch.",
+      ] },
+      { h: "Why adoption lags", p: [
+        "Unlike eligibility, where 270/271 is near-universal, 278 support is patchy. Many payers require clinical documentation that does not fit neatly into the transaction, or route certain services through their own portals. That is why, even in 2026, a large share of authorizations still involve a portal login or a phone call.",
+      ] },
+      { h: "Where FHIR and Da Vinci fit", p: [
+        "Newer standards are pushing electronic prior auth forward: the HL7 Da Vinci prior-authorization work (built on FHIR APIs) aims to make auth requirements and submissions programmatic, including attaching clinical documentation. It is promising and gaining regulatory momentum, but it coexists with 278 and portals rather than having replaced them.",
+      ] },
+      { h: "How AI bridges the gap", p: [
+        "Because the landscape is mixed, reliable prior-auth automation cannot depend on 278 alone. The practical approach is to use the 278 where a payer supports it, and use AI agents to work the payer portals and follow up where it does not - determining what needs auth, submitting with the right documentation, and tracking to a decision, whatever channel the payer uses.",
+      ] },
+    ],
+    faq: [
+      { q: "What is the X12 278 transaction?", a: "It is the EDI standard for a health care services review - prior authorization and referrals. The 278 request asks a payer to authorize a service, and the 278 response returns the decision, often with an authorization number." },
+      { q: "Why do payers still require portals if the 278 exists?", a: "Adoption of the 278 is uneven. Many payers require clinical documentation that does not fit the transaction well, or route certain services through their own portals, so a large share of authorizations still involve portal or phone work." },
+      { q: "How is prior authorization automated end to end?", a: "By combining the 278 where payers support it with AI agents that handle the rest: detecting what needs authorization, submitting with documentation, working payer portals where there is no 278, and tracking each request to a decision." },
+    ],
+  },
+  {
     slug: "ai-agents-provider-credentialing",
     snippet: "AI agents support provider credentialing by preparing and submitting payer enrollment and credentialing applications, keeping CAQH and PECOS profiles current, tracking each application to approval, and monitoring re-credentialing and expirable dates - so new providers become billable faster and no claim is filed under a lapsed credential.",
     title: "How AI Agents Support Provider Credentialing and Payer Enrollment",

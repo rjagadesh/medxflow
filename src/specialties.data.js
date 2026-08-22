@@ -10,6 +10,193 @@
 
 export const SPECIALTIES = [
   {
+    slug: "chiropractic",
+    icon: "🦴",
+    name: "Chiropractic",
+    eyebrow: "Specialty · Chiropractic",
+    h1a: "High visit volume,",
+    h1b: "documentation that holds up.",
+    tagline: "Chiropractic revenue leaks in medical necessity and coverage limits - visit caps, maintenance-care denials and modifier errors. AI agents catch it before the claim goes out and work the whole cycle behind it.",
+    overview: "Chiropractic runs on high visit volume against tight payer rules: medical-necessity documentation, active-treatment vs maintenance-care distinctions, visit caps, and the AT modifier. MedXFlow supports coding and documentation, verifies benefits and visit limits before care, and runs claims, posting and denials end to end.",
+    stat: { n: "AT", suffix: " modifier", label: "Active-treatment vs maintenance care flagged so covered visits get paid" },
+    groups: [
+      { title: "Coding & documentation", note: "Where chiropractic leaks.", processes: [
+        ["🏷️", "CMT & modifier support", "Supports 98940 to 98943 spinal manipulation coding with the correct AT modifier."],
+        ["📝", "Medical-necessity prompts", "Prompts for the documentation payers require to support active treatment."],
+        ["🎯", "Maintenance-care flagging", "Flags visits at risk of maintenance-care denial before submission."],
+      ] },
+      { title: "Eligibility & benefits", processes: [
+        ["🛡️", "Visit-limit verification", "Verifies coverage and remaining chiropractic visit limits before care."],
+        ["💳", "Copay & cash-plan handling", "Surfaces patient responsibility and supports cash/wellness plans."],
+      ] },
+      { title: "Prior authorization", processes: [
+        ["📦", "Extended-care authorization", "Submits authorizations for extended treatment plans with documentation."],
+        ["📡", "Auth status tracking", "Tracks authorizations to approval and flags expiring ones."],
+      ] },
+      { title: "Claims, posting & denials", processes: [
+        ["🧼", "Claim scrubbing", "Scrubs claims for modifier and medical-necessity edits before submission."],
+        ["💰", "Payment posting & reconciliation", "Auto-posts ERAs and reconciles at line level."],
+        ["🔧", "Denial management", "Works visit-limit and medical-necessity denials by root cause."],
+      ] },
+    ],
+    benefits: ["Fewer maintenance-care and visit-limit denials", "Documentation that supports medical necessity", "Faster, cleaner high-volume claims", "Less front-desk time on benefits and caps"],
+  },
+  {
+    slug: "urgent-care",
+    icon: "⛑️",
+    name: "Urgent Care",
+    eyebrow: "Specialty · Urgent Care",
+    h1a: "High volume,",
+    h1b: "clean claims at speed.",
+    tagline: "Urgent care lives on throughput - walk-ins, self-pay and fast eligibility. AI agents verify coverage in seconds, code the visit correctly, and keep clean claims flowing at volume.",
+    overview: "Urgent care wins on speed and volume, which is exactly where revenue slips: unverified coverage on walk-ins, self-pay that had active insurance, S-codes and global-period rules, and E/M plus procedure coding. MedXFlow verifies eligibility instantly, supports coding, and runs claims, posting and denials end to end.",
+    stat: { n: "S9083", suffix: "", label: "Global vs itemized urgent-care billing handled to each payer's rule" },
+    groups: [
+      { title: "Eligibility at speed", note: "Where urgent care leaks.", processes: [
+        ["⚡", "Instant walk-in verification", "Verifies eligibility in seconds for walk-in patients before they are seen."],
+        ["🔎", "Self-pay coverage discovery", "Finds active coverage for patients presenting as self-pay."],
+        ["💳", "Point-of-service collection", "Surfaces copay and patient responsibility for collection at the desk."],
+      ] },
+      { title: "Coding & documentation", processes: [
+        ["🏷️", "E/M plus procedure coding", "Supports E/M level selection with same-visit procedure coding and modifiers."],
+        ["📋", "S-code & global billing", "Applies S9083/S9088 or itemized billing per each payer's requirement."],
+      ] },
+      { title: "Claims & submission", processes: [
+        ["🧼", "High-volume claim scrubbing", "Scrubs claims against payer and bundling edits at urgent-care volume."],
+        ["🔄", "Claim status follow-up", "Polls 276/277 status and chases stuck claims automatically."],
+      ] },
+      { title: "Posting & denials", processes: [
+        ["💰", "Automated payment posting", "Auto-posts ERAs with line-level reconciliation."],
+        ["🔧", "Denial management", "Works eligibility and coding denials fast, before filing deadlines."],
+      ] },
+    ],
+    benefits: ["Coverage verified before care, even on walk-ins", "Fewer self-pay write-offs", "Clean claims at high throughput", "Faster cash with automated follow-up"],
+  },
+  {
+    slug: "dme",
+    icon: "🦽",
+    name: "DME (Durable Medical Equipment)",
+    eyebrow: "Specialty · DME",
+    h1a: "Authorization-heavy,",
+    h1b: "documentation that clears.",
+    tagline: "DME revenue lives or dies on documentation and authorization - CMNs, medical necessity, and recurring rental billing. AI agents assemble the paperwork, track auths, and keep rentals billing on time.",
+    overview: "DME is one of the most documentation- and authorization-intensive corners of billing: certificates of medical necessity, detailed written orders, prior authorization, and recurring rental cycles. MedXFlow verifies coverage, assembles and tracks authorizations, supports HCPCS coding, and keeps recurring claims and denials handled end to end.",
+    stat: { n: "CMN", suffix: "", label: "Certificates of medical necessity assembled and tracked to approval" },
+    groups: [
+      { title: "Authorization & documentation", note: "Where DME leaks.", processes: [
+        ["📦", "Prior authorization assembly", "Assembles and submits DME authorizations with the required documentation."],
+        ["📝", "CMN & order tracking", "Tracks certificates of medical necessity and detailed written orders to completion."],
+        ["📡", "Auth & expirable tracking", "Tracks authorizations and re-authorization dates so nothing lapses."],
+      ] },
+      { title: "Eligibility & benefits", processes: [
+        ["🛡️", "Coverage & benefit checks", "Verifies DME coverage, rental-vs-purchase rules and patient responsibility."],
+        ["🔗", "Medicare & secondary handling", "Handles Medicare DME rules and secondary coordination."],
+      ] },
+      { title: "Coding & claims", processes: [
+        ["🏷️", "HCPCS & modifier support", "Supports HCPCS coding with rental (RR), purchase and other modifiers."],
+        ["🔁", "Recurring rental billing", "Bills recurring rental cycles on time, every cycle."],
+      ] },
+      { title: "Posting & denials", processes: [
+        ["💰", "Payment posting", "Auto-posts ERAs and reconciles rental and purchase payments."],
+        ["🔧", "Denial management", "Works documentation and medical-necessity denials by root cause."],
+      ] },
+    ],
+    benefits: ["Fewer documentation and medical-necessity denials", "Authorizations and CMNs tracked to approval", "Recurring rentals billed on time", "Less manual paperwork per order"],
+  },
+  {
+    slug: "home-health",
+    icon: "🏠",
+    name: "Home Health",
+    eyebrow: "Specialty · Home Health",
+    h1a: "OASIS, PDGM,",
+    h1b: "and cash that keeps moving.",
+    tagline: "Home health revenue hinges on OASIS accuracy, PDGM periods and authorizations. AI agents verify coverage, track auths and periods, and keep claims and RAPs/final claims flowing end to end.",
+    overview: "Home health billing is uniquely complex: OASIS-driven PDGM periods, LUPA thresholds, authorizations, and the RAP-to-final-claim cycle. MedXFlow verifies eligibility, tracks authorizations and 30-day periods, supports coding, and runs claims, posting and denials so cash does not stall between periods.",
+    stat: { n: "PDGM", suffix: "", label: "30-day periods and LUPA thresholds tracked so claims bill correctly" },
+    groups: [
+      { title: "Periods & authorization", note: "Where home health leaks.", processes: [
+        ["📅", "PDGM period tracking", "Tracks 30-day PDGM periods and LUPA visit thresholds to avoid underpayment."],
+        ["📦", "Authorization management", "Submits and tracks payer authorizations across the episode."],
+        ["📝", "OASIS-linked documentation prompts", "Prompts for the documentation that supports the billed period."],
+      ] },
+      { title: "Eligibility & benefits", processes: [
+        ["🛡️", "Coverage & benefit verification", "Verifies home-health coverage and benefit periods before care."],
+        ["🔗", "Medicare & MA plan handling", "Handles Medicare and Medicare Advantage home-health rules."],
+      ] },
+      { title: "Claims cycle", processes: [
+        ["🧾", "RAP & final claim handling", "Manages the notice-of-admission and final-claim cycle on time."],
+        ["🔄", "Claim status follow-up", "Polls status and chases stuck claims automatically."],
+      ] },
+      { title: "Posting & denials", processes: [
+        ["💰", "Payment posting", "Auto-posts ERAs and reconciles by period."],
+        ["🔧", "Denial management", "Works authorization and documentation denials by root cause."],
+      ] },
+    ],
+    benefits: ["PDGM periods and LUPA thresholds handled correctly", "Authorizations tracked across the episode", "RAP and final claims filed on time", "Fewer documentation-driven denials"],
+  },
+  {
+    slug: "radiology",
+    icon: "🩻",
+    name: "Radiology",
+    eyebrow: "Specialty · Radiology",
+    h1a: "Prior auth heavy,",
+    h1b: "denials caught upstream.",
+    tagline: "Radiology's biggest leak is prior authorization - imaging that needs it and does not have it is denied. AI agents detect, submit and track auths, split technical and professional components, and work the cycle end to end.",
+    overview: "Radiology carries some of the highest prior-authorization burden in medicine, plus technical/professional component splits and modifier complexity. MedXFlow detects auth requirements, submits and tracks them, supports TC/26 and imaging coding, and runs claims, posting and denials so imaging revenue is not lost to paperwork.",
+    stat: { n: "TC/26", suffix: "", label: "Technical and professional components split and billed correctly" },
+    groups: [
+      { title: "Prior authorization", note: "Where radiology leaks.", processes: [
+        ["🔎", "Auto-detect auth requirements", "Flags which imaging orders need authorization the moment they are ordered."],
+        ["📤", "Submit with documentation", "Submits imaging authorizations with clinical justification."],
+        ["📡", "Status tracking", "Tracks authorizations to approval and surfaces at-risk cases before the scan."],
+      ] },
+      { title: "Coding & documentation", processes: [
+        ["🏷️", "TC / professional component split", "Applies TC and 26 modifiers so technical and professional components bill correctly."],
+        ["📋", "Imaging coding support", "Supports CPT imaging coding with contrast and laterality modifiers."],
+      ] },
+      { title: "Eligibility & claims", processes: [
+        ["🛡️", "Eligibility verification", "Verifies coverage and imaging benefits before service."],
+        ["🧼", "Claim scrubbing", "Scrubs claims against payer and bundling edits before submission."],
+      ] },
+      { title: "Posting & denials", processes: [
+        ["💰", "Payment posting", "Auto-posts ERAs with line-level reconciliation."],
+        ["🔧", "Denial management", "Works authorization and medical-necessity denials by root cause."],
+      ] },
+    ],
+    benefits: ["Fewer authorization-related imaging denials", "Technical and professional components billed correctly", "Authorizations cleared before the scan", "Faster cash with automated follow-up"],
+  },
+  {
+    slug: "ambulatory-surgery-center",
+    icon: "🏥",
+    name: "Ambulatory Surgery Center (ASC)",
+    eyebrow: "Specialty · ASC",
+    h1a: "High-dollar claims,",
+    h1b: "nothing left on the table.",
+    tagline: "ASC claims are high-dollar and complex - implants, multiple procedures, and authorization. AI agents secure auths, code implants and multiple procedures correctly, and protect every dollar through posting and denials.",
+    overview: "Ambulatory surgery centers bill high-dollar, high-complexity claims: implant and device coding, multiple-procedure discounting and modifiers, and prior authorization. A single missed auth or implant line is expensive. MedXFlow secures authorizations, supports implant and procedure coding, verifies benefits, and runs claims, posting and denials end to end.",
+    stat: { n: "51", suffix: " modifier", label: "Multiple-procedure discounting and implant lines coded correctly" },
+    groups: [
+      { title: "Authorization", note: "Where ASC revenue leaks.", processes: [
+        ["📦", "Surgical prior authorization", "Detects and submits authorizations for scheduled procedures with documentation."],
+        ["📡", "Auth-to-schedule matching", "Confirms the authorization matches the exact procedure and provider before surgery."],
+        ["📅", "Status tracking", "Tracks authorizations to approval and escalates at-risk cases pre-op."],
+      ] },
+      { title: "Coding & documentation", processes: [
+        ["🏷️", "Implant & device coding", "Supports implant and device HCPCS coding so high-dollar lines are captured."],
+        ["🔢", "Multiple-procedure modifiers", "Applies modifier 51 and multiple-procedure discounting correctly."],
+      ] },
+      { title: "Eligibility & claims", processes: [
+        ["🛡️", "Benefit verification", "Verifies surgical benefits and patient responsibility before the procedure."],
+        ["🧼", "Claim scrubbing", "Scrubs high-dollar claims against payer and bundling edits."],
+      ] },
+      { title: "Posting & denials", processes: [
+        ["💰", "Payment posting & underpayment detection", "Auto-posts ERAs and flags underpayments against contracted rates."],
+        ["🔧", "Denial management", "Works authorization and coding denials fast, given the dollar stakes."],
+      ] },
+    ],
+    benefits: ["Authorizations matched to the exact procedure", "Implant and high-dollar lines captured", "Underpayments detected against contracts", "Fewer costly authorization denials"],
+  },
+  {
     slug: "primary-care",
     icon: "🩺",
     name: "Primary Care",
