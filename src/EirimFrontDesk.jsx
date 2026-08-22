@@ -69,11 +69,12 @@ export function Reveal({ children, delay = 0, className = "" }) {
 /* ---------- Nav ---------- */
 // Specialties mega-menu, grouped into columns (left-to-right) like Products.
 const SPECIALTY_GROUPS = [
-  ["Primary & Preventive", ["primary-care"]],
+  ["Primary & Urgent", ["primary-care", "urgent-care"]],
   ["Aesthetics & Skin", ["medspa", "dermatology"]],
   ["Dental & Vision", ["dental", "eye-care"]],
-  ["Behavioral & Therapy", ["behavioral-health", "physical-therapy", "physical-rehabilitation"]],
-  ["Procedural & Surgical", ["cardiology", "orthopedics"]],
+  ["Behavioral & Therapy", ["behavioral-health", "physical-therapy", "physical-rehabilitation", "chiropractic"]],
+  ["Procedural & Surgical", ["cardiology", "orthopedics", "radiology", "ambulatory-surgery-center"]],
+  ["Post-Acute & DME", ["home-health", "dme"]],
 ];
 const specBySlug = Object.fromEntries(SPECIALTIES.map((s) => [s.slug, s]));
 
@@ -690,10 +691,10 @@ function Integrations() {
           </Reveal>
           <Reveal delay={120}>
             <div className="int-chips">
-              <span className="ichip">Epic</span>
-              <span className="ichip">athenahealth</span>
-              <span className="ichip">eClinicalWorks</span>
-              <span className="ichip ichip-soft">Availity</span>
+              <a className="ichip" style={{ textDecoration: "none" }} href="/epic-rcm-automation-integration/">Epic</a>
+              <a className="ichip" style={{ textDecoration: "none" }} href="/athenahealth-billing-api-integration/">athenahealth</a>
+              <a className="ichip" style={{ textDecoration: "none" }} href="/eclinicalworks-billing-integration/">eClinicalWorks</a>
+              <a className="ichip ichip-soft" style={{ textDecoration: "none" }} href="/availity-api-integration-guide/">Availity</a>
               <span className="ichip ichip-soft">SMS / ZIP lookup</span>
             </div>
           </Reveal>
@@ -1074,7 +1075,9 @@ function Guides() {
   const items = [
     ["/blog/what-is-dnfb-clear-coding-backlog/", "What is DNFB? Clear the coding backlog", "Discharged Not Final Billed, DNFB days, and how to cut them."],
     ["/blog/prior-authorization-automation-guide/", "Prior authorization automation", "A practical guide to automating prior auth for clinics."],
-    ["/specialties/dermatology/", "Dermatology revenue cycle management", "AI agents and telehealth tuned to dermatology practices."],
+    ["/blog/how-much-does-rcm-automation-cost/", "What does RCM automation cost?", "The pricing models, what drives cost, and how to compare."],
+    ["/best-rcm-automation-companies/", "Choosing an RCM automation company", "The vendor categories and the criteria that actually matter."],
+    ["/blog/why-are-medical-claims-denied/", "Why medical claims get denied", "The 12 most common reasons, and how to prevent each."],
     ["/products/denial-management/", "Denial management", "Turn denials into recovered revenue, worked by root cause."],
     ["/roi-calculator/", "ROI calculator", "See what MedXFlow saves versus your current RCM cost."],
     ["/rcm-denial-benchmarks/", "RCM denial benchmarks", "Claim denial rates, costs and KPI benchmarks."],
