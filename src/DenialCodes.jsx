@@ -56,6 +56,11 @@ export function DenialCodePage({ slug }) {
   if (!c) {
     return <Shell><main className="wrap dc-article"><p className="eyebrow">Not found</p><h1>Code not found</h1><p><a href="/denial-codes/">Back to the denial code lookup</a></p></main></Shell>;
   }
+  // Related codes (same category first, then fill) to interlink the hub.
+  const related = [
+    ...CODES.filter((x) => x.cat === c.cat && x.slug !== c.slug),
+    ...CODES.filter((x) => x.cat !== c.cat && x.slug !== c.slug),
+  ].slice(0, 6);
   return (
     <Shell>
       <main className="wrap dc-article">
@@ -67,6 +72,16 @@ export function DenialCodePage({ slug }) {
         <div className="dc-block"><h2>Official description</h2><p className="dc-official">{c.official}</p></div>
         <div className="dc-block"><h2>Common cause</h2><p>{c.cause}</p></div>
         <div className="dc-block"><h2>How to fix it</h2><p>{c.fix}</p></div>
+
+        <div className="dc-block dc-related-block">
+          <h2>Related denial codes</h2>
+          <div className="dc-related">
+            {related.map((r) => (
+              <a key={r.slug} href={`/denial-codes/${r.slug}/`}>{r.code}: {r.meaning}</a>
+            ))}
+          </div>
+          <p className="dc-related-all"><a href="/denial-codes/">See all denial codes →</a></p>
+        </div>
 
         <div className="dc-cta">
           <p>Working denials by hand? MedXFlow AI agents triage denials by reason code, draft appeals, and surface the root cause.</p>
@@ -101,6 +116,11 @@ const DC_CSS = `
 .dc-block h2{font-size:19px; margin:0 0 8px; font-weight:800; color:var(--ink)}
 .dc-block p{font-size:16.5px; color:#33455A; margin:0; max-width:70ch}
 .dc-official{font-style:italic; color:#45596E}
+.dc-related{display:flex; flex-direction:column; gap:8px; margin-top:4px}
+.dc-related a{font-size:15px; color:var(--spruce,#1A5DAD); text-decoration:none; font-weight:600}
+.dc-related a:hover{text-decoration:underline}
+.dc-related-all{margin-top:12px; font-size:14.5px}
+.dc-related-all a{color:var(--spruce,#1A5DAD); font-weight:700; text-decoration:none}
 .dc-cta{margin:34px 0; padding:24px; background:var(--mist); border:1px solid var(--seaglass); border-radius:16px}
 .dc-cta p{font-size:16px; font-weight:600; margin:0 0 14px; color:var(--ink)}
 .blog .btn{display:inline-block; background:var(--ink); color:#fff; padding:11px 20px; border-radius:10px; font-weight:700; text-decoration:none; font-size:15px}

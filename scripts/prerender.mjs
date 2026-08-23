@@ -88,12 +88,18 @@ function denialIndexBody() {
     `</section>`;
 }
 function denialCodeBody(c) {
+  const related = [
+    ...CODES.filter((x) => x.cat === c.cat && x.slug !== c.slug),
+    ...CODES.filter((x) => x.cat !== c.cat && x.slug !== c.slug),
+  ].slice(0, 6);
   return `<article><h1>Denial Code ${esc(c.code)}: What It Means and How to Fix It</h1>` +
     p(c.meaning) +
     h2("Official description") + p(c.official) +
     h2("Common cause") + p(c.cause) +
     h2("How to fix it") + p(c.fix) +
-    `<p><a href="/products/denial-management/">See MedXFlow Denial Management</a></p>` +
+    h2("Related denial codes") +
+    `<ul>${related.map((r) => `<li><a href="/denial-codes/${r.slug}/">${esc(r.code)}: ${esc(r.meaning)}</a></li>`).join("")}</ul>` +
+    `<p><a href="/denial-codes/">See all denial codes</a> · <a href="/products/denial-management/">See MedXFlow Denial Management</a></p>` +
     `</article>`;
 }
 function aiAgentsBody() {
