@@ -109,7 +109,7 @@ export function Nav({ resources = false } = {}) {
               {t("nav.products")} <span className="nav-dd-caret">▼</span>
             </button>
             <div className="nav-dd-menu nav-dd-mega" role="menu">
-              <div className="nav-dd-mega-inner wrap">
+              <div className="nav-dd-mega-inner">
                 <div className="nav-dd-col">
                   <div className="nav-dd-head">Platforms</div>
                   <a href="/ai-agents-rcm/" role="menuitem"><span className="nav-dd-em">🤖</span>AI Agents for RCM</a>
@@ -169,7 +169,7 @@ export function Nav({ resources = false } = {}) {
               Specialties <span className="nav-dd-caret">▼</span>
             </button>
             <div className="nav-dd-menu nav-dd-mega" role="menu">
-              <div className="nav-dd-mega-inner wrap">
+              <div className="nav-dd-mega-inner">
                 {SPECIALTY_GROUPS.map(([title, slugs]) => (
                   <div className="nav-dd-col" key={title}>
                     <div className="nav-dd-head">{title}</div>
@@ -1199,7 +1199,7 @@ export const CSS = `
 .nav-scrolled ~ * .nav-dd-mega, .nav-dd-mega{top:57px}
 .nav-dd:hover .nav-dd-mega, .nav-dd:focus-within .nav-dd-mega{transform:none}
 .nav-dd-mega::before{content:""; position:absolute; top:-20px; left:0; right:0; height:20px}
-.nav-dd-mega-inner{display:grid; grid-template-columns:repeat(6,1fr); gap:10px 26px; padding:30px clamp(20px,3vw,48px) 34px}
+.nav-dd-mega-inner{display:grid; grid-template-columns:repeat(6,1fr); gap:10px 26px; padding:30px clamp(20px,3vw,48px) 34px; max-width:1760px; margin:0 auto}
 .nav-dd-col{display:flex; flex-direction:column; gap:1px; min-width:0}
 .nav-dd-col-span2{grid-column:span 2}
 .nav-dd-subgrid{display:grid; grid-template-columns:1fr 1fr; gap:1px 20px}
