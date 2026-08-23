@@ -51,7 +51,7 @@ export default function About() {
 
           <section className="ab-contact">
             <h2>Contact</h2>
-            <p><a href="tel:+12103969718">(210) 396-9718</a> · <a href="mailto:sales@medxflow.ai">sales@medxflow.ai</a> · <a href="/#cta">Book a demo</a></p>
+            <p><a href="tel:+14693128805">(469) 312-8805</a> · <a href="mailto:sales@medxflow.ai">sales@medxflow.ai</a> · <a href="/#cta">Book a demo</a></p>
           </section>
         </main>
         <Footer />

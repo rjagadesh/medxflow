@@ -72,7 +72,7 @@ export default function Trust() {
           <section className="tc-cta">
             <h2>Have a security or compliance question?</h2>
             <p>Ask us anything about HIPAA, the BAA, data handling, or how the AI agents keep PHI secure.</p>
-            <p className="tc-contact"><a href="mailto:sales@medxflow.ai">sales@medxflow.ai</a> · <a href="tel:+12103969718">(210) 396-9718</a> · <a href="/#cta">Book a demo</a></p>
+            <p className="tc-contact"><a href="mailto:sales@medxflow.ai">sales@medxflow.ai</a> · <a href="tel:+14693128805">(469) 312-8805</a> · <a href="/#cta">Book a demo</a></p>
           </section>
         </main>
         <Footer />
