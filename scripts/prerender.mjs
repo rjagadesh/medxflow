@@ -494,8 +494,14 @@ const routes = [
         url: `${ORIGIN}/${p.slug}/`,
         telephone: "+1-469-312-8805",
         email: "sales@medxflow.ai",
+        image: `${ORIGIN}/og-cover.jpg`,
+        logo: `${ORIGIN}/logo.png`,
         address: { "@type": "PostalAddress", addressLocality: "Frisco", addressRegion: "TX", addressCountry: "US" },
+        // City-level coordinates (Frisco, TX); replace with the exact street
+        // address + point once the office address is published.
+        geo: { "@type": "GeoCoordinates", latitude: 33.1507, longitude: -96.8236 },
         areaServed: ["Frisco TX", "Dallas TX", "Fort Worth TX", "Plano TX", "Dallas-Fort Worth metroplex", "Texas"],
+        sameAs: ["https://www.linkedin.com/company/medxflow/"],
         parentOrganization: { "@id": `${ORIGIN}/#organization` },
       }] : undefined,
     }),
@@ -604,13 +610,68 @@ function headFor(r) {
 // Regenerate sitemap.xml from every known route (homepage + all prerendered
 // routes) so new pages like blog posts are always included.
 function writeSitemap() {
-  const today = new Date().toISOString().slice(0, 10);
-  // Trailing slash on sub-pages to match what Netlify serves + the canonical.
-  const urls = ["/", ...routes.map((r) => r.path.replace(/\/+$/, "") + "/")];
-  const body = urls.map((u) => `  <url>\n    <loc>${ORIGIN}${u}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>${u === "/" ? "1.0" : "0.7"}</priority>\n  </url>`).join("\n");
+  // lastmod only where we genuinely know it (blog publish dates). Stamping
+  // "today" on every URL each build teaches Google to distrust the field.
+  const entries = [
+    { u: "/" },
+    ...routes.map((r) => ({ u: r.path.replace(/\/+$/, "") + "/", d: r.article?.date })),
+  ];
+  const body = entries.map(({ u, d }) =>
+    `  <url>\n    <loc>${ORIGIN}${u}</loc>${d ? `\n    <lastmod>${d}</lastmod>` : ""}\n  </url>`).join("\n");
   fs.writeFileSync(path.join(DIST, "sitemap.xml"),
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`);
-  return urls.length;
+  return entries.length;
+}
+
+// RSS feed for the blog: cheap discovery for crawlers and AI aggregators.
+function writeRss() {
+  const rfc822 = (iso) => new Date(iso + "T12:00:00Z").toUTCString();
+  const items = [...POSTS].sort((a, b) => b.date.localeCompare(a.date)).map((p) =>
+    `    <item>\n      <title>${esc(p.title)}</title>\n      <link>${ORIGIN}/blog/${p.slug}/</link>\n      <guid isPermaLink="true">${ORIGIN}/blog/${p.slug}/</guid>\n      <pubDate>${rfc822(p.date)}</pubDate>\n      <description>${esc(p.description)}</description>\n    </item>`).join("\n");
+  fs.writeFileSync(path.join(DIST, "feed.xml"),
+    `<?xml version="1.0" encoding="UTF-8"?>\n<rss version="2.0"><channel>\n    <title>MedXFlow RCM Resources</title>\n    <link>${ORIGIN}/blog/</link>\n    <description>Practical guides on claim denials, prior authorization, coding, EDI and the healthcare revenue cycle.</description>\n    <language>en-us</language>\n${items}\n</channel></rss>\n`);
+}
+
+// llms.txt, generated from route data so it never goes stale (llmstxt.org).
+function writeLlmsTxt() {
+  const line = (u, label, d) => `- [${label}](${ORIGIN}${u}): ${d}`;
+  const out = [
+    "# MedXFlow",
+    "",
+    "> MedXFlow is AI revenue cycle management (RCM) for US medical practices, billing companies and RCM teams. AI agents run eligibility, prior authorization, coding, claims, denial management, payment posting and patient collections end to end - plus a 24/7 AI receptionist, self check-in and telehealth - integrated with Epic, athenahealth and eClinicalWorks. HIPAA-compliant with a BAA available; SOC 2-aligned controls.",
+    "",
+    "## Core pages",
+    line("/", "Home", "What MedXFlow does across the revenue cycle."),
+    line("/ai-agents-rcm/", "AI agents for RCM", "How the AI agents work the revenue cycle end to end."),
+    line("/products/", "Products", "The connected RCM product suite."),
+    line("/specialties/", "Specialties", "RCM automation by practice type."),
+    line("/about/", "About", "Who MedXFlow is."),
+    line("/trust/", "Trust and security", "HIPAA, BAA, SOC 2-aligned controls."),
+    line("/careers/", "Careers", "Open roles across AI engineering and certified RCM."),
+    "",
+    "## Products",
+    ...PRODUCTS.map((x) => line(`/products/${x.slug}/`, x.name, x.tagline)),
+    "",
+    "## Specialties",
+    ...SPECIALTIES.map((s) => line(`/specialties/${s.slug}/`, s.name, (s.seoDesc || s.tagline).split(" - ")[0])),
+    "",
+    "## Tools and reference",
+    line("/roi-calculator/", "ROI calculator", "Compare your current RCM cost against MedXFlow pricing."),
+    line("/denial-rate-calculator/", "Denial rate calculator", "Calculate and benchmark your claim denial rate."),
+    line("/npi-lookup/", "NPI lookup", "Search the CMS NPPES registry."),
+    line("/rcm-denial-benchmarks/", "RCM denial benchmarks", "Claim denial rates, costs and KPI benchmarks with sources."),
+    line("/glossary/", "RCM glossary", "Plain-language definitions of revenue cycle terms."),
+    line("/denial-codes/", "Denial codes", "CARC and RARC denial code explanations and fixes."),
+    "",
+    "## Guides",
+    ...[...POSTS].sort((a, b) => b.date.localeCompare(a.date)).map((p) => line(`/blog/${p.slug}/`, p.title, p.description)),
+    "",
+    "## Contact",
+    "- Email: sales@medxflow.ai",
+    "- Phone: +1-469-312-8805",
+    "",
+  ].join("\n");
+  fs.writeFileSync(path.join(DIST, "llms.txt"), out);
 }
 
 let n = 0;
@@ -632,5 +693,8 @@ for (const r of routes) {
 }
 
 const smCount = writeSitemap();
+writeRss();
+writeLlmsTxt();
 console.log(`✓ prerendered ${n} routes with per-page meta + JSON-LD`);
+console.log("✓ feed.xml + llms.txt regenerated");
 console.log(`✓ sitemap.xml regenerated with ${smCount} URLs`);
