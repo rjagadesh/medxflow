@@ -108,7 +108,7 @@ export const SEO_PAGES = [
   {
     slug: "ai-rcm-vendors-comparison",
     kind: "pillar",
-    title: "AI RCM Vendors Compared: Capabilities, Pricing & Fit | MedXFlow",
+    title: "AI RCM Vendors Compared: Pricing & Fit | MedXFlow",
     h1: "AI RCM Vendors Compared: Capabilities, Pricing and Fit",
     eyebrow: "Comparison · AI RCM Vendors",
     description: "How to compare AI revenue cycle vendors in 2026 - the categories, the capabilities that matter, pricing models, and how to find the right fit for your practice or billing company.",
@@ -232,7 +232,7 @@ export const SEO_PAGES = [
   {
     slug: "availity-alternatives",
     kind: "pillar",
-    title: "Availity Alternatives for Eligibility & Prior Auth | MedXFlow",
+    title: "Availity Alternatives: Eligibility & Prior Auth | MedXFlow",
     h1: "Availity Alternatives for Eligibility and Prior Auth",
     eyebrow: "Comparison · Alternatives",
     description: "Comparing Availity alternatives for eligibility, claims and prior authorization - what a health information network does, where automation adds value, and how MedXFlow fits. Verify current offerings.",
@@ -571,7 +571,7 @@ export const SEO_PAGES = [
   {
     slug: "best-ai-medical-billing-companies",
     kind: "pillar",
-    title: "Best AI Medical Billing Companies: 2026 Buyer's Guide | MedXFlow",
+    title: "Best AI Medical Billing Companies: 2026 Guide | MedXFlow",
     h1: "Choosing an AI Medical Billing Company in 2026",
     eyebrow: "Buyer's Guide · AI Medical Billing",
     description: "What to look for in an AI medical billing company in 2026 - how AI billing differs from traditional outsourcing, the criteria that matter, and the questions to ask before you sign.",
@@ -654,7 +654,7 @@ export const SEO_PAGES = [
   {
     slug: "revenue-cycle-management-dallas-fort-worth",
     kind: "audience",
-    title: "Revenue Cycle Management for Dallas-Fort Worth Practices | MedXFlow",
+    title: "Revenue Cycle Management Dallas-Fort Worth | MedXFlow",
     h1: "Revenue Cycle Management for Dallas-Fort Worth Practices",
     eyebrow: "Serving Dallas-Fort Worth, TX",
     description: "AI-driven revenue cycle management for Dallas-Fort Worth medical practices - eligibility, prior authorization, coding, claims and denials automated, with a human-led billing option.",
@@ -865,7 +865,7 @@ export const SEO_PAGES = [
   {
     slug: "ai-for-physician-practices",
     kind: "audience",
-    title: "AI Revenue Cycle Automation for Physician Practices | MedXFlow",
+    title: "AI RCM Automation for Physician Practices | MedXFlow",
     h1: "AI Revenue Cycle Automation for Physician Practices",
     eyebrow: "For Physician Practices",
     description:

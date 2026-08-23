@@ -12,7 +12,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { PRODUCTS } from "../src/products.data.js";
 import { SPECIALTIES } from "../src/specialties.data.js";
-import { POSTS, medxflowFor } from "../src/blog.data.js";
+import { POSTS, medxflowFor, resourcesFor } from "../src/blog.data.js";
 import { AI_AGENTS, AI_AGENTS_INTRO, AI_AGENTS_FAQ } from "../src/ai-agents-rcm.data.js";
 import { SEO_PAGES } from "../src/seo-pages.data.js";
 import { TERMS } from "../src/glossary.data.js";
@@ -53,6 +53,8 @@ function blogPostBody(post) {
     p(post.intro) +
     post.sections.map((s) => h2(s.h) + (s.p || []).map(p).join("") + (s.list ? `<ul>${s.list.map((li) => `<li>${esc(li)}</li>`).join("")}</ul>` : "")).join("") +
     h2("How MedXFlow AI agents handle this") + p(medxflowFor(post)) +
+    h2("Related resources") +
+    `<ul>${resourcesFor(post).map((r) => `<li><a href="${r.href}">${esc(r.label)}</a></li>`).join("")}</ul>` +
     faqHtml(post.faq) +
     `</article>`;
 }
@@ -92,7 +94,7 @@ function denialCodeBody(c) {
     ...CODES.filter((x) => x.cat === c.cat && x.slug !== c.slug),
     ...CODES.filter((x) => x.cat !== c.cat && x.slug !== c.slug),
   ].slice(0, 6);
-  return `<article><h1>Denial Code ${esc(c.code)}: What It Means and How to Fix It</h1>` +
+  return `<article><h1>Denial Code ${esc(c.code)}: Description, Meaning and How to Fix It</h1>` +
     p(c.meaning) +
     h2("Official description") + p(c.official) +
     h2("Common cause") + p(c.cause) +
@@ -244,9 +246,35 @@ const RCM_VIDEO = {
   contentUrl: "https://youtu.be/5FWau1ZzAgA",
 };
 
-// Every route to prerender (homepage keeps its own index.html untouched).
+// Crawler bodies for the two pages whose content is otherwise client-rendered
+// (homepage hero is an animated carousel; telehealth is i18n-driven).
+function telehealthBody() {
+  const t = en.telehealth;
+  return `<article><h1>${esc(t.hero_h1a)} ${esc(t.hero_h1b)}</h1>` +
+    p(t.hero_lead) + p(t.intro_body) +
+    h2(t.feat_h2 || "What's included") +
+    `<ul>` + [1, 2, 3, 4].map((i) => t[`f${i}_h`] ? `<li><strong>${esc(t[`f${i}_h`])}</strong> - ${esc(t[`f${i}_d`] || "")}</li>` : "").join("") + `</ul>` +
+    `<p><a href="/products/">See all MedXFlow products</a> · <a href="/ai-agents-rcm/">AI agents for healthcare RCM</a></p>` +
+    `</article>`;
+}
+function homeBody() {
+  const h = en.hero;
+  return `<article><h1>${esc(h.s1_h1a)} ${esc(h.s1_h1b)}</h1>` +
+    p(h.s1_lead) +
+    h2("AI agents for the whole revenue cycle") +
+    p("MedXFlow runs the healthcare revenue cycle with AI agents - eligibility and benefits verification, prior authorization, medical coding and charge capture, claims submission and follow-up, denial management, payment posting and patient collections - plus a 24/7 AI receptionist, self check-in and telehealth. Integrated with Epic, athenahealth and eClinicalWorks; HIPAA-compliant with a BAA available.") +
+    h2("Explore MedXFlow") +
+    `<ul>` +
+    [["/ai-agents-rcm/", "AI Agents for Healthcare RCM"], ["/products/", "All products"], ["/specialties/", "Specialties we serve"],
+     ["/roi-calculator/", "ROI calculator"], ["/rcm-denial-benchmarks/", "RCM denial benchmarks"], ["/denial-codes/", "Denial code lookup"],
+     ["/glossary/", "RCM glossary"], ["/blog/", "Guides and resources"], ["/trust/", "Trust and security"]]
+      .map(([u, l]) => `<li><a href="${u}">${esc(l)}</a></li>`).join("") +
+    `</ul></article>`;
+}
+
+// Every route to prerender (homepage gets its crawler body injected after the loop).
 const routes = [
-  { path: "/telehealth", title: "Telehealth · MedXFlow", desc: en.telehealth.hero_lead },
+  { path: "/telehealth", title: "Telehealth · MedXFlow", desc: en.telehealth.hero_lead, body: telehealthBody() },
   {
     path: "/trust",
     title: "Trust & Security · HIPAA, SOC 2, BAA · MedXFlow",
@@ -307,7 +335,7 @@ const routes = [
   })),
   { path: "/specialties", title: "Specialties · AI agents by practice type · MedXFlow", desc: "AI revenue-cycle agents tuned to your specialty - MedSpa, dental, mental health, dermatology, physical therapy, cardiology, orthopedics and primary care.", body: specialtiesIndexBody() },
   ...SPECIALTIES.map((s) => ({
-    path: `/specialties/${s.slug}/`, title: `${s.name} · AI agents for the revenue cycle · MedXFlow`, desc: s.tagline,
+    path: `/specialties/${s.slug}/`, title: `${s.name.replace(/\s*\([^)]*\)/, "")} Medical Billing & RCM | MedXFlow`, desc: s.tagline,
     body: specialtyBody(s),
     jsonld: serviceLd({
       name: `${s.name} revenue cycle management`, serviceType: "Healthcare revenue cycle management", url: `${ORIGIN}/specialties/${s.slug}/`,
@@ -315,7 +343,8 @@ const routes = [
     }),
   })),
   { path: "/blog", title: "Resources · RCM insights for medical practices · MedXFlow", desc: "Practical guides on claim denials, prior authorization, coding and the healthcare revenue cycle - for the people who run medical billing.", body: blogIndexBody() },
-  ...POSTS.map((p) => ({ path: `/blog/${p.slug}/`, title: `${p.title} · MedXFlow`, desc: p.description, article: p, body: blogPostBody(p) })),
+  // Keep titles under 60 chars: drop the brand suffix when the title alone is long.
+  ...POSTS.map((p) => ({ path: `/blog/${p.slug}/`, title: `${p.title} · MedXFlow`.length <= 60 ? `${p.title} · MedXFlow` : p.title, desc: p.description, article: p, body: blogPostBody(p) })),
   {
     path: "/ai-agents-rcm",
     title: "AI Agents for Healthcare RCM | MedXFlow",
@@ -334,7 +363,7 @@ const routes = [
   { path: "/glossary", title: "RCM Glossary · Revenue cycle terms explained · MedXFlow", desc: "Plain-English definitions of revenue cycle management, medical coding and billing terms - DNFB, CARC codes, days in A/R, prior authorization and more.", body: glossaryIndexBody() },
   ...TERMS.map((t) => ({
     path: `/glossary/${t.slug}/`,
-    title: `${t.term} - RCM Glossary | MedXFlow`,
+    title: `${t.term.replace(/\s*\([^)]*\)/, "")} - RCM Glossary | MedXFlow`,
     desc: t.def,
     body: glossaryTermBody(t),
     jsonld: JSON.stringify({
@@ -398,7 +427,7 @@ const routes = [
   },
   {
     path: "/rcm-denial-benchmarks",
-    title: "RCM Denial Benchmarks: Claim Denial Rates & Statistics | MedXFlow",
+    title: "RCM Denial Benchmarks & Claim Denial Rates | MedXFlow",
     desc: "Medical claim denial statistics and benchmarks: average denial rates (around 11%), the share that are avoidable (around 85%), cost per denial, top root causes, and healthy-vs-at-risk KPI benchmarks - compiled from published industry sources.",
     body: denialBenchmarksBody(),
     jsonld: JSON.stringify({
@@ -431,7 +460,7 @@ const routes = [
   },
   ...CODES.map((c) => ({
     path: `/denial-codes/${c.slug}/`,
-    title: `Denial Code ${c.code} - What It Means & How to Fix It | MedXFlow`,
+    title: `Denial Code ${c.code}: Description, Meaning & Fix | MedXFlow`,
     desc: `${c.code}: ${c.meaning}`.slice(0, 155),
     body: denialCodeBody(c),
     jsonld: JSON.stringify({
@@ -457,12 +486,24 @@ const routes = [
       description: p.description,
       faq: p.faq,
       crumbs: [["Home", "/"], ["Products", "/products/"], [p.h1, `/${p.slug}/`]],
+      // Local SEO: the DFW/Frisco pages also carry LocalBusiness with a service area.
+      extra: /dallas-fort-worth|frisco/.test(p.slug) ? [{
+        "@type": "LocalBusiness",
+        "@id": `${ORIGIN}/${p.slug}/#localbusiness`,
+        name: "MedXFlow",
+        url: `${ORIGIN}/${p.slug}/`,
+        telephone: "+1-469-312-8805",
+        email: "sales@medxflow.ai",
+        address: { "@type": "PostalAddress", addressLocality: "Frisco", addressRegion: "TX", addressCountry: "US" },
+        areaServed: ["Frisco TX", "Dallas TX", "Fort Worth TX", "Plano TX", "Dallas-Fort Worth metroplex", "Texas"],
+        parentOrganization: { "@id": `${ORIGIN}/#organization` },
+      }] : undefined,
     }),
   })),
 ];
 
 // Service + FAQPage + BreadcrumbList (+ optional VideoObject) JSON-LD.
-function serviceLd({ name, serviceType, url, description, faq, crumbs, video }) {
+function serviceLd({ name, serviceType, url, description, faq, crumbs, video, extra }) {
   const graph = [
     {
       "@type": "Service", name, serviceType, url, description,
@@ -484,6 +525,7 @@ function serviceLd({ name, serviceType, url, description, faq, crumbs, video }) 
   if (faq?.length) {
     graph.push({ "@type": "FAQPage", mainEntity: faq.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })) });
   }
+  if (extra?.length) graph.push(...extra);
   return JSON.stringify({ "@context": "https://schema.org", "@graph": graph });
 }
 
@@ -496,6 +538,11 @@ function articleLd(p, url) {
       author: { "@type": "Organization", name: "MedXFlow" },
       publisher: { "@id": `${ORIGIN}/#organization` },
       mainEntityOfPage: url, articleSection: p.category, keywords: (p.keywords || []).join(", "),
+    },
+    {
+      "@type": "BreadcrumbList",
+      itemListElement: [["Home", `${ORIGIN}/`], ["Resources", `${ORIGIN}/blog/`], [p.title, url]]
+        .map(([n, u], i) => ({ "@type": "ListItem", position: i + 1, name: n, item: u })),
     },
   ];
   if (p.faq?.length) {
@@ -572,6 +619,17 @@ for (const r of routes) {
   fs.writeFileSync(path.join(dir, "index.html"), headFor(r));
   n++;
 }
+// Homepage: inject the crawler body into the root index.html (same hidden-div
+// pattern as every other route) so the homepage is no longer client-only.
+{
+  const rootFile = path.join(DIST, "index.html");
+  const html = fs.readFileSync(rootFile, "utf8").replace(
+    /<div id="root">\s*<\/div>/,
+    `<div id="root"><div id="prerender" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">${homeBody()}</div></div>`
+  );
+  fs.writeFileSync(rootFile, html);
+}
+
 const smCount = writeSitemap();
 console.log(`✓ prerendered ${n} routes with per-page meta + JSON-LD`);
 console.log(`✓ sitemap.xml regenerated with ${smCount} URLs`);

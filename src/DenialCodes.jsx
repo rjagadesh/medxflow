@@ -52,7 +52,7 @@ export function DenialCodesIndex() {
 
 export function DenialCodePage({ slug }) {
   const c = denialCode(slug);
-  useEffect(() => { if (c) { document.title = `Denial Code ${c.code} - What It Means & How to Fix It · MedXFlow`; window.scrollTo(0, 0); } }, [c]);
+  useEffect(() => { if (c) { document.title = `Denial Code ${c.code}: Description, Meaning & Fix · MedXFlow`; window.scrollTo(0, 0); } }, [c]);
   if (!c) {
     return <Shell><main className="wrap dc-article"><p className="eyebrow">Not found</p><h1>Code not found</h1><p><a href="/denial-codes/">Back to the denial code lookup</a></p></main></Shell>;
   }
@@ -66,7 +66,7 @@ export function DenialCodePage({ slug }) {
       <main className="wrap dc-article">
         <nav className="dc-crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>›</span><a href="/denial-codes/">Denial Codes</a><span>›</span><span>{c.code}</span></nav>
         <p className="eyebrow">Denial Code · {c.cat}</p>
-        <h1>Denial Code {c.code}: What It Means and How to Fix It</h1>
+        <h1>Denial Code {c.code}: Description, Meaning and How to Fix It</h1>
         <p className="dc-answer">{c.meaning}</p>
 
         <div className="dc-block"><h2>Official description</h2><p className="dc-official">{c.official}</p></div>

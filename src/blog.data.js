@@ -26,6 +26,96 @@ export const MEDXFLOW_BY_CATEGORY = {
   "Buyer's Guide": "MedXFlow is the AI-native option in this category - connected agents that complete eligibility, prior authorization, coding, claims, denials, posting and collections end to end, write back into your systems, and escalate exceptions to your team.",
   "Compliance & Security": "MedXFlow handles this to HIPAA standards with a signed BAA, SOC 2-aligned controls, US data residency, encryption in transit and at rest, and full audit logging - so the automation meets the bar enterprise buyers require.",
 };
+// Hub-and-spoke internal linking: every post links to at least 2 relevant
+// solution/specialty pages. Category defaults, merged with the post's own
+// `related` link and deduped by href.
+const RESOURCES_BY_CATEGORY = {
+  "Denial Management": [
+    { label: "Denial Management automation", href: "/products/denial-management/" },
+    { label: "Denial code lookup (CARC/RARC)", href: "/denial-codes/" },
+    { label: "RCM denial benchmarks", href: "/rcm-denial-benchmarks/" },
+  ],
+  "Prior Authorization": [
+    { label: "Prior authorization automation", href: "/products/pre-authorization/" },
+    { label: "Radiology billing (auth-heavy)", href: "/specialties/radiology/" },
+  ],
+  "Eligibility": [
+    { label: "Eligibility verification automation", href: "/products/eligibility-verification/" },
+    { label: "Urgent care billing (instant eligibility)", href: "/specialties/urgent-care/" },
+  ],
+  "Claims": [
+    { label: "Claims submission automation", href: "/products/claims-submission/" },
+    { label: "Denial management", href: "/products/denial-management/" },
+  ],
+  "Accounts Receivable": [
+    { label: "Payment posting & remittance", href: "/products/payment-posting/" },
+    { label: "Patient collections", href: "/products/patient-collections/" },
+  ],
+  "AR Management": [
+    { label: "Payment posting & remittance", href: "/products/payment-posting/" },
+    { label: "Reporting & analytics (A/R KPIs)", href: "/products/reporting-analytics/" },
+  ],
+  "Coding & Charge Capture": [
+    { label: "Charge capture & coding automation", href: "/products/charge-capture-coding/" },
+    { label: "Primary care billing (coding-heavy)", href: "/specialties/primary-care/" },
+  ],
+  "Technical / Coding": [
+    { label: "Charge capture & coding automation", href: "/products/charge-capture-coding/" },
+    { label: "RCM glossary", href: "/glossary/" },
+  ],
+  "Patient Collections": [
+    { label: "Patient statements & collections", href: "/products/patient-collections/" },
+    { label: "Registration & check-in (POS collection)", href: "/products/registration-check-in/" },
+  ],
+  "Credentialing": [
+    { label: "Credentialing & provider enrollment", href: "/products/credentialing/" },
+    { label: "Free NPI lookup", href: "/npi-lookup/" },
+  ],
+  "Technical / EDI": [
+    { label: "Claims submission (837)", href: "/products/claims-submission/" },
+    { label: "Payment posting (835/ERA)", href: "/products/payment-posting/" },
+  ],
+  "Technical / Interoperability": [
+    { label: "Epic RCM integration", href: "/epic-rcm-automation-integration/" },
+    { label: "athenahealth integration", href: "/athenahealth-billing-api-integration/" },
+  ],
+  "Technical / AI": [
+    { label: "AI agents for healthcare RCM", href: "/ai-agents-rcm/" },
+    { label: "AI RCM vendors compared", href: "/ai-rcm-vendors-comparison/" },
+  ],
+  "AI & Automation": [
+    { label: "AI agents for healthcare RCM", href: "/ai-agents-rcm/" },
+    { label: "Healthcare RCM automation", href: "/healthcare-rcm-automation/" },
+  ],
+  "Healthcare RCM": [
+    { label: "Healthcare RCM automation", href: "/healthcare-rcm-automation/" },
+    { label: "All MedXFlow products", href: "/products/" },
+  ],
+  "Pricing": [
+    { label: "ROI calculator", href: "/roi-calculator/" },
+    { label: "RCM software pricing compared", href: "/rcm-software-pricing-comparison/" },
+  ],
+  "Buyer's Guide": [
+    { label: "Best RCM automation companies", href: "/best-rcm-automation-companies/" },
+    { label: "AI RCM vendors compared", href: "/ai-rcm-vendors-comparison/" },
+  ],
+  "Compliance & Security": [
+    { label: "Trust & security at MedXFlow", href: "/trust/" },
+    { label: "Healthcare RCM automation", href: "/healthcare-rcm-automation/" },
+  ],
+};
+export const resourcesFor = (post) => {
+  const list = [
+    ...(post?.related ? [post.related] : []),
+    ...(RESOURCES_BY_CATEGORY[post?.category] || [
+      { label: "AI agents for healthcare RCM", href: "/ai-agents-rcm/" },
+      { label: "All MedXFlow products", href: "/products/" },
+    ]),
+  ];
+  const seen = new Set();
+  return list.filter((r) => !seen.has(r.href) && seen.add(r.href)).slice(0, 3);
+};
+
 export const medxflowFor = (post) =>
   (post && post.medxflow) ||
   MEDXFLOW_BY_CATEGORY[post && post.category] ||
@@ -116,7 +206,7 @@ export const POSTS = [
   {
     slug: "medical-billing-ar-days-benchmark",
     snippet: "In medical billing, days in accounts receivable (A/R) measures how long it takes to collect. Under 40 days is generally healthy, best-in-class practices run 30 to 35, and over 50 days signals a problem. Aged A/R over 90 days should stay under about 15 to 20 percent of total A/R.",
-    title: "Medical Billing AR Days Benchmark: What Good Looks Like in 2026",
+    title: "Medical Billing AR Days Benchmark for 2026",
     description: "Days in A/R benchmarks for medical billing in 2026 - what is healthy, what is at-risk, how it varies by specialty, and how to bring your A/R days down.",
     date: "2026-08-22",
     category: "AR Management",
@@ -151,7 +241,7 @@ export const POSTS = [
   {
     slug: "x12-278-prior-authorization-explained",
     snippet: "The X12 278 is the EDI transaction for electronic prior authorization: the 278 request asks a payer to authorize a service, and the 278 response returns the decision. It can automate what is usually a manual portal-and-phone process, but payer adoption is uneven, which is why many authorizations still require portal or fax work.",
-    title: "X12 278 Explained: Automating Prior Authorization Service Reviews",
+    title: "X12 278 Prior Authorization Explained",
     description: "What the X12 278 prior authorization transaction is, how the request and response work, why adoption lags, and how AI bridges the gap where payers do not support it.",
     date: "2026-08-22",
     category: "Technical / EDI",
@@ -185,7 +275,7 @@ export const POSTS = [
   {
     slug: "ai-agents-provider-credentialing",
     snippet: "AI agents support provider credentialing by preparing and submitting payer enrollment and credentialing applications, keeping CAQH and PECOS profiles current, tracking each application to approval, and monitoring re-credentialing and expirable dates - so new providers become billable faster and no claim is filed under a lapsed credential.",
-    title: "How AI Agents Support Provider Credentialing and Payer Enrollment",
+    title: "How AI Agents Support Provider Credentialing",
     description:
       "How AI agents speed up provider credentialing and payer enrollment - preparing applications, tracking status, keeping CAQH current, and monitoring re-credentialing so providers stay billable.",
     date: "2026-08-20",
@@ -327,7 +417,7 @@ export const POSTS = [
   {
     slug: "prior-authorization-automation-guide",
     snippet: "Prior authorization automation uses software to detect which services need auth, gather documentation, submit the request, track its status, and attach the approval to the claim. It removes the manual portal work while the payer still makes the decision, cutting turnaround time and auth-related denials.",
-    title: "Prior Authorization Automation: A Practical Guide for Clinics",
+    title: "Prior Authorization Automation: A Practical Guide",
     description:
       "What prior authorization automation actually does, where it fits in your workflow, and how to cut turnaround time and denials without adding staff.",
     date: "2025-08-15",
@@ -424,6 +514,10 @@ export const POSTS = [
       },
     ],
     faq: [
+      {
+        q: "What does DNFB stand for?",
+        a: "DNFB stands for Discharged Not Final Billed. Its meaning in the revenue cycle: the dollar value of completed, discharged encounters that have not yet been coded and billed, so the revenue is earned but stuck. It is usually tracked as DNFB days (DNFB dollars divided by average daily revenue).",
+      },
       {
         q: "What is a good DNFB days number?",
         a: "Many organizations target under 5 days in DNFB. The right number depends on your specialty and volume, but the trend matters most - a rising DNFB means cash is getting trapped.",
@@ -643,7 +737,7 @@ export const POSTS = [
   {
     slug: "healthcare-revenue-cycle-management-with-ai",
     snippet: "AI in the revenue cycle automates the repetitive, rules-based work across eligibility, prior authorization, coding, claims, payment posting, denials and collections, while staff handle exceptions. The main change is capacity: the same team handles more volume with more consistent quality.",
-    title: "Healthcare Revenue Cycle Management with AI: A Practical Overview",
+    title: "Healthcare Revenue Cycle Management with AI",
     description:
       "A practical overview of using AI across healthcare revenue cycle management - which stages it automates, where humans stay in the loop, and what changes for your team.",
     date: "2026-03-15",
@@ -944,6 +1038,7 @@ export const POSTS = [
       { h: "How it travels: clearinghouse and acknowledgments", p: ["The 837 goes to a clearinghouse, which runs edits and forwards it to the payer. You get back acknowledgments: a 999 confirms the file was syntactically accepted, and a 277CA reports whether each claim was accepted or rejected before adjudication. A rejection at this stage is different from a payer denial and is fixed by correcting and resubmitting."] },
     ],
     faq: [
+      { q: "What is an 837 file?", a: "An 837 is the standard X12 EDI file used to submit a medical claim electronically to a payer or clearinghouse. It carries the patient, provider, diagnosis, procedure and charge details that would otherwise go on a paper CMS-1500 or UB-04 form." },
       { q: "What is the difference between 837P and 837I?", a: "837P is the professional claim (physician/outpatient services, based on the CMS-1500). 837I is the institutional claim (hospital/facility services, based on the UB-04). Dental uses 837D." },
       { q: "What is the 277CA?", a: "The 277CA is a claim acknowledgment from the payer or clearinghouse that reports whether each claim in your 837 was accepted or rejected before adjudication. Rejections here are corrected and resubmitted, not appealed." },
     ],
@@ -993,7 +1088,7 @@ export const POSTS = [
 
   {
     slug: "eob-to-era-conversion",
-    title: "EOB to ERA Conversion: Turning Paper Remittances into Auto-Postable 835 Files",
+    title: "EOB to ERA Conversion: Paper EOBs to 835 Files",
     description:
       "How paper and PDF EOBs are converted into an X12 835 ERA so payments post automatically - the conversion pipeline, how adjustments and CARC/RARC codes are mapped, the edge cases that break it, and how it is validated.",
     date: "2026-08-19", category: "Technical / EDI", readMins: 8,

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { LanguageProvider } from "./i18n.jsx";
 import { Nav, Footer, BookDemo, CSS } from "./EirimFrontDesk.jsx";
-import { POSTS, post as findPost, medxflowFor } from "./blog.data.js";
+import { POSTS, post as findPost, medxflowFor, resourcesFor } from "./blog.data.js";
 
 // Resources / blog. Uses the shared site header (Nav) + footer so it matches
 // every other marketing page. Index lists all posts; BlogPost renders one
@@ -60,7 +60,7 @@ export function BlogPost({ slug }) {
   const p = findPost(slug);
   useEffect(() => {
     if (!p) return;
-    document.title = `${p.title} · MedXFlow`;
+    document.title = `${p.title} · MedXFlow`.length <= 60 ? `${p.title} · MedXFlow` : p.title;
     window.scrollTo(0, 0);
   }, [p]);
 
@@ -100,6 +100,15 @@ export function BlogPost({ slug }) {
             <a className="btn" href={p.related.href}>{p.related.label} →</a>
           </div>
         )}
+
+        <section className="blog-sec blog-resources">
+          <h2>Related resources</h2>
+          <div className="blog-res-links">
+            {resourcesFor(p).map((r) => (
+              <a key={r.href} href={r.href}>{r.label} →</a>
+            ))}
+          </div>
+        </section>
 
         {p.faq?.length ? (
           <section className="blog-sec blog-faq">
@@ -159,6 +168,9 @@ const BLOG_CSS = `
 .blog-sec p{font-size:16.5px; color:#33455A; margin:0 0 14px; max-width:68ch}
 .blog-list{margin:0 0 14px; padding-left:22px; max-width:68ch}
 .blog-list li{font-size:16.5px; color:#33455A; margin:0 0 9px; line-height:1.55}
+.blog-res-links{display:flex; flex-direction:column; gap:9px}
+.blog-res-links a{color:var(--spruce); font-weight:700; font-size:15.5px; text-decoration:none}
+.blog-res-links a:hover{text-decoration:underline}
 .blog-mx{margin-top:30px; background:var(--mist,#F2F6FB); border:1px solid var(--seaglass,#CFE0F2); border-left:4px solid var(--gorse,#17C3B2); border-radius:14px; padding:20px 22px}
 .blog-mx h2{font-size:19px; margin:0 0 8px; font-weight:800; color:var(--ink,#0D2B52)}
 .blog-mx p{font-size:16px; color:#22364B; margin:0; line-height:1.6; max-width:70ch}

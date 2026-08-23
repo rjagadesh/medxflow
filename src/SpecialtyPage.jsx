@@ -22,7 +22,7 @@ export default function SpecialtyPage({ slug }) {
 
   useEffect(() => {
     if (!s) return;
-    document.title = `${s.name} · AI agents for the revenue cycle · MedXFlow`;
+    document.title = `${s.name.replace(/\s*\([^)]*\)/, "")} Medical Billing & RCM | MedXFlow`;
     let meta = document.querySelector('meta[name="description"]');
     if (!meta) { meta = document.createElement("meta"); meta.name = "description"; document.head.appendChild(meta); }
     const prev = meta.getAttribute("content");

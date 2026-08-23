@@ -813,7 +813,7 @@ export const SPECIALTIES = [
     tagline:
       "Two businesses under one roof - the cosmetic-vs-medical coding line is the biggest audit risk, and biologics are the biggest PA burden. AI agents keep both clean across the whole cycle.",
     overview:
-      "Dermatology mixes medical and cosmetic work with procedure-heavy coding and expensive biologics. AI agents keep the cosmetic-vs-medical line clean, get modifiers right on lesion removals and Mohs, assemble biologic authorizations, and run claims, posting and denials behind it.",
+      "Dermatology mixes medical and cosmetic work with procedure-heavy coding and expensive biologics. AI agents keep the cosmetic-vs-medical line clean, get modifiers right on lesion removals and Mohs, assemble biologic authorizations, and run claims, posting and denials behind it. Teledermatology is covered too - telehealth visits are billed with the correct place-of-service and modifiers, and the same AI agents handle their eligibility, claims and follow-up.",
     stat: { n: "25", suffix: " & 59", label: "Modifiers validated automatically on same-day procedures and lesion removals" },
     groups: [
       {
