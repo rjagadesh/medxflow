@@ -53,8 +53,11 @@ export default function Seo({ pw }) {
           viewport: g('meta[name="viewport"]'),
           themeColor: g('meta[name="theme-color"]'),
         };
+        // Normalize every path to no-trailing-slash before comparing, so
+        // "/products/x/" (route list) matches "/products/x/" (sitemap loc).
+        const norm = (p) => (String(p).replace(/\/+$/, "") || "/");
         const sitemapLocs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => m[1]);
-        const sitemapPaths = new Set(sitemapLocs.map((u) => { try { return new URL(u).pathname.replace(/\/$/, "") || "/"; } catch { return u; } }));
+        const sitemapPaths = new Set(sitemapLocs.map((u) => { try { return norm(new URL(u).pathname); } catch { return u; } }));
         const routes = buildRoutes(home.title, home.desc);
 
         // Global checks
@@ -67,8 +70,8 @@ export default function Seo({ pw }) {
           ["Structured data (JSON-LD)", mark(home.jsonld, false), home.jsonld ? "present" : "missing"],
           ["robots.txt", mark(/Sitemap:/i.test(robots), !!robots), robots ? "present + sitemap directive" : "missing"],
           ["sitemap.xml", mark(sitemapLocs.length > 0, false), `${sitemapLocs.length} URLs`],
-          ["Sitemap covers all routes", mark(routes.every((r) => sitemapPaths.has(r.path)), true),
-            `${routes.filter((r) => sitemapPaths.has(r.path)).length}/${routes.length} routes listed`],
+          ["Sitemap covers all routes", mark(routes.every((r) => sitemapPaths.has(norm(r.path))), true),
+            `${routes.filter((r) => sitemapPaths.has(norm(r.path))).length}/${routes.length} routes listed`],
           ["Correct domain in canonical", mark(/^https:\/\/medxflow\.ai/.test(home.canonical), true), home.canonical.replace(/^https?:\/\//, "").split("/")[0] || "?"],
           ["<html lang> + viewport", mark(home.lang && home.viewport, false), home.lang ? `lang=${home.lang}` : "missing"],
         ];
@@ -83,7 +86,7 @@ export default function Seo({ pw }) {
           const rdoc = new DOMParser().parseFromString(routeHtmls[idx] || "", "text/html");
           const ogu = rdoc.querySelector('meta[property="og:url"]')?.getAttribute("content") || "";
           let ownHead = false;
-          try { ownHead = (new URL(ogu).pathname.replace(/\/$/, "") || "/") === r.path; } catch {}
+          try { ownHead = norm(new URL(ogu).pathname) === norm(r.path); } catch {}
           const hasWebPage = [...rdoc.querySelectorAll('script[type="application/ld+json"]')]
             .some((s) => /"WebPage"/.test(s.textContent || ""));
           const isHome = r.path === "/";
@@ -92,7 +95,7 @@ export default function Seo({ pw }) {
             title: r.title, desc: r.desc,
             titleOk: mark(tLen > 0 && tLen <= TITLE_MAX, tLen === 0 || tLen > TITLE_MAX || tLen < TITLE_MIN),
             descOk: mark(dLen >= DESC_MIN && dLen <= DESC_MAX, dLen > 0),
-            inSitemap: sitemapPaths.has(r.path),
+            inSitemap: sitemapPaths.has(norm(r.path)),
             ogOk: ownHead ? "pass" : "warn",
             jsonld: isHome || hasWebPage ? "pass" : "warn",
           };
