@@ -10,6 +10,341 @@
 
 export const SPECIALTIES = [
   {
+    slug: "podiatry",
+    icon: "🦶",
+    name: "Podiatry",
+    eyebrow: "Specialty · Podiatry",
+    h1a: "Routine foot care rules,",
+    h1b: "handled before the claim.",
+    tagline: "Podiatry revenue leaks in routine foot care coverage and at-risk documentation - Q modifiers, LCD limits and debridement frequency. AI agents get it right before the claim goes out.",
+    overview: "Podiatry lives or dies on medical necessity and coverage rules: routine foot care is only covered for at-risk patients, nail and callus debridement has frequency limits, and Q7 to Q9 class-findings modifiers must match the documentation. MedXFlow supports coding, verifies coverage against Medicare LCDs, and runs claims, posting and denials end to end.",
+    stat: { n: "Q7-Q9", suffix: "", label: "Class-findings modifiers matched to documentation so at-risk foot care gets paid" },
+    groups: [
+      { title: "Coding & documentation", note: "Where podiatry leaks.", processes: [
+        ["🏷️", "Routine foot care & Q modifiers", "Applies Q7 to Q9 class-findings modifiers with documentation that supports at-risk status."],
+        ["🎯", "Debridement frequency checks", "Flags nail and callus debridement against payer frequency limits before submission."],
+        ["📝", "Medical-necessity prompts", "Prompts for the LOPS and vascular findings payers require."],
+      ] },
+      { title: "Eligibility & coverage", processes: [
+        ["🛡️", "LCD coverage verification", "Verifies coverage against Medicare LCDs and routine-foot-care limits before care."],
+        ["💳", "Benefit & copay surfacing", "Surfaces patient responsibility ahead of the visit."],
+      ] },
+      { title: "Prior authorization", processes: [
+        ["📦", "Orthotics & surgery auth", "Submits authorizations for orthotics, DME and surgical procedures with documentation."],
+        ["📡", "Auth status tracking", "Tracks authorizations to approval and flags expiring ones."],
+      ] },
+      { title: "Claims, posting & denials", processes: [
+        ["🧼", "Claim scrubbing", "Scrubs claims for modifier and medical-necessity edits before submission."],
+        ["🔧", "Denial management", "Works routine-foot-care and frequency denials by root cause."],
+      ] },
+    ],
+    benefits: ["Fewer routine-foot-care and frequency denials", "Class-findings modifiers matched to documentation", "Coverage confirmed against LCDs before care", "Faster, cleaner claims"],
+    faq: [
+      { q: "When is routine foot care covered?", a: "Routine foot care is generally covered only for at-risk patients, such as those with diabetes and loss of protective sensation or vascular disease, and the documentation must support the Q7 to Q9 class-findings modifier billed. MedXFlow checks this before the claim goes out." },
+      { q: "What are Q7, Q8 and Q9 modifiers in podiatry?", a: "They are class-findings modifiers indicating the severity of a patient's foot condition (one class-A finding, two class-B findings, or class-B plus class-C findings), which support medical necessity for otherwise-routine foot care." },
+      { q: "Why are podiatry claims denied?", a: "The most common reasons are routine foot care billed without documented at-risk status, debridement exceeding payer frequency limits, and missing or mismatched class-findings modifiers. Verifying coverage and documentation up front prevents them." },
+    ],
+  },
+  {
+    slug: "speech-therapy",
+    icon: "🗣️",
+    name: "Speech Therapy",
+    eyebrow: "Specialty · Speech-Language Pathology",
+    h1a: "Therapy thresholds,",
+    h1b: "documented and paid.",
+    tagline: "Speech therapy revenue leaks in therapy thresholds and plan-of-care rules - the KX modifier, timed codes and visit limits. AI agents track them so covered therapy gets paid.",
+    overview: "Speech-language pathology billing turns on therapy thresholds, the KX modifier once the threshold is passed, a compliant plan of care, and correct timed-versus-untimed coding. MedXFlow supports coding, tracks thresholds and authorizations, and runs claims, posting and denials end to end.",
+    stat: { n: "KX", suffix: " modifier", label: "Applied at the therapy threshold with documentation so therapy keeps getting paid" },
+    groups: [
+      { title: "Coding & documentation", note: "Where SLP leaks.", processes: [
+        ["🏷️", "SLP coding & KX modifier", "Supports evaluation and treatment coding and applies the KX modifier at the therapy threshold."],
+        ["📝", "Plan-of-care tracking", "Tracks plan-of-care certification and recertification dates so claims stay compliant."],
+      ] },
+      { title: "Eligibility & benefits", processes: [
+        ["🛡️", "Therapy benefit verification", "Verifies therapy coverage and remaining visit limits before care."],
+        ["💳", "Copay & responsibility", "Surfaces patient responsibility ahead of the visit."],
+      ] },
+      { title: "Prior authorization", processes: [
+        ["📦", "Therapy authorization", "Submits and tracks authorizations for continued therapy with documentation."],
+        ["📡", "Auth & threshold alerts", "Flags approaching thresholds and expiring authorizations."],
+      ] },
+      { title: "Claims, posting & denials", processes: [
+        ["🧼", "Claim scrubbing", "Scrubs claims for modifier and medical-necessity edits before submission."],
+        ["🔧", "Denial management", "Works threshold and plan-of-care denials by root cause."],
+      ] },
+    ],
+    benefits: ["Fewer threshold and plan-of-care denials", "KX modifier applied correctly with documentation", "Visit limits verified before care", "Faster cash on therapy claims"],
+    faq: [
+      { q: "What is the KX modifier in speech therapy?", a: "The KX modifier signals that therapy above the annual threshold is medically necessary and supported by documentation. Applying it correctly, with a compliant plan of care, is what keeps therapy above the threshold getting paid." },
+      { q: "Why are speech therapy claims denied?", a: "Common reasons are missing the KX modifier above the threshold, an expired plan-of-care certification, and exceeding visit limits without authorization. Tracking thresholds and plan-of-care dates prevents them." },
+    ],
+  },
+  {
+    slug: "oncology",
+    icon: "🎗️",
+    name: "Oncology",
+    eyebrow: "Specialty · Oncology",
+    h1a: "High-dollar drug claims,",
+    h1b: "nothing left on the table.",
+    tagline: "Oncology revenue is high-dollar and authorization-heavy - chemotherapy J-codes, NDC units, drug wastage and prior auth. AI agents capture every unit and clear every auth before treatment.",
+    overview: "Oncology carries some of the highest-dollar, most complex claims in medicine: chemotherapy and biologic J-codes billed by NDC units, JW drug-wastage capture, infusion time coding, and heavy prior authorization. A single missed unit or auth is expensive. MedXFlow supports drug and infusion coding, secures authorizations, and protects every dollar through posting and denials.",
+    stat: { n: "JW", suffix: " modifier", label: "Drug wastage captured and NDC units billed correctly on high-dollar therapy" },
+    groups: [
+      { title: "Drug & infusion billing", note: "Where oncology leaks.", processes: [
+        ["💊", "J-code & NDC unit billing", "Bills chemotherapy and biologic J-codes with correct NDC units so nothing is under-billed."],
+        ["🧪", "Drug wastage (JW) capture", "Captures discarded drug with the JW modifier so wastage is reimbursed."],
+        ["⏱️", "Infusion time coding", "Codes infusion and hydration time correctly, including sequential and concurrent rules."],
+      ] },
+      { title: "Prior authorization", processes: [
+        ["📦", "Regimen authorization", "Submits chemotherapy and specialty-drug authorizations with clinical documentation."],
+        ["📡", "Auth-to-treatment matching", "Confirms the authorization matches the regimen before treatment and tracks it to approval."],
+      ] },
+      { title: "Eligibility & benefits", processes: [
+        ["🛡️", "Specialty-drug benefit checks", "Verifies medical and pharmacy benefit coverage for high-cost therapy."],
+      ] },
+      { title: "Claims, posting & denials", processes: [
+        ["⚖️", "Underpayment detection", "Flags underpayments against contracted rates on high-dollar claims."],
+        ["🔧", "Denial management", "Works authorization and unit denials fast, given the dollar stakes."],
+      ] },
+    ],
+    benefits: ["Every drug unit and wastage captured", "Authorizations matched to the regimen", "Underpayments detected on high-dollar claims", "Fewer costly authorization denials"],
+    faq: [
+      { q: "How is chemotherapy billed?", a: "Chemotherapy and biologic drugs are billed with HCPCS J-codes by NDC units, alongside infusion administration codes for the time and complexity of delivery. Discarded drug is captured with the JW modifier. Accurate unit and wastage capture is essential because the dollars are large." },
+      { q: "Why are oncology claims denied?", a: "Common reasons are missing or mismatched prior authorization for the regimen, incorrect NDC units, un-captured drug wastage, and infusion time-coding errors. Securing auth and capturing units correctly prevents most of them." },
+    ],
+  },
+  {
+    slug: "occupational-therapy",
+    icon: "🖐️",
+    name: "Occupational Therapy",
+    eyebrow: "Specialty · Occupational Therapy",
+    h1a: "Therapy thresholds,",
+    h1b: "documented and paid.",
+    tagline: "Occupational therapy revenue leaks in therapy thresholds and timed-code rules - the KX modifier, the 8-minute rule and plan-of-care compliance. AI agents keep covered therapy paid.",
+    overview: "Occupational therapy billing turns on therapy thresholds and the KX modifier, correct timed-code units under the 8-minute rule, and a compliant plan of care. MedXFlow supports coding, tracks thresholds and authorizations, and runs claims, posting and denials end to end.",
+    stat: { n: "8-min", suffix: " rule", label: "Timed therapy units calculated correctly so every billable unit is captured" },
+    groups: [
+      { title: "Coding & documentation", note: "Where OT leaks.", processes: [
+        ["🏷️", "Timed-code units & KX", "Calculates timed-code units under the 8-minute rule and applies the KX modifier at the threshold."],
+        ["📝", "Plan-of-care tracking", "Tracks plan-of-care certification and recertification so claims stay compliant."],
+      ] },
+      { title: "Eligibility & benefits", processes: [
+        ["🛡️", "Therapy benefit verification", "Verifies therapy coverage and remaining visit limits before care."],
+        ["💳", "Copay & responsibility", "Surfaces patient responsibility ahead of the visit."],
+      ] },
+      { title: "Prior authorization", processes: [
+        ["📦", "Therapy authorization", "Submits and tracks authorizations for continued therapy with documentation."],
+      ] },
+      { title: "Claims, posting & denials", processes: [
+        ["🧼", "Claim scrubbing", "Scrubs claims for modifier, unit and medical-necessity edits before submission."],
+        ["🔧", "Denial management", "Works threshold, unit and plan-of-care denials by root cause."],
+      ] },
+    ],
+    benefits: ["Timed units captured correctly under the 8-minute rule", "KX modifier applied with documentation", "Visit limits verified before care", "Fewer therapy denials"],
+    faq: [
+      { q: "What is the 8-minute rule in occupational therapy?", a: "The 8-minute rule determines how many timed treatment units you can bill based on total minutes of direct one-on-one therapy. Calculating units correctly is essential because errors either lose revenue or trigger denials." },
+      { q: "Why are occupational therapy claims denied?", a: "Common reasons are incorrect timed-code units, missing the KX modifier above the therapy threshold, and expired plan-of-care certification. Automating unit calculation and threshold tracking prevents them." },
+    ],
+  },
+  {
+    slug: "pathology",
+    icon: "🔬",
+    name: "Pathology",
+    eyebrow: "Specialty · Pathology",
+    h1a: "High volume,",
+    h1b: "every component billed.",
+    tagline: "Pathology revenue leaks in component splits and volume - the technical and professional components, specimen-level coding and payer edits. AI agents bill every component correctly at scale.",
+    overview: "Pathology bills high-volume, component-split claims: the technical component (TC) and professional component (26) must be billed correctly, specimens coded to the right CPT level, and claims scrubbed against payer edits. MedXFlow supports coding, verifies coverage, and runs claims, posting and denials at pathology volume.",
+    stat: { n: "TC/26", suffix: "", label: "Technical and professional components split and billed correctly, every claim" },
+    groups: [
+      { title: "Coding & documentation", note: "Where pathology leaks.", processes: [
+        ["🏷️", "Specimen CPT coding", "Codes specimens to the correct CPT level so nothing is under-coded."],
+        ["🔀", "TC / professional split", "Applies TC and 26 modifiers so technical and professional components bill correctly."],
+      ] },
+      { title: "Eligibility & coverage", processes: [
+        ["🛡️", "Coverage & medical necessity", "Verifies coverage and medical-necessity requirements for testing before billing."],
+      ] },
+      { title: "Claims & submission", processes: [
+        ["🧼", "High-volume claim scrubbing", "Scrubs claims against payer and bundling edits at pathology volume."],
+        ["🔄", "Claim status follow-up", "Polls status and chases stuck claims automatically."],
+      ] },
+      { title: "Posting & denials", processes: [
+        ["💰", "Payment posting", "Auto-posts ERAs with line-level reconciliation."],
+        ["🔧", "Denial management", "Works component-split and medical-necessity denials by root cause."],
+      ] },
+    ],
+    benefits: ["Technical and professional components billed correctly", "Specimens coded to the right level", "Clean claims at high volume", "Fewer component and medical-necessity denials"],
+    faq: [
+      { q: "What is the technical vs professional component in pathology?", a: "The technical component (TC) covers the equipment, supplies and technician work; the professional component (modifier 26) covers the pathologist's interpretation. Billing them correctly, whether globally or split, is essential to getting paid for both." },
+      { q: "Why are pathology claims denied?", a: "Common reasons are incorrect technical/professional component billing, specimen under-coding, and medical-necessity mismatches. Correct component coding and up-front coverage checks prevent them." },
+    ],
+  },
+  {
+    slug: "infusion",
+    icon: "💉",
+    name: "Infusion Therapy",
+    eyebrow: "Specialty · Infusion Therapy",
+    h1a: "High-cost drugs,",
+    h1b: "every unit captured.",
+    tagline: "Infusion revenue is high-dollar and authorization-heavy - J-codes by NDC units, infusion time coding, drug wastage and site-of-care auth. AI agents capture every unit and clear every auth.",
+    overview: "Infusion therapy bills high-cost drugs by NDC units, time-based infusion and hydration codes with sequential and concurrent rules, JW drug-wastage capture, and site-of-care prior authorization. MedXFlow supports drug and infusion coding, secures authorizations, and protects every dollar through posting and denials.",
+    stat: { n: "NDC", suffix: " units", label: "High-cost drug units and wastage captured so nothing is under-billed" },
+    groups: [
+      { title: "Drug & infusion billing", note: "Where infusion leaks.", processes: [
+        ["💊", "J-code & NDC unit billing", "Bills infused drugs with correct J-codes and NDC units so nothing is under-billed."],
+        ["⏱️", "Infusion & hydration time coding", "Codes initial, sequential and concurrent infusion and hydration time correctly."],
+        ["🧪", "Drug wastage (JW) capture", "Captures discarded drug with the JW modifier so wastage is reimbursed."],
+      ] },
+      { title: "Prior authorization", processes: [
+        ["📦", "Specialty-drug & site-of-care auth", "Submits specialty-drug and site-of-care authorizations with documentation and tracks them."],
+      ] },
+      { title: "Eligibility & benefits", processes: [
+        ["🛡️", "Medical & pharmacy benefit checks", "Verifies whether the drug bills under the medical or pharmacy benefit before treatment."],
+      ] },
+      { title: "Claims, posting & denials", processes: [
+        ["⚖️", "Underpayment detection", "Flags underpayments against contracted rates on high-dollar drug claims."],
+        ["🔧", "Denial management", "Works authorization, unit and wastage denials by root cause."],
+      ] },
+    ],
+    benefits: ["Every drug unit and wastage captured", "Infusion time coded correctly", "Site-of-care authorizations cleared", "Underpayments detected on high-dollar claims"],
+    faq: [
+      { q: "How is infusion therapy billed?", a: "Infused drugs are billed with HCPCS J-codes by NDC units, plus time-based infusion and hydration administration codes that follow initial, sequential and concurrent rules. Discarded drug is captured with the JW modifier. Accurate unit and time capture is critical because the drugs are expensive." },
+      { q: "Why are infusion claims denied?", a: "Common reasons are missing site-of-care or specialty-drug authorization, incorrect NDC units, infusion time-coding errors, and un-captured wastage. Securing auth and capturing units correctly prevents most of them." },
+    ],
+  },
+  {
+    slug: "skilled-nursing",
+    icon: "🛏️",
+    name: "Skilled Nursing (SNF)",
+    eyebrow: "Specialty · Skilled Nursing Facility",
+    h1a: "PDPM and MDS,",
+    h1b: "billed accurately.",
+    tagline: "Skilled nursing revenue hinges on PDPM case-mix, MDS accuracy and consolidated billing. AI agents keep the MDS, benefit periods and claims aligned so payment matches the care delivered.",
+    overview: "Skilled nursing facility billing is uniquely complex: PDPM case-mix driven by the MDS assessment, Medicare Part A benefit periods, consolidated billing rules, and Part B therapy. MedXFlow verifies eligibility and benefit periods, keeps MDS-linked billing aligned, and runs claims, posting and denials end to end.",
+    stat: { n: "PDPM", suffix: "", label: "Case-mix and MDS-linked billing kept aligned so payment matches the care" },
+    groups: [
+      { title: "PDPM & MDS", note: "Where SNF leaks.", processes: [
+        ["📊", "PDPM case-mix billing", "Aligns billing to the PDPM case-mix components driven by the MDS assessment."],
+        ["📝", "MDS-linked documentation", "Flags where MDS timing and documentation must support the billed case-mix."],
+      ] },
+      { title: "Consolidated billing & benefits", processes: [
+        ["🧾", "Consolidated billing rules", "Applies SNF consolidated-billing rules across Part A and Part B services."],
+        ["📅", "Benefit-period tracking", "Tracks Medicare benefit periods and day counts so claims bill correctly."],
+      ] },
+      { title: "Eligibility & authorization", processes: [
+        ["🛡️", "Coverage verification", "Verifies Medicare, Medicare Advantage and secondary coverage before and during the stay."],
+      ] },
+      { title: "Claims, posting & denials", processes: [
+        ["💰", "Payment posting", "Auto-posts ERAs and reconciles by stay and period."],
+        ["🔧", "Denial management", "Works case-mix, benefit-period and documentation denials by root cause."],
+      ] },
+    ],
+    benefits: ["PDPM case-mix and MDS billing kept aligned", "Consolidated-billing rules applied correctly", "Benefit periods and day counts tracked", "Fewer documentation-driven denials"],
+    faq: [
+      { q: "What is PDPM in skilled nursing billing?", a: "PDPM (Patient-Driven Payment Model) is the Medicare payment model that sets SNF reimbursement based on patient characteristics captured in the MDS assessment, rather than therapy volume. Accurate MDS coding and aligned billing are essential to correct payment." },
+      { q: "Why are skilled nursing claims denied?", a: "Common reasons are MDS timing or documentation that does not support the billed case-mix, consolidated-billing errors, and benefit-period or coverage issues. Keeping the MDS, benefit periods and claims aligned prevents them." },
+    ],
+  },
+  {
+    slug: "pediatrics",
+    icon: "🧒",
+    name: "Pediatrics",
+    eyebrow: "Specialty · Pediatrics",
+    h1a: "High volume, low margin,",
+    h1b: "nothing left uncoded.",
+    tagline: "Pediatric revenue leaks in vaccines and well-child visits - VFC reporting, EPSDT rules, immunization admin codes and Medicaid billing. AI agents capture every code across high volume.",
+    overview: "Pediatrics runs on high volume and thin margins, which is exactly where revenue slips: Vaccines for Children (VFC) reporting, well-child and EPSDT visits, immunization product and administration codes, and heavy Medicaid and CHIP billing. MedXFlow supports coding, verifies coverage, and runs claims, posting and denials end to end.",
+    stat: { n: "VFC", suffix: "", label: "Vaccine product and administration codes captured so no immunization is dropped" },
+    groups: [
+      { title: "Coding & documentation", note: "Where pediatrics leaks.", processes: [
+        ["💉", "Vaccine & admin code capture", "Captures vaccine product and administration codes, including VFC reporting, so none are dropped."],
+        ["📋", "Well-child & EPSDT coding", "Supports well-child and EPSDT visit coding with the correct age and screening components."],
+        ["🏷️", "Sick-plus-well visit coding", "Codes same-day preventive-plus-problem visits with modifier 25 so both get paid."],
+      ] },
+      { title: "Eligibility & benefits", processes: [
+        ["🛡️", "Medicaid & CHIP verification", "Verifies Medicaid, CHIP and commercial coverage at scale before visits."],
+      ] },
+      { title: "Claims & submission", processes: [
+        ["🧼", "High-volume claim scrubbing", "Scrubs claims against payer and bundling edits at pediatric volume."],
+      ] },
+      { title: "Posting & denials", processes: [
+        ["💰", "Payment posting", "Auto-posts ERAs with line-level reconciliation."],
+        ["🔧", "Denial management", "Works immunization and EPSDT denials by root cause."],
+      ] },
+    ],
+    benefits: ["Every vaccine and admin code captured", "Well-child and EPSDT coded correctly", "Coverage verified across Medicaid and CHIP", "Clean claims at pediatric volume"],
+    faq: [
+      { q: "How are pediatric vaccines billed?", a: "Each vaccine has a product code and a separate administration code, and Vaccines for Children (VFC) doses require specific reporting. Capturing both the product and administration codes for every immunization is where pediatric practices most often lose revenue." },
+      { q: "What is EPSDT in pediatric billing?", a: "EPSDT (Early and Periodic Screening, Diagnostic and Treatment) is the Medicaid benefit for children's preventive and screening care. Coding well-child and EPSDT visits with the correct components is essential for full payment." },
+    ],
+  },
+  {
+    slug: "emergency-medicine",
+    icon: "🚑",
+    name: "Emergency Medicine",
+    eyebrow: "Specialty · Emergency Medicine",
+    h1a: "High acuity, high volume,",
+    h1b: "coverage found and billed.",
+    tagline: "Emergency medicine revenue leaks in E/M leveling and self-pay - ED level coding, critical care, and patients with no insurance on file. AI agents level correctly and find coverage.",
+    overview: "Emergency medicine sees high acuity and high volume with a large share of self-pay and unknown-coverage patients. Revenue turns on correct ED E/M leveling (99281 to 99285), critical-care coding, and finding coverage for patients who present without insurance. MedXFlow supports coding, runs coverage discovery, and works claims, posting and denials end to end.",
+    stat: { n: "99281-99285", suffix: "", label: "ED E/M levels coded to the documentation so acuity is billed correctly" },
+    groups: [
+      { title: "Coding & documentation", note: "Where the ED leaks.", processes: [
+        ["🏷️", "ED E/M leveling", "Supports ED E/M level selection (99281 to 99285) matched to acuity and documentation."],
+        ["⏱️", "Critical care & procedures", "Codes critical-care time and same-visit procedures with the correct modifiers."],
+      ] },
+      { title: "Eligibility & coverage discovery", processes: [
+        ["🔎", "Coverage discovery", "Finds active coverage for patients who present as self-pay or with no insurance on file."],
+        ["🛡️", "Eligibility verification", "Verifies coverage and benefits for identified payers."],
+      ] },
+      { title: "Claims & submission", processes: [
+        ["🧼", "High-volume claim scrubbing", "Scrubs claims against payer and bundling edits at ED volume."],
+      ] },
+      { title: "Posting & denials", processes: [
+        ["💰", "Payment posting", "Auto-posts ERAs with line-level reconciliation."],
+        ["🔧", "Denial management", "Works level-of-service and coverage denials by root cause."],
+      ] },
+    ],
+    benefits: ["ED levels coded to the documentation", "Coverage found for self-pay patients", "Clean claims at ED volume", "Fewer level-of-service and coverage denials"],
+    faq: [
+      { q: "How is emergency department E/M leveled?", a: "ED visits are coded 99281 to 99285 based on the complexity of the presenting problem, data reviewed, and risk, matched to the documentation. Correct leveling is essential because under-leveling loses revenue and over-leveling is a compliance risk." },
+      { q: "How do you bill emergency visits for uninsured patients?", a: "Coverage discovery searches for active insurance the patient did not present, so self-pay and unknown-coverage visits can be billed to the right payer instead of written off. MedXFlow runs this automatically." },
+    ],
+  },
+  {
+    slug: "hospice",
+    icon: "🕊️",
+    name: "Hospice",
+    eyebrow: "Specialty · Hospice",
+    h1a: "Notices on time,",
+    h1b: "per-diem billed right.",
+    tagline: "Hospice revenue hinges on timely notices and levels of care - the NOE deadline, per-diem levels and benefit periods. AI agents keep notices, elections and claims on time.",
+    overview: "Hospice billing runs on the Medicare hospice benefit: a Notice of Election filed within strict deadlines, per-diem billing by level of care, benefit-period tracking, and Notice of Termination/Revocation when care ends. A late NOE alone can forfeit days of payment. MedXFlow tracks notices and benefit periods and runs claims, posting and denials end to end.",
+    stat: { n: "NOE", suffix: "", label: "Notice of Election filed within the deadline so no covered days are forfeited" },
+    groups: [
+      { title: "Election & notices", note: "Where hospice leaks.", processes: [
+        ["📅", "NOE timely filing", "Tracks and files the Notice of Election within the deadline so days are not forfeited."],
+        ["🧾", "NOTR & revocation handling", "Files Notice of Termination/Revocation accurately when care ends or changes."],
+      ] },
+      { title: "Levels of care & per-diem", processes: [
+        ["🏷️", "Level-of-care per-diem billing", "Bills routine, continuous, respite and general inpatient care at the correct per-diem."],
+        ["📝", "Documentation prompts", "Prompts for the documentation each level of care requires."],
+      ] },
+      { title: "Eligibility & benefits", processes: [
+        ["🛡️", "Benefit-period verification", "Verifies hospice election and benefit periods before and during care."],
+      ] },
+      { title: "Claims, posting & denials", processes: [
+        ["💰", "Payment posting", "Auto-posts ERAs and reconciles by period and level of care."],
+        ["🔧", "Denial management", "Works NOE-timeliness and level-of-care denials by root cause."],
+      ] },
+    ],
+    benefits: ["Notices filed within deadline so no days are forfeited", "Levels of care billed at the correct per-diem", "Benefit periods tracked accurately", "Fewer timeliness and documentation denials"],
+    faq: [
+      { q: "What is the Notice of Election (NOE) in hospice billing?", a: "The NOE tells Medicare a patient has elected hospice, and it must be filed within five calendar days of the start of care. A late NOE makes the hospice liable for the days before it was filed, so timely filing directly protects revenue." },
+      { q: "How is hospice care billed?", a: "Hospice is paid per diem by level of care (routine home care, continuous home care, inpatient respite, and general inpatient), with documentation supporting the level billed. MedXFlow tracks notices, benefit periods and levels so claims are accurate and on time." },
+    ],
+  },
+  {
     slug: "chiropractic",
     icon: "🦴",
     name: "Chiropractic",

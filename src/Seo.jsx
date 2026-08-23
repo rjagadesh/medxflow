@@ -149,14 +149,17 @@ export default function Seo({ pw }) {
 
                 {gsc.series?.length ? (
                   <>
-                    <div className="seo-gsc-sub">Trends - last 30 days</div>
+                    <div className="seo-gsc-sub">Daily impressions - last 30 days</div>
+                    <div className="tr-hero" style={{ marginBottom: 16 }}>
+                      <TrendChart title="Impressions" ic="👁" points={gsc.series.map((s) => ({ d: s.date, v: s.impressions }))} color="#5AA9F5" />
+                    </div>
+                    <div className="seo-gsc-sub">Clicks, position &amp; CTR</div>
                     <div className="tr-grid">
                       <TrendChart title="Clicks" ic="🖱" points={gsc.series.map((s) => ({ d: s.date, v: s.clicks }))} color="#3DDCC9" />
-                      <TrendChart title="Impressions" ic="👁" points={gsc.series.map((s) => ({ d: s.date, v: s.impressions }))} color="#5AA9F5" />
                       <TrendChart title="Avg. position" ic="📍" points={gsc.series.map((s) => ({ d: s.date, v: s.position }))} color="#F2C14E" fmtTotal={() => (gsc.totals?.position != null ? gsc.totals.position.toFixed(1) : " - ")} fmtLast={(v) => v.toFixed(1)} />
                       <TrendChart title="CTR %" ic="🎯" points={gsc.series.map((s) => ({ d: s.date, v: +(s.ctr * 100).toFixed(1) }))} color="#B79CE0" fmtTotal={() => (gsc.totals?.ctr != null ? (gsc.totals.ctr * 100).toFixed(1) + "%" : " - ")} fmtLast={(v) => v + "%"} />
                     </div>
-                    <p className="seo-hint" style={{ marginTop: 6 }}>Note: for “Avg. position”, lower is better - a falling line means you're ranking higher.</p>
+                    <p className="seo-hint" style={{ marginTop: 6 }}>The most recent day or two is preliminary (fresh data) and may revise upward as Google finishes processing. For “Avg. position”, lower is better - a falling line means you're ranking higher.</p>
                   </>
                 ) : null}
 

@@ -5,6 +5,107 @@
 
 export const SEO_PAGES = [
   {
+    slug: "medical-billing-services-usa",
+    kind: "pillar",
+    title: "Medical Billing & RCM Services Across the US | MedXFlow",
+    h1: "Medical Billing and RCM Services Across the United States",
+    eyebrow: "Serving the United States",
+    description: "AI-driven medical billing and revenue cycle management for US practices in all 50 states - eligibility, prior auth, coding, claims and denials, remote-first.",
+    intro: "MedXFlow is a remote-first RCM automation platform serving medical practices, billing companies and RCM teams across the United States. Because the work is done by AI agents that connect to your systems and payers, we serve practices in any state without a local office.",
+    sections: [
+      { h: "Nationwide, remote-first RCM", p: [
+        "MedXFlow's AI agents run the revenue cycle end to end - eligibility, prior authorization, coding, claims, denials, payment posting and collections - and write back into the systems you already use. Nothing about that depends on geography, so a practice in California gets the same automation as one in New York or Texas." ] },
+      { h: "What we automate", list: [
+        "Eligibility and benefits verification before every visit.",
+        "Prior authorization detection, submission and tracking.",
+        "Charge capture, coding support and claim scrubbing.",
+        "Claims submission to every payer and clearinghouse.",
+        "Payment posting, denial management and patient collections." ] },
+      { h: "States we serve", p: [
+        "We work with practices in all 50 states. A few of our focus markets have their own pages: Texas, California, Florida and New York. Wherever you are, the platform adapts to your payer mix and state Medicaid rules." ] },
+    ],
+    related: [
+      { label: "RCM services in Texas", href: "/medical-billing-services-texas/" },
+      { label: "RCM services in California", href: "/medical-billing-services-california/" },
+      { label: "RCM services in Florida", href: "/medical-billing-services-florida/" },
+      { label: "RCM services in New York", href: "/medical-billing-services-new-york/" },
+      { label: "AI Agents for Healthcare RCM", href: "/ai-agents-rcm/" },
+    ],
+    faq: [
+      { q: "Does MedXFlow serve practices nationwide?", a: "Yes. MedXFlow is remote-first and serves medical practices, billing companies and RCM teams in all 50 states, automating the revenue cycle and writing back into your existing systems, with no local office required." },
+      { q: "Do you handle state Medicaid rules?", a: "Yes. The platform adapts to your payer mix, including state Medicaid and managed-care plans, and the workflows are tuned to the payers you actually bill." },
+    ],
+  },
+  {
+    slug: "medical-billing-services-california",
+    kind: "audience",
+    title: "Medical Billing & RCM Services in California | MedXFlow",
+    h1: "Medical Billing and RCM Services for California Practices",
+    eyebrow: "Serving California",
+    description: "AI medical billing and revenue cycle automation for California practices - Medi-Cal and managed care, eligibility, prior auth, coding, claims and denials, remote-first.",
+    intro: "MedXFlow brings AI revenue cycle automation to California medical practices, tuned to the state's Medi-Cal and managed-care landscape, so eligibility, authorization, claims and denials run automatically.",
+    sections: [
+      { h: "Built for California's payer mix", p: [
+        "California practices juggle Medi-Cal and its managed-care plans alongside a dense commercial market. MedXFlow verifies eligibility across those payers, detects and submits prior authorizations, and scrubs claims to each plan's rules before they go out." ] },
+      { h: "Why California practices automate", p: [
+        "California's high labor costs make manual RCM expensive, so automating the repetitive payer-facing work delivers an especially strong return. Your team stays on exceptions while the agents handle the volume." ] },
+    ],
+    related: [
+      { label: "RCM services across the US", href: "/medical-billing-services-usa/" },
+      { label: "AI Agents for Healthcare RCM", href: "/ai-agents-rcm/" },
+      { label: "ROI calculator", href: "/roi-calculator/" },
+    ],
+    faq: [
+      { q: "Does MedXFlow work with Medi-Cal?", a: "Yes. MedXFlow verifies eligibility and bills across California payers including Medi-Cal and its managed-care plans, with workflows tuned to each plan's requirements." },
+    ],
+  },
+  {
+    slug: "medical-billing-services-florida",
+    kind: "audience",
+    title: "Medical Billing & RCM Services in Florida | MedXFlow",
+    h1: "Medical Billing and RCM Services for Florida Practices",
+    eyebrow: "Serving Florida",
+    description: "AI medical billing and revenue cycle automation for Florida practices - Medicaid managed care and Medicare Advantage, eligibility, prior auth, claims and denials.",
+    intro: "MedXFlow brings AI revenue cycle automation to Florida medical practices, tuned to the state's Medicaid managed-care and large Medicare Advantage population, so the payer-facing work runs automatically.",
+    sections: [
+      { h: "Built for Florida's payer mix", p: [
+        "Florida practices see heavy Medicaid managed-care and one of the country's largest Medicare Advantage populations. MedXFlow verifies eligibility across those plans, secures prior authorizations, and works denials by root cause so senior-heavy panels get billed cleanly." ] },
+      { h: "Handling seasonal volume", p: [
+        "Seasonal patient swings strain front-desk and billing capacity. Because MedXFlow's agents scale with volume automatically, peaks are absorbed without adding staff." ] },
+    ],
+    related: [
+      { label: "RCM services across the US", href: "/medical-billing-services-usa/" },
+      { label: "AI Agents for Healthcare RCM", href: "/ai-agents-rcm/" },
+      { label: "ROI calculator", href: "/roi-calculator/" },
+    ],
+    faq: [
+      { q: "Does MedXFlow handle Medicare Advantage in Florida?", a: "Yes. MedXFlow verifies eligibility and bills across Florida payers including Medicaid managed-care and Medicare Advantage plans, with prior authorization and denial workflows tuned to them." },
+    ],
+  },
+  {
+    slug: "medical-billing-services-new-york",
+    kind: "audience",
+    title: "Medical Billing & RCM Services in New York | MedXFlow",
+    h1: "Medical Billing and RCM Services for New York Practices",
+    eyebrow: "Serving New York",
+    description: "AI medical billing and revenue cycle automation for New York practices - NY Medicaid and a complex commercial payer mix, eligibility, prior auth, claims and denials.",
+    intro: "MedXFlow brings AI revenue cycle automation to New York medical practices, tuned to New York Medicaid and the state's complex commercial payer mix, so eligibility, authorization, claims and denials run automatically.",
+    sections: [
+      { h: "Built for New York's payer mix", p: [
+        "New York practices navigate NY Medicaid and its managed-care plans alongside a dense, complex commercial market. MedXFlow verifies eligibility across those payers, submits and tracks authorizations, and scrubs claims to each plan's rules before submission." ] },
+      { h: "Why New York practices automate", p: [
+        "With some of the highest labor costs in the country, New York practices get an outsized return from automating manual RCM. The agents carry the volume; your team handles the judgment calls." ] },
+    ],
+    related: [
+      { label: "RCM services across the US", href: "/medical-billing-services-usa/" },
+      { label: "AI Agents for Healthcare RCM", href: "/ai-agents-rcm/" },
+      { label: "ROI calculator", href: "/roi-calculator/" },
+    ],
+    faq: [
+      { q: "Does MedXFlow work with New York Medicaid?", a: "Yes. MedXFlow verifies eligibility and bills across New York payers including NY Medicaid and its managed-care plans, with workflows tuned to each plan's requirements." },
+    ],
+  },
+  {
     slug: "ai-rcm-vendors-comparison",
     kind: "pillar",
     title: "AI RCM Vendors Compared: Capabilities, Pricing & Fit | MedXFlow",

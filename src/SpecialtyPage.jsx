@@ -147,6 +147,26 @@ export default function SpecialtyPage({ slug }) {
           </div>
         </section>
 
+        {/* FAQ (answer-first, for SEO/AEO) */}
+        {s.faq?.length ? (
+          <section className="sec">
+            <div className="wrap sp-faq">
+              <Reveal>
+                <Eyebrow>FAQ</Eyebrow>
+                <h2>{s.name} billing: frequently asked questions</h2>
+              </Reveal>
+              <div className="sp-faq-list">
+                {s.faq.map((f, i) => (
+                  <div className="sp-faq-item" key={i}>
+                    <h3>{f.q}</h3>
+                    <p>{f.a}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        ) : null}
+
         {/* CTA */}
         <section className="sec sec-dark" id="cta">
           <div className="wrap pp-cta">
@@ -284,6 +304,10 @@ const SP_CSS = `
 
 .pp-cta{text-align:center; max-width:720px; margin:0 auto}
 .pp-cta .lead-light{margin:14px auto 26px}
+.sp-faq{max-width:760px}
+.sp-faq-list{margin-top:26px; display:flex; flex-direction:column; gap:18px}
+.sp-faq-item h3{font-size:17.5px; font-weight:800; color:var(--ink); margin:0 0 6px}
+.sp-faq-item p{font-size:16px; color:rgba(13,43,82,.78); line-height:1.6; margin:0; max-width:70ch}
 
 @media(max-width:880px){
   .pp-over{grid-template-columns:1fr; gap:28px}

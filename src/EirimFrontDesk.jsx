@@ -69,12 +69,13 @@ export function Reveal({ children, delay = 0, className = "" }) {
 /* ---------- Nav ---------- */
 // Specialties mega-menu, grouped into columns (left-to-right) like Products.
 const SPECIALTY_GROUPS = [
-  ["Primary & Urgent", ["primary-care", "urgent-care"]],
+  ["Primary & Urgent", ["primary-care", "urgent-care", "pediatrics", "emergency-medicine"]],
   ["Aesthetics & Skin", ["medspa", "dermatology"]],
   ["Dental & Vision", ["dental", "eye-care"]],
-  ["Behavioral & Therapy", ["behavioral-health", "physical-therapy", "physical-rehabilitation", "chiropractic"]],
-  ["Procedural & Surgical", ["cardiology", "orthopedics", "radiology", "ambulatory-surgery-center"]],
-  ["Post-Acute & DME", ["home-health", "dme"]],
+  ["Behavioral & Therapy", ["behavioral-health", "physical-therapy", "physical-rehabilitation", "chiropractic", "speech-therapy", "occupational-therapy"]],
+  ["Procedural & Surgical", ["cardiology", "orthopedics", "radiology", "ambulatory-surgery-center", "podiatry", "pathology"]],
+  ["Oncology & Infusion", ["oncology", "infusion"]],
+  ["Post-Acute & DME", ["home-health", "dme", "skilled-nursing", "hospice"]],
 ];
 const specBySlug = Object.fromEntries(SPECIALTIES.map((s) => [s.slug, s]));
 
@@ -195,7 +196,7 @@ export function Nav({ resources = false } = {}) {
           <a href="#cta">{t("nav.contact")}</a>
           <a href="/#faq">{t("nav.faq")}</a>
           <a href="#top" className="nav-tour" onClick={(e) => { e.preventDefault(); startTour(); }}>▶ {t("nav.tour")}</a>
-          <a href="tel:+12103969718" className="nav-phone">📞 (210) 396-9718</a>
+          <a href="tel:+14693128805" className="nav-phone">📞 (469) 312-8805</a>
           <a href="#cta" className="nav-cta" onClick={(e) => { e.preventDefault(); openDemo(); }}>{t("nav.book")}</a>
           <LangSwitcher />
         </div>
@@ -210,7 +211,7 @@ export function Nav({ resources = false } = {}) {
         <a href="#cta" onClick={closeMenu}>{t("nav.contact")}</a>
         <a href="/#faq" onClick={closeMenu}>{t("nav.faq")}</a>
         <a href="#top" onClick={(e) => { e.preventDefault(); closeMenu(); startTour(); }}>▶ {t("nav.tour")}</a>
-        <a href="tel:+12103969718" onClick={closeMenu}>📞 (210) 396-9718</a>
+        <a href="tel:+14693128805" onClick={closeMenu}>📞 (469) 312-8805</a>
         <a href="#cta" className="nav-mobile-cta" onClick={(e) => { e.preventDefault(); closeMenu(); openDemo(); }}>{t("nav.book")}</a>
         <div className="nav-mobile-lang"><LangSwitcher /></div>
       </div>
@@ -812,7 +813,7 @@ function CTA() {
             <h2 className="h-light">{t("cta.h2a")}<br />{t("cta.h2b")}</h2>
             <p className="lead-light">{t("cta.lead")}</p>
             <div className="cta-contact">
-              <a href="tel:+12103969718">📞 (210) 396-9718</a>
+              <a href="tel:+14693128805">📞 (469) 312-8805</a>
               <a href="https://wa.me/14693128805?text=Hi%20MedXFlow%2C%20I%27d%20like%20to%20know%20more%20about%20your%20AI%20RCM%20platform." target="_blank" rel="noopener noreferrer">💬 WhatsApp us</a>
               <a href="mailto:sales@medxflow.ai">✉ sales@medxflow.ai</a>
             </div>
@@ -841,7 +842,7 @@ export function Footer() {
           <a href="/trust/">Trust &amp; Security</a>
           <a href="/roi-calculator/">ROI Calculator</a>
           <a href="/npi-lookup/">NPI Lookup</a>
-          <a href="tel:+12103969718">📞 (210) 396-9718</a>
+          <a href="tel:+14693128805">📞 (469) 312-8805</a>
           <a href="https://wa.me/14693128805?text=Hi%20MedXFlow%2C%20I%27d%20like%20to%20know%20more%20about%20your%20AI%20RCM%20platform." target="_blank" rel="noopener noreferrer">💬 WhatsApp</a>
           <a href="mailto:sales@medxflow.ai">sales@medxflow.ai</a>
         </div>
@@ -1083,6 +1084,7 @@ function Guides() {
     ["/rcm-denial-benchmarks/", "RCM denial benchmarks", "Claim denial rates, costs and KPI benchmarks."],
     ["/denial-rate-calculator/", "Denial rate calculator", "Calculate and benchmark your claim denial rate."],
     ["/npi-lookup/", "NPI lookup", "Search the CMS NPPES registry by name or NPI number."],
+    ["/medical-billing-services-usa/", "RCM services across the US", "Remote-first medical billing and RCM in all 50 states."],
   ];
   return (
     <section className="sec sec-tint" id="guides">

@@ -69,9 +69,12 @@ export default async (req) => {
 
   try {
     const token = await getAccessToken(sa);
-    const end = new Date(Date.now() - 2 * 864e5);   // GSC data lags ~2 days
+    // Use dataState:"all" so the freshest 1-2 days are included (Google's default
+    // "final" data lags ~3 days). The most recent day is preliminary and may
+    // revise upward. endDate is today; GSC returns up to whatever it has.
+    const end = new Date();
     const start = new Date(Date.now() - 30 * 864e5);
-    const range = { startDate: ymd(start), endDate: ymd(end) };
+    const range = { startDate: ymd(start), endDate: ymd(end), dataState: "all" };
 
     const [totalsRes, rowsRes, pagesRes, dateRes] = await Promise.all([
       query(token, siteUrl, { ...range }),

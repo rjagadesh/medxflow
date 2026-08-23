@@ -120,6 +120,14 @@ function productBody(prod) {
     faqHtml(prod.faq) +
     `</article>`;
 }
+function specialtyBody(s) {
+  return `<article><h1>${esc(s.name)} revenue cycle management</h1>` +
+    p(s.tagline) + p(s.overview) +
+    (s.groups || []).map((g) => h2(g.title) + `<ul>${(g.processes || []).map(([ic, name, desc]) => `<li><strong>${esc(name)}</strong> - ${esc(desc)}</li>`).join("")}</ul>`).join("") +
+    h2("What you get") + `<ul>${(s.benefits || []).map((b) => `<li>${esc(b)}</li>`).join("")}</ul>` +
+    faqHtml(s.faq) +
+    `</article>`;
+}
 function productsIndexBody() {
   return `<section><h1>MedXFlow products: the whole revenue cycle, one platform</h1>` +
     p("MedXFlow's platform covers the entire revenue cycle in one place: scheduling, eligibility and benefits verification, prior authorization, patient check-in, charge capture and coding, claims submission and follow-up, payment posting, denial management, and patient collections - plus a human-led managed billing team when you would rather hand it over.") +
@@ -294,9 +302,10 @@ const routes = [
   { path: "/specialties", title: "Specialties · AI agents by practice type · MedXFlow", desc: "AI revenue-cycle agents tuned to your specialty - MedSpa, dental, mental health, dermatology, physical therapy, cardiology, orthopedics and primary care.", body: specialtiesIndexBody() },
   ...SPECIALTIES.map((s) => ({
     path: `/specialties/${s.slug}/`, title: `${s.name} · AI agents for the revenue cycle · MedXFlow`, desc: s.tagline,
+    body: specialtyBody(s),
     jsonld: serviceLd({
       name: `${s.name} revenue cycle management`, serviceType: "Healthcare revenue cycle management", url: `${ORIGIN}/specialties/${s.slug}/`,
-      description: s.tagline, crumbs: [["Home", "/"], ["Specialties", "/specialties/"], [s.name, `/specialties/${s.slug}/`]],
+      description: s.tagline, faq: s.faq, crumbs: [["Home", "/"], ["Specialties", "/specialties/"], [s.name, `/specialties/${s.slug}/`]],
     }),
   })),
   { path: "/blog", title: "Resources · RCM insights for medical practices · MedXFlow", desc: "Practical guides on claim denials, prior authorization, coding and the healthcare revenue cycle - for the people who run medical billing.", body: blogIndexBody() },
