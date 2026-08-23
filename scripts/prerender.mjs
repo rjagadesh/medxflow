@@ -302,7 +302,7 @@ const routes = [
   {
     path: "/about",
     title: "About MedXFlow · AI Revenue Cycle Management",
-    desc: "MedXFlow is an AI-powered revenue cycle management platform whose AI agents automate eligibility, prior authorization, coding, claims and denials for medical practices, billing companies and RCM teams in the US. HIPAA-compliant, BAA available.",
+    desc: "MedXFlow is an AI-powered RCM platform: AI agents automate eligibility, prior auth, coding, claims and denials for US practices. HIPAA-compliant.",
     body: `<article><h1>About MedXFlow</h1>` +
       p("MedXFlow is an AI-powered revenue cycle management platform. Our AI agents automate the repetitive work across the healthcare revenue cycle so medical practices, billing companies and RCM teams get paid faster with less manual effort.") +
       h2("What we do") + p("MedXFlow runs the revenue cycle with AI agents that carry out each task end to end: eligibility and benefits verification, prior authorization, charge capture and medical coding, claims submission and follow-up, denial management, payment posting, and patient collections. Agents escalate exceptions to staff, and a human-led Managed Billing team is available to run the whole cycle.") +
@@ -414,7 +414,7 @@ const routes = [
   {
     path: "/npi-lookup",
     title: "NPI Lookup · Free NPI Number Registry Search · MedXFlow",
-    desc: "Free NPI lookup. Search the official CMS NPPES registry for any US provider or organization by name or NPI number - the NPI, taxonomy, location and status, for billing and credentialing.",
+    desc: "Free NPI lookup. Search the CMS NPPES registry by provider name, organization or NPI number - see the NPI, taxonomy, location and active status.",
     body: npiLookupBody(),
     jsonld: JSON.stringify({
       "@context": "https://schema.org",
@@ -561,8 +561,9 @@ const template = fs.readFileSync(path.join(DIST, "index.html"), "utf8");
 function headFor(r) {
   // Netlify serves prerendered directory pages with a trailing slash and 301s
   // the non-slash form to it, so the canonical + og:url must use the slash form
-  // (otherwise the canonical points at a URL that redirects).
-  const url = ORIGIN + r.path + "/";
+  // (otherwise the canonical points at a URL that redirects). Normalize any
+  // trailing slash already present in r.path so we never emit "//".
+  const url = ORIGIN + r.path.replace(/\/+$/, "") + "/";
   const t = esc(r.title), d = esc(clipDesc(r.desc));
   let out = template
     // Strip the base template's homepage JSON-LD so each prerendered page carries
@@ -605,7 +606,7 @@ function headFor(r) {
 function writeSitemap() {
   const today = new Date().toISOString().slice(0, 10);
   // Trailing slash on sub-pages to match what Netlify serves + the canonical.
-  const urls = ["/", ...routes.map((r) => r.path + "/")];
+  const urls = ["/", ...routes.map((r) => r.path.replace(/\/+$/, "") + "/")];
   const body = urls.map((u) => `  <url>\n    <loc>${ORIGIN}${u}</loc>\n    <lastmod>${today}</lastmod>\n    <changefreq>weekly</changefreq>\n    <priority>${u === "/" ? "1.0" : "0.7"}</priority>\n  </url>`).join("\n");
   fs.writeFileSync(path.join(DIST, "sitemap.xml"),
     `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${body}\n</urlset>\n`);

@@ -65,7 +65,7 @@ export const SEO_PAGES = [
     title: "Medical Billing & RCM Services in Florida | MedXFlow",
     h1: "Medical Billing and RCM Services for Florida Practices",
     eyebrow: "Serving Florida",
-    description: "AI medical billing and revenue cycle automation for Florida practices - Medicaid managed care and Medicare Advantage, eligibility, prior auth, claims and denials.",
+    description: "AI medical billing automation for Florida practices - Medicaid managed care, Medicare Advantage, eligibility, prior auth, claims and denials.",
     intro: "MedXFlow brings AI revenue cycle automation to Florida medical practices, tuned to the state's Medicaid managed-care and large Medicare Advantage population, so the payer-facing work runs automatically.",
     sections: [
       { h: "Built for Florida's payer mix", p: [
@@ -235,7 +235,7 @@ export const SEO_PAGES = [
     title: "Availity Alternatives: Eligibility & Prior Auth | MedXFlow",
     h1: "Availity Alternatives for Eligibility and Prior Auth",
     eyebrow: "Comparison · Alternatives",
-    description: "Comparing Availity alternatives for eligibility, claims and prior authorization - what a health information network does, where automation adds value, and how MedXFlow fits. Verify current offerings.",
+    description: "Comparing Availity alternatives for eligibility and prior auth - what a network does, where automation adds value, and how MedXFlow fits.",
     intro: "Availity is one of the largest health information networks, widely used for eligibility, claims and authorization service reviews. An \"alternative\" often is not another network but automation layered on top of connectivity. Here is how to think about it - details reflect general positioning and should be confirmed directly.",
     sections: [
       { h: "Network versus automation", p: [
@@ -288,7 +288,7 @@ export const SEO_PAGES = [
     title: "Medical Billing & RCM Software for Dubai Clinics | MedXFlow",
     h1: "Medical Billing and RCM Software for Dubai Clinics",
     eyebrow: "For Dubai Clinics",
-    description: "AI-driven medical billing and RCM for Dubai clinics - eligibility with UAE TPAs, DHA prior authorization, and eClaimLink claim submission and resubmission, automated end to end.",
+    description: "AI medical billing and RCM for Dubai clinics - eligibility with UAE TPAs, DHA prior authorization, and eClaimLink claim submission, automated end to end.",
     intro: "MedXFlow provides AI-driven medical billing and revenue cycle automation for Dubai clinics, aligned to DHA requirements and the eClaimLink platform, so claims go out clean and denials are worked automatically.",
     sections: [
       { h: "For the DHA and eClaimLink workflow", list: [
@@ -574,7 +574,7 @@ export const SEO_PAGES = [
     title: "Best AI Medical Billing Companies: 2026 Guide | MedXFlow",
     h1: "Choosing an AI Medical Billing Company in 2026",
     eyebrow: "Buyer's Guide · AI Medical Billing",
-    description: "What to look for in an AI medical billing company in 2026 - how AI billing differs from traditional outsourcing, the criteria that matter, and the questions to ask before you sign.",
+    description: "How to choose an AI medical billing company in 2026 - how AI billing differs from outsourcing, the criteria that matter, and the questions to ask.",
     intro: "AI medical billing promises the throughput of outsourcing without handing your revenue cycle to a black box. This guide explains how to tell real AI billing from repackaged outsourcing, and how to choose.",
     sections: [
       { h: "AI billing vs traditional outsourcing", p: [
@@ -630,7 +630,7 @@ export const SEO_PAGES = [
     title: "Medical Billing Company Pricing: What to Expect | MedXFlow",
     h1: "Medical Billing Company Pricing: What You Should Expect to Pay",
     eyebrow: "Pricing · Medical Billing",
-    description: "What medical billing companies charge in 2026 - percentage of collections, per-claim and flat-fee models, typical ranges, and how automation changes the math.",
+    description: "What medical billing companies charge in 2026 - percentage of collections, per-claim and flat-fee pricing, and how automation changes the math.",
     intro: "Most medical billing companies charge a percentage of collections, but per-claim and flat-fee models exist, and automation is changing what you should expect to pay. Here are the ranges and the trade-offs.",
     sections: [
       { h: "Typical pricing", list: [
@@ -657,7 +657,7 @@ export const SEO_PAGES = [
     title: "Revenue Cycle Management Dallas-Fort Worth | MedXFlow",
     h1: "Revenue Cycle Management for Dallas-Fort Worth Practices",
     eyebrow: "Serving Dallas-Fort Worth, TX",
-    description: "AI-driven revenue cycle management for Dallas-Fort Worth medical practices - eligibility, prior authorization, coding, claims and denials automated, with a human-led billing option.",
+    description: "AI revenue cycle management for Dallas-Fort Worth practices - eligibility, prior auth, coding, claims and denials automated, plus a human-led option.",
     intro: "MedXFlow brings AI revenue cycle automation to medical practices across Dallas-Fort Worth, running the repetitive payer-facing work so local teams get paid faster with less manual effort.",
     sections: [
       { h: "What MedXFlow does for DFW practices", p: [
@@ -682,7 +682,7 @@ export const SEO_PAGES = [
     title: "Medical Billing and RCM Company in Frisco, TX | MedXFlow",
     h1: "Medical Billing and RCM Company in Frisco, TX",
     eyebrow: "Serving Frisco, TX",
-    description: "AI-powered medical billing and revenue cycle management for Frisco, TX practices - automated eligibility, prior auth, claims and denials, with transparent, outcome-based pricing.",
+    description: "AI-powered medical billing for Frisco, TX practices - eligibility, prior auth, claims and denials automated, with transparent outcome-based pricing.",
     intro: "MedXFlow provides AI-powered medical billing and revenue cycle management for practices in Frisco and the wider Dallas-Fort Worth area, automating the repetitive work and keeping your team on exceptions.",
     sections: [
       { h: "Billing built on automation", p: [
