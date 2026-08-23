@@ -26,7 +26,7 @@ export default function SpecialtyPage({ slug }) {
     let meta = document.querySelector('meta[name="description"]');
     if (!meta) { meta = document.createElement("meta"); meta.name = "description"; document.head.appendChild(meta); }
     const prev = meta.getAttribute("content");
-    meta.setAttribute("content", clip155(s.tagline));
+    meta.setAttribute("content", clip155(s.seoDesc || s.tagline));
     window.scrollTo(0, 0);
     return () => prev && meta.setAttribute("content", prev);
   }, [s]);

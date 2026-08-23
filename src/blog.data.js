@@ -167,7 +167,7 @@ export const POSTS = [
     slug: "why-are-medical-claims-denied",
     snippet: "Medical claims are denied for a small set of recurring reasons: eligibility and registration errors, missing or invalid prior authorization, missing or incorrect information, medical-necessity and coding mismatches, duplicate claims, non-covered services, and untimely filing. Most are avoidable because they originate at the front of the revenue cycle, before the claim is submitted.",
     title: "Why Are Medical Claims Denied? 12 Common Reasons",
-    description: "The 12 most common reasons medical claims are denied - eligibility, prior authorization, coding, medical necessity, timely filing and more - and how to prevent each one before submission.",
+    description: "The 12 most common reasons medical claims are denied - eligibility, prior auth, coding, medical necessity, timely filing - and how to prevent each one.",
     date: "2026-08-21",
     category: "Denial Management",
     readMins: 8,
@@ -694,7 +694,7 @@ export const POSTS = [
     snippet: "AI works a denial end to end: it classifies the denial by reason and priority, identifies the root cause, corrects or appeals it within the payer window, and feeds the pattern back upstream so the same denial stops recurring.",
     title: "AI Denial Management: From Classification to Appeal",
     description:
-      "How AI works a denial end to end - classifying it, finding the root cause, correcting and appealing, and feeding the pattern back upstream to prevent the next one.",
+      "How AI works a denial end to end - classifying it, finding root cause, correcting and appealing, and feeding the pattern back upstream.",
     date: "2026-02-15",
     category: "Denial Management",
     readMins: 6,
@@ -935,7 +935,7 @@ export const POSTS = [
     snippet: "Traditional RCM software organizes the work and surfaces worklists, but a person does each step. AI agents do the step: they run the task, read the result, and escalate exceptions. The test in a demo is whether a task runs with no human clicking through it.",
     title: "AI Agents vs. Traditional RCM Software: What's Different?",
     description:
-      "Traditional RCM software helps your team work faster; AI agents complete the work. Here's how they differ, where each fits, and how to tell them apart in a demo.",
+      "Traditional RCM software helps your team work faster; AI agents complete the work. How they differ, where each fits, and how to tell them apart.",
     date: "2026-07-15",
     category: "AI & Automation",
     readMins: 6,
@@ -983,7 +983,7 @@ export const POSTS = [
     snippet: "In-house RCM gives control but carries staffing cost; outsourcing removes the staffing burden but trades visibility; AI agents keep work in-house while automating the repetitive volume. Many practices blend them: agents handle volume, staff handle judgment, a managed team covers overflow.",
     title: "In-House vs. Outsourced vs. AI-Agent RCM: How to Decide",
     description:
-      "Three ways to run your revenue cycle - an in-house team, an outsourced billing company, or AI agents. Here's the trade-off in cost, control and scale, and how to choose.",
+      "Three ways to run your revenue cycle - in-house team, outsourced billing company, or AI agents - compared on cost, control and scale.",
     date: "2026-08-15",
     category: "Healthcare RCM",
     readMins: 7,

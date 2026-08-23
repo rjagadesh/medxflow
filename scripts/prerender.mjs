@@ -335,7 +335,7 @@ const routes = [
   })),
   { path: "/specialties", title: "Specialties · AI agents by practice type · MedXFlow", desc: "AI revenue-cycle agents tuned to your specialty - MedSpa, dental, mental health, dermatology, physical therapy, cardiology, orthopedics and primary care.", body: specialtiesIndexBody() },
   ...SPECIALTIES.map((s) => ({
-    path: `/specialties/${s.slug}/`, title: `${s.name.replace(/\s*\([^)]*\)/, "")} Medical Billing & RCM | MedXFlow`, desc: s.tagline,
+    path: `/specialties/${s.slug}/`, title: `${s.name.replace(/\s*\([^)]*\)/, "")} Medical Billing & RCM | MedXFlow`, desc: s.seoDesc || s.tagline,
     body: specialtyBody(s),
     jsonld: serviceLd({
       name: `${s.name} revenue cycle management`, serviceType: "Healthcare revenue cycle management", url: `${ORIGIN}/specialties/${s.slug}/`,

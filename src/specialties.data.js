@@ -81,6 +81,7 @@ export const SPECIALTIES = [
   },
   {
     slug: "oncology",
+    seoDesc: "Oncology billing automation - chemotherapy J-codes, NDC units and drug wastage captured, regimen authorizations cleared, denials worked end to end.",
     icon: "🎗️",
     name: "Oncology",
     eyebrow: "Specialty · Oncology",
@@ -313,6 +314,7 @@ export const SPECIALTIES = [
   },
   {
     slug: "hospice",
+    seoDesc: "Hospice billing automation - Notice of Election deadlines, per-diem levels of care and benefit periods tracked, claims and denials worked end to end.",
     icon: "🕊️",
     name: "Hospice",
     eyebrow: "Specialty · Hospice",
@@ -440,6 +442,7 @@ export const SPECIALTIES = [
   },
   {
     slug: "home-health",
+    seoDesc: "Home health billing automation - PDGM periods, LUPA thresholds and authorizations tracked, with claims, posting and denials handled end to end.",
     icon: "🏠",
     name: "Home Health",
     eyebrow: "Specialty · Home Health",
@@ -722,6 +725,7 @@ export const SPECIALTIES = [
 
   {
     slug: "dental",
+    seoDesc: "Dental billing and RCM automation - insurance verification, pre-authorizations, coding support, claims and denials handled end to end.",
     icon: "🦷",
     name: "Dental",
     eyebrow: "Specialty · Dental",
@@ -1076,6 +1080,7 @@ export const SPECIALTIES = [
 
   {
     slug: "physical-therapy",
+    seoDesc: "AI billing automation for physical therapy - timed-code units, therapy thresholds, authorizations, claims and denials handled end to end.",
     icon: "🏃",
     name: "Physical Therapy",
     eyebrow: "Specialty · Physical Therapy",
