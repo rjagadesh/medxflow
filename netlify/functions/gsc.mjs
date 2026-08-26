@@ -70,9 +70,10 @@ export default async (req) => {
   try {
     const token = await getAccessToken(sa);
     // Use dataState:"all" so the freshest 1-2 days are included (Google's default
-    // "final" data lags ~3 days). The most recent day is preliminary and may
-    // revise upward. endDate is today; GSC returns up to whatever it has.
-    const end = new Date();
+    // "final" data lags ~3 days). End at YESTERDAY, not today: the current day
+    // has barely any data processed yet, which plots as a misleading crash-to-
+    // zero final point on the trend charts.
+    const end = new Date(Date.now() - 1 * 864e5);
     const start = new Date(Date.now() - 30 * 864e5);
     const range = { startDate: ymd(start), endDate: ymd(end), dataState: "all" };
 

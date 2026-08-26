@@ -106,6 +106,49 @@ export const SEO_PAGES = [
     ],
   },
   {
+    slug: "ai-for-indian-rcm-companies",
+    kind: "audience",
+    title: "AI Agents for Indian RCM Companies | MedXFlow",
+    h1: "AI Agents for Indian RCM and Medical Billing Companies",
+    eyebrow: "For Indian RCM Companies",
+    description: "AI RCM automation for Indian medical billing and RCM companies serving US providers - agents absorb the manual FTE work so you scale margin, not headcount.",
+    intro: "India runs a large share of the world's US healthcare revenue cycle work - eligibility, claims, payment posting, denials and AR follow-up, delivered by thousands of billers and coders on night shifts. MedXFlow gives Indian RCM and billing companies the next lever after labor arbitrage: AI agents that complete that same work end to end, so you grow your US client book without growing headcount at the same rate.",
+    sections: [
+      { h: "From labor arbitrage to automation arbitrage", p: [
+        "The traditional Indian RCM model wins on cost per FTE. That advantage is narrowing as wages rise and US clients push rates down, and it caps your margin at whatever a human can process per shift. AI agents change the unit economics: repetitive work - eligibility checks, claim status, payment posting, routine denials, AR follow-up - runs automatically at machine throughput, and your team handles the exceptions and the judgment calls US clients pay for.",
+      ] },
+      { h: "What the agents take off your production floor", list: [
+        "Eligibility and benefits verification (270/271) across US payers before the visit.",
+        "Claim scrubbing, submission and 276/277 status follow-up, without portal queues.",
+        "Payment posting from 835/ERA, plus paper EOB-to-ERA conversion at per-claim pricing.",
+        "Denial triage by CARC/RARC with appeal drafting, worked by recoverable value.",
+        "AR follow-up by payer and dollar value, including underpayment detection.",
+      ] },
+      { h: "Built for the BPO delivery model", list: [
+        "Partner plan with channel terms: you carry implementation, first-line support and client management, and resell across your own book.",
+        "Per-outcome pricing at partner volume, so your cost per completed transaction sits below your loaded cost per FTE-hour.",
+        "Agents run 24/7, cutting the night-shift dependency US time zones force on Indian teams.",
+        "Every action is logged, assigned and auditable - the compliance trail your US clients ask for in every RFP.",
+        "Works with the systems your clients already run: Epic, athenahealth, eClinicalWorks and major clearinghouses.",
+      ] },
+      { h: "Keep the client, change the economics", p: [
+        "Your US clients stay yours. MedXFlow sits inside your delivery: agents do the volume under your brand and your SLAs, your specialists review exceptions, and your margin per account rises because throughput no longer scales one-to-one with hiring. Use the ROI calculator with your own FTE count and loaded hourly cost to see the spread.",
+      ] },
+    ],
+    related: [
+      { label: "ROI calculator (use the Offshore preset)", href: "/roi-calculator/" },
+      { label: "AI for RCM companies", href: "/ai-for-rcm-companies/" },
+      { label: "AI for medical billing companies", href: "/ai-for-medical-billing-companies/" },
+      { label: "EOB to ERA conversion", href: "/blog/eob-to-era-conversion/" },
+    ],
+    faq: [
+      { q: "Does MedXFlow work with Indian RCM companies?", a: "Yes. MedXFlow's Partner plan is built for billing companies and BPOs - including Indian RCM companies serving US providers - with channel terms where the partner carries implementation, first-line support and client management, and resells across their own book." },
+      { q: "How does AI change the economics of an Indian RCM operation?", a: "Repetitive transactions run at machine throughput and per-outcome pricing instead of per-FTE cost, so revenue per account is no longer capped by headcount and shift capacity. Your team moves to exceptions, QA and client management, where the value is higher." },
+      { q: "Will the agents work US night hours?", a: "Yes. Agents run 24/7 against US payer systems, which reduces the night-shift staffing that US time zones usually force on Indian delivery teams." },
+      { q: "Do our US clients have to change systems?", a: "No. The agents work with the EHR/PMS and clearinghouses your clients already run - Epic, athenahealth, eClinicalWorks and more - writing results back, so your delivery slots into the existing workflow." },
+    ],
+  },
+  {
     slug: "ai-rcm-vendors-comparison",
     kind: "pillar",
     title: "AI RCM Vendors Compared: Pricing & Fit | MedXFlow",

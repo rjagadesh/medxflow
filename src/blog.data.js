@@ -123,6 +123,45 @@ export const medxflowFor = (post) =>
 
 export const POSTS = [
   {
+    slug: "ai-agents-indian-rcm-outsourcing",
+    snippet: "Indian RCM companies win US billing work on cost per FTE, but wage inflation and rate pressure are squeezing that model. AI agents shift the economics from labor arbitrage to automation arbitrage: repetitive transactions - eligibility, claim status, posting, routine denials - run at machine throughput and per-outcome cost, while billers and coders move to exceptions, QA and client management.",
+    title: "AI Agents and the Future of Indian RCM Outsourcing",
+    description: "How Indian RCM and medical billing companies serving US providers can adopt AI agents - what automates first, how the economics change, and what stays human.",
+    date: "2026-08-23",
+    category: "AI & Automation",
+    readMins: 8,
+    keywords: ["Indian RCM companies", "RCM outsourcing India", "AI in medical billing BPO", "RCM automation India", "medical billing outsourcing automation"],
+    related: { label: "AI agents for Indian RCM companies", href: "/ai-for-indian-rcm-companies/" },
+    intro: "A large share of US healthcare revenue cycle work is delivered from India - eligibility checks, claim submission, payment posting, denial follow-up and AR calling, run by teams in Chennai, Hyderabad, Bengaluru, Mumbai and Noida, mostly on night shifts aligned to US hours. That model was built on labor arbitrage, and it is under pressure from three directions at once: rising Indian wages, US clients pushing per-claim and percentage rates down, and US competitors adopting automation. Here is how AI agents change the equation for an Indian RCM operation, honestly - including what they cannot do.",
+    sections: [
+      { h: "Why the pure-FTE model is getting harder", p: [
+        "The traditional pitch - the same work at a lower cost per person - has a ceiling: throughput scales one-to-one with hiring, attrition on night shifts is chronic, and every new US client means recruiting, training and QA ramp. Meanwhile the rates US clients will pay keep compressing, because they are comparing you not just to other BPOs but to software.",
+      ] },
+      { h: "What automates first in a BPO delivery floor", list: [
+        "Eligibility and benefits verification - the 270/271 checks your teams run per visit, per payer portal.",
+        "Claim status follow-up - 276/277 polling and portal checks that consume analyst hours.",
+        "Payment posting - 835/ERA auto-posting, plus converting paper EOBs into postable 835s at per-claim pricing.",
+        "Routine denial triage - classifying by CARC/RARC, drafting appeals, routing by recoverable value.",
+        "AR follow-up worklists - chasing aged claims by payer and dollar value, with underpayment detection.",
+      ] },
+      { h: "What stays human, and becomes your product", p: [
+        "Complex appeals, coding judgment on ambiguous charts, payer escalations, client reporting and relationship management - the work that actually differentiates one RCM company from another - stays with your people. The honest framing: agents do not replace your delivery organization; they replace the part of it that was always a throughput business, and free your experienced staff for the part clients will keep paying premium rates for.",
+      ] },
+      { h: "The new unit economics", p: [
+        "In the FTE model, margin = client rate minus loaded cost per person, capped by shift capacity. In the agent model, repetitive transactions cost a per-outcome fee that sits below loaded FTE-hour cost, run 24/7 without night-shift premiums or attrition, and scale to new client volume without a hiring ramp. The spread between what your US client pays per account and what delivery costs you widens - and that spread is yours, not the software vendor's, when the pricing is per outcome rather than a percentage of collections.",
+      ] },
+      { h: "How adoption actually works", p: [
+        "The realistic path is not a big-bang replacement. Pick one workflow with clean volume - eligibility or payment posting - on one or two client accounts, run agents in a supervised pilot alongside your team, measure completed transactions against your current cost, and expand workflow by workflow. Because every agent action is logged and auditable, your client-facing QA and compliance story gets stronger, not weaker, which matters in every US RFP.",
+      ] },
+    ],
+    faq: [
+      { q: "Will AI replace Indian RCM companies?", a: "AI replaces the pure-throughput part of the work, not the business. Indian RCM companies that adopt agents keep their US clients and shift their people to exceptions, complex appeals, QA and client management - and improve margin. The companies at risk are the ones competing on FTE cost alone." },
+      { q: "Which RCM processes should a BPO automate first?", a: "Start where volume is high and judgment is low: eligibility verification, claim status follow-up, and payment posting. Then routine denial triage and AR follow-up. Complex appeals and coding judgment stay with experienced staff." },
+      { q: "How is this priced for a BPO?", a: "MedXFlow's Partner plan uses per-outcome pricing at partner volume with channel terms - the partner carries implementation, first-line support and client management, and resells across their own book. The test is simple: the per-outcome cost should sit below your loaded cost per FTE-hour for the same work." },
+      { q: "Do agents handle US night hours?", a: "Yes - agents run 24/7 against US payer systems, which reduces the night-shift staffing burden that US time zones impose on Indian delivery teams." },
+    ],
+  },
+  {
     slug: "how-much-does-rcm-automation-cost",
     snippet: "RCM automation is usually priced one of four ways: per completed workflow outcome, per claim, a percentage of collections (commonly 4 to 9 percent), or a flat monthly platform fee. Per-outcome and per-claim pricing tend to be the most predictable, and the honest test is whether the rate sits below the loaded cost of doing the same work in-house or offshore.",
     title: "How Much Does RCM Automation Cost? A Straight Answer",
