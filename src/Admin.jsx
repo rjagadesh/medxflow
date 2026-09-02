@@ -4,6 +4,7 @@ import Finance from "./Finance.jsx";
 import { Contacts, ContactDetail } from "./Contacts.jsx";
 import Pipeline from "./Pipeline.jsx";
 import Tickets from "./Tickets.jsx";
+import Eligibility from "./Eligibility.jsx";
 import Settings from "./Settings.jsx";
 import Seo from "./Seo.jsx";
 import Social from "./Social.jsx";
@@ -31,7 +32,7 @@ const tally = (arr, keyFn) => {
 };
 
 const SKEY = "eirim_admin_session";
-const TAB_ORDER = ["contacts", "pipeline", "campaigns", "social", "financials", "leads", "traffic", "seo", "chat", "tickets", "settings"];
+const TAB_ORDER = ["contacts", "pipeline", "campaigns", "social", "financials", "leads", "traffic", "seo", "chat", "tickets", "eligibility", "settings"];
 const readSession = () => { try { return JSON.parse(localStorage.getItem(SKEY) || "null"); } catch { return null; } };
 const firstTab = (sess) => TAB_ORDER.find((m) => sess?.role === "owner" || (sess?.modules || []).includes(m)) || "contacts";
 
@@ -175,6 +176,7 @@ export default function Admin() {
           {can("financials") && <button className={tab === "financials" ? "on" : ""} onClick={() => setTab("financials")}>💶 Financials</button>}
           {can("leads") && <button className={tab === "leads" ? "on" : ""} onClick={() => setTab("leads")}>📥 Demo requests</button>}
           {can("tickets") && <button className={tab === "tickets" ? "on" : ""} onClick={() => setTab("tickets")}>🎫 Tickets</button>}
+          {can("eligibility") && <button className={tab === "eligibility" ? "on" : ""} onClick={() => setTab("eligibility")}>🛡 Eligibility</button>}
           {can("traffic") && <button className={tab === "traffic" ? "on" : ""} onClick={() => setTab("traffic")}>📊 Traffic</button>}
           {can("traffic") && <button className={tab === "seo" ? "on" : ""} onClick={() => setTab("seo")}>📈 SEO</button>}
           {can("chat") && <button className={tab === "chat" ? "on" : ""} onClick={() => setTab("chat")}>💬 Chatbot</button>}
@@ -188,7 +190,7 @@ export default function Admin() {
       </aside>
 
       <main className="ad-main">
-        {!["campaigns", "social", "financials", "contacts", "pipeline", "tickets", "settings", "seo"].includes(tab) && (
+        {!["campaigns", "social", "financials", "contacts", "pipeline", "tickets", "settings", "seo", "eligibility"].includes(tab) && (
           <div className="ad-stats">
             <div className="ad-stat ad-stat-hot"><b>{counts.leads ?? leads.length}</b><span>Demo requests</span></div>
             <div className="ad-stat"><b>{tab === "traffic" ? shownPV.length : (segments.human ?? pageviews.length)}</b><span>Pageviews{tab === "traffic" && seg !== "human" ? ` · ${SEG_LABEL[seg]}` : " · Real"}</span></div>
@@ -205,6 +207,8 @@ export default function Admin() {
       {tab === "pipeline" && <Pipeline pw={pw} onOpen={openContact} />}
 
       {tab === "tickets" && can("tickets") && <Tickets pw={pw} />}
+
+      {tab === "eligibility" && can("eligibility") && <Eligibility pw={pw} />}
 
       {tab === "settings" && can("settings") && <Settings pw={pw} session={session} />}
 
